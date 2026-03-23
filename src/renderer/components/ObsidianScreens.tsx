@@ -37,6 +37,7 @@ type ShellProps = {
   onChooseFolder: () => void;
   onChooseImportFile: () => void;
   onStartMonitoring: () => void;
+  onStartMonitoringFromFile: () => void;
   onImportLogFile: () => void;
   onStopMonitoring: () => void;
   onToggleCompanions: () => void;
@@ -115,6 +116,20 @@ function getRuntimeLabel(state: AppState): string {
 
 function getSourceLabel(state: AppState): string {
   return state.importedLogFile ?? state.activeLogFile ?? state.analysis.sourcePath ?? "No source linked";
+}
+
+function getCombatLogTimestampLabel(filePath: string | null): string {
+  if (!filePath) {
+    return "Awaiting combatlog_YYYY-MM-DD_HH-MM-SS.log";
+  }
+
+  const match = filePath.match(/combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})\.log$/i);
+  if (!match) {
+    return "Using file timestamp from filesystem";
+  }
+
+  const [, year, month, day, hour, minute, second] = match;
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 function initialsFromName(value: string | null | undefined): string {
@@ -463,6 +478,12 @@ function SetupView(props: ShellProps) {
               </button>
             </div>
 
+            <div className="oa-mini-panel">
+              <strong>Latest tracked combat log</strong>
+              <p>{state.activeLogFile ?? "No live log selected yet"}</p>
+              <p className="oa-muted-copy">Timestamp: {getCombatLogTimestampLabel(state.activeLogFile)}</p>
+            </div>
+
             <label className="oa-field">
               <span>Archived combat log</span>
               <div className="oa-input-row">
@@ -479,6 +500,14 @@ function SetupView(props: ShellProps) {
                 </button>
               </div>
             </label>
+            <button
+              className="oa-button tertiary"
+              onClick={props.onStartMonitoringFromFile}
+              disabled={props.starting || !props.importFilePath.trim() || !props.isDesktopRuntime}
+            >
+              <Icon name="play_circle" />
+              Track Selected File Live
+            </button>
             <button
               className="oa-button tertiary"
               onClick={props.onImportLogFile}

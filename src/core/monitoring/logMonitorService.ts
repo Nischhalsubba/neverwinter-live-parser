@@ -1,6 +1,7 @@
 import chokidar, { type FSWatcher } from "chokidar";
 import { EventEmitter } from "node:events";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import type {
   AppState,
   CombatEvent,
@@ -64,6 +65,7 @@ export class LogMonitorService extends EventEmitter {
   private encounterManager = new EncounterManager(10_000);
   private combatantTracker = new CombatantTracker();
   private flushTimer: NodeJS.Timeout | null = null;
+  private liveTrackingFilePath: string | null = null;
 
   getState(): AppState {
     return structuredClone(this.state);
@@ -72,25 +74,37 @@ export class LogMonitorService extends EventEmitter {
   async start(config: MonitoringConfig): Promise<AppState> {
     await this.stop();
 
+    const targetFilePath = config.filePath?.trim() || null;
+    const targetFolderPath = config.folderPath?.trim() || null;
+    const resolvedFolderPath =
+      targetFolderPath ?? (targetFilePath ? path.dirname(targetFilePath) : null);
+
+    if (!resolvedFolderPath) {
+      throw new Error("Monitoring requires a combat log folder or file path.");
+    }
+
     this.state = {
       ...createInitialAppState(),
       watcherStatus: "watching",
-      selectedLogFolder: config.folderPath,
+      selectedLogFolder: resolvedFolderPath,
       analysis: {
         ...createInitialAppState().analysis,
         mode: "live",
-        sourcePath: config.folderPath
+        sourcePath: targetFilePath ?? resolvedFolderPath
       }
     };
     this.readerState = createInitialReaderState();
     this.encounterManager = new EncounterManager(config.inactivityTimeoutMs);
     this.combatantTracker = new CombatantTracker();
+    this.liveTrackingFilePath = targetFilePath;
 
-    const activeFile = await detectActiveLogFile(config.folderPath);
+    const activeFile = targetFilePath
+      ? await detectActiveLogFile(resolvedFolderPath, targetFilePath)
+      : await detectActiveLogFile(resolvedFolderPath);
     this.state.activeLogFile = activeFile;
     this.state.debug.activeFilePath = activeFile;
 
-    this.watcher = chokidar.watch(config.folderPath, {
+    this.watcher = chokidar.watch(resolvedFolderPath, {
       ignoreInitial: false,
       depth: 0,
       awaitWriteFinish: {
@@ -100,7 +114,7 @@ export class LogMonitorService extends EventEmitter {
     });
 
     const refresh = async () => {
-      await this.refreshActiveFile(config.folderPath);
+      await this.refreshActiveFile(resolvedFolderPath);
       await this.readNewLines();
       this.emitState();
     };
@@ -138,6 +152,7 @@ export class LogMonitorService extends EventEmitter {
     };
     this.encounterManager = new EncounterManager(10_000);
     this.combatantTracker = new CombatantTracker();
+    this.liveTrackingFilePath = null;
 
     const contents = await readFile(filePath, "utf8");
     const { lines, leftover } = splitBufferedLines("", contents);
@@ -168,15 +183,20 @@ export class LogMonitorService extends EventEmitter {
     this.encounterManager.flush();
     this.syncEncounterState();
     this.state.watcherStatus = "idle";
+    this.liveTrackingFilePath = null;
     this.emitState();
     return this.getState();
   }
 
   private async refreshActiveFile(folderPath: string): Promise<void> {
-    const activeFile = await detectActiveLogFile(folderPath);
+    const activeFile = await detectActiveLogFile(
+      folderPath,
+      this.state.activeLogFile ?? this.liveTrackingFilePath
+    );
     if (activeFile !== this.state.activeLogFile) {
       this.state.activeLogFile = activeFile;
       this.state.debug.activeFilePath = activeFile;
+      this.state.analysis.sourcePath = activeFile ?? folderPath;
     }
   }
 

@@ -66,12 +66,16 @@ export function App() {
     void api.getState().then((snapshot) => {
       setState(snapshot);
       setFolderInput(snapshot.selectedLogFolder ?? "");
-      setImportFilePath(snapshot.importedLogFile ?? "");
+      setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
     });
 
     return api.onState((snapshot) => {
       setState(snapshot);
-      setImportFilePath(snapshot.importedLogFile ?? "");
+      setImportFilePath((current) =>
+        current.trim()
+          ? current
+          : snapshot.importedLogFile ?? snapshot.activeLogFile ?? ""
+      );
     });
   }, []);
 
@@ -155,6 +159,26 @@ export function App() {
     }
   }
 
+  async function startMonitoringFromFile() {
+    const api = window.neverwinterApi;
+    if (!api || !importFilePath.trim()) {
+      return;
+    }
+
+    setStarting(true);
+    try {
+      const snapshot = await api.startMonitoring({
+        filePath: importFilePath.trim(),
+        inactivityTimeoutMs: 10_000
+      });
+      setState(snapshot);
+      setFolderInput(snapshot.selectedLogFolder ?? "");
+      setView("live");
+    } finally {
+      setStarting(false);
+    }
+  }
+
   async function importLogFile() {
     const api = window.neverwinterApi;
     if (!api || !importFilePath.trim()) {
@@ -204,6 +228,7 @@ export function App() {
       onChooseFolder={() => void chooseFolder()}
       onChooseImportFile={() => void chooseImportFile()}
       onStartMonitoring={() => void startMonitoring()}
+      onStartMonitoringFromFile={() => void startMonitoringFromFile()}
       onImportLogFile={() => void importLogFile()}
       onStopMonitoring={() => void stopMonitoring()}
       onToggleCompanions={() => setIncludeCompanions((value) => !value)}

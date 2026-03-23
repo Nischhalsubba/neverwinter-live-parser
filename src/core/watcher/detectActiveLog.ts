@@ -2,28 +2,103 @@ import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
 
 const VALID_LOG_PATTERN = /^combatlog_.*\.log$/i;
+const TIMESTAMPED_LOG_PATTERN =
+  /^combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})\.log$/i;
 
-export async function detectActiveLogFile(
-  folderPath: string
-): Promise<string | null> {
-  const entries = await readdir(folderPath, { withFileTypes: true });
-  const candidates = entries
-    .filter((entry) => entry.isFile() && VALID_LOG_PATTERN.test(entry.name))
-    .map((entry) => path.join(folderPath, entry.name));
+type LogCandidate = {
+  candidate: string;
+  timestampMs: number | null;
+  mtimeMs: number;
+};
 
-  if (candidates.length === 0) {
+export function parseCombatLogTimestamp(filePath: string): number | null {
+  const match = path.basename(filePath).match(TIMESTAMPED_LOG_PATTERN);
+  if (!match) {
     return null;
   }
 
-  const withStats = await Promise.all(
-    candidates.map(async (candidate) => ({
-      candidate,
-      stats: await stat(candidate)
-    }))
+  const [, year, month, day, hour, minute, second] = match;
+  const parsed = new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Number(second),
+    0
+  ).getTime();
+
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function compareCandidates(left: LogCandidate, right: LogCandidate): number {
+  if (left.timestampMs !== null && right.timestampMs !== null && left.timestampMs !== right.timestampMs) {
+    return right.timestampMs - left.timestampMs;
+  }
+
+  if (left.timestampMs !== null && right.timestampMs === null) {
+    return -1;
+  }
+
+  if (left.timestampMs === null && right.timestampMs !== null) {
+    return 1;
+  }
+
+  if (left.mtimeMs !== right.mtimeMs) {
+    return right.mtimeMs - left.mtimeMs;
+  }
+
+  return right.candidate.localeCompare(left.candidate);
+}
+
+export async function detectActiveLogFile(
+  folderPath: string,
+  currentFilePath?: string | null
+): Promise<string | null> {
+  const entries = await readdir(folderPath, { withFileTypes: true });
+  const candidates = new Set(
+    entries
+    .filter((entry) => entry.isFile() && VALID_LOG_PATTERN.test(entry.name))
+      .map((entry) => path.join(folderPath, entry.name))
   );
 
-  withStats.sort(
-    (left, right) => right.stats.mtimeMs - left.stats.mtimeMs
+  if (currentFilePath && path.dirname(currentFilePath) === folderPath) {
+    candidates.add(currentFilePath);
+  }
+
+  if (candidates.size === 0) {
+    return null;
+  }
+
+  const withStats = (
+    await Promise.allSettled(
+      Array.from(candidates).map(async (candidate) => ({
+        candidate,
+        stats: await stat(candidate),
+        timestampMs: parseCombatLogTimestamp(candidate)
+      }))
+    )
+  )
+    .flatMap((result) => (result.status === "fulfilled" ? [result.value] : []))
+    .filter((candidate) => candidate.stats.isFile());
+
+  if (withStats.length === 0) {
+    return null;
+  }
+
+  withStats.sort((left, right) =>
+    compareCandidates(
+      {
+        candidate: left.candidate,
+        timestampMs: left.timestampMs,
+        mtimeMs: left.stats.mtimeMs
+      },
+      {
+        candidate: right.candidate,
+        timestampMs: right.timestampMs,
+        mtimeMs: right.stats.mtimeMs
+      }
+    )
   );
 
   return withStats[0]?.candidate ?? null;

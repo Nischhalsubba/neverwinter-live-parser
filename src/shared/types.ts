@@ -151,6 +151,7 @@ export type AppState = {
 };
 
 export type MonitoringConfig = {
-  folderPath: string;
+  folderPath?: string | null;
+  filePath?: string | null;
   inactivityTimeoutMs: number;
 };
