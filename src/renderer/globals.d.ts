@@ -10,7 +10,7 @@ type NeverwinterApi = {
 
 declare global {
   interface Window {
-    neverwinterApi: NeverwinterApi;
+    neverwinterApi?: NeverwinterApi;
   }
 }
 

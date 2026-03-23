@@ -37,33 +37,52 @@ export function App() {
   const [view, setView] = useState<View>("setup");
   const [folderInput, setFolderInput] = useState("");
   const [starting, setStarting] = useState(false);
+  const [isDesktopRuntime, setIsDesktopRuntime] = useState(
+    Boolean(window.neverwinterApi)
+  );
 
   useEffect(() => {
-    void window.neverwinterApi.getState().then((snapshot) => {
+    const api = window.neverwinterApi;
+    setIsDesktopRuntime(Boolean(api));
+    if (!api) {
+      return;
+    }
+
+    void api.getState().then((snapshot) => {
       setState(snapshot);
       setFolderInput(snapshot.selectedLogFolder ?? "");
     });
 
-    return window.neverwinterApi.onState((snapshot) => {
+    return api.onState((snapshot) => {
       setState(snapshot);
     });
   }, []);
 
   async function chooseFolder() {
-    const folder = await window.neverwinterApi.selectFolder();
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const folder = await api.selectFolder();
     if (folder) {
       setFolderInput(folder);
     }
   }
 
   async function startMonitoring() {
+    const api = window.neverwinterApi;
+    if (!api || !folderInput.trim()) {
+      return;
+    }
+
     if (!folderInput.trim()) {
       return;
     }
 
     setStarting(true);
     try {
-      const snapshot = await window.neverwinterApi.startMonitoring({
+      const snapshot = await api.startMonitoring({
         folderPath: folderInput.trim(),
         inactivityTimeoutMs: 10_000
       });
@@ -75,7 +94,12 @@ export function App() {
   }
 
   async function stopMonitoring() {
-    const snapshot = await window.neverwinterApi.stopMonitoring();
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const snapshot = await api.stopMonitoring();
     setState(snapshot);
   }
 
@@ -90,6 +114,12 @@ export function App() {
           <p className="muted">
             Logic-first desktop monitor for local combat logs.
           </p>
+          {!isDesktopRuntime && (
+            <div className="runtime-banner">
+              Browser preview only. Live monitoring requires the Electron desktop
+              app on Windows.
+            </div>
+          )}
         </div>
         <nav className="nav">
           {(["setup", "live", "recent", "debug"] as View[]).map((item) => (
@@ -127,11 +157,13 @@ export function App() {
               <button onClick={() => void chooseFolder()}>Select Folder</button>
               <button
                 onClick={() => void startMonitoring()}
-                disabled={starting || !folderInput.trim()}
+                disabled={starting || !folderInput.trim() || !isDesktopRuntime}
               >
                 Start Monitoring
               </button>
-              <button onClick={() => void stopMonitoring()}>Stop Monitoring</button>
+              <button onClick={() => void stopMonitoring()} disabled={!isDesktopRuntime}>
+                Stop Monitoring
+              </button>
             </div>
 
             <div className="details-grid">
@@ -148,6 +180,27 @@ export function App() {
                 <strong>{formatNumber(state.debug.currentOffset)}</strong>
               </article>
             </div>
+
+            {!isDesktopRuntime && (
+              <article className="panel-section">
+                <div className="section-header">
+                  <h3>Why Vercel Looks Empty</h3>
+                </div>
+                <div className="table">
+                  <div className="row issue">
+                    <span>
+                      This app reads local combat logs through Electron IPC, which
+                      does not exist in a hosted browser deployment.
+                    </span>
+                    <small>
+                      Use `npm run dev` locally for the desktop app, or keep Vercel
+                      as a static project page and add a separate browser-safe demo
+                      mode later.
+                    </small>
+                  </div>
+                </div>
+              </article>
+            )}
           </section>
         )}
 

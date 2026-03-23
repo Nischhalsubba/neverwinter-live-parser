@@ -71,6 +71,16 @@ input {
   color: #8da1bf;
 }
 
+.runtime-banner {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 186, 92, 0.25);
+  background: rgba(73, 49, 8, 0.35);
+  color: #ffd28d;
+  line-height: 1.4;
+}
+
 .nav {
   display: grid;
   gap: 0.75rem;
