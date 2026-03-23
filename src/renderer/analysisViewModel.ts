@@ -194,6 +194,17 @@ export function buildPlayerRows(
   }
 
   return Array.from(groups.entries())
+    .filter(([groupKey, members]) => {
+      if (groupKey.startsWith("P[")) {
+        return true;
+      }
+
+      return members.some(
+        (member) =>
+          member.type === "player" ||
+          (member.type === "companion" && member.ownerId.startsWith("P["))
+      );
+    })
     .map(([groupKey, members]) => {
       const primary =
         members.find((member) => member.type === "player" || member.id === member.ownerId) ??

@@ -26,7 +26,12 @@ function parseTimestamp(input: string): number {
   return Number.isNaN(candidate.getTime()) ? Date.now() : candidate.getTime();
 }
 
-function parseActorType(ref: string | undefined): CombatEvent["sourceType"] {
+function parseActorType(
+  ref: string | undefined,
+  name: string | undefined,
+  ownerRef?: string,
+  isSource = false
+): CombatEvent["sourceType"] {
   if (!ref) {
     return "unknown";
   }
@@ -34,7 +39,18 @@ function parseActorType(ref: string | undefined): CombatEvent["sourceType"] {
     return "player";
   }
   if (ref.startsWith("C[")) {
-    return "companion";
+    if (
+      isSource &&
+      ownerRef?.startsWith("P[") &&
+      ownerRef !== ref &&
+      isCompanionSource(ref, name)
+    ) {
+      return "companion";
+    }
+    if (isSource && ownerRef?.startsWith("P[") && ownerRef !== ref) {
+      return "player";
+    }
+    return "npc";
   }
   if (ref.startsWith("E[")) {
     return "npc";
@@ -42,26 +58,78 @@ function parseActorType(ref: string | undefined): CombatEvent["sourceType"] {
   return "unknown";
 }
 
+function normalizeName(value: string | undefined): string {
+  return (value ?? "").trim().toLowerCase();
+}
+
+function isCompanionSource(ref: string, name: string | undefined): boolean {
+  const loweredName = normalizeName(name);
+  const loweredRef = ref.toLowerCase();
+  return loweredRef.includes("pet_") || loweredName.includes("companion") || loweredName.includes("augment");
+}
+
+function isActorReference(ref: string | undefined): boolean {
+  if (!ref) {
+    return false;
+  }
+  return ref === "*" || ref.startsWith("P[") || ref.startsWith("C[") || ref.startsWith("E[");
+}
+
+function findReferenceIndexes(parts: string[]): number[] {
+  const indexes: number[] = [];
+  for (let index = 0; index < parts.length; index += 1) {
+    if (isActorReference(parts[index]?.trim())) {
+      indexes.push(index);
+    }
+  }
+  return indexes;
+}
+
 function inferEventType(
   amount: number,
   school: string,
   flags: string[],
-  targetName: string
+  sourceType: CombatEvent["sourceType"],
+  targetType: CombatEvent["targetType"]
 ): CombatEvent["eventType"] {
-  if (amount <= 0) {
+  const loweredSchool = school.toLowerCase();
+  const loweredFlags = flags.map((flag) => flag.toLowerCase());
+  const isDisplayOnly =
+    loweredFlags.includes("showpowerdisplayname") ||
+    loweredFlags.includes("immune") ||
+    loweredSchool === "null" ||
+    loweredSchool === "power" ||
+    loweredSchool === "soulweave" ||
+    loweredSchool === "stat_power" ||
+    loweredSchool === "damagetrigger";
+
+  if (isDisplayOnly || amount === 0) {
     return "unknown";
   }
 
-  const joined = `${school} ${flags.join(" ")}`.toLowerCase();
-  if (joined.includes("heal")) {
+  if (amount < 0 && loweredSchool === "hitpoints") {
     return "heal";
   }
 
-  if (targetName) {
+  if (amount > 0) {
+    if (sourceType === "npc" && (targetType === "player" || targetType === "companion")) {
+      return "damageTaken";
+    }
     return "damage";
   }
 
   return "unknown";
+}
+
+function resolveEventAmount(eventType: CombatEvent["eventType"], magnitude: number, amount: number): number {
+  const absoluteMagnitude = Math.abs(magnitude);
+  const absoluteAmount = Math.abs(amount);
+
+  if (eventType === "damage" || eventType === "heal" || eventType === "damageTaken") {
+    return Math.max(absoluteMagnitude, absoluteAmount);
+  }
+
+  return amount;
 }
 
 function buildUnknown(line: string, reason: string): ParseResult {
@@ -95,38 +163,70 @@ export function parseLine(line: string): ParseResult {
   const payload = trimmed.slice(separatorIndex + 2);
   const parts = payload.split(",");
 
-  if (parts.length < 10) {
+  if (parts.length < 12) {
     return buildUnknown(line, "Unexpected Neverwinter field count");
   }
 
-  const hasExplicitSourceActor = parts.length >= 12;
-  const sourceOwnerName = parts[0]?.trim() ?? "";
-  const sourceOwnerId = parts[1]?.trim() ?? "";
-  const sourceName = hasExplicitSourceActor
-    ? parts[2]?.trim() || sourceOwnerName
-    : sourceOwnerName;
-  const sourceId = hasExplicitSourceActor
-    ? parts[3]?.trim() || sourceOwnerId
-    : sourceOwnerId;
-  const targetName = parts[hasExplicitSourceActor ? 4 : 2]?.trim() ?? "";
-  const targetId = parts[hasExplicitSourceActor ? 5 : 3]?.trim() ?? "";
-  const abilityName = parts[hasExplicitSourceActor ? 6 : 4]?.trim() ?? "";
-  const abilityId = parts[hasExplicitSourceActor ? 7 : 5]?.trim() ?? "";
-  const school = parts[hasExplicitSourceActor ? 8 : 6]?.trim() ?? "";
-  const flagsField = parts[hasExplicitSourceActor ? 9 : 7]?.trim() ?? "";
-  const magnitude = Number(parts[hasExplicitSourceActor ? 10 : 8] ?? "0");
-  const amount = Number(parts[hasExplicitSourceActor ? 11 : 9] ?? "0");
+  const searchableParts = parts.slice(0, parts.length - 5);
+  const referenceIndexes = findReferenceIndexes(searchableParts);
+
+  if (referenceIndexes.length < 1) {
+    return buildUnknown(line, "Could not align Neverwinter actor fields");
+  }
+
+  const targetRefIndex = referenceIndexes.at(-1)!;
+  const sourceRefIndex = referenceIndexes.length >= 2 ? referenceIndexes.at(-2)! : -1;
+  const ownerRefIndex = referenceIndexes.length >= 3 ? referenceIndexes.at(-3)! : -1;
+
+  const sourceOwnerName =
+    ownerRefIndex >= 0
+      ? parts.slice(0, ownerRefIndex).join(",").trim()
+      : "";
+  const sourceOwnerId = ownerRefIndex >= 0 ? parts[ownerRefIndex]?.trim() ?? "" : "";
+  const sourceNameField =
+    sourceRefIndex >= 0
+      ? parts.slice(ownerRefIndex + 1, sourceRefIndex).join(",").trim()
+      : "";
+  const sourceIdField = sourceRefIndex >= 0 ? parts[sourceRefIndex]?.trim() ?? "" : "";
+  const targetId = parts[targetRefIndex]?.trim() ?? "";
+  const targetName = parts
+    .slice(sourceRefIndex + 1, targetRefIndex)
+    .join(",")
+    .trim();
+  const abilityName = parts
+    .slice(targetRefIndex + 1, parts.length - 5)
+    .join(",")
+    .trim();
+  const abilityId = parts[parts.length - 5]?.trim() ?? "";
+  const school = parts[parts.length - 4]?.trim() ?? "";
+  const flagsField = parts[parts.length - 3]?.trim() ?? "";
+  const magnitude = Number(parts[parts.length - 2] ?? "0");
+  const amount = Number(parts[parts.length - 1] ?? "0");
+  const hasExplicitSourceActor =
+    sourceNameField.length > 0 && sourceIdField.length > 0 && sourceIdField !== "*";
+  const sourceName = hasExplicitSourceActor ? sourceNameField : sourceOwnerName;
+  const sourceId = hasExplicitSourceActor ? sourceIdField : sourceOwnerId;
   const flags = flagsField
     ? flagsField
         .split("|")
         .map((flag) => flag.trim())
         .filter(Boolean)
     : [];
-  const eventType = inferEventType(amount, school, flags, targetName);
+  const sourceType = parseActorType(sourceId, sourceName, sourceOwnerId, true);
+  const targetType = parseActorType(targetId, targetName, undefined, false);
+  const eventType = inferEventType(amount, school, flags, sourceType, targetType);
+
+  if (targetRefIndex < 0 || !isActorReference(targetId)) {
+    return buildUnknown(line, "Could not align Neverwinter actor fields");
+  }
 
   if (!abilityName && !targetName) {
     return buildUnknown(line, "Line does not describe a combat action");
   }
+
+  const resolvedAmount = resolveEventAmount(eventType, magnitude, amount);
+  const normalizedMagnitude =
+    eventType === "heal" ? Math.abs(magnitude) : magnitude;
 
   const event: CombatEvent = {
     raw: line,
@@ -136,14 +236,14 @@ export function parseLine(line: string): ParseResult {
     sourceId,
     sourceOwnerName: sourceOwnerName || sourceName,
     sourceOwnerId: sourceOwnerId || sourceId,
-    sourceType: parseActorType(sourceId),
+    sourceType,
     targetName,
     targetId,
-    targetType: parseActorType(targetId),
+    targetType,
     abilityName,
     abilityId,
-    amount: Number.isFinite(amount) ? amount : undefined,
-    magnitude: Number.isFinite(magnitude) ? magnitude : undefined,
+    amount: Number.isFinite(resolvedAmount) ? resolvedAmount : undefined,
+    magnitude: Number.isFinite(normalizedMagnitude) ? normalizedMagnitude : undefined,
     critical: flags.some((flag) => flag.toLowerCase() === "critical"),
     school,
     flags,
