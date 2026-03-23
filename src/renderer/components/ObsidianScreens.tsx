@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import {
   Area,
   AreaChart,
@@ -170,6 +170,26 @@ function getCombatLogTimestampLabel(filePath: string | null): string {
 
   const [, year, month, day, hour, minute, second] = match;
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+function buildLiveTargetFocus(players: PlayerRow[]): Array<{ name: string; totalDamage: number; hits: number }> {
+  const totals = new Map<string, { name: string; totalDamage: number; hits: number }>();
+
+  for (const player of players) {
+    for (const target of player.targets) {
+      const current = totals.get(target.targetName) ?? {
+        name: target.targetName,
+        totalDamage: 0,
+        hits: 0
+      };
+
+      current.totalDamage += target.totalDamage;
+      current.hits += target.hits;
+      totals.set(target.targetName, current);
+    }
+  }
+
+  return Array.from(totals.values()).sort((left, right) => right.totalDamage - left.totalDamage);
 }
 
 function classifyLineTags(line: string): Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> {
@@ -525,13 +545,13 @@ function SetupView(props: ShellProps) {
     <section className="oa-screen">
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Configuration & Setup</p>
-        <h1>Initialize the tactical data stream</h1>
-        <p>Link your Neverwinter combat log directory, validate parser health, and launch a live session or analyze a recorded combat log.</p>
+        <h1>Connect the Neverwinter combat log</h1>
+        <p>Select the active `combatlog_YYYY-MM-DD_HH-MM-SS.log` directory or a single recorded log file, then track or analyze only what the parser reads from that log.</p>
       </header>
 
       <div className="oa-setup-grid">
         <section className="oa-panel oa-panel-hero">
-          <SectionHeading icon="folder_special" eyebrow="Log Directory Configuration" title="Live watch and recorded log analysis" />
+          <SectionHeading icon="folder_special" eyebrow="Combat Log Source" title="Live watch and recorded log analysis" />
           <div className="oa-field-stack">
             <label className="oa-field">
               <span>Combat log path</span>
@@ -578,7 +598,7 @@ function SetupView(props: ShellProps) {
 
             <div className="oa-mini-panel">
               <strong>Latest tracked combat log</strong>
-              <p>{state.activeLogFile ?? "No live log selected yet"}</p>
+              <p>{state.activeLogFile ?? "No active combat log selected"}</p>
               <p className="oa-muted-copy">Timestamp: {getCombatLogTimestampLabel(state.activeLogFile)}</p>
             </div>
 
@@ -618,7 +638,7 @@ function SetupView(props: ShellProps) {
         </section>
 
         <section className="oa-panel">
-          <SectionHeading icon="monitor_heart" eyebrow="Parse Health Dashboard" title="Signal integrity" />
+          <SectionHeading icon="monitor_heart" eyebrow="Combat Log Parse Health" title="Signal integrity" />
           <div className="oa-card-grid three">
             <StatCard
               label="Lines Processed"
@@ -643,7 +663,7 @@ function SetupView(props: ShellProps) {
         </section>
 
         <section className="oa-panel">
-          <SectionHeading icon="memory" eyebrow="Telemetry Environment" title="Runtime profile" />
+          <SectionHeading icon="memory" eyebrow="Runtime From Current Log" title="Runtime profile" />
           <div className="oa-kv-list">
             <div><span>Runtime</span><strong>{getRuntimeLabel(state)}</strong></div>
             <div><span>Analysis Mode</span><strong>{state.analysis.mode}</strong></div>
@@ -676,6 +696,9 @@ function SetupView(props: ShellProps) {
 function LiveOverviewView({
   props,
   filteredPlayers,
+  liveFocusTarget,
+  liveFocusOptions,
+  onLiveFocusChange,
   searchQuery,
   onSearchChange,
   compareMode,
@@ -683,6 +706,9 @@ function LiveOverviewView({
 }: {
   props: ShellProps;
   filteredPlayers: PlayerRow[];
+  liveFocusTarget: string;
+  liveFocusOptions: Array<{ name: string; totalDamage: number; hits: number }>;
+  onLiveFocusChange: (target: string) => void;
   searchQuery: string;
   onSearchChange: (value: string) => void;
   compareMode: boolean;
@@ -720,10 +746,30 @@ function LiveOverviewView({
         </div>
       </header>
 
+      <div className="oa-focus-bar">
+        <span className="oa-focus-label"><Icon name="adjust" className="oa-inline-icon" /> Live Focus:</span>
+        <button
+          className={`oa-encounter-chip ${liveFocusTarget === "all" ? "active" : ""}`}
+          onClick={() => onLiveFocusChange("all")}
+        >
+          All Targets
+        </button>
+        {liveFocusOptions.slice(0, 8).map((target) => (
+          <button
+            className={`oa-encounter-chip ${liveFocusTarget === target.name ? "active" : ""}`}
+            key={target.name}
+            onClick={() => onLiveFocusChange(target.name)}
+          >
+            <Icon name="gps_fixed" className="oa-chip-icon" />
+            {target.name} ({formatShort(target.totalDamage)})
+          </button>
+        ))}
+      </div>
+
       <div className="oa-card-grid four">
         <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={current ? "current encounter" : "waiting for live combat"} />
-        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live players tracked`} />
-        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Live class inference confidence" />
+        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live player rows from combat log`} />
+        <StatCard label="Tracked Targets" value={formatNumber(liveFocusOptions.length)} icon="my_location" hint={liveFocusTarget === "all" ? "all current targets hit" : `focused on ${liveFocusTarget}`} />
         <StatCard label="Total Time" value={formatDuration(liveDurationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
       </div>
 
@@ -1220,7 +1266,7 @@ function PlayerView({
               <h1>{player.displayName}</h1>
               <span className="oa-badge">{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</span>
             </div>
-            <p>Focus: {player.topSkills[0]?.abilityName ?? "No parsed power events"}</p>
+            <p>Combat log focus: {player.topSkills[0]?.abilityName ?? "No parsed power events"}</p>
           </div>
         </div>
         <div className="oa-hero-metrics">
@@ -1295,7 +1341,7 @@ function RecentView({ state }: { state: AppState }) {
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Encounter Archive</p>
         <h1>Completed engagements</h1>
-        <p>Stored encounters from the current session. Use these for focused post-run review.</p>
+        <p>Encounter summaries parsed from the current combat log session for post-run review.</p>
       </header>
       <section className="oa-panel">
         <SectionHeading icon="history_edu" eyebrow="Archive" title="Recent encounters" />
@@ -1654,6 +1700,7 @@ function GlobalSearchPanel({
 export function ObsidianScreens(props: ShellProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [compareMode, setCompareMode] = useState(false);
+  const [liveFocusTarget, setLiveFocusTarget] = useState("all");
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
   const runtimeLabel = getRuntimeLabel(props.state);
@@ -1686,10 +1733,29 @@ export function ObsidianScreens(props: ShellProps) {
   };
 
   const filteredPlayers = useMemo(() => filterRows(props.playerRows), [props.playerRows, searchQuery]);
-  const filteredLivePlayers = useMemo(
-    () => filterRows(props.livePlayerRows),
-    [props.livePlayerRows, searchQuery]
+  const liveFocusOptions = useMemo(
+    () => buildLiveTargetFocus(props.livePlayerRows),
+    [props.livePlayerRows]
   );
+  const focusFilteredLivePlayers = useMemo(() => {
+    if (liveFocusTarget === "all") {
+      return props.livePlayerRows;
+    }
+
+    return props.livePlayerRows.filter((player) =>
+      player.targets.some((target) => target.targetName === liveFocusTarget)
+    );
+  }, [liveFocusTarget, props.livePlayerRows]);
+  const filteredLivePlayers = useMemo(
+    () => filterRows(focusFilteredLivePlayers),
+    [focusFilteredLivePlayers, searchQuery]
+  );
+
+  useEffect(() => {
+    if (liveFocusTarget !== "all" && !liveFocusOptions.some((target) => target.name === liveFocusTarget)) {
+      setLiveFocusTarget("all");
+    }
+  }, [liveFocusOptions, liveFocusTarget]);
 
   const rootStyle = {
     "--oa-overlay-opacity": `${settings.overlayOpacity / 100}`
@@ -1733,6 +1799,7 @@ export function ObsidianScreens(props: ShellProps) {
               <Icon name="sensors" />
               <span>Live</span>
               <Icon name="expand_more" className="oa-nav-expand" />
+              <span className={`oa-nav-status-dot ${sessionIndicator.tone}`} />
             </button>
             <div className="oa-subnav">
               {DETAIL_TABS.map((tab) => (
@@ -1781,6 +1848,7 @@ export function ObsidianScreens(props: ShellProps) {
               <span className="oa-system-dot" />
               <span>{sessionIndicator.label}</span>
             </div>
+            <span className="oa-sidebar-status-detail">{sessionIndicator.detail}</span>
           </div>
         </div>
       </aside>
@@ -1826,6 +1894,9 @@ export function ObsidianScreens(props: ShellProps) {
             <LiveOverviewView
               props={props}
               filteredPlayers={filteredLivePlayers}
+              liveFocusTarget={liveFocusTarget}
+              liveFocusOptions={liveFocusOptions}
+              onLiveFocusChange={setLiveFocusTarget}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               compareMode={compareMode}
