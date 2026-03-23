@@ -14,6 +14,7 @@ type MutableEncounter = {
   critCount: number;
   hitCount: number;
   skillTotals: Map<string, SkillStat>;
+  targetTotals: Map<string, number>;
   eventCount: number;
   lastActivityAt: number;
 };
@@ -28,6 +29,7 @@ export function createEncounter(id: string, startedAt: number): MutableEncounter
     critCount: 0,
     hitCount: 0,
     skillTotals: new Map(),
+    targetTotals: new Map(),
     eventCount: 0,
     lastActivityAt: startedAt
   };
@@ -44,6 +46,12 @@ export function applyEventToEncounter(
   if (event.eventType === "damage") {
     encounter.totalDamage += amount;
     encounter.hitCount += 1;
+    if (event.targetName) {
+      encounter.targetTotals.set(
+        event.targetName,
+        (encounter.targetTotals.get(event.targetName) ?? 0) + amount
+      );
+    }
   } else if (event.eventType === "heal") {
     encounter.totalHealing += amount;
     encounter.hitCount += 1;
@@ -80,9 +88,14 @@ export function finalizeEncounter(
   const topSkills = Array.from(encounter.skillTotals.values())
     .sort((left, right) => right.total - left.total)
     .slice(0, 5);
+  const primaryTargetName =
+    Array.from(encounter.targetTotals.entries()).sort(
+      (left, right) => right[1] - left[1]
+    )[0]?.[0] ?? "Encounter";
 
   return {
     id: encounter.id,
+    label: primaryTargetName,
     startedAt: encounter.startedAt,
     endedAt,
     durationMs,

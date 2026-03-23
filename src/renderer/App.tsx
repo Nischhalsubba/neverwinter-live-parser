@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import type { AppState, CombatantSnapshot, SkillStat } from "../shared/types";
+import type {
+  AppState,
+  CombatantEncounterStat,
+  CombatantSnapshot,
+  EncounterSnapshot,
+  SkillStat,
+  TargetStat,
+  TimelinePoint
+} from "../shared/types";
 
 const INITIAL_STATE: AppState = {
   watcherStatus: "idle",
@@ -27,6 +35,16 @@ const INITIAL_STATE: AppState = {
 };
 
 type View = "setup" | "live" | "players" | "recent" | "debug";
+type DetailTab =
+  | "overview"
+  | "timeline"
+  | "damageOut"
+  | "healing"
+  | "damageTaken"
+  | "timing"
+  | "positioning"
+  | "other"
+  | "deaths";
 
 type PlayerRow = {
   id: string;
@@ -37,11 +55,28 @@ type PlayerRow = {
   hits: number;
   critCount: number;
   critRate: number;
+  flankRate: number;
   dps: number;
   hps: number;
   topSkills: SkillStat[];
   companionCount: number;
+  targets: TargetStat[];
+  timeline: TimelinePoint[];
+  encounters: CombatantEncounterStat[];
+  deaths: number;
 };
+
+const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
+  { id: "overview", label: "Overview" },
+  { id: "timeline", label: "Timeline & Powers" },
+  { id: "damageOut", label: "Damage Out" },
+  { id: "healing", label: "Healing" },
+  { id: "damageTaken", label: "Damage Taken" },
+  { id: "timing", label: "Timing" },
+  { id: "positioning", label: "Positioning" },
+  { id: "other", label: "Other" },
+  { id: "deaths", label: "Deaths" }
+];
 
 function formatNumber(value: number): string {
   return new Intl.NumberFormat().format(Math.round(value));
@@ -84,7 +119,67 @@ function mergeSkills(skills: SkillStat[]): SkillStat[] {
 
   return Array.from(totals.values())
     .sort((left, right) => right.total - left.total)
-    .slice(0, 8);
+    .slice(0, 12);
+}
+
+function mergeTargets(targets: TargetStat[]): TargetStat[] {
+  const totals = new Map<string, TargetStat>();
+  for (const target of targets) {
+    const current = totals.get(target.targetName) ?? {
+      targetName: target.targetName,
+      totalDamage: 0,
+      hits: 0,
+      critCount: 0
+    };
+    current.totalDamage += target.totalDamage;
+    current.hits += target.hits;
+    current.critCount += target.critCount;
+    totals.set(target.targetName, current);
+  }
+
+  return Array.from(totals.values()).sort(
+    (left, right) => right.totalDamage - left.totalDamage
+  );
+}
+
+function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
+  const totals = new Map<number, TimelinePoint>();
+  for (const point of points) {
+    const current = totals.get(point.second) ?? {
+      second: point.second,
+      damage: 0,
+      healing: 0,
+      hits: 0
+    };
+    current.damage += point.damage;
+    current.healing += point.healing;
+    current.hits += point.hits;
+    totals.set(point.second, current);
+  }
+
+  return Array.from(totals.values()).sort((left, right) => left.second - right.second);
+}
+
+function mergeEncounters(
+  encounters: CombatantEncounterStat[]
+): CombatantEncounterStat[] {
+  const totals = new Map<string, CombatantEncounterStat>();
+  for (const encounter of encounters) {
+    const current = totals.get(encounter.encounterId) ?? {
+      encounterId: encounter.encounterId,
+      totalDamage: 0,
+      totalHealing: 0,
+      damageTaken: 0,
+      hits: 0
+    };
+    current.totalDamage += encounter.totalDamage;
+    current.totalHealing += encounter.totalHealing;
+    current.damageTaken += encounter.damageTaken;
+    current.hits += encounter.hits;
+    totals.set(encounter.encounterId, current);
+  }
+
+  return Array.from(totals.values());
 }
 
 function buildPlayerRows(
@@ -127,6 +222,10 @@ function buildPlayerRows(
         (total, member) => total + member.critCount,
         0
       );
+      const flankCount = sourceMembers.reduce(
+        (total, member) => total + member.flankRate * member.hits,
+        0
+      );
       const dps = sourceMembers.reduce((total, member) => total + member.dps, 0);
       const hps = sourceMembers.reduce((total, member) => total + member.hps, 0);
       const topSkills = mergeSkills(sourceMembers.flatMap((member) => member.topSkills));
@@ -140,23 +239,88 @@ function buildPlayerRows(
         hits,
         critCount,
         critRate: hits === 0 ? 0 : critCount / hits,
+        flankRate: hits === 0 ? 0 : flankCount / hits,
         dps,
         hps,
         topSkills,
-        companionCount: members.filter((member) => member.type === "companion").length
+        companionCount: members.filter((member) => member.type === "companion").length,
+        targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
+        timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
+        encounters: mergeEncounters(sourceMembers.flatMap((member) => member.encounters)),
+        deaths: sourceMembers.reduce((total, member) => total + member.deaths, 0)
       };
     })
     .sort((left, right) => right.totalDamage - left.totalDamage);
 }
 
+function MetricCard({ label, value }: { label: string; value: string }) {
+  return (
+    <article className="hero-card">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </article>
+  );
+}
+
+function TimelineChart({
+  points,
+  encounter
+}: {
+  points: TimelinePoint[];
+  encounter: EncounterSnapshot | null;
+}) {
+  const filteredPoints =
+    encounter === null
+      ? points
+      : points.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000));
+  const width = 900;
+  const height = 260;
+  const maxValue = Math.max(1, ...filteredPoints.map((point) => point.damage));
+  const polyline = filteredPoints
+    .map((point, index) => {
+      const x =
+        filteredPoints.length <= 1
+          ? 0
+          : (index / (filteredPoints.length - 1)) * width;
+      const y = height - (point.damage / maxValue) * (height - 24);
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <div className="chart-shell">
+      <div className="chart-meta">
+        <span>Damage Timeline</span>
+        <strong>{encounter ? encounter.label : "All Encounters"}</strong>
+      </div>
+      {filteredPoints.length > 0 ? (
+        <svg className="timeline-chart" viewBox={`0 0 ${width} ${height}`}>
+          <polyline
+            fill="none"
+            stroke="#8fa5ff"
+            strokeWidth="3"
+            points={polyline}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      ) : (
+        <div className="empty-chart">No timeline data for this focus selection</div>
+      )}
+    </div>
+  );
+}
+
 export function App() {
   const [state, setState] = useState(INITIAL_STATE);
   const [view, setView] = useState<View>("setup");
+  const [detailTab, setDetailTab] = useState<DetailTab>("overview");
   const [folderInput, setFolderInput] = useState("");
   const [importFilePath, setImportFilePath] = useState("");
   const [starting, setStarting] = useState(false);
   const [includeCompanions, setIncludeCompanions] = useState(true);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const [selectedEncounterId, setSelectedEncounterId] = useState("all");
   const [isDesktopRuntime, setIsDesktopRuntime] = useState(
     Boolean(window.neverwinterApi)
   );
@@ -185,6 +349,14 @@ export function App() {
     [includeCompanions, state.analysis.combatants]
   );
 
+  const availableEncounters = useMemo(
+    () =>
+      [...state.recentEncounters]
+        .sort((left, right) => left.startedAt - right.startedAt)
+        .concat(state.currentEncounter ? [state.currentEncounter] : []),
+    [state.currentEncounter, state.recentEncounters]
+  );
+
   useEffect(() => {
     if (!playerRows.length) {
       setSelectedPlayerId(null);
@@ -196,8 +368,28 @@ export function App() {
     }
   }, [playerRows, selectedPlayerId]);
 
+  useEffect(() => {
+    if (
+      selectedEncounterId !== "all" &&
+      !availableEncounters.some((encounter) => encounter.id === selectedEncounterId)
+    ) {
+      setSelectedEncounterId("all");
+    }
+  }, [availableEncounters, selectedEncounterId]);
+
   const selectedPlayer =
     playerRows.find((player) => player.id === selectedPlayerId) ?? null;
+  const selectedEncounter =
+    selectedEncounterId === "all"
+      ? null
+      : availableEncounters.find((encounter) => encounter.id === selectedEncounterId) ??
+        null;
+  const selectedPlayerEncounter =
+    selectedPlayer && selectedEncounter
+      ? selectedPlayer.encounters.find(
+          (encounter) => encounter.encounterId === selectedEncounter.id
+        ) ?? null
+      : null;
 
   async function chooseFolder() {
     const api = window.neverwinterApi;
@@ -269,6 +461,19 @@ export function App() {
   }
 
   const current = state.currentEncounter;
+  const displayedDamage =
+    selectedPlayerEncounter?.totalDamage ?? selectedPlayer?.totalDamage ?? 0;
+  const displayedHealing =
+    selectedPlayerEncounter?.totalHealing ?? selectedPlayer?.totalHealing ?? 0;
+  const displayedTaken =
+    selectedPlayerEncounter?.damageTaken ?? selectedPlayer?.damageTaken ?? 0;
+  const displayedHits = selectedPlayerEncounter?.hits ?? selectedPlayer?.hits ?? 0;
+  const displayedDurationMs = selectedEncounter?.durationMs ?? state.analysis.durationMs;
+  const displayedDps =
+    displayedDurationMs > 0 ? displayedDamage / (displayedDurationMs / 1000) : 0;
+  const peakTimeline = selectedPlayer
+    ? [...selectedPlayer.timeline].sort((left, right) => right.damage - left.damage)[0]
+    : null;
 
   return (
     <div className="shell">
@@ -455,26 +660,32 @@ export function App() {
               </article>
             </div>
 
-            <div className="player-layout">
+            <div className="player-layout single-column">
               <article className="panel-section">
                 <div className="section-header">
                   <h3>Players</h3>
                   <span>{playerRows.length}</span>
                 </div>
                 <div className="table">
-                  <div className="row row-head">
+                  <div className="row row-head row-grid-player">
                     <strong>Player</strong>
                     <strong>Damage</strong>
                     <strong>DPS</strong>
                     <strong>Hits</strong>
+                    <strong>Duration</strong>
                   </div>
                   {playerRows.map((player) => (
                     <button
                       className={
-                        selectedPlayerId === player.id ? "row selectable active-row" : "row selectable"
+                        selectedPlayerId === player.id
+                          ? "row selectable active-row row-grid-player"
+                          : "row selectable row-grid-player"
                       }
                       key={player.id}
-                      onClick={() => setSelectedPlayerId(player.id)}
+                      onClick={() => {
+                        setSelectedPlayerId(player.id);
+                        setDetailTab("overview");
+                      }}
                     >
                       <span>
                         {player.displayName}
@@ -488,6 +699,7 @@ export function App() {
                       <strong>{formatShort(player.totalDamage)}</strong>
                       <strong>{formatShort(player.dps)}</strong>
                       <strong>{formatNumber(player.hits)}</strong>
+                      <strong>{formatDuration(state.analysis.durationMs)}</strong>
                     </button>
                   ))}
                   {!playerRows.length && (
@@ -500,59 +712,247 @@ export function App() {
               </article>
 
               <article className="panel-section">
-                <div className="section-header">
-                  <h3>{selectedPlayer ? selectedPlayer.displayName : "Player Detail"}</h3>
-                  <span>
-                    {includeCompanions ? "With companion damage" : "Without companion damage"}
-                  </span>
+                <div className="detail-header">
+                  <div>
+                    <h3>{selectedPlayer ? selectedPlayer.displayName : "Player Detail"}</h3>
+                    <p className="muted">
+                      {includeCompanions ? "With companion damage" : "Without companion damage"}
+                    </p>
+                  </div>
+                  <button onClick={() => setIncludeCompanions((value) => !value)}>
+                    {includeCompanions ? "Pets Included" : "Pets Excluded"}
+                  </button>
+                </div>
+
+                <div className="focus-strip">
+                  <span className="focus-label">Focus</span>
+                  <button
+                    className={selectedEncounterId === "all" ? "chip active" : "chip"}
+                    onClick={() => setSelectedEncounterId("all")}
+                  >
+                    All Encounters
+                  </button>
+                  {availableEncounters.map((encounter, index) => (
+                    <button
+                      className={selectedEncounterId === encounter.id ? "chip active" : "chip"}
+                      key={encounter.id}
+                      onClick={() => setSelectedEncounterId(encounter.id)}
+                    >
+                      #{index + 1} {encounter.label} ({formatDuration(encounter.durationMs)})
+                    </button>
+                  ))}
+                </div>
+
+                <div className="tab-strip">
+                  {DETAIL_TABS.map((tab) => (
+                    <button
+                      className={detailTab === tab.id ? "tab-button active" : "tab-button"}
+                      key={tab.id}
+                      onClick={() => setDetailTab(tab.id)}
+                    >
+                      {tab.label}
+                      {tab.id === "deaths" && selectedPlayer && (
+                        <span className="tab-badge">{selectedPlayer.deaths}</span>
+                      )}
+                    </button>
+                  ))}
                 </div>
 
                 {selectedPlayer ? (
                   <>
                     <div className="hero-grid compact-grid">
-                      <article className="hero-card">
-                        <span>Total Damage</span>
-                        <strong>{formatShort(selectedPlayer.totalDamage)}</strong>
-                      </article>
-                      <article className="hero-card">
-                        <span>DPS</span>
-                        <strong>{formatShort(selectedPlayer.dps)}</strong>
-                      </article>
-                      <article className="hero-card">
-                        <span>Total Healing</span>
-                        <strong>{formatShort(selectedPlayer.totalHealing)}</strong>
-                      </article>
-                      <article className="hero-card">
-                        <span>Damage Taken</span>
-                        <strong>{formatShort(selectedPlayer.damageTaken)}</strong>
-                      </article>
-                      <article className="hero-card">
-                        <span>Crit Rate</span>
-                        <strong>{(selectedPlayer.critRate * 100).toFixed(1)}%</strong>
-                      </article>
-                      <article className="hero-card">
-                        <span>Hits</span>
-                        <strong>{formatNumber(selectedPlayer.hits)}</strong>
-                      </article>
+                      <MetricCard label="Total Damage" value={formatShort(displayedDamage)} />
+                      <MetricCard label="DPS" value={formatShort(displayedDps)} />
+                      <MetricCard label="Healing Done" value={formatShort(displayedHealing)} />
+                      <MetricCard label="Damage Taken" value={formatShort(displayedTaken)} />
+                      <MetricCard label="Crit Rate" value={`${(selectedPlayer.critRate * 100).toFixed(1)}%`} />
+                      <MetricCard label="Flank Rate" value={`${(selectedPlayer.flankRate * 100).toFixed(1)}%`} />
+                      <MetricCard label="Hits" value={formatNumber(displayedHits)} />
+                      <MetricCard label="Duration" value={formatDuration(displayedDurationMs)} />
                     </div>
 
-                    <article className="panel-section nested-panel">
-                      <div className="section-header">
-                        <h3>Top Damage Powers</h3>
-                        <span>{selectedPlayer.topSkills.length}</span>
-                      </div>
-                      <div className="table">
-                        {selectedPlayer.topSkills.map((skill) => (
-                          <div className="row" key={skill.abilityName}>
-                            <span>{skill.abilityName}</span>
-                            <strong>{formatShort(skill.total)}</strong>
+                    {detailTab === "overview" && (
+                      <div className="detail-grid">
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Top Damage Powers</h3>
                           </div>
-                        ))}
-                        {!selectedPlayer.topSkills.length && (
-                          <div className="row empty">No skill breakdown yet</div>
-                        )}
+                          <div className="table">
+                            {selectedPlayer.topSkills.slice(0, 8).map((skill) => (
+                              <div className="row" key={skill.abilityName}>
+                                <span>{skill.abilityName}</span>
+                                <strong>{formatShort(skill.total)}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        </article>
+
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Damage By Target</h3>
+                          </div>
+                          <div className="table">
+                            {selectedPlayer.targets.slice(0, 8).map((target) => (
+                              <div className="row" key={target.targetName}>
+                                <span>{target.targetName}</span>
+                                <strong>{formatShort(target.totalDamage)}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        </article>
                       </div>
-                    </article>
+                    )}
+
+                    {detailTab === "timeline" && (
+                      <div className="detail-grid single-detail">
+                        <TimelineChart
+                          points={selectedPlayer.timeline}
+                          encounter={selectedEncounter}
+                        />
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Power Usage</h3>
+                          </div>
+                          <div className="table">
+                            {selectedPlayer.topSkills.map((skill) => (
+                              <div className="row" key={skill.abilityName}>
+                                <span>{skill.abilityName}</span>
+                                <span>{formatNumber(skill.hits)} hits</span>
+                                <strong>{formatShort(skill.total)}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        </article>
+                      </div>
+                    )}
+
+                    {detailTab === "damageOut" && (
+                      <div className="detail-grid">
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Targets</h3>
+                            <span>Damage on each mob, boss, or add</span>
+                          </div>
+                          <div className="table">
+                            {selectedPlayer.targets.map((target) => (
+                              <div className="row" key={target.targetName}>
+                                <span>{target.targetName}</span>
+                                <span>{formatNumber(target.hits)} hits</span>
+                                <strong>{formatShort(target.totalDamage)}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        </article>
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Boss or Phase Damage</h3>
+                          </div>
+                          <div className="table">
+                            {availableEncounters.map((encounter) => {
+                              const stat = selectedPlayer.encounters.find(
+                                (entry) => entry.encounterId === encounter.id
+                              );
+                              return (
+                                <div className="row" key={encounter.id}>
+                                  <span>{encounter.label}</span>
+                                  <span>{formatDuration(encounter.durationMs)}</span>
+                                  <strong>{formatShort(stat?.totalDamage ?? 0)}</strong>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </article>
+                      </div>
+                    )}
+
+                    {detailTab === "healing" && (
+                      <article className="panel-section nested-panel">
+                        <div className="hero-grid compact-grid">
+                          <MetricCard label="Healing Done" value={formatShort(displayedHealing)} />
+                          <MetricCard label="HPS" value={formatShort(selectedPlayer.hps)} />
+                          <MetricCard label="Hits" value={formatNumber(selectedPlayer.hits)} />
+                        </div>
+                      </article>
+                    )}
+
+                    {detailTab === "damageTaken" && (
+                      <article className="panel-section nested-panel">
+                        <div className="hero-grid compact-grid">
+                          <MetricCard label="Damage Taken" value={formatShort(displayedTaken)} />
+                          <MetricCard label="Duration" value={formatDuration(displayedDurationMs)} />
+                          <MetricCard label="Recorded Hits" value={formatNumber(displayedHits)} />
+                        </div>
+                      </article>
+                    )}
+
+                    {detailTab === "timing" && (
+                      <div className="detail-grid">
+                        <article className="panel-section nested-panel">
+                          <div className="section-header">
+                            <h3>Encounter Timing</h3>
+                          </div>
+                          <div className="table">
+                            {availableEncounters.map((encounter) => {
+                              const stat = selectedPlayer.encounters.find(
+                                (entry) => entry.encounterId === encounter.id
+                              );
+                              const dps =
+                                encounter.durationMs > 0
+                                  ? (stat?.totalDamage ?? 0) /
+                                    (encounter.durationMs / 1000)
+                                  : 0;
+                              return (
+                                <div className="row" key={encounter.id}>
+                                  <span>{encounter.label}</span>
+                                  <span>{formatDuration(encounter.durationMs)}</span>
+                                  <strong>{formatShort(dps)} DPS</strong>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </article>
+                        <article className="panel-section nested-panel">
+                          <div className="hero-grid compact-grid">
+                            <MetricCard label="Peak 5s Damage" value={formatShort(peakTimeline?.damage ?? 0)} />
+                            <MetricCard label="Peak Window Start" value={`${peakTimeline?.second ?? 0}s`} />
+                            <MetricCard label="Peak Window Hits" value={formatNumber(peakTimeline?.hits ?? 0)} />
+                          </div>
+                        </article>
+                      </div>
+                    )}
+
+                    {detailTab === "positioning" && (
+                      <article className="panel-section nested-panel">
+                        <div className="hero-grid compact-grid">
+                          <MetricCard label="Flank Rate" value={`${(selectedPlayer.flankRate * 100).toFixed(1)}%`} />
+                          <MetricCard label="Crit Rate" value={`${(selectedPlayer.critRate * 100).toFixed(1)}%`} />
+                          <MetricCard label="Targets Tracked" value={formatNumber(selectedPlayer.targets.length)} />
+                        </div>
+                      </article>
+                    )}
+
+                    {detailTab === "other" && (
+                      <article className="panel-section nested-panel">
+                        <div className="hero-grid compact-grid">
+                          <MetricCard label="Companions" value={formatNumber(selectedPlayer.companionCount)} />
+                          <MetricCard label="Timeline Buckets" value={formatNumber(selectedPlayer.timeline.length)} />
+                          <MetricCard label="Parsed Events" value={formatNumber(state.analysis.parsedEvents)} />
+                        </div>
+                      </article>
+                    )}
+
+                    {detailTab === "deaths" && (
+                      <article className="panel-section nested-panel">
+                        <div className="hero-grid compact-grid">
+                          <MetricCard label="Deaths" value={formatNumber(selectedPlayer.deaths)} />
+                          <MetricCard label="Damage Taken" value={formatShort(selectedPlayer.damageTaken)} />
+                          <MetricCard label="Hits" value={formatNumber(selectedPlayer.hits)} />
+                        </div>
+                        <div className="row empty">
+                          Death detail will improve once we capture explicit death-line samples.
+                        </div>
+                      </article>
+                    )}
                   </>
                 ) : (
                   <div className="row empty">
@@ -570,7 +970,7 @@ export function App() {
             <div className="table">
               {state.recentEncounters.map((encounter) => (
                 <div className="row" key={encounter.id}>
-                  <span>{new Date(encounter.startedAt).toLocaleTimeString()}</span>
+                  <span>{encounter.label}</span>
                   <span>{formatDuration(encounter.durationMs)}</span>
                   <span>{formatShort(encounter.dps)} DPS</span>
                   <strong>{formatShort(encounter.totalDamage)} damage</strong>

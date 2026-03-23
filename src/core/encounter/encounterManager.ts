@@ -52,6 +52,10 @@ export class EncounterManager {
     return [...this.state.completed];
   }
 
+  getCurrentEncounterId(): string | null {
+    return this.state.current?.id ?? null;
+  }
+
   private maybeExpire(now: number): void {
     const current = this.state.current;
     if (!current) {

@@ -194,8 +194,8 @@ export class LogMonitorService extends EventEmitter {
   }
 
   private consumeEvent(event: CombatEvent): void {
-    this.combatantTracker.consume(event);
     this.encounterManager.consume(event);
+    this.combatantTracker.consume(event, this.encounterManager.getCurrentEncounterId());
     this.syncEncounterState();
   }
 
@@ -204,9 +204,13 @@ export class LogMonitorService extends EventEmitter {
     this.state.currentEncounter = currentEncounter;
     this.state.encounterStatus = currentEncounter ? "active" : "idle";
     this.state.recentEncounters = this.encounterManager.getCompleted();
+    const encounterSnapshots = currentEncounter
+      ? [...this.state.recentEncounters, currentEncounter]
+      : this.state.recentEncounters;
     this.state.analysis = this.combatantTracker.snapshot(
       this.state.analysis.mode,
-      this.state.analysis.sourcePath
+      this.state.analysis.sourcePath,
+      encounterSnapshots
     );
   }
 

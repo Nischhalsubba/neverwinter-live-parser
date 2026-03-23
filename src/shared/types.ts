@@ -46,8 +46,31 @@ export type SkillStat = {
   hits: number;
 };
 
+export type TimelinePoint = {
+  second: number;
+  damage: number;
+  healing: number;
+  hits: number;
+};
+
+export type TargetStat = {
+  targetName: string;
+  totalDamage: number;
+  hits: number;
+  critCount: number;
+};
+
+export type CombatantEncounterStat = {
+  encounterId: string;
+  totalDamage: number;
+  totalHealing: number;
+  damageTaken: number;
+  hits: number;
+};
+
 export type EncounterSnapshot = {
   id: string;
+  label: string;
   startedAt: number;
   endedAt?: number;
   durationMs: number;
@@ -75,9 +98,14 @@ export type CombatantSnapshot = {
   hits: number;
   critCount: number;
   critRate: number;
+  flankRate: number;
   dps: number;
   hps: number;
   topSkills: SkillStat[];
+  targets: TargetStat[];
+  timeline: TimelinePoint[];
+  encounters: CombatantEncounterStat[];
+  deaths: number;
 };
 
 export type AnalysisSnapshot = {
