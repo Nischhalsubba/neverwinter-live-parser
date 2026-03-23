@@ -1,17 +1,20 @@
 import chokidar, { type FSWatcher } from "chokidar";
 import { EventEmitter } from "node:events";
+import { readFile } from "node:fs/promises";
 import type {
   AppState,
   CombatEvent,
   MonitoringConfig,
   ParseIssue
 } from "../../shared/types.js";
+import { CombatantTracker } from "../aggregation/combatantTracker.js";
 import { detectActiveLogFile } from "../watcher/detectActiveLog.js";
 import {
   createInitialReaderState,
   readAppendedLines,
   type ReaderState
 } from "../reader/incrementalReader.js";
+import { splitBufferedLines } from "../reader/lineBuffer.js";
 import { parseLine } from "../parser/parseLine.js";
 import { EncounterManager } from "../encounter/encounterManager.js";
 
@@ -22,9 +25,18 @@ function createInitialAppState(): AppState {
     watcherStatus: "idle",
     selectedLogFolder: null,
     activeLogFile: null,
+    importedLogFile: null,
     encounterStatus: "idle",
     currentEncounter: null,
     recentEncounters: [],
+    analysis: {
+      mode: "idle",
+      sourcePath: null,
+      totalLines: 0,
+      parsedEvents: 0,
+      durationMs: 0,
+      combatants: []
+    },
     debug: {
       latestRawLines: [],
       unknownEvents: [],
@@ -41,6 +53,7 @@ export class LogMonitorService extends EventEmitter {
   private readonly pollIntervalMs = 1000;
   private readerState: ReaderState = createInitialReaderState();
   private encounterManager = new EncounterManager(10_000);
+  private combatantTracker = new CombatantTracker();
   private flushTimer: NodeJS.Timeout | null = null;
 
   getState(): AppState {
@@ -53,10 +66,16 @@ export class LogMonitorService extends EventEmitter {
     this.state = {
       ...createInitialAppState(),
       watcherStatus: "watching",
-      selectedLogFolder: config.folderPath
+      selectedLogFolder: config.folderPath,
+      analysis: {
+        ...createInitialAppState().analysis,
+        mode: "live",
+        sourcePath: config.folderPath
+      }
     };
     this.readerState = createInitialReaderState();
     this.encounterManager = new EncounterManager(config.inactivityTimeoutMs);
+    this.combatantTracker = new CombatantTracker();
 
     const activeFile = await detectActiveLogFile(config.folderPath);
     this.state.activeLogFile = activeFile;
@@ -93,6 +112,36 @@ export class LogMonitorService extends EventEmitter {
     }, this.pollIntervalMs);
 
     await refresh();
+    return this.getState();
+  }
+
+  async importLogFile(filePath: string): Promise<AppState> {
+    await this.stop();
+
+    this.state = {
+      ...createInitialAppState(),
+      importedLogFile: filePath,
+      analysis: {
+        ...createInitialAppState().analysis,
+        mode: "imported",
+        sourcePath: filePath
+      }
+    };
+    this.encounterManager = new EncounterManager(10_000);
+    this.combatantTracker = new CombatantTracker();
+
+    const contents = await readFile(filePath, "utf8");
+    const { lines, leftover } = splitBufferedLines("", contents);
+    const normalizedLines = leftover ? [...lines, leftover] : lines;
+
+    this.consumeLines(normalizedLines);
+    this.encounterManager.flush(
+      this.state.analysis.endedAt
+        ? this.state.analysis.endedAt + 10_000
+        : Date.now()
+    );
+    this.syncEncounterState();
+    this.emitState();
     return this.getState();
   }
 
@@ -141,19 +190,11 @@ export class LogMonitorService extends EventEmitter {
       ...this.state.debug.latestRawLines
     ].slice(0, MAX_DEBUG_ITEMS);
 
-    for (const line of result.lines) {
-      const parsed = parseLine(line);
-      if (parsed.kind === "event") {
-        this.consumeEvent(parsed.event);
-        continue;
-      }
-
-      this.pushUnknown(parsed.event);
-      this.pushParseIssue(parsed.issue);
-    }
+    this.consumeLines(result.lines);
   }
 
   private consumeEvent(event: CombatEvent): void {
+    this.combatantTracker.consume(event);
     this.encounterManager.consume(event);
     this.syncEncounterState();
   }
@@ -163,6 +204,10 @@ export class LogMonitorService extends EventEmitter {
     this.state.currentEncounter = currentEncounter;
     this.state.encounterStatus = currentEncounter ? "active" : "idle";
     this.state.recentEncounters = this.encounterManager.getCompleted();
+    this.state.analysis = this.combatantTracker.snapshot(
+      this.state.analysis.mode,
+      this.state.analysis.sourcePath
+    );
   }
 
   private pushUnknown(event: CombatEvent): void {
@@ -189,5 +234,21 @@ export class LogMonitorService extends EventEmitter {
 
   private emitState(): void {
     this.emit("state", this.getState());
+  }
+
+  private consumeLines(lines: string[]): void {
+    for (const line of lines) {
+      this.combatantTracker.registerLine();
+      const parsed = parseLine(line);
+      if (parsed.kind === "event") {
+        this.consumeEvent(parsed.event);
+        continue;
+      }
+
+      this.pushUnknown(parsed.event);
+      this.pushParseIssue(parsed.issue);
+    }
+
+    this.syncEncounterState();
   }
 }

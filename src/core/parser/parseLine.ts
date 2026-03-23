@@ -1,86 +1,75 @@
 import type { CombatEvent, ParseIssue } from "../../shared/types.js";
 
-const DAMAGE_PATTERN =
-  /^\[(?<time>[^\]]+)\]\s+(?<source>.+?)\s+hits\s+(?<target>.+?)\s+with\s+(?<ability>.+?)\s+for\s+(?<amount>\d+)\s+damage(?<crit>\s+\(Critical\))?\.?$/i;
-
-const HEAL_PATTERN =
-  /^\[(?<time>[^\]]+)\]\s+(?<source>.+?)\s+heals\s+(?<target>.+?)\s+with\s+(?<ability>.+?)\s+for\s+(?<amount>\d+)(?<crit>\s+\(Critical\))?\.?$/i;
-
-const DAMAGE_TAKEN_PATTERN =
-  /^\[(?<time>[^\]]+)\]\s+(?<source>.+?)\s+damages\s+you\s+with\s+(?<ability>.+?)\s+for\s+(?<amount>\d+)(?<crit>\s+\(Critical\))?\.?$/i;
-
 export type ParseResult =
   | { kind: "event"; event: CombatEvent }
   | { kind: "issue"; issue: ParseIssue; event: CombatEvent };
 
 function parseTimestamp(input: string): number {
-  const now = new Date();
-  const candidate = new Date(`${now.toDateString()} ${input}`);
+  const parts = input.split(":");
+  if (parts.length < 6) {
+    return Date.now();
+  }
+
+  const [yy, month, day, hour, minute, secondWithFraction] = parts;
+  const year = Number(yy) + 2000;
+  const second = Number(secondWithFraction);
+  const candidate = new Date(
+    year,
+    Number(month) - 1,
+    Number(day),
+    Number(hour),
+    Number(minute),
+    Math.floor(second),
+    Math.round((second % 1) * 1000)
+  );
+
   return Number.isNaN(candidate.getTime()) ? Date.now() : candidate.getTime();
 }
 
-function toEvent(
-  match: RegExpMatchArray,
-  raw: string,
-  eventType: CombatEvent["eventType"]
-): CombatEvent {
-  const groups = match.groups ?? {};
-  return {
-    raw,
-    timestamp: parseTimestamp(groups.time ?? ""),
-    eventType,
-    sourceName: groups.source?.trim(),
-    targetName: groups.target?.trim(),
-    abilityName: groups.ability?.trim(),
-    amount: groups.amount ? Number(groups.amount) : undefined,
-    critical: Boolean(groups.crit)
-  };
+function parseActorType(ref: string | undefined): CombatEvent["sourceType"] {
+  if (!ref) {
+    return "unknown";
+  }
+  if (ref.startsWith("P[")) {
+    return "player";
+  }
+  if (ref.startsWith("C[")) {
+    return "companion";
+  }
+  if (ref.startsWith("E[")) {
+    return "npc";
+  }
+  return "unknown";
 }
 
-export function parseLine(line: string): ParseResult {
-  const trimmed = line.trim();
-  if (!trimmed) {
-    return {
-      kind: "issue",
-      issue: {
-        line,
-        reason: "Empty log line",
-        seenAt: Date.now()
-      },
-      event: {
-        raw: line,
-        timestamp: Date.now(),
-        eventType: "unknown"
-      }
-    };
+function inferEventType(
+  amount: number,
+  school: string,
+  flags: string[],
+  targetName: string
+): CombatEvent["eventType"] {
+  if (amount <= 0) {
+    return "unknown";
   }
 
-  const damageMatch = trimmed.match(DAMAGE_PATTERN);
-  if (damageMatch) {
-    return { kind: "event", event: toEvent(damageMatch, line, "damage") };
+  const joined = `${school} ${flags.join(" ")}`.toLowerCase();
+  if (joined.includes("heal")) {
+    return "heal";
   }
 
-  const healMatch = trimmed.match(HEAL_PATTERN);
-  if (healMatch) {
-    return { kind: "event", event: toEvent(healMatch, line, "heal") };
+  if (targetName) {
+    return "damage";
   }
 
-  const damageTakenMatch = trimmed.match(DAMAGE_TAKEN_PATTERN);
-  if (damageTakenMatch) {
-    return {
-      kind: "event",
-      event: {
-        ...toEvent(damageTakenMatch, line, "damageTaken"),
-        targetName: "You"
-      }
-    };
-  }
+  return "unknown";
+}
 
+function buildUnknown(line: string, reason: string): ParseResult {
   return {
     kind: "issue",
     issue: {
       line,
-      reason: "Unrecognized combat log pattern",
+      reason,
       seenAt: Date.now()
     },
     event: {
@@ -89,4 +78,94 @@ export function parseLine(line: string): ParseResult {
       eventType: "unknown"
     }
   };
+}
+
+export function parseLine(line: string): ParseResult {
+  const trimmed = line.trim();
+  if (!trimmed) {
+    return buildUnknown(line, "Empty log line");
+  }
+
+  const separatorIndex = trimmed.indexOf("::");
+  if (separatorIndex === -1) {
+    return buildUnknown(line, "Missing Neverwinter field separator");
+  }
+
+  const timestamp = parseTimestamp(trimmed.slice(0, separatorIndex));
+  const payload = trimmed.slice(separatorIndex + 2);
+  const parts = payload.split(",");
+
+  if (parts.length < 10) {
+    return buildUnknown(line, "Unexpected Neverwinter field count");
+  }
+
+  const hasExplicitSourceActor = parts.length >= 12;
+  const sourceOwnerName = parts[0]?.trim() ?? "";
+  const sourceOwnerId = parts[1]?.trim() ?? "";
+  const sourceName = hasExplicitSourceActor
+    ? parts[2]?.trim() || sourceOwnerName
+    : sourceOwnerName;
+  const sourceId = hasExplicitSourceActor
+    ? parts[3]?.trim() || sourceOwnerId
+    : sourceOwnerId;
+  const targetName = parts[hasExplicitSourceActor ? 4 : 2]?.trim() ?? "";
+  const targetId = parts[hasExplicitSourceActor ? 5 : 3]?.trim() ?? "";
+  const abilityName = parts[hasExplicitSourceActor ? 6 : 4]?.trim() ?? "";
+  const abilityId = parts[hasExplicitSourceActor ? 7 : 5]?.trim() ?? "";
+  const school = parts[hasExplicitSourceActor ? 8 : 6]?.trim() ?? "";
+  const flagsField = parts[hasExplicitSourceActor ? 9 : 7]?.trim() ?? "";
+  const magnitude = Number(parts[hasExplicitSourceActor ? 10 : 8] ?? "0");
+  const amount = Number(parts[hasExplicitSourceActor ? 11 : 9] ?? "0");
+  const flags = flagsField
+    ? flagsField
+        .split("|")
+        .map((flag) => flag.trim())
+        .filter(Boolean)
+    : [];
+  const eventType = inferEventType(amount, school, flags, targetName);
+
+  if (!abilityName && !targetName) {
+    return buildUnknown(line, "Line does not describe a combat action");
+  }
+
+  const event: CombatEvent = {
+    raw: line,
+    timestamp,
+    eventType,
+    sourceName,
+    sourceId,
+    sourceOwnerName: sourceOwnerName || sourceName,
+    sourceOwnerId: sourceOwnerId || sourceId,
+    sourceType: parseActorType(sourceId),
+    targetName,
+    targetId,
+    targetType: parseActorType(targetId),
+    abilityName,
+    abilityId,
+    amount: Number.isFinite(amount) ? amount : undefined,
+    magnitude: Number.isFinite(magnitude) ? magnitude : undefined,
+    critical: flags.some((flag) => flag.toLowerCase() === "critical"),
+    school,
+    flags,
+    tags: {
+      hasExplicitSourceActor
+    }
+  };
+
+  if (eventType === "unknown") {
+    return {
+      kind: "issue",
+      issue: {
+        line,
+        reason: "Parsed line but could not classify it as damage or healing",
+        seenAt: Date.now()
+      },
+      event: {
+        ...event,
+        eventType: "unknown"
+      }
+    };
+  }
+
+  return { kind: "event", event };
 }

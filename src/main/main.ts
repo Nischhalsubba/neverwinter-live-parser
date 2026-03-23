@@ -51,6 +51,9 @@ ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
   return monitor.start(config);
 });
 
+ipcMain.handle("monitoring:importFile", async (_event, filePath: string) =>
+  monitor.importLogFile(filePath)
+);
 ipcMain.handle("monitoring:stop", async () => monitor.stop());
 ipcMain.handle("monitoring:getState", async () => {
   const state = monitor.getState();
@@ -64,6 +67,20 @@ ipcMain.handle("monitoring:getState", async () => {
 ipcMain.handle("dialog:selectFolder", async () => {
   const result = await dialog.showOpenDialog({
     properties: ["openDirectory"]
+  });
+  if (result.canceled) {
+    return null;
+  }
+  return result.filePaths[0] ?? null;
+});
+
+ipcMain.handle("dialog:selectLogFile", async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ["openFile"],
+    filters: [
+      { name: "Neverwinter combat logs", extensions: ["log", "txt"] },
+      { name: "All files", extensions: ["*"] }
+    ]
   });
   if (result.canceled) {
     return null;
