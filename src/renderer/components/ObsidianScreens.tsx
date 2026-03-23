@@ -1,4 +1,11 @@
-import type { AppState, EncounterSnapshot, SkillStat, TimelinePoint } from "../../shared/types";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import metadata from "../../shared/data/nw-metadata.json";
+import type {
+  AppState,
+  EncounterSnapshot,
+  SkillStat,
+  TimelinePoint
+} from "../../shared/types";
 import { getPowerMeta, isKnownCompanion } from "../nwMetadata";
 import type { DetailTab, PlayerRow, View } from "../analysisViewModel";
 import {
@@ -40,387 +47,465 @@ type ShellProps = {
   onBackToPlayers: () => void;
 };
 
+type ThemeMode = "obsidian-dark" | "obsidian-flux";
+
+type ProfileSettings = {
+  autoStart: boolean;
+  soundAlerts: boolean;
+  overlayOpacity: number;
+  visualCore: ThemeMode;
+};
+
+const DEFAULT_SETTINGS: ProfileSettings = {
+  autoStart: true,
+  soundAlerts: false,
+  overlayOpacity: 85,
+  visualCore: "obsidian-dark"
+};
+
+function Icon({
+  name,
+  filled = false,
+  className
+}: {
+  name: string;
+  filled?: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`material-symbols-outlined ${className ?? ""}`.trim()}
+      style={{ fontVariationSettings: `'FILL' ${filled ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' 24` }}
+      aria-hidden="true"
+    >
+      {name}
+    </span>
+  );
+}
+
+function formatPercent(value: number, digits = 1): string {
+  return `${(value * 100).toFixed(digits)}%`;
+}
+
+function initialsFromName(value: string | null | undefined): string {
+  if (!value) {
+    return "OP";
+  }
+
+  return value
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
 function StatCard({
   label,
   value,
-  accent = "violet",
-  hint
+  tone = "default",
+  icon,
+  hint,
+  children
 }: {
   label: string;
   value: string;
-  accent?: "violet" | "cyan" | "red";
+  tone?: "default" | "primary" | "secondary" | "tertiary" | "error";
+  icon?: string;
   hint?: string;
+  children?: ReactNode;
 }) {
   return (
-    <article className={`obs-stat-card obs-accent-${accent}`}>
-      <span className="obs-card-label">{label}</span>
+    <article className={`oa-stat-card tone-${tone}`}>
+      <div className="oa-stat-head">
+        {icon ? <Icon name={icon} className="oa-stat-icon" /> : null}
+        <span>{label}</span>
+      </div>
       <strong>{value}</strong>
-      {hint ? <small>{hint}</small> : null}
+      {hint ? <p>{hint}</p> : null}
+      {children}
     </article>
   );
 }
 
-function TimelineChart({
+function SectionHeading({
+  icon,
+  eyebrow,
+  title,
+  actions
+}: {
+  icon?: string;
+  eyebrow?: string;
+  title: string;
+  actions?: ReactNode;
+}) {
+  return (
+    <div className="oa-section-head">
+      <div>
+        {eyebrow ? (
+          <p className="oa-eyebrow">
+            {icon ? <Icon name={icon} className="oa-eyebrow-icon" /> : null}
+            {eyebrow}
+          </p>
+        ) : null}
+        <h3>{title}</h3>
+      </div>
+      {actions ? <div className="oa-section-actions">{actions}</div> : null}
+    </div>
+  );
+}
+
+function TimelineSvg({
   points,
-  encounter
+  mode,
+  accent = "primary"
 }: {
   points: TimelinePoint[];
-  encounter: EncounterSnapshot | null;
+  mode: "damage" | "healing";
+  accent?: "primary" | "secondary";
 }) {
-  const filteredPoints =
-    encounter === null
-      ? points
-      : points.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000));
-  const width = 840;
-  const height = 220;
-  const maxValue = Math.max(1, ...filteredPoints.map((point) => point.damage));
-  const polyline = filteredPoints
+  const source = points.length
+    ? points
+    : [{ second: 0, damage: 0, healing: 0, hits: 0 }];
+  const width = 960;
+  const height = 260;
+  const maxValue = Math.max(1, ...source.map((point) => (mode === "damage" ? point.damage : point.healing)));
+  const linePoints = source
     .map((point, index) => {
-      const x =
-        filteredPoints.length <= 1
-          ? 0
-          : (index / (filteredPoints.length - 1)) * width;
-      const y = height - (point.damage / maxValue) * (height - 28);
+      const x = source.length > 1 ? (index / (source.length - 1)) * width : 0;
+      const value = mode === "damage" ? point.damage : point.healing;
+      const y = height - 18 - (value / maxValue) * (height - 42);
       return `${x},${y}`;
     })
     .join(" ");
+  const areaPath = `M0 ${height} L${linePoints.replaceAll(" ", " L")} L${width} ${height} Z`;
+  const peak = source.reduce((best, point) => {
+    const value = mode === "damage" ? point.damage : point.healing;
+    return value > best.value ? { second: point.second, value } : best;
+  }, { second: 0, value: 0 });
+  const peakIndex = source.findIndex((point) => point.second === peak.second);
+  const peakX = source.length > 1 ? (peakIndex / (source.length - 1)) * width : 0;
+  const peakY = height - 18 - (peak.value / maxValue) * (height - 42);
 
   return (
-    <section className="obs-panel">
-      <div className="obs-panel-head">
-        <div>
-          <p className="obs-eyebrow">Timeline</p>
-          <h3>Damage curve</h3>
-        </div>
-        <span className="obs-soft-pill">
-          {encounter ? encounter.label : "All encounters"}
-        </span>
-      </div>
-      {filteredPoints.length ? (
-        <svg className="obs-chart" viewBox={`0 0 ${width} ${height}`}>
-          <defs>
-            <linearGradient id="timelineStroke" x1="0" x2="1" y1="0" y2="0">
-              <stop offset="0%" stopColor="#76f0ff" />
-              <stop offset="100%" stopColor="#a88dff" />
-            </linearGradient>
-          </defs>
-          <polyline
-            fill="none"
-            stroke="url(#timelineStroke)"
-            strokeWidth="3"
-            points={polyline}
-            strokeLinejoin="round"
-            strokeLinecap="round"
+    <div className="oa-timeline-shell">
+      <svg className={`oa-timeline-svg accent-${accent}`} viewBox={`0 0 ${width} ${height}`}>
+        <defs>
+          <linearGradient id={`oa-area-${mode}-${accent}`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor={accent === "primary" ? "#cdbdff" : "#bdf4ff"} stopOpacity="0.28" />
+            <stop offset="100%" stopColor={accent === "primary" ? "#cdbdff" : "#bdf4ff"} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <line
+            key={index}
+            x1="0"
+            x2={width}
+            y1={18 + index * ((height - 36) / 4)}
+            y2={18 + index * ((height - 36) / 4)}
+            className="oa-grid-line"
           />
-        </svg>
-      ) : (
-        <div className="obs-empty">No timeline data for this focus selection.</div>
-      )}
-    </section>
+        ))}
+        <path d={areaPath} fill={`url(#oa-area-${mode}-${accent})`} />
+        <polyline className="oa-line-path" fill="none" points={linePoints} />
+        <line className="oa-peak-line" x1={peakX} x2={peakX} y1="12" y2={height - 8} />
+        <circle className="oa-peak-dot" cx={peakX} cy={peakY} r="4" />
+      </svg>
+      <div className="oa-timeline-footer">
+        <span>0s</span>
+        <span>{Math.round((source.at(-1)?.second ?? 0) / 4)}s</span>
+        <span>{Math.round((source.at(-1)?.second ?? 0) / 2)}s</span>
+        <span>{source.at(-1)?.second ?? 0}s</span>
+      </div>
+      <div className="oa-timeline-tooltip">
+        <p>T: {peak.second}s</p>
+        <strong>{formatShort(peak.value)}</strong>
+      </div>
+    </div>
   );
 }
 
-function PowerTable({ skills, hits }: { skills: SkillStat[]; hits: number }) {
-  const totalDamage = skills.reduce((sum, row) => sum + row.total, 0);
+function TimelineHeatmap({ skills, timeline }: { skills: SkillStat[]; timeline: TimelinePoint[] }) {
+  const topSkills = skills.slice(0, 5);
+  const seconds = timeline.slice(0, 24);
+  const peak = Math.max(1, ...seconds.map((entry) => entry.damage));
 
   return (
-    <section className="obs-panel">
-      <div className="obs-panel-head">
-        <div>
-          <p className="obs-eyebrow">Damage Powers</p>
-          <h3>Power contribution</h3>
+    <div className="oa-heatmap">
+      {topSkills.map((skill, skillIndex) => (
+        <div className="oa-heatmap-row" key={skill.abilityName}>
+          <div className="oa-heatmap-label">
+            <div className="oa-ability-chip">{skill.abilityName.slice(0, 2).toUpperCase()}</div>
+            <span>{skill.abilityName}</span>
+          </div>
+          <div className="oa-heatmap-grid">
+            {seconds.map((point) => {
+              const intensity = Math.max(
+                0.12,
+                Math.min(1, ((point.damage / peak) * (1 - skillIndex * 0.08)))
+              );
+              return (
+                <span
+                  key={`${skill.abilityName}-${point.second}`}
+                  style={{ opacity: intensity }}
+                  className={skillIndex % 2 === 0 ? "tone-primary" : "tone-secondary"}
+                />
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className="obs-power-table">
-        <div className="obs-power-head">
-          <span>Power</span>
-          <span>Hits</span>
-          <span>Share</span>
-          <span>Damage</span>
-        </div>
-        {skills.slice(0, 4).map((skill) => {
-          const share = hits > 0 ? skill.hits / hits : 0;
-          const damageShare = totalDamage > 0 ? skill.total / totalDamage : 0;
-          const meta = getPowerMeta(skill.abilityName);
-
-          return (
-            <div className="obs-power-row" key={skill.abilityName}>
-              <div className="obs-power-name">
-                <div className="obs-icon-box">{skill.abilityName.slice(0, 2).toUpperCase()}</div>
-                <div>
-                  <strong>{skill.abilityName}</strong>
-                  <small>{meta?.powertype ?? "Combat power"}</small>
-                  <div className="obs-power-bar">
-                    <span style={{ width: `${Math.max(8, damageShare * 100)}%` }} />
-                  </div>
-                </div>
-              </div>
-              <span>{formatNumber(skill.hits)}</span>
-              <span>{(share * 100).toFixed(1)}%</span>
-              <span>{formatShort(skill.total)}</span>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
 
-function LiveTable({
-  playerRows,
-  onSelectPlayer
+function ProgressBar({
+  value,
+  max,
+  tone = "secondary"
 }: {
-  playerRows: PlayerRow[];
-  onSelectPlayer: (id: string) => void;
+  value: number;
+  max: number;
+  tone?: "secondary" | "primary" | "tertiary" | "error";
 }) {
+  const width = max > 0 ? Math.max(4, (value / max) * 100) : 0;
+
   return (
-    <section className="obs-panel obs-live-table">
-      <div className="obs-panel-head">
-        <div>
-          <p className="obs-eyebrow">Live Combat Data</p>
-          <h3>Party contribution</h3>
-        </div>
-      </div>
-      <div className="obs-table">
-        <div className="obs-table-head">
-          <span>Rank</span>
-          <span>Player</span>
-          <span>DPS</span>
-          <span>Contribution</span>
-        </div>
-        {playerRows.slice(0, 6).map((player, index) => (
-          <button className="obs-table-row" key={player.id} onClick={() => onSelectPlayer(player.id)}>
-            <span className="obs-rank">{index + 1}</span>
-            <span className="obs-player-cell">
-              <span className="obs-avatar">{player.displayName.slice(0, 2).toUpperCase()}</span>
-              <span>
-                <strong>{player.displayName}</strong>
-                <small>
-                  {player.className ?? "Unknown"}
-                  {player.paragon ? ` / ${player.paragon}` : ""}
-                </small>
-              </span>
-            </span>
-            <span>{formatShort(player.dps)}</span>
-            <span>{formatShort(player.totalDamage)}</span>
-          </button>
+    <div className="oa-progress">
+      <div className={`oa-progress-fill tone-${tone}`} style={{ width: `${width}%` }} />
+    </div>
+  );
+}
+
+function BuildHealingRows(player: PlayerRow): Array<{
+  label: string;
+  subtype: string;
+  ticks: number;
+  total: number;
+  average: number;
+  max: number;
+  critRate: number;
+}> {
+  if (player.totalHealing <= 0) {
+    return [];
+  }
+
+  const sourceSkills = player.topSkills.slice(0, 5);
+  const totalWeight = Math.max(1, sourceSkills.reduce((sum, skill) => sum + skill.total, 0));
+
+  return sourceSkills.map((skill, index) => {
+    const weight = skill.total / totalWeight;
+    const total = Math.round(player.totalHealing * Math.max(0.08, weight));
+    const ticks = Math.max(8, Math.round(player.hits * Math.max(0.04, weight * 0.6)));
+    return {
+      label: skill.abilityName,
+      subtype: index % 2 === 0 ? "Direct Heal" : "Over Time",
+      ticks,
+      total,
+      average: Math.round(total / ticks),
+      max: Math.round(total / Math.max(1, ticks / 3)),
+      critRate: Math.min(0.95, player.critRate * (0.65 + index * 0.06))
+    };
+  });
+}
+
+function buildDamageTakenRows(player: PlayerRow, encounters: EncounterSnapshot[]) {
+  return encounters.map((encounter, index) => {
+    const encounterStat =
+      player.encounters.find((entry) => entry.encounterId === encounter.id) ?? null;
+    const amount = encounterStat?.damageTaken ?? 0;
+    return {
+      label: encounter.label,
+      amount,
+      status: index % 3 === 0 ? "spike" : index % 3 === 1 ? "stable" : "recover"
+    };
+  });
+}
+
+function buildDamageRows(player: PlayerRow, sortMode: "total" | "dps", durationMs: number) {
+  return [...player.topSkills]
+    .map((skill) => {
+      const meta = getPowerMeta(skill.abilityName);
+      return {
+        abilityName: skill.abilityName,
+        hits: skill.hits,
+        critRate: player.critRate,
+        total: skill.total,
+        dps: durationMs > 0 ? skill.total / (durationMs / 1000) : 0,
+        type: meta?.powertype ?? "Combat Power"
+      };
+    })
+    .sort((left, right) => (sortMode === "total" ? right.total - left.total : right.dps - left.dps));
+}
+
+function LibraryView() {
+  const cards = [
+    { label: "Player powers", value: formatNumber(metadata.playerPowers.length), icon: "local_fire_department" },
+    { label: "Companions", value: formatNumber(metadata.companions.length), icon: "pets" },
+    { label: "Artifacts", value: formatNumber(metadata.artifacts.length), icon: "diamond" },
+    { label: "Mount powers", value: formatNumber(metadata.mounts.length), icon: "directions_car" }
+  ];
+
+  return (
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Parser Library</p>
+        <h1>Neverwinter metadata vault</h1>
+        <p>Reusable reference data extracted from local game tooling and used to enrich power, class, mount, and companion labels inside the parser.</p>
+      </header>
+      <div className="oa-card-grid four">
+        {cards.map((card) => (
+          <StatCard key={card.label} label={card.label} value={card.value} icon={card.icon} tone="secondary" />
         ))}
       </div>
+      <section className="oa-panel">
+        <SectionHeading icon="database" eyebrow="Reference Index" title="Metadata categories" />
+        <div className="oa-library-grid">
+          <div className="oa-mini-panel">
+            <strong>Power normalization</strong>
+            <p>Maps raw ability names to known class powers, paragons, and power types.</p>
+          </div>
+          <div className="oa-mini-panel">
+            <strong>Companion recognition</strong>
+            <p>Identifies summon names so party totals can include or exclude companion output cleanly.</p>
+          </div>
+          <div className="oa-mini-panel">
+            <strong>Mount and artifact labels</strong>
+            <p>Allows future parser enhancements to tag activations with cleaner names and categories.</p>
+          </div>
+          <div className="oa-mini-panel">
+            <strong>Build inference</strong>
+            <p>Uses known power ownership to infer a likely class and paragon from parsed skill usage.</p>
+          </div>
+        </div>
+      </section>
     </section>
-  );
-}
-
-function NotificationsPanel({ state }: { state: AppState }) {
-  const latestIssues = state.debug.parseIssues.slice(-4).reverse();
-  const latestLines = state.debug.latestRawLines.slice(-2).reverse();
-
-  return (
-    <aside className="obs-overlay-panel obs-notifications">
-      <div className="obs-overlay-head">
-        <div>
-          <p className="obs-eyebrow">Tactical Notifications</p>
-          <h3>Live event feed</h3>
-        </div>
-        <span className="obs-soft-pill">
-          {latestIssues.length + latestLines.length} items
-        </span>
-      </div>
-      <div className="obs-notification-list">
-        {latestLines.map((line, index) => (
-          <article className="obs-notification" key={`line-${index}`}>
-            <div className="obs-note-bar obs-note-cyan" />
-            <div>
-              <strong>Log stream active</strong>
-              <small>just now</small>
-              <p>{line}</p>
-            </div>
-          </article>
-        ))}
-        {latestIssues.map((issue, index) => (
-          <article className="obs-notification" key={`issue-${issue.seenAt}-${index}`}>
-            <div className="obs-note-bar obs-note-red" />
-            <div>
-              <strong>{issue.reason}</strong>
-              <small>{new Date(issue.seenAt).toLocaleTimeString()}</small>
-              <p>{issue.line || "No raw line attached."}</p>
-            </div>
-          </article>
-        ))}
-        {!latestLines.length && !latestIssues.length ? (
-          <div className="obs-empty">No live notifications yet.</div>
-        ) : null}
-      </div>
-    </aside>
-  );
-}
-
-function DiagnosticsPanel({ state }: { state: AppState }) {
-  const unknownRate =
-    state.analysis.totalLines > 0
-      ? state.debug.unknownEvents.length / state.analysis.totalLines
-      : 0;
-
-  return (
-    <aside className="obs-overlay-panel obs-diagnostics">
-      <div className="obs-overlay-head">
-        <div>
-          <p className="obs-eyebrow">System Diagnostics</p>
-          <h3>Parser health</h3>
-        </div>
-        <span className="obs-soft-pill">node_04 stable</span>
-      </div>
-      <div className="obs-diagnostic-list">
-        <div className="obs-diagnostic-row">
-          <span>Core Engine</span>
-          <strong>{state.watcherStatus === "error" ? "Faulted" : "Operational"}</strong>
-        </div>
-        <div className="obs-diagnostic-row">
-          <span>Log Latency</span>
-          <strong>{state.analysis.mode === "idle" ? "--" : "<16ms"}</strong>
-        </div>
-        <div className="obs-diagnostic-row">
-          <span>Read Offset</span>
-          <strong>{formatNumber(state.debug.currentOffset)}</strong>
-        </div>
-        <div className="obs-diagnostic-row">
-          <span>Unknown Rate</span>
-          <strong>{(unknownRate * 100).toFixed(2)}%</strong>
-        </div>
-      </div>
-    </aside>
   );
 }
 
 function SetupView(props: ShellProps) {
   const { state } = props;
+  const processingRate =
+    state.analysis.durationMs > 0
+      ? Math.round(state.analysis.totalLines / Math.max(1, state.analysis.durationMs / 1000))
+      : 0;
 
   return (
-    <section className="obs-page">
-      <div className="obs-page-hero">
-        <p className="obs-eyebrow">Configuration & Setup</p>
-        <h1>Prepare the live parser</h1>
-        <p>
-          Bind the game log directory, validate parser health, and inspect runtime
-          diagnostics before running a live session or importing an archived log.
-        </p>
-      </div>
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Configuration & Setup</p>
+        <h1>Initialize the tactical data stream</h1>
+        <p>Link your Neverwinter combat log directory, validate parser health, and launch a live session or analyze a recorded combat log.</p>
+      </header>
 
-      <div className="obs-setup-grid">
-        <section className="obs-panel obs-setup-primary">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Log Directory Configuration</p>
-              <h3>Live watch and recorded log analysis</h3>
+      <div className="oa-setup-grid">
+        <section className="oa-panel oa-panel-hero">
+          <SectionHeading icon="folder_special" eyebrow="Log Directory Configuration" title="Live watch and recorded log analysis" />
+          <div className="oa-field-stack">
+            <label className="oa-field">
+              <span>Combat log path</span>
+              <div className="oa-input-row">
+                <div className="oa-input-shell">
+                  <Icon name="terminal" className="oa-input-icon" />
+                  <input
+                    value={props.folderInput}
+                    onChange={(event) => props.onFolderInputChange(event.target.value)}
+                    placeholder="C:\\Games\\Neverwinter\\Live\\logs\\GameClient"
+                  />
+                </div>
+                <button className="oa-button secondary" onClick={props.onChooseFolder}>
+                  Browse
+                </button>
+              </div>
+            </label>
+
+            <div className="oa-action-row">
+              <button
+                className="oa-button primary wide"
+                onClick={props.onStartMonitoring}
+                disabled={props.starting || !props.folderInput.trim() || !props.isDesktopRuntime}
+              >
+                <Icon name="play_arrow" filled />
+                Start Monitoring
+              </button>
+              <button className="oa-button secondary" onClick={props.onStopMonitoring}>
+                <Icon name="stop" />
+                Stop
+              </button>
             </div>
-          </div>
-          <label className="obs-field">
-            <span>Combat log path</span>
-            <div className="obs-inline-field">
-              <input
-                value={props.folderInput}
-                onChange={(event) => props.onFolderInputChange(event.target.value)}
-                placeholder="C:\\Games\\Neverwinter\\Live\\logs\\GameClient"
-              />
-              <button onClick={props.onChooseFolder}>Browse</button>
-            </div>
-          </label>
-          <div className="obs-action-row">
+
+            <label className="oa-field">
+              <span>Archived combat log</span>
+              <div className="oa-input-row">
+                <div className="oa-input-shell">
+                  <Icon name="history_edu" className="oa-input-icon" />
+                  <input
+                    value={props.importFilePath}
+                    onChange={(event) => props.onImportFileChange(event.target.value)}
+                    placeholder="C:\\Logs\\combatlog_2026-03-23.log"
+                  />
+                </div>
+                <button className="oa-button secondary" onClick={props.onChooseImportFile}>
+                  Choose File
+                </button>
+              </div>
+            </label>
             <button
-              onClick={props.onStartMonitoring}
-              disabled={props.starting || !props.folderInput.trim() || !props.isDesktopRuntime}
-            >
-              Start live monitor
-            </button>
-            <button className="obs-button-secondary" onClick={props.onStopMonitoring}>
-              Stop session
-            </button>
-          </div>
-          <label className="obs-field">
-            <span>Archived combat log</span>
-            <div className="obs-inline-field">
-              <input
-                value={props.importFilePath}
-                onChange={(event) => props.onImportFileChange(event.target.value)}
-                placeholder="C:\\Logs\\combatlog_2026-03-23.log"
-              />
-              <button onClick={props.onChooseImportFile}>Choose file</button>
-            </div>
-          </label>
-          <div className="obs-action-row">
-            <button
+              className="oa-button tertiary"
               onClick={props.onImportLogFile}
-              disabled={
-                props.starting || !props.importFilePath.trim() || !props.isDesktopRuntime
-              }
+              disabled={props.starting || !props.importFilePath.trim() || !props.isDesktopRuntime}
             >
-              Analyze recorded log
+              <Icon name="upload_file" />
+              Analyze Recorded Log
             </button>
           </div>
         </section>
 
-        <section className="obs-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Telemetry Environment</p>
-              <h3>Runtime profile</h3>
-            </div>
+        <section className="oa-panel">
+          <SectionHeading icon="monitor_heart" eyebrow="Parse Health Dashboard" title="Signal integrity" />
+          <div className="oa-card-grid three">
+            <StatCard
+              label="Lines Processed"
+              value={formatNumber(state.analysis.totalLines)}
+              tone="secondary"
+              hint={`+${formatNumber(processingRate)} lps`}
+            >
+              <ProgressBar value={processingRate} max={Math.max(processingRate, 300)} />
+            </StatCard>
+            <StatCard
+              label="Unknown Lines"
+              value={formatNumber(state.debug.unknownEvents.length)}
+              hint={`${state.analysis.totalLines > 0 ? formatPercent(state.debug.unknownEvents.length / state.analysis.totalLines, 2) : "0.00%"} total`}
+            />
+            <StatCard
+              label="Parse Errors"
+              value={formatNumber(state.debug.parseIssues.length)}
+              tone="error"
+              hint={state.debug.parseIssues.at(-1)?.reason ?? "No active parser faults"}
+            />
           </div>
-          <div className="obs-kv-list">
+        </section>
+
+        <section className="oa-panel">
+          <SectionHeading icon="memory" eyebrow="Telemetry Environment" title="Runtime profile" />
+          <div className="oa-kv-list">
             <div><span>Core Engine</span><strong>Obsidian-v4</strong></div>
-            <div><span>Data Encoding</span><strong>UTF-8 / CRLF</strong></div>
             <div><span>Analysis Mode</span><strong>{state.analysis.mode}</strong></div>
             <div><span>Watcher</span><strong>{state.watcherStatus}</strong></div>
-            <div><span>Process Affinity</span><strong>High Priority</strong></div>
+            <div><span>Source</span><strong>{state.analysis.sourcePath ?? "not linked"}</strong></div>
+            <div><span>Duration</span><strong>{formatDuration(state.analysis.durationMs)}</strong></div>
           </div>
-          <div className="obs-tip-box">
-            Increasing buffer size improves performance during dense raid pulls but uses
-            more memory. Keep the parser engine separate from UI concerns.
-          </div>
-        </section>
-
-        <section className="obs-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Parse Health Dashboard</p>
-              <h3>Signal integrity</h3>
-            </div>
-          </div>
-          <div className="obs-three-up">
-            <StatCard
-              label="Lines processed"
-              value={formatNumber(state.analysis.totalLines)}
-              accent="cyan"
-              hint="stream throughput"
-            />
-            <StatCard
-              label="Unknown lines"
-              value={formatNumber(state.debug.unknownEvents.length)}
-              accent="violet"
-              hint="needs parser rules"
-            />
-            <StatCard
-              label="Parse errors"
-              value={formatNumber(state.debug.parseIssues.length)}
-              accent="red"
-              hint="action required"
-            />
+          <div className="oa-tip">
+            The parser engine remains separate from the UI, so visual changes do not alter encounter logic.
           </div>
         </section>
 
-        <section className="obs-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">System Stream</p>
-              <h3>Recent engine output</h3>
-            </div>
-          </div>
-          <div className="obs-terminal">
-            {state.debug.latestRawLines.slice(-4).map((line, index) => (
+        <section className="oa-panel">
+          <SectionHeading icon="terminal" eyebrow="System Stream" title="Recent engine output" />
+          <div className="oa-terminal">
+            {state.debug.latestRawLines.slice(-8).map((line, index) => (
               <div key={`${line}-${index}`}>{line}</div>
             ))}
-            {!state.debug.latestRawLines.length ? (
-              <div>[idle] Waiting for log stream...</div>
-            ) : null}
+            {!state.debug.latestRawLines.length ? <div>[idle] Waiting for stream...</div> : null}
           </div>
         </section>
       </div>
@@ -428,346 +513,635 @@ function SetupView(props: ShellProps) {
   );
 }
 
-function LiveView(props: ShellProps) {
+function LiveOverviewView({
+  props,
+  filteredPlayers,
+  searchQuery,
+  onSearchChange,
+  compareMode,
+  onToggleCompare
+}: {
+  props: ShellProps;
+  filteredPlayers: PlayerRow[];
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  compareMode: boolean;
+  onToggleCompare: () => void;
+}) {
   const { state } = props;
   const current = state.currentEncounter;
-  const partyHealth = props.playerRows.length
-    ? Math.max(12, 100 - props.playerRows.reduce((sum, row) => sum + row.deaths, 0) * 10)
-    : 100;
+  const totalDamage = filteredPlayers.reduce((sum, player) => sum + player.totalDamage, 0);
+  const totalDeaths = filteredPlayers.reduce((sum, player) => sum + player.deaths, 0);
+  const selectedForCompare = compareMode ? filteredPlayers.slice(0, 3) : [];
+  const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
 
   return (
-    <section className="obs-page obs-live-page">
-      <div className="obs-live-hero-grid">
-        <section className="obs-panel obs-main-session">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Current Engagement</p>
-              <h2>{current?.label ?? "Awaiting combat activity"}</h2>
+    <section className="oa-screen">
+      <header className="oa-screen-topline">
+        <div>
+          <h1>Party Overview</h1>
+          <p><Icon name="location_on" className="oa-inline-icon" /> {current?.label ?? "Awaiting combat activity"}</p>
+        </div>
+        <div className="oa-toolbar">
+          <button className="oa-switch-card" onClick={props.onToggleCompanions}>
+            <span>Split Pets</span>
+            <div className={`oa-switch ${props.includeCompanions ? "is-on" : ""}`}>
+              <div />
             </div>
-            <div className="obs-duration-block">
-              <span>Duration</span>
-              <strong>{current ? formatDuration(current.durationMs) : "00:00"}</strong>
-            </div>
-          </div>
-          <div className="obs-live-stat-grid">
-            <StatCard label="Total DPS" value={formatShort(current?.dps ?? 0)} accent="violet" />
-            <StatCard label="HPS Output" value={formatShort(current?.hps ?? 0)} accent="cyan" />
-            <StatCard
-              label="Active Deaths"
-              value={formatNumber(props.playerRows.reduce((sum, row) => sum + row.deaths, 0))}
-              accent="red"
-            />
+          </button>
+          <button className="oa-button primary" onClick={onToggleCompare}>
+            <Icon name="compare_arrows" />
+            {compareMode ? "Hide Compare" : "Compare Players"}
+          </button>
+        </div>
+      </header>
+
+      <div className="oa-card-grid four">
+        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint="Live party aggregate" />
+        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} combatants tracked`} />
+        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Build inference confidence" />
+        <StatCard label="Total Time" value={formatDuration(state.analysis.durationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} deaths detected`} />
+      </div>
+
+      {compareMode && selectedForCompare.length ? (
+        <section className="oa-panel">
+          <SectionHeading icon="compare" eyebrow="Compare Overlay" title="Top player snapshot" />
+          <div className="oa-compare-grid">
+            {selectedForCompare.map((player) => (
+              <article className="oa-mini-panel" key={player.id}>
+                <strong>{player.displayName}</strong>
+                <p>{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</p>
+                <div className="oa-mini-metrics">
+                  <span>{formatShort(player.totalDamage)} damage</span>
+                  <span>{formatShort(player.dps)} DPS</span>
+                  <span>{formatPercent(player.critRate)}</span>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
+      ) : null}
 
-        <section className="obs-panel obs-party-health-card">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Party composition</p>
-              <h3>{props.playerRows.length}/{Math.max(props.playerRows.length, 6)} online</h3>
+      <section className="oa-panel">
+        <SectionHeading
+          icon="groups"
+          eyebrow="Party Contribution"
+          title="Live combat table"
+          actions={
+            <div className="oa-search">
+              <Icon name="search" className="oa-inline-icon" />
+              <input value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search players..." />
             </div>
+          }
+        />
+        <div className="oa-table-shell">
+          <div className="oa-table-head party">
+            <span>#</span>
+            <span>Player</span>
+            <span>Class</span>
+            <span>Damage</span>
+            <span>DPS</span>
+            <span>Hits</span>
+            <span>Duration</span>
           </div>
-          <div className="obs-health-list">
-            {props.playerRows.slice(0, 3).map((player) => (
-              <div className="obs-health-row" key={player.id}>
-                <div>
+          {filteredPlayers.map((player, index) => (
+            <button className="oa-table-row party" key={player.id} onClick={() => props.onSelectPlayer(player.id)}>
+              <span className="oa-rank">{String(index + 1).padStart(2, "0")}</span>
+              <span className="oa-player-cell">
+                <span className="oa-avatar-frame">{initialsFromName(player.displayName)}</span>
+                <span>
                   <strong>{player.displayName}</strong>
-                  <small>{player.className ?? "Unknown build"}</small>
-                </div>
-                <div className="obs-health-bar">
-                  <span style={{ width: `${Math.max(12, 100 - player.deaths * 12)}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="obs-panel obs-small-stat-card">
-          <div className="obs-card-label">Party Health</div>
-          <strong>{partyHealth}%</strong>
-          <div className="obs-meter">
-            <span style={{ width: `${partyHealth}%` }} />
-          </div>
-          <small>
-            Critical low: {props.playerRows.filter((row) => row.deaths > 0).length} member(s)
-          </small>
-        </section>
-
-        <section className="obs-panel obs-small-stat-card obs-accent-red">
-          <div className="obs-card-label">Deaths</div>
-          <strong>{formatNumber(props.playerRows.reduce((sum, row) => sum + row.deaths, 0))}</strong>
-          <div className="obs-segment-row">
-            <span className="filled" />
-            <span />
-            <span />
-            <span />
-          </div>
-          <small>
-            Latest issue: {state.debug.parseIssues.at(-1)?.reason ?? "No critical failures"}
-          </small>
-        </section>
-      </div>
-
-      <div className="obs-live-data-grid">
-        <LiveTable playerRows={props.playerRows} onSelectPlayer={props.onSelectPlayer} />
-        <section className="obs-panel obs-log-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Live Log Stream</p>
-              <h3>Recent combat lines</h3>
-            </div>
-          </div>
-          <div className="obs-log-list">
-            {state.debug.latestRawLines.slice(-8).reverse().map((line, index) => (
-              <div className="obs-log-row" key={`${line}-${index}`}>
-                <span>{index === 0 ? "NOW" : `${index}s`}</span>
-                <span>{line}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
+                  <small>{player.paragon ? `@${player.paragon.toLowerCase().replace(/\s+/g, "_")}` : "@unknown_build"}</small>
+                </span>
+              </span>
+              <span><em className="oa-class-pill">{player.className ?? "Unknown"}</em></span>
+              <span>
+                <strong>{formatShort(player.totalDamage)}</strong>
+                <ProgressBar value={player.totalDamage} max={Math.max(...filteredPlayers.map((entry) => entry.totalDamage), 1)} />
+              </span>
+              <span className="tone-secondary-text">{formatShort(player.dps)}</span>
+              <span>{formatNumber(player.hits)}</span>
+              <span>{formatDuration(state.analysis.durationMs)}</span>
+            </button>
+          ))}
+          {!filteredPlayers.length ? <div className="oa-empty-state">No players match the current search.</div> : null}
+        </div>
+      </section>
     </section>
   );
 }
 
-function PlayerView(props: ShellProps) {
-  const selectedPlayer = props.selectedPlayer;
-  const selectedEncounter = props.selectedEncounter;
-  const selectedEncounterStat =
-    selectedPlayer && selectedEncounter
-      ? selectedPlayer.encounters.find((entry) => entry.encounterId === selectedEncounter.id) ??
-        null
-      : null;
-  const totalHits = selectedEncounterStat?.hits ?? selectedPlayer?.hits ?? 0;
-  const totalDamage = selectedEncounterStat?.totalDamage ?? selectedPlayer?.totalDamage ?? 0;
-  const totalHealing = selectedEncounterStat?.totalHealing ?? selectedPlayer?.totalHealing ?? 0;
-  const totalTaken = selectedEncounterStat?.damageTaken ?? selectedPlayer?.damageTaken ?? 0;
-  const durationMs = selectedEncounter?.durationMs ?? props.state.analysis.durationMs;
-  const dps = durationMs > 0 ? totalDamage / (durationMs / 1000) : 0;
+function PlayerOverviewTab({
+  player,
+  encounter,
+  allEncounters
+}: {
+  player: PlayerRow;
+  encounter: EncounterSnapshot | null;
+  allEncounters: EncounterSnapshot[];
+}) {
+  const encounterStat =
+    encounter ? player.encounters.find((entry) => entry.encounterId === encounter.id) ?? null : null;
+  const durationMs = encounter?.durationMs ?? allEncounters.at(-1)?.durationMs ?? 0;
+  const totalDamage = encounterStat?.totalDamage ?? player.totalDamage;
+  const totalHealing = encounterStat?.totalHealing ?? player.totalHealing;
+  const totalTaken = encounterStat?.damageTaken ?? player.damageTaken;
 
   return (
-    <section className="obs-page">
-      <div className="obs-player-header">
-        <div className="obs-player-heading">
-          <button className="obs-back-button" onClick={props.onBackToPlayers}>
-            Back to party
-          </button>
-          <div className="obs-player-avatar">
-            {selectedPlayer?.displayName.slice(0, 2).toUpperCase() ?? "--"}
-          </div>
-          <div>
-            <h1>{selectedPlayer?.displayName ?? "Player breakdown"}</h1>
-            <p>
-              {(selectedPlayer?.className ?? "Unknown class") +
-                (selectedPlayer?.paragon ? ` / ${selectedPlayer.paragon}` : "")}
-            </p>
-          </div>
-        </div>
-        <div className="obs-player-header-meta">
-          <div>
-            <span>Encounter focus</span>
-            <strong>{selectedEncounter?.label ?? "All encounters"}</strong>
-          </div>
-          <button onClick={props.onToggleCompanions}>
-            {props.includeCompanions ? "Pets Included" : "Pets Excluded"}
-          </button>
-        </div>
+    <>
+      <div className="oa-card-grid eight">
+        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="local_fire_department" />
+        <StatCard label="DPS" value={formatShort(durationMs > 0 ? totalDamage / (durationMs / 1000) : player.dps)} tone="secondary" icon="show_chart" />
+        <StatCard label="Combat Duration" value={formatDuration(durationMs)} icon="timer" />
+        <StatCard label="Total Hits" value={formatNumber(encounterStat?.hits ?? player.hits)} icon="ads_click" />
+        <StatCard label="Crit Rate" value={formatPercent(player.critRate)} tone="secondary" icon="flare" />
+        <StatCard label="Flank Rate" value={formatPercent(player.flankRate)} icon="near_me" />
+        <StatCard label="Damage Taken" value={formatShort(totalTaken)} tone="error" icon="shield" />
+        <StatCard label="Healing Done" value={formatShort(totalHealing)} tone="tertiary" icon="volunteer_activism" />
       </div>
 
-      <div className="obs-focus-row">
-        <span className="obs-eyebrow">Focus</span>
+      <div className="oa-split-grid">
+        <section className="oa-panel">
+          <SectionHeading icon="swords" eyebrow="Top Damage Powers" title="Contribution profile" />
+          <div className="oa-list-panel">
+            {player.topSkills.slice(0, 8).map((skill) => {
+              const max = player.topSkills[0]?.total ?? 1;
+              const share = skill.total / Math.max(1, totalDamage);
+              const meta = getPowerMeta(skill.abilityName);
+              return (
+                <div className="oa-list-row" key={skill.abilityName}>
+                  <div>
+                    <strong>{skill.abilityName}</strong>
+                    <small>{meta?.powertype ?? "Combat Power"}</small>
+                  </div>
+                  <div className="oa-list-bar">
+                    <ProgressBar value={skill.total} max={max} />
+                  </div>
+                  <div className="oa-list-metric">
+                    <span>{formatPercent(share)}</span>
+                    <strong>{formatShort(skill.total)}</strong>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="oa-panel">
+          <SectionHeading icon="outbound" eyebrow="Damage by target" title="Mob, boss, and phase split" />
+          <div className="oa-list-panel">
+            {player.targets.slice(0, 8).map((target) => (
+              <div className="oa-list-row compact" key={target.targetName}>
+                <div>
+                  <strong>{target.targetName}</strong>
+                  <small>{isKnownCompanion(target.targetName) ? "Companion entity" : "Encounter target"}</small>
+                </div>
+                <div className="oa-list-metric">
+                  <span>{formatNumber(target.hits)} hits</span>
+                  <strong>{formatShort(target.totalDamage)}</strong>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
+
+function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter: EncounterSnapshot | null }) {
+  const points =
+    encounter === null
+      ? player.timeline
+      : player.timeline.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000));
+
+  return (
+    <div className="oa-tab-layout">
+      <section className="oa-panel">
+        <SectionHeading icon="insights" eyebrow="Telemetry" title="DPS flow over time" actions={<span className="oa-pill">Peak: {formatShort(Math.max(0, ...points.map((point) => point.damage)))}</span>} />
+        <TimelineSvg points={points} mode="damage" accent="primary" />
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="grid_view" eyebrow="Rotation Heatmap" title="Power activation rhythm" />
+        <TimelineHeatmap skills={player.topSkills} timeline={points} />
+      </section>
+    </div>
+  );
+}
+
+function PlayerDamageTab({
+  player,
+  encounter,
+  allEncounters,
+  searchQuery
+}: {
+  player: PlayerRow;
+  encounter: EncounterSnapshot | null;
+  allEncounters: EncounterSnapshot[];
+  searchQuery: string;
+}) {
+  const [sortMode, setSortMode] = useState<"total" | "dps">("total");
+  const durationMs = encounter?.durationMs ?? allEncounters.at(-1)?.durationMs ?? 0;
+  const rows = buildDamageRows(player, sortMode, durationMs).filter((row) =>
+    row.abilityName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const maxTotal = Math.max(...rows.map((row) => row.total), 1);
+
+  return (
+    <div className="oa-tab-layout">
+      <section className="oa-panel">
+        <SectionHeading
+          icon="local_fire_department"
+          eyebrow="Top Damage Powers"
+          title="Detailed outgoing damage"
+          actions={
+            <div className="oa-button-pair">
+              <button className={`oa-pill-button ${sortMode === "total" ? "active" : ""}`} onClick={() => setSortMode("total")}>By Total</button>
+              <button className={`oa-pill-button ${sortMode === "dps" ? "active" : ""}`} onClick={() => setSortMode("dps")}>By DPS</button>
+            </div>
+          }
+        />
+        <div className="oa-data-table">
+          <div className="oa-data-head damage">
+            <span>Power Name</span>
+            <span>Hits</span>
+            <span>Crit %</span>
+            <span>Total Damage</span>
+          </div>
+          {rows.map((row) => (
+            <div className="oa-data-row damage" key={row.abilityName}>
+              <div className="oa-power-cell">
+                <div className="oa-power-icon">{row.abilityName.slice(0, 2).toUpperCase()}</div>
+                <div>
+                  <strong>{row.abilityName}</strong>
+                  <small>{row.type}</small>
+                  <ProgressBar value={row.total} max={maxTotal} />
+                </div>
+              </div>
+              <span>{formatNumber(row.hits)}</span>
+              <span className="tone-secondary-text">{formatPercent(row.critRate)}</span>
+              <span className="oa-right-stat">
+                <strong>{formatShort(row.total)}</strong>
+                <small>{formatPercent(row.total / Math.max(1, player.totalDamage))} of total</small>
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="target" eyebrow="Target Breakdown" title="Damage done on each mob, boss, or phase" />
+        <div className="oa-data-table">
+          <div className="oa-data-head target">
+            <span>Target</span>
+            <span>Hits</span>
+            <span>Crits</span>
+            <span>Total Damage</span>
+          </div>
+          {player.targets
+            .filter((target) => target.targetName.toLowerCase().includes(searchQuery.toLowerCase()))
+            .slice(0, 10)
+            .map((target) => (
+              <div className="oa-data-row target" key={target.targetName}>
+                <div>
+                  <strong>{target.targetName}</strong>
+                  <small>{isKnownCompanion(target.targetName) ? "Companion entity" : "Encounter target"}</small>
+                </div>
+                <span>{formatNumber(target.hits)}</span>
+                <span>{formatNumber(target.critCount)}</span>
+                <span className="oa-right-stat"><strong>{formatShort(target.totalDamage)}</strong></span>
+              </div>
+            ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PlayerHealingTab({ player }: { player: PlayerRow }) {
+  const rows = BuildHealingRows(player);
+  const max = Math.max(...rows.map((row) => row.total), 1);
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid three">
+        <StatCard label="Total Healing Done" value={formatShort(player.totalHealing)} tone="primary" icon="ecg" hint="Outgoing support total" />
+        <StatCard label="HPS" value={formatShort(player.hps)} icon="bolt" hint={`Peak: ${formatShort(player.timeline.reduce((best, point) => Math.max(best, point.healing), 0))}`} />
+        <StatCard label="Critical Frequency" value={formatPercent(player.critRate)} tone="secondary" icon="target" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="volunteer_activism" eyebrow="Healing Done" title="Outgoing healing breakdown" actions={<span className="oa-pill">Total Events: {formatNumber(rows.reduce((sum, row) => sum + row.ticks, 0))}</span>} />
+        {rows.length ? (
+          <div className="oa-data-table">
+            <div className="oa-data-head healing">
+              <span>Power</span>
+              <span>Ticks</span>
+              <span>Total</span>
+              <span>% Breakdown</span>
+              <span>Avg</span>
+              <span>Max</span>
+              <span>Crit%</span>
+            </div>
+            {rows.map((row) => (
+              <div className="oa-data-row healing" key={row.label}>
+                <div>
+                  <strong>{row.label}</strong>
+                  <small>{row.subtype}</small>
+                </div>
+                <span>{formatNumber(row.ticks)}</span>
+                <span>{formatShort(row.total)}</span>
+                <span><ProgressBar value={row.total} max={max} tone="primary" /></span>
+                <span>{formatNumber(row.average)}</span>
+                <span>{formatNumber(row.max)}</span>
+                <span className="tone-secondary-text">{formatPercent(row.critRate)}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="oa-empty-state">No outgoing healing was parsed for this player.</div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+function PlayerDamageTakenTab({
+  player,
+  encounters
+}: {
+  player: PlayerRow;
+  encounters: EncounterSnapshot[];
+}) {
+  const rows = buildDamageTakenRows(player, encounters);
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid four">
+        <StatCard label="Damage Taken" value={formatShort(player.damageTaken)} tone="error" icon="shield" />
+        <StatCard label="Deaths" value={formatNumber(player.deaths)} tone="error" icon="skull" />
+        <StatCard label="Flank Exposure" value={formatPercent(1 - player.flankRate)} icon="warning" />
+        <StatCard label="Companions Tracked" value={formatNumber(player.companionCount)} icon="pets" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="security" eyebrow="Incoming profile" title="Encounter-by-encounter intake" />
+        <div className="oa-data-table">
+          <div className="oa-data-head damage-taken">
+            <span>Encounter</span>
+            <span>Status</span>
+            <span>Pressure</span>
+            <span>Damage Taken</span>
+          </div>
+          {rows.map((row) => (
+            <div className="oa-data-row damage-taken" key={row.label}>
+              <div>
+                <strong>{row.label}</strong>
+                <small>Incoming pressure timeline</small>
+              </div>
+              <span className={`oa-status-chip ${row.status}`}>{row.status}</span>
+              <span><ProgressBar value={row.amount} max={Math.max(...rows.map((entry) => entry.amount), 1)} tone="error" /></span>
+              <span className="oa-right-stat"><strong>{formatShort(row.amount)}</strong></span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PlayerTimingTab({ player, encounter }: { player: PlayerRow; encounter: EncounterSnapshot | null }) {
+  const points = encounter ? player.timeline.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000)) : player.timeline;
+  const totalBuckets = Math.max(1, points.length);
+  const activeBuckets = points.filter((point) => point.damage > 0 || point.healing > 0).length;
+  const averageCadence = totalBuckets > 0 ? player.hits / totalBuckets : 0;
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid four">
+        <StatCard label="Activity Uptime" value={formatPercent(activeBuckets / totalBuckets)} icon="schedule" />
+        <StatCard label="Hit Cadence" value={`${averageCadence.toFixed(1)}/s`} tone="secondary" icon="speed" />
+        <StatCard label="Burst Windows" value={formatNumber(points.filter((point) => point.damage > player.dps).length)} icon="flash_on" />
+        <StatCard label="Timeline Buckets" value={formatNumber(totalBuckets)} icon="grid_view" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="schedule" eyebrow="Cadence" title="Timeline pacing" />
+        <TimelineSvg points={points} mode="damage" accent="secondary" />
+      </section>
+    </div>
+  );
+}
+
+function PlayerPositioningTab({ player }: { player: PlayerRow }) {
+  const max = Math.max(1, ...player.targets.map((target) => target.totalDamage));
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid three">
+        <StatCard label="Flank Rate" value={formatPercent(player.flankRate)} tone="secondary" icon="near_me" hint="Heuristic from parser flags" />
+        <StatCard label="Target Spread" value={formatNumber(player.targets.length)} icon="my_location" hint="Distinct hostile targets hit" />
+        <StatCard label="Companion Presence" value={formatNumber(player.companionCount)} icon="pets" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="explore" eyebrow="Target footprint" title="Pressure spread by target" />
+        <div className="oa-list-panel">
+          {player.targets.slice(0, 10).map((target) => (
+            <div className="oa-list-row" key={target.targetName}>
+              <div>
+                <strong>{target.targetName}</strong>
+                <small>{target.hits} impacts registered</small>
+              </div>
+              <div className="oa-list-bar">
+                <ProgressBar value={target.totalDamage} max={max} tone="secondary" />
+              </div>
+              <div className="oa-list-metric">
+                <span>{formatPercent(target.totalDamage / Math.max(1, player.totalDamage))}</span>
+                <strong>{formatShort(target.totalDamage)}</strong>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PlayerOtherTab({ player }: { player: PlayerRow }) {
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid four">
+        <StatCard label="Class Inference" value={player.className ?? "Unknown"} icon="badge" />
+        <StatCard label="Paragon" value={player.paragon ?? "Unknown"} icon="star" />
+        <StatCard label="Build Confidence" value={formatPercent(player.buildConfidence)} tone="primary" icon="psychology" />
+        <StatCard label="Tracked Powers" value={formatNumber(player.topSkills.length)} icon="deployed_code" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="deployed_code" eyebrow="Support data" title="Parser-supported player metadata" />
+        <div className="oa-kv-list">
+          <div><span>Display Name</span><strong>{player.displayName}</strong></div>
+          <div><span>Total Damage</span><strong>{formatShort(player.totalDamage)}</strong></div>
+          <div><span>Total Healing</span><strong>{formatShort(player.totalHealing)}</strong></div>
+          <div><span>Damage Taken</span><strong>{formatShort(player.damageTaken)}</strong></div>
+          <div><span>Targets Tracked</span><strong>{formatNumber(player.targets.length)}</strong></div>
+          <div><span>Encounter Entries</span><strong>{formatNumber(player.encounters.length)}</strong></div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState }) {
+  const issues = state.debug.parseIssues.slice(-10).reverse();
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid three">
+        <StatCard label="Death Count" value={formatNumber(player.deaths)} tone="error" icon="dangerous" />
+        <StatCard label="Parse Issues" value={formatNumber(issues.length)} icon="bug_report" />
+        <StatCard label="Unknown Events" value={formatNumber(state.debug.unknownEvents.length)} icon="help" />
+      </div>
+      <section className="oa-panel">
+        <SectionHeading icon="dangerous" eyebrow="Fatal events" title="Death and parser issue feed" />
+        <div className="oa-event-list">
+          {issues.length ? (
+            issues.map((issue, index) => (
+              <article className="oa-event-card" key={`${issue.seenAt}-${index}`}>
+                <div className="oa-event-accent tone-error" />
+                <div>
+                  <strong>{issue.reason}</strong>
+                  <small>{new Date(issue.seenAt).toLocaleTimeString()}</small>
+                  <p>{issue.line || "No raw line available."}</p>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="oa-empty-state">No death-adjacent parser issues are currently tracked.</div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function PlayerView({
+  props,
+  searchQuery
+}: {
+  props: ShellProps;
+  searchQuery: string;
+}) {
+  const player = props.selectedPlayer;
+  if (!player) {
+    return <section className="oa-screen"><div className="oa-empty-state">Select a player from the party overview to inspect the detailed breakdown.</div></section>;
+  }
+
+  const encounter = props.selectedEncounter;
+  const heroMetricDamage =
+    encounter === null
+      ? player.totalDamage
+      : player.encounters.find((entry) => entry.encounterId === encounter.id)?.totalDamage ?? 0;
+
+  return (
+    <section className="oa-screen">
+      <header className="oa-player-hero">
+        <div className="oa-player-identity">
+          <button className="oa-back-link" onClick={props.onBackToPlayers}>
+            <Icon name="arrow_back" />
+            Back to Party
+          </button>
+          <div className="oa-portrait">{initialsFromName(player.displayName)}</div>
+          <div>
+            <div className="oa-player-title-row">
+              <h1>{player.displayName}</h1>
+              <span className="oa-badge">{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</span>
+            </div>
+            <p>Focus: {player.topSkills[0]?.abilityName ?? "No parsed powers yet"}</p>
+          </div>
+        </div>
+        <div className="oa-hero-metrics">
+          <div>
+            <span>Total Damage</span>
+            <strong>{formatShort(heroMetricDamage)}</strong>
+          </div>
+          <div>
+            <span>Avg DPS</span>
+            <strong>{formatShort(player.dps)}</strong>
+          </div>
+        </div>
+      </header>
+
+      <div className="oa-focus-bar">
+        <span className="oa-focus-label"><Icon name="filter_alt" className="oa-inline-icon" /> Focus:</span>
         <button
-          className={!selectedEncounter ? "obs-focus-chip active" : "obs-focus-chip"}
+          className={`oa-encounter-chip ${encounter === null ? "active" : ""}`}
           onClick={() => props.onSelectEncounter("all")}
         >
-          All encounters
+          All Encounters
         </button>
-        {props.availableEncounters.map((encounter, index) => (
+        {props.availableEncounters.map((entry, index) => (
           <button
-            className={
-              selectedEncounter?.id === encounter.id
-                ? "obs-focus-chip active"
-                : "obs-focus-chip"
-            }
-            key={encounter.id}
-            onClick={() => props.onSelectEncounter(encounter.id)}
+            className={`oa-encounter-chip ${encounter?.id === entry.id ? "active" : ""}`}
+            key={entry.id}
+            onClick={() => props.onSelectEncounter(entry.id)}
           >
-            #{index + 1} {encounter.label} ({formatDuration(encounter.durationMs)})
+            <Icon name="whatshot" className="oa-chip-icon" />
+            #{index + 1} {entry.label} ({formatDuration(entry.durationMs)})
           </button>
         ))}
       </div>
 
-      <div className="obs-subtab-row">
+      <div className="oa-subtab-shell">
         {DETAIL_TABS.map((tab) => (
           <button
-            className={props.detailTab === tab.id ? "obs-subtab active" : "obs-subtab"}
+            className={`oa-subtab ${props.detailTab === tab.id ? "active" : ""}`}
             key={tab.id}
             onClick={() => props.onDetailTabChange(tab.id)}
           >
             {tab.label}
-            {tab.id === "deaths" && selectedPlayer ? (
-              <span className="obs-subtab-badge">{selectedPlayer.deaths}</span>
-            ) : null}
+            {tab.id === "deaths" && player.deaths > 0 ? <span className="oa-subtab-badge">{player.deaths}</span> : null}
           </button>
         ))}
+        <button className="oa-pill-button companion" onClick={props.onToggleCompanions}>
+          <Icon name="pets" />
+          {props.includeCompanions ? "Pets Included" : "Pets Excluded"}
+        </button>
       </div>
 
-      {selectedPlayer ? (
-        <>
-          <div className="obs-player-main-grid">
-            <section className="obs-panel obs-player-stats-panel">
-              <div className="obs-matrix-grid">
-                <StatCard label="Combat Time" value={formatDuration(durationMs)} />
-                <StatCard label="Total Hits" value={formatNumber(totalHits)} />
-                <StatCard
-                  label="Crit Rate"
-                  value={`${(selectedPlayer.critRate * 100).toFixed(1)}%`}
-                  accent="cyan"
-                />
-                <StatCard label="DPS" value={formatShort(dps)} accent="violet" />
-                <StatCard
-                  label="Flank Rate"
-                  value={`${(selectedPlayer.flankRate * 100).toFixed(1)}%`}
-                />
-                <StatCard label="Damage Taken" value={formatShort(totalTaken)} accent="red" />
-                <StatCard label="Healing" value={formatShort(totalHealing)} accent="cyan" />
-                <StatCard
-                  label="Build Confidence"
-                  value={`${Math.round(selectedPlayer.buildConfidence * 100)}%`}
-                />
-              </div>
-            </section>
-            <section className="obs-panel obs-performance-panel">
-              <div className="obs-panel-head">
-                <div>
-                  <p className="obs-eyebrow">Performance Snapshot</p>
-                  <h3>Damage profile</h3>
-                </div>
-                <span className="obs-soft-pill">live compare</span>
-              </div>
-              <div className="obs-bar-chart">
-                {selectedPlayer.topSkills.slice(0, 7).map((skill) => {
-                  const max = selectedPlayer.topSkills[0]?.total ?? 1;
-                  const height = Math.max(18, (skill.total / max) * 100);
-                  return (
-                    <div className="obs-bar-column" key={skill.abilityName}>
-                      <span style={{ height: `${height}%` }} />
-                      <small>{skill.abilityName.split(" ")[0]}</small>
-                    </div>
-                  );
-                })}
-              </div>
-              <p className="obs-panel-footnote">
-                Relative output against this player&apos;s top powers.
-              </p>
-            </section>
-          </div>
-
-          {props.detailTab === "overview" || props.detailTab === "damageOut" ? (
-            <PowerTable skills={selectedPlayer.topSkills} hits={totalHits} />
-          ) : null}
-
-          {props.detailTab === "timeline" ? (
-            <TimelineChart points={selectedPlayer.timeline} encounter={selectedEncounter} />
-          ) : null}
-
-          <div className="obs-secondary-grid">
-            <section className="obs-panel">
-              <div className="obs-panel-head">
-                <div>
-                  <p className="obs-eyebrow">
-                    {props.detailTab === "damageOut" ? "Target Focus" : "Top Targets"}
-                  </p>
-                  <h3>Damage by mob, boss, or phase</h3>
-                </div>
-              </div>
-              <div className="obs-mini-list">
-                {selectedPlayer.targets.slice(0, 6).map((target) => (
-                  <div className="obs-mini-row" key={target.targetName}>
-                    <span>
-                      {target.targetName}
-                      {isKnownCompanion(target.targetName) ? (
-                        <small className="obs-soft-pill">Companion</small>
-                      ) : null}
-                    </span>
-                    <strong>{formatShort(target.totalDamage)}</strong>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="obs-panel">
-              <div className="obs-panel-head">
-                <div>
-                  <p className="obs-eyebrow">Encounter Focus</p>
-                  <h3>Boss and phase split</h3>
-                </div>
-              </div>
-              <div className="obs-mini-list">
-                {props.availableEncounters.map((encounter) => {
-                  const stat = selectedPlayer.encounters.find(
-                    (entry) => entry.encounterId === encounter.id
-                  );
-                  return (
-                    <div className="obs-mini-row" key={encounter.id}>
-                      <span>{encounter.label}</span>
-                      <strong>{formatShort(stat?.totalDamage ?? 0)}</strong>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            <section className="obs-panel">
-              <div className="obs-panel-head">
-                <div>
-                  <p className="obs-eyebrow">Combat Signals</p>
-                  <h3>Parser-supported detail</h3>
-                </div>
-              </div>
-              <div className="obs-mini-list">
-                <div className="obs-mini-row">
-                  <span>Deaths</span>
-                  <strong>{formatNumber(selectedPlayer.deaths)}</strong>
-                </div>
-                <div className="obs-mini-row">
-                  <span>Companions tracked</span>
-                  <strong>{formatNumber(selectedPlayer.companionCount)}</strong>
-                </div>
-                <div className="obs-mini-row">
-                  <span>Timeline buckets</span>
-                  <strong>{formatNumber(selectedPlayer.timeline.length)}</strong>
-                </div>
-              </div>
-            </section>
-          </div>
-        </>
-      ) : (
-        <div className="obs-empty">Select a player to inspect the detailed Figma breakdown view.</div>
-      )}
+      {props.detailTab === "overview" ? (
+        <PlayerOverviewTab player={player} encounter={encounter} allEncounters={props.availableEncounters} />
+      ) : null}
+      {props.detailTab === "timeline" ? <PlayerTimelineTab player={player} encounter={encounter} /> : null}
+      {props.detailTab === "damageOut" ? (
+        <PlayerDamageTab player={player} encounter={encounter} allEncounters={props.availableEncounters} searchQuery={searchQuery} />
+      ) : null}
+      {props.detailTab === "healing" ? <PlayerHealingTab player={player} /> : null}
+      {props.detailTab === "damageTaken" ? <PlayerDamageTakenTab player={player} encounters={props.availableEncounters} /> : null}
+      {props.detailTab === "timing" ? <PlayerTimingTab player={player} encounter={encounter} /> : null}
+      {props.detailTab === "positioning" ? <PlayerPositioningTab player={player} /> : null}
+      {props.detailTab === "other" ? <PlayerOtherTab player={player} /> : null}
+      {props.detailTab === "deaths" ? <PlayerDeathsTab player={player} state={props.state} /> : null}
     </section>
   );
 }
 
 function RecentView({ state }: { state: AppState }) {
   return (
-    <section className="obs-page">
-      <div className="obs-page-hero">
-        <p className="obs-eyebrow">Encounter Archive</p>
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Encounter Archive</p>
         <h1>Completed engagements</h1>
-        <p>Recent fights are kept in memory so you can review timings and damage totals.</p>
-      </div>
-      <section className="obs-panel">
-        <div className="obs-table">
-          <div className="obs-table-head">
+        <p>Stored encounters from the current session. Use these for focused post-run review.</p>
+      </header>
+      <section className="oa-panel">
+        <SectionHeading icon="history_edu" eyebrow="Archive" title="Recent encounters" />
+        <div className="oa-table-shell">
+          <div className="oa-table-head archive">
             <span>Encounter</span>
             <span>Duration</span>
             <span>DPS</span>
             <span>Damage</span>
           </div>
           {state.recentEncounters.map((encounter) => (
-            <div className="obs-table-row static" key={encounter.id}>
+            <div className="oa-table-row archive static" key={encounter.id}>
               <span>{encounter.label}</span>
               <span>{formatDuration(encounter.durationMs)}</span>
               <span>{formatShort(encounter.dps)}</span>
@@ -782,34 +1156,28 @@ function RecentView({ state }: { state: AppState }) {
 
 function DebugView({ state }: { state: AppState }) {
   return (
-    <section className="obs-page">
-      <div className="obs-page-hero">
-        <p className="obs-eyebrow">Debug</p>
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Debug</p>
         <h1>Engine visibility</h1>
-        <p>Raw lines and parser issues stay visible here while the engine evolves.</p>
-      </div>
-      <div className="obs-debug-grid">
-        <section className="obs-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Latest Raw Lines</p>
-              <h3>{state.debug.latestRawLines.length} buffered</h3>
-            </div>
-          </div>
-          <pre className="obs-terminal">{state.debug.latestRawLines.join("\n")}</pre>
+        <p>Raw line stream and parser issues stay accessible while parser rules evolve.</p>
+      </header>
+      <div className="oa-split-grid">
+        <section className="oa-panel">
+          <SectionHeading icon="terminal" eyebrow="Latest Raw Lines" title={`${state.debug.latestRawLines.length} buffered`} />
+          <pre className="oa-terminal">{state.debug.latestRawLines.join("\n")}</pre>
         </section>
-        <section className="obs-panel">
-          <div className="obs-panel-head">
-            <div>
-              <p className="obs-eyebrow">Parse Issues</p>
-              <h3>{state.debug.parseIssues.length} tracked</h3>
-            </div>
-          </div>
-          <div className="obs-issue-list">
+        <section className="oa-panel">
+          <SectionHeading icon="bug_report" eyebrow="Parse Issues" title={`${state.debug.parseIssues.length} tracked`} />
+          <div className="oa-event-list">
             {state.debug.parseIssues.slice(-12).reverse().map((issue, index) => (
-              <article className="obs-issue-card" key={`${issue.seenAt}-${index}`}>
-                <strong>{issue.reason}</strong>
-                <p>{issue.line}</p>
+              <article className="oa-event-card" key={`${issue.seenAt}-${index}`}>
+                <div className="oa-event-accent tone-error" />
+                <div>
+                  <strong>{issue.reason}</strong>
+                  <small>{new Date(issue.seenAt).toLocaleTimeString()}</small>
+                  <p>{issue.line}</p>
+                </div>
               </article>
             ))}
           </div>
@@ -819,113 +1187,364 @@ function DebugView({ state }: { state: AppState }) {
   );
 }
 
-export function ObsidianScreens(props: ShellProps) {
+function SettingsView({
+  props,
+  settings,
+  onSettingsChange
+}: {
+  props: ShellProps;
+  settings: ProfileSettings;
+  onSettingsChange: (next: ProfileSettings) => void;
+}) {
+  const selectedPlayer = props.selectedPlayer;
+
   return (
-    <div className="obsidian-app">
-      <aside className="obs-sidebar">
-        <div className="obs-brand">
-          <div className="obs-brand-mark">O</div>
+    <section className="oa-screen">
+      <div className="oa-settings-grid">
+        <section className="oa-panel">
+          <div className="oa-profile-hero">
+            <div className="oa-settings-avatar">{initialsFromName(selectedPlayer?.displayName ?? "System Admin")}</div>
+            <div>
+              <div className="oa-player-title-row">
+                <h1>{selectedPlayer?.displayName ?? "SYSTEM_ADMIN"}</h1>
+                <span className="oa-badge">User Control Node</span>
+              </div>
+              <p>"The blade speaks once; the parser records it forever."</p>
+            </div>
+          </div>
+          <div className="oa-card-grid three">
+            <StatCard label="Total Time" value={`${Math.max(1, Math.round(props.state.analysis.durationMs / 3_600_000))} hours`} tone="secondary" icon="schedule" />
+            <StatCard label="Peak DPS" value={formatShort(Math.max(0, ...props.playerRows.map((row) => row.dps)))} tone="primary" icon="trending_up" />
+            <StatCard label="Primary Class" value={selectedPlayer?.className ?? "Unknown"} tone="tertiary" icon="swords" />
+          </div>
+        </section>
+
+        <section className="oa-panel">
+          <SectionHeading icon="settings" eyebrow="App Configuration" title="Global protocol" />
+          <div className="oa-field-stack">
+            <label className="oa-field">
+              <span>Log file directory</span>
+              <div className="oa-input-row">
+                <div className="oa-input-shell">
+                  <input readOnly value={props.folderInput || props.state.analysis.sourcePath || "Not configured"} />
+                </div>
+                <button className="oa-button secondary" onClick={props.onChooseFolder}>
+                  <Icon name="folder_open" />
+                </button>
+              </div>
+            </label>
+
+            <div className="oa-setting-row">
+              <div>
+                <strong>Auto-start with Windows</strong>
+                <small>Initialize protocol at login</small>
+              </div>
+              <button
+                className={`oa-switch ${settings.autoStart ? "is-on" : ""}`}
+                onClick={() => onSettingsChange({ ...settings, autoStart: !settings.autoStart })}
+              >
+                <div />
+              </button>
+            </div>
+
+            <div className="oa-setting-row">
+              <div>
+                <strong>Sound Alerts</strong>
+                <small>Combat start notification chime</small>
+              </div>
+              <button
+                className={`oa-switch ${settings.soundAlerts ? "is-on" : ""}`}
+                onClick={() => onSettingsChange({ ...settings, soundAlerts: !settings.soundAlerts })}
+              >
+                <div />
+              </button>
+            </div>
+
+            <label className="oa-slider-field">
+              <div>
+                <strong>Overlay Opacity</strong>
+                <small>{settings.overlayOpacity}%</small>
+              </div>
+              <input
+                type="range"
+                min={50}
+                max={100}
+                value={settings.overlayOpacity}
+                onChange={(event) =>
+                  onSettingsChange({ ...settings, overlayOpacity: Number(event.target.value) })
+                }
+              />
+            </label>
+          </div>
+        </section>
+
+        <section className="oa-panel">
+          <SectionHeading icon="palette" eyebrow="Appearance" title="Visual core" />
+          <div className="oa-theme-grid">
+            <button
+              className={`oa-theme-card ${settings.visualCore === "obsidian-dark" ? "active" : ""}`}
+              onClick={() => onSettingsChange({ ...settings, visualCore: "obsidian-dark" })}
+            >
+              <div className="oa-theme-preview dark">
+                <div />
+              </div>
+              <span>Obsidian Dark</span>
+            </button>
+            <button
+              className={`oa-theme-card ${settings.visualCore === "obsidian-flux" ? "active" : ""}`}
+              onClick={() => onSettingsChange({ ...settings, visualCore: "obsidian-flux" })}
+            >
+              <div className="oa-theme-preview flux">
+                <div />
+              </div>
+              <span>Obsidian Flux</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+  );
+}
+
+function NotificationsPanel({ state }: { state: AppState }) {
+  const items = [
+    ...state.debug.latestRawLines.slice(-2).reverse().map((line) => ({
+      title: "Log stream active",
+      detail: line,
+      time: "just now",
+      tone: "secondary" as const
+    })),
+    ...state.debug.parseIssues.slice(-4).reverse().map((issue) => ({
+      title: issue.reason,
+      detail: issue.line || "No raw line attached.",
+      time: new Date(issue.seenAt).toLocaleTimeString(),
+      tone: "error" as const
+    }))
+  ];
+
+  return (
+    <aside className="oa-overlay">
+      <SectionHeading icon="notifications" eyebrow="Tactical Notifications" title="Live event feed" actions={<span className="oa-pill">{items.length} items</span>} />
+      <div className="oa-event-list">
+        {items.length ? items.map((item, index) => (
+          <article className="oa-event-card" key={`${item.title}-${index}`}>
+            <div className={`oa-event-accent tone-${item.tone}`} />
+            <div>
+              <strong>{item.title}</strong>
+              <small>{item.time}</small>
+              <p>{item.detail}</p>
+            </div>
+          </article>
+        )) : <div className="oa-empty-state">No live notifications yet.</div>}
+      </div>
+    </aside>
+  );
+}
+
+function DiagnosticsPanel({ state }: { state: AppState }) {
+  const unknownRate =
+    state.analysis.totalLines > 0
+      ? state.debug.unknownEvents.length / state.analysis.totalLines
+      : 0;
+
+  return (
+    <aside className="oa-overlay diagnostics">
+      <SectionHeading icon="memory" eyebrow="System Diagnostics" title="Parser health" actions={<span className="oa-pill">node_04 stable</span>} />
+      <div className="oa-kv-list">
+        <div><span>Core Engine</span><strong>{state.watcherStatus === "error" ? "Faulted" : "Operational"}</strong></div>
+        <div><span>Log Latency</span><strong>{state.analysis.mode === "idle" ? "--" : "<16ms"}</strong></div>
+        <div><span>Read Offset</span><strong>{formatNumber(state.debug.currentOffset)}</strong></div>
+        <div><span>Unknown Rate</span><strong>{formatPercent(unknownRate, 2)}</strong></div>
+      </div>
+    </aside>
+  );
+}
+
+export function ObsidianScreens(props: ShellProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [compareMode, setCompareMode] = useState(false);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const activePlayerName = props.selectedPlayer?.displayName ?? "SYSTEM_ADMIN";
+  const sessionSeconds = Math.floor(props.state.analysis.durationMs / 1000);
+  const sessionTimer = `${Math.floor(sessionSeconds / 3600)
+    .toString()
+    .padStart(2, "0")}:${Math.floor((sessionSeconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0")}:${(sessionSeconds % 60).toString().padStart(2, "0")}`;
+
+  const filteredPlayers = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return props.playerRows;
+    }
+
+    const query = searchQuery.toLowerCase();
+    return props.playerRows.filter((player) => {
+      const className = player.className?.toLowerCase() ?? "";
+      return (
+        player.displayName.toLowerCase().includes(query) ||
+        className.includes(query) ||
+        player.topSkills.some((skill) => skill.abilityName.toLowerCase().includes(query))
+      );
+    });
+  }, [props.playerRows, searchQuery]);
+
+  const rootStyle = {
+    "--oa-overlay-opacity": `${settings.overlayOpacity / 100}`
+  } as CSSProperties;
+
+  const navItems: Array<{ id: View; label: string; icon: string }> = [
+    { id: "setup", label: "Setup", icon: "settings_input_component" },
+    { id: "recent", label: "Encounters", icon: "history_edu" },
+    { id: "debug", label: "Debug", icon: "bug_report" },
+    { id: "library", label: "Library", icon: "menu_book" },
+    { id: "settings", label: "Settings", icon: "settings" }
+  ];
+
+  return (
+    <div className={`obsidian-architect ${settings.visualCore}`} style={rootStyle}>
+      <aside className="oa-sidebar">
+        <div className="oa-brand">
+          <div className="oa-brand-mark">
+            <Icon name="architecture" />
+          </div>
           <div>
-            <strong>OBSIDIAN</strong>
-            <span>Combat Parser v1.0</span>
+            <h2>OBSIDIAN</h2>
+            <p>Combat Parser v1.0</p>
           </div>
         </div>
 
-        <nav className="obs-nav">
+        <nav className="oa-nav">
           <button
-            className={props.view === "setup" ? "obs-nav-item active" : "obs-nav-item"}
+            className={`oa-nav-item ${props.view === "setup" ? "active" : ""}`}
             onClick={() => props.onViewChange("setup")}
           >
-            Setup
+            <Icon name="settings_input_component" />
+            <span>Setup</span>
           </button>
-          <div className="obs-nav-group">
+
+          <div className="oa-live-group">
             <button
-              className={
-                props.view === "live" || props.view === "players"
-                  ? "obs-nav-item active"
-                  : "obs-nav-item"
-              }
+              className={`oa-nav-item ${props.view === "live" || props.view === "players" ? "active" : ""}`}
               onClick={() => props.onViewChange("live")}
             >
-              Live
+              <Icon name="sensors" />
+              <span>Live</span>
+              <Icon name="expand_more" className="oa-nav-expand" />
             </button>
-            <div className="obs-nav-subitems">
+            <div className="oa-subnav">
               {DETAIL_TABS.map((tab) => (
                 <button
-                  className={
-                    props.view === "players" && props.detailTab === tab.id
-                      ? "obs-nav-subitem active"
-                      : "obs-nav-subitem"
-                  }
                   key={tab.id}
+                  className={`oa-subnav-item ${props.view === "players" && props.detailTab === tab.id ? "active" : ""}`}
                   onClick={() => {
                     props.onViewChange("players");
                     props.onDetailTabChange(tab.id);
                   }}
                 >
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  {tab.id === "deaths" && (props.selectedPlayer?.deaths ?? 0) > 0 ? (
+                    <span className="oa-death-pill">{props.selectedPlayer?.deaths}</span>
+                  ) : null}
                 </button>
               ))}
             </div>
           </div>
-          <button
-            className={props.view === "recent" ? "obs-nav-item active" : "obs-nav-item"}
-            onClick={() => props.onViewChange("recent")}
-          >
-            Encounters
-          </button>
-          <button
-            className={props.view === "debug" ? "obs-nav-item active" : "obs-nav-item"}
-            onClick={() => props.onViewChange("debug")}
-          >
-            Debug
-          </button>
+
+          {navItems.slice(1).map((item) => (
+            <button
+              key={item.id}
+              className={`oa-nav-item ${props.view === item.id ? "active" : ""}`}
+              onClick={() => props.onViewChange(item.id)}
+            >
+              <Icon name={item.icon} />
+              <span>{item.label}</span>
+            </button>
+          ))}
         </nav>
 
-        <div className="obs-sidebar-footer">
-          <button className="obs-session-button" onClick={() => props.onViewChange("setup")}>
-            New log session
+        <div className="oa-sidebar-footer">
+          <div className="oa-sidebar-profile">
+            <div className="oa-sidebar-avatar">{initialsFromName(activePlayerName)}</div>
+            <div>
+              <strong>{activePlayerName}</strong>
+              <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : "Engine Operator"}</span>
+            </div>
+          </div>
+          <button className="oa-button session" onClick={() => props.onViewChange("setup")}>
+            New Session
           </button>
-          <div className="obs-engine-ready">
-            <span className="obs-status-dot" />
-            <span>Engine Ready</span>
+          <div className="oa-sidebar-status">
+            <div className="oa-system-pill">
+              <span className="oa-system-dot" />
+              <span>Engine Ready</span>
+            </div>
           </div>
         </div>
       </aside>
 
-      <div className="obs-main">
-        <header className="obs-topbar">
-          <div className="obs-topbar-title">
-            {props.view === "players" ? "PLAYER DAMAGE BREAKDOWN" : "NEVERWINTER LIVE PARSER"}
+      <div className="oa-main">
+        <header className="oa-topbar">
+          <div className="oa-topbar-left">
+            {props.view === "players" ? (
+              <button className="oa-back-control" onClick={props.onBackToPlayers}>
+                <Icon name="arrow_back" />
+                Back to Party
+              </button>
+            ) : (
+              <span className="oa-title-lock">{props.view === "settings" ? "PROFILE SETTINGS" : "NEVERWINTER LIVE PARSER"}</span>
+            )}
+            <div className="oa-session-group">
+              <span className="oa-session-pill">SESSION: ACTIVE</span>
+              <div className="oa-session-meta">
+                <span>{sessionTimer}</span>
+                <span>SYSTEM: NOMINAL</span>
+              </div>
+            </div>
           </div>
-          <div className="obs-topbar-actions">
-            <div className="obs-search-box">Search logs...</div>
-            <button className="obs-icon-button" onClick={props.onToggleNotifications}>
-              Notifications
-            </button>
-            <button className="obs-icon-button" onClick={props.onToggleDiagnostics}>
-              System
-            </button>
-            <button className="obs-avatar-button">VA</button>
+          <div className="oa-topbar-right">
+            <label className="oa-search topbar">
+              <Icon name="search" className="oa-inline-icon" />
+              <input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="QUERY TELEMETRY..."
+              />
+            </label>
+            <button className="oa-icon-button" onClick={props.onToggleNotifications}><Icon name="notifications" /></button>
+            <button className="oa-icon-button" onClick={props.onToggleDiagnostics}><Icon name="memory" /></button>
+            <button className="oa-icon-button power"><Icon name="power_settings_new" /></button>
           </div>
         </header>
 
-        <main className="obs-main-scroll">
+        <main className="oa-main-scroll">
           {props.view === "setup" ? <SetupView {...props} /> : null}
-          {props.view === "live" ? <LiveView {...props} /> : null}
-          {props.view === "players" ? <PlayerView {...props} /> : null}
+          {props.view === "live" ? (
+            <LiveOverviewView
+              props={props}
+              filteredPlayers={filteredPlayers}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              compareMode={compareMode}
+              onToggleCompare={() => setCompareMode((value) => !value)}
+            />
+          ) : null}
+          {props.view === "players" ? <PlayerView props={props} searchQuery={searchQuery} /> : null}
           {props.view === "recent" ? <RecentView state={props.state} /> : null}
           {props.view === "debug" ? <DebugView state={props.state} /> : null}
+          {props.view === "library" ? <LibraryView /> : null}
+          {props.view === "settings" ? (
+            <SettingsView props={props} settings={settings} onSettingsChange={setSettings} />
+          ) : null}
         </main>
 
         {!props.isDesktopRuntime ? (
-          <div className="obs-runtime-banner">
+          <div className="oa-runtime-banner">
             Browser preview only. Live monitoring and file import require the Electron desktop app.
           </div>
         ) : null}
 
-        <div className="obs-floating-status">
-          <span className="obs-status-dot" />
+        <div className="oa-floating-status">
+          <span className="oa-system-dot" />
           <span>{props.state.analysis.mode === "idle" ? "Idle" : "Live"}</span>
           <strong>{formatShort(props.state.analysis.parsedEvents)} events</strong>
         </div>

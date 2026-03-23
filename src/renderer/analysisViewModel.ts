@@ -8,7 +8,14 @@ import type {
 } from "../shared/types";
 import { inferBuildFromSkills } from "./nwMetadata";
 
-export type View = "setup" | "live" | "players" | "recent" | "debug";
+export type View =
+  | "setup"
+  | "live"
+  | "players"
+  | "recent"
+  | "debug"
+  | "library"
+  | "settings";
 
 export type DetailTab =
   | "overview"
