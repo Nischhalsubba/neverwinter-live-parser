@@ -258,6 +258,16 @@ input {
   color: #9cc7ff;
 }
 
+.class-pill {
+  background: rgba(255, 159, 111, 0.16);
+  color: #ffb694;
+}
+
+.subtle-pill {
+  background: rgba(141, 161, 191, 0.14);
+  color: #c1d0e6;
+}
+
 .nested-panel {
   padding: 0;
   border: 0;
@@ -269,6 +279,17 @@ input {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.detail-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.detail-badges .pill {
+  margin-left: 0;
 }
 
 .focus-strip {

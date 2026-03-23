@@ -1,0 +1,5260 @@
+{
+  "playerPowers": [
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Bloodletter",
+      "cooldown": "11.6",
+      "casttime": "0.73",
+      "magnitude": "950"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Bounding Slam",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "80"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Crescendo",
+      "cooldown": "0",
+      "casttime": "0.25",
+      "magnitude": "2800"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Indomitable Battle Strike",
+      "cooldown": "11.6",
+      "casttime": "1.1",
+      "magnitude": "750"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Mighty Leap",
+      "cooldown": "17.4",
+      "casttime": "0.4",
+      "magnitude": "380"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Not so Fast",
+      "cooldown": "11.6",
+      "casttime": "0.7",
+      "magnitude": "300"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Punishing Charge",
+      "cooldown": "17.4",
+      "casttime": "0.25",
+      "magnitude": "650"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Savage Advance",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "1800"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Spinning Strike",
+      "cooldown": "0",
+      "casttime": "1.3",
+      "magnitude": "1400"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Sure Strike",
+      "cooldown": "0",
+      "casttime": "0.45",
+      "magnitude": "60"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Daily",
+      "powername": "Adamantine Strike",
+      "cooldown": "0",
+      "casttime": "1.3",
+      "magnitude": "1200"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Daily",
+      "powername": "Avalanche of Steel",
+      "cooldown": "0",
+      "casttime": "5",
+      "magnitude": "1400"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Encounter",
+      "powername": "Axestorm",
+      "cooldown": "15.4",
+      "casttime": "1.4",
+      "magnitude": "450"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Encounter",
+      "powername": "Battle Fury",
+      "cooldown": "24.2",
+      "casttime": "1.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "At-Will",
+      "powername": "Brash Strike",
+      "cooldown": "0",
+      "casttime": "0.65",
+      "magnitude": "140"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Encounter",
+      "powername": "Frenzy",
+      "cooldown": "15.4",
+      "casttime": "1.1",
+      "magnitude": "1275"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Encounter",
+      "powername": "Hidden Daggers",
+      "cooldown": "17.4",
+      "casttime": "0.8",
+      "magnitude": "100"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "At-Will",
+      "powername": "Relentless Slash",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "55"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster",
+      "powertype": "Encounter",
+      "powername": "Roar",
+      "cooldown": "12.5",
+      "casttime": "0.61",
+      "magnitude": "250"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Daily",
+      "powername": "Battle High",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "At-Will",
+      "powername": "Challenger's Slash",
+      "cooldown": "0",
+      "casttime": "0.65",
+      "magnitude": "30"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Encounter",
+      "powername": "Come and Get It",
+      "cooldown": "14.5",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Encounter",
+      "powername": "Enduring Shout",
+      "cooldown": "29",
+      "casttime": "1.15",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Encounter",
+      "powername": "Ingnore Weakness",
+      "cooldown": "23.2",
+      "casttime": "0.7",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Encounter",
+      "powername": "Primal Fury",
+      "cooldown": "0.9",
+      "casttime": "1",
+      "magnitude": "750"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Daily",
+      "powername": "Primal Instinct",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "At-Will",
+      "powername": "Sentinel's Slash",
+      "cooldown": "0",
+      "casttime": "2.8",
+      "magnitude": "50 - 300"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel",
+      "powertype": "Encounter",
+      "powername": "Takedown",
+      "cooldown": "9.6",
+      "casttime": "0.9",
+      "magnitude": "400"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Dancing Lights",
+      "cooldown": "20",
+      "casttime": "0.8",
+      "magnitude": "700"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Duet",
+      "cooldown": "15.3",
+      "casttime": "0.7",
+      "magnitude": "230"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Encore",
+      "cooldown": "0",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Fleche",
+      "cooldown": "0",
+      "casttime": "0.6",
+      "magnitude": "180"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Flourish",
+      "cooldown": "17.2",
+      "casttime": "0.9",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Inspiration",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Lunge",
+      "cooldown": "17.2",
+      "casttime": "0.25",
+      "magnitude": "400"
+    },
+    {
+      "class": "Bard",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Reprise",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "35"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "At-Will",
+      "powername": "Arpeggio",
+      "cooldown": "1",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "Encounter",
+      "powername": "Bassline",
+      "cooldown": "22.9",
+      "casttime": "10",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "Daily",
+      "powername": "Curtain Call",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "Encounter",
+      "powername": "Delayed Play",
+      "cooldown": "11.4",
+      "casttime": "1.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "At-Will",
+      "powername": "Phantasmal Concerto",
+      "cooldown": "0",
+      "casttime": "1.1",
+      "magnitude": "70"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel",
+      "powertype": "Encounter",
+      "powername": "Serenade",
+      "cooldown": "22.9",
+      "casttime": "2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "Encounter",
+      "powername": "Ad Libitum",
+      "cooldown": "15.2",
+      "casttime": "0.35",
+      "magnitude": "400"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "At-Will",
+      "powername": "Con Elemento",
+      "cooldown": "0",
+      "casttime": "1.2",
+      "magnitude": "130"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "Encounter",
+      "powername": "Contre",
+      "cooldown": "19",
+      "casttime": "5.75",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "Daily",
+      "powername": "Lore",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "At-Will",
+      "powername": "Staccato",
+      "cooldown": "0",
+      "casttime": "0.35",
+      "magnitude": "80"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade",
+      "powertype": "Encounter",
+      "powername": "Volti Subito",
+      "cooldown": "15.2",
+      "casttime": "0.9",
+      "magnitude": "200"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Divine Glow",
+      "cooldown": "28.5",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Hallowed Ground",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Bastion of Health",
+      "cooldown": "0.4",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Break the Spirit",
+      "cooldown": "20",
+      "casttime": "0.8",
+      "magnitude": "520"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Daily",
+      "powername": "Celestial Prominence",
+      "cooldown": "0",
+      "casttime": "0",
+      "magnitude": "700"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Chains of Blazing Light",
+      "cooldown": "15.2",
+      "casttime": "1.2",
+      "magnitude": "320"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "At-Will",
+      "powername": "Conflagrate",
+      "cooldown": "0",
+      "casttime": "1.8",
+      "magnitude": "150"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Daunting Light",
+      "cooldown": "0.9",
+      "casttime": "0.74",
+      "magnitude": "280"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Daily",
+      "powername": "Flame Strike",
+      "cooldown": "0",
+      "casttime": "2",
+      "magnitude": "260"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Forgemaster's Flame",
+      "cooldown": "0.9",
+      "casttime": "0.8",
+      "magnitude": "770"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Geas",
+      "cooldown": "20",
+      "casttime": "0.8",
+      "magnitude": "650"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Daily",
+      "powername": "Guardian of Faith",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "1700"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Daily",
+      "powername": "Hammer of Fate",
+      "cooldown": "0",
+      "casttime": "0.25",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "At-Will",
+      "powername": "Lance of Faith",
+      "cooldown": "0",
+      "casttime": "0.6",
+      "magnitude": "110"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Prophecy of Doom",
+      "cooldown": "24.7",
+      "casttime": "1.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "At-Will",
+      "powername": "Sacred Flame",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "100"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "At-Will",
+      "powername": "Scattering Light",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "70"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Searing Javelin",
+      "cooldown": "0.9",
+      "casttime": "1.1",
+      "magnitude": "470"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter",
+      "powertype": "Encounter",
+      "powername": "Sun Burst",
+      "cooldown": "11.4",
+      "casttime": "1",
+      "magnitude": "260"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Daily",
+      "powername": "Anointed Army",
+      "cooldown": "0",
+      "casttime": "1.1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Astral Shield",
+      "cooldown": "0.4",
+      "casttime": "0.15",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Bastion of Health",
+      "cooldown": "0.4",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "At-Will",
+      "powername": "Blessing of Light",
+      "cooldown": "0",
+      "casttime": "1.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Cleansing Light",
+      "cooldown": "0.4",
+      "casttime": "1.61",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Daunting Light",
+      "cooldown": "0.9",
+      "casttime": "0.74",
+      "magnitude": "280"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Exaltation",
+      "cooldown": "19",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Daily",
+      "powername": "Flame Strike",
+      "cooldown": "0",
+      "casttime": "2",
+      "magnitude": "260"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Geas",
+      "cooldown": "20",
+      "casttime": "0.8",
+      "magnitude": "650"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Daily",
+      "powername": "Guardian of Faith",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "1700"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Daily",
+      "powername": "Guardian of Life",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Healing Word",
+      "cooldown": "0.4",
+      "casttime": "1.6",
+      "magnitude": "450"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Intercession",
+      "cooldown": "22.8",
+      "casttime": "0.3",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "At-Will",
+      "powername": "Sacred Flame",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "90"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "At-Will",
+      "powername": "Scattering Light",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "70"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "At-Will",
+      "powername": "Soothe",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout",
+      "powertype": "Encounter",
+      "powername": "Sun Burst",
+      "cooldown": "11.4",
+      "casttime": "1",
+      "magnitude": "260"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Anvil of Doom",
+      "cooldown": "16.7",
+      "casttime": "0.86",
+      "magnitude": "880"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Brazen Slash",
+      "cooldown": "0",
+      "casttime": "0.5",
+      "magnitude": "100"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Bull Charge",
+      "cooldown": "11.1",
+      "casttime": "0.65",
+      "magnitude": "520"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Cleave",
+      "cooldown": "0",
+      "casttime": "0.5",
+      "magnitude": "45"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Determination",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Earthshaker",
+      "cooldown": "0",
+      "casttime": "1.6",
+      "magnitude": "1050"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Guarded Strike",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "110"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Knee Breaker",
+      "cooldown": "14.9",
+      "casttime": "0.55",
+      "magnitude": "650"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Second Wind",
+      "cooldown": "0",
+      "casttime": "1.1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Shield Bash",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "40"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Shield Slam",
+      "cooldown": "13",
+      "casttime": "0.7",
+      "magnitude": "260"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Shield Throw",
+      "cooldown": "11.1",
+      "casttime": "0.65",
+      "magnitude": "450"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Encounter",
+      "powername": "Commander's Strike",
+      "cooldown": "16.7",
+      "casttime": "0.8",
+      "magnitude": "780"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Encounter",
+      "powername": "Griffon's Wrath",
+      "cooldown": "14.9",
+      "casttime": "0.55",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "At-Will",
+      "powername": "Heavy Slash",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "175"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Encounter",
+      "powername": "Into the Fray",
+      "cooldown": "18.6",
+      "casttime": "0.9",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Daily",
+      "powername": "Mow Down",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Encounter",
+      "powername": "Onslaught",
+      "cooldown": "16.7",
+      "casttime": "1.1",
+      "magnitude": "550"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "At-Will",
+      "powername": "Reave",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "60"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Daily",
+      "powername": "Shockwave",
+      "cooldown": "0",
+      "casttime": "1.2",
+      "magnitude": "1150"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought",
+      "powertype": "Encounter",
+      "powername": "Tremor",
+      "cooldown": "14.9",
+      "casttime": "0.8",
+      "magnitude": "440"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Daily",
+      "powername": "Bladed Rampart",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "260"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Encounter",
+      "powername": "Enforced Threat",
+      "cooldown": "13",
+      "casttime": "0.55",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Encounter",
+      "powername": "Iron Warrior",
+      "cooldown": "22.3",
+      "casttime": "1.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Encounter",
+      "powername": "Knight's Challenge",
+      "cooldown": "22.3",
+      "casttime": "0.75",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Encounter",
+      "powername": "Knight's Valor",
+      "cooldown": "16.7",
+      "casttime": "0.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Encounter",
+      "powername": "Linebreaker",
+      "cooldown": "14.9",
+      "casttime": "0.7",
+      "magnitude": "200"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "Daily",
+      "powername": "Phalanx",
+      "cooldown": "0",
+      "casttime": "2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "At-Will",
+      "powername": "Threatening Rush",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "80"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard",
+      "powertype": "At-Will",
+      "powername": "Tide of Iron",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "100"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Bane",
+      "cooldown": "0.5",
+      "casttime": "0.74",
+      "magnitude": "620"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Burning Light",
+      "cooldown": "13.5",
+      "casttime": "2",
+      "magnitude": "200 - 400"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Divine Judgement",
+      "cooldown": "0",
+      "casttime": "0.9",
+      "magnitude": "2200"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Radiant Charge",
+      "cooldown": "0",
+      "casttime": "1.9",
+      "magnitude": "750"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Radiant Slam",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "60"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Shield of Faith",
+      "cooldown": "0",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Smite",
+      "cooldown": "0.5",
+      "casttime": "0.9",
+      "magnitude": "1150"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Valorous Strike",
+      "cooldown": "0",
+      "casttime": "0.35",
+      "magnitude": "60"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Absolution",
+      "cooldown": "21.6",
+      "casttime": "0.75",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Binding Oath",
+      "cooldown": "21.6",
+      "casttime": "0.8",
+      "magnitude": "65"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Daily",
+      "powername": "Divine Protector",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Divine Touch",
+      "cooldown": "0.5",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Daily",
+      "powername": "Heroism",
+      "cooldown": "0",
+      "casttime": "0.9",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "At-Will",
+      "powername": "Oath Strike",
+      "cooldown": "0",
+      "casttime": "0.3",
+      "magnitude": "25"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Relentless Avenger",
+      "cooldown": "10.8",
+      "casttime": "0.65",
+      "magnitude": "600"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Sacred Weapon",
+      "cooldown": "27",
+      "casttime": "0.8",
+      "magnitude": "52"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "At-Will",
+      "powername": "Shielding Strike",
+      "cooldown": "0",
+      "casttime": "0.3",
+      "magnitude": "60"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Templar's Wrath",
+      "cooldown": "0.5",
+      "casttime": "1",
+      "magnitude": "400"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar",
+      "powertype": "Encounter",
+      "powername": "Vow of Enmity",
+      "cooldown": "18",
+      "casttime": "0.5",
+      "magnitude": "130"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Banishment",
+      "cooldown": "19",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Bond of Virtue",
+      "cooldown": "28.9",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Circle of Divinity",
+      "cooldown": "27.1",
+      "casttime": "1.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Cleansing Touch",
+      "cooldown": "0.5",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "At-Will",
+      "powername": "Cure Wounds",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "At-Will",
+      "powername": "Divine Fulmination",
+      "cooldown": "0",
+      "casttime": "1.46",
+      "magnitude": "180"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Divine Shelter",
+      "cooldown": "0.5",
+      "casttime": "0.7",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Divine Touch",
+      "cooldown": "0.5",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Daily",
+      "powername": "Lay on Hands",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Encounter",
+      "powername": "Sacred Weapon",
+      "cooldown": "27",
+      "casttime": "0.8",
+      "magnitude": "52"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper",
+      "powertype": "Daily",
+      "powername": "Sanctuary",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Constricting Arrow",
+      "cooldown": "13.8",
+      "casttime": "0.5",
+      "magnitude": "520"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Cordon of Arrows",
+      "cooldown": "18.4",
+      "casttime": "1.2",
+      "magnitude": "225"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Forest Ghost",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "250x4"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Hindering Shot",
+      "cooldown": "11",
+      "casttime": "0.5",
+      "magnitude": "130"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Hindering Strike",
+      "cooldown": "12.9",
+      "casttime": "0.5",
+      "magnitude": "520"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Marauder's Escape",
+      "cooldown": "13.8",
+      "casttime": "1.3",
+      "magnitude": "550"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Marauder's Rush",
+      "cooldown": "12.9",
+      "casttime": "0.7",
+      "magnitude": "580"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Plant Growth",
+      "cooldown": "23",
+      "casttime": "0.72",
+      "magnitude": "150"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Rain of Arrows",
+      "cooldown": "14.7",
+      "casttime": "1",
+      "magnitude": "60x5"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Rain of Swords",
+      "cooldown": "12.9",
+      "casttime": "1.5",
+      "magnitude": "200"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Rapid Shot",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "65"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Rapid Strike",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "55"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Seismic Shot",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "800"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Snipe",
+      "cooldown": "0",
+      "casttime": "1.25",
+      "magnitude": "1900"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Split Shot",
+      "cooldown": "0",
+      "casttime": "2.1",
+      "magnitude": "95 - 220"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Split Strike",
+      "cooldown": "0",
+      "casttime": "0.55",
+      "magnitude": "50"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Steel Breeze",
+      "cooldown": "12.9",
+      "casttime": "0.5",
+      "magnitude": "250"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "At-Will",
+      "powername": "Aimed Shot",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "260"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "At-Will",
+      "powername": "Aimed Strike",
+      "cooldown": "0",
+      "casttime": "1.2",
+      "magnitude": "65"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Ambush",
+      "cooldown": "13.8",
+      "casttime": "0.5",
+      "magnitude": "150"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Bear Trap",
+      "cooldown": "9.2",
+      "casttime": "0.47",
+      "magnitude": "220"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "At-Will",
+      "powername": "Careful Attack",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "15 per hit"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Commanding Shot",
+      "cooldown": "13.8",
+      "casttime": "1.4",
+      "magnitude": "520"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Daily",
+      "powername": "Disruptive Shot",
+      "cooldown": "0",
+      "casttime": "0.5",
+      "magnitude": "400"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Gushing Wound",
+      "cooldown": "14.7",
+      "casttime": "1.3",
+      "magnitude": "400"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Hawk Shot",
+      "cooldown": "13.8",
+      "casttime": "1.5",
+      "magnitude": "275"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Hawkeye",
+      "cooldown": "16.6",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "At-Will",
+      "powername": "Hunter's Teamwork",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "160"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Longstrider's Shot",
+      "cooldown": "12.9",
+      "casttime": "0.6",
+      "magnitude": "650"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Rapid Volley",
+      "cooldown": "4.6",
+      "casttime": "0.5",
+      "magnitude": "100"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Daily",
+      "powername": "Slasher's Mark",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "2100"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Stag Heart",
+      "cooldown": "18.4",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter",
+      "powertype": "Encounter",
+      "powername": "Windwalk Strike",
+      "cooldown": "15",
+      "casttime": "0.6",
+      "magnitude": "180"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Binding Arrow",
+      "cooldown": "16.6",
+      "casttime": "0.7",
+      "magnitude": "1000"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Boar Charge",
+      "cooldown": "14.7",
+      "casttime": "0.1",
+      "magnitude": "585"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Boar Hide",
+      "cooldown": "18.4",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Daily",
+      "powername": "Call of the Storm",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "400"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "At-Will",
+      "powername": "Clear the Ground",
+      "cooldown": "0",
+      "casttime": "0.3",
+      "magnitude": "60"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Daily",
+      "powername": "Cold Steel Hurricane",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "1000"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "At-Will",
+      "powername": "Electric Shot",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "100"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Fox Shift",
+      "cooldown": "16.6",
+      "casttime": "0.1",
+      "magnitude": "400x3"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Fox's Cunning",
+      "cooldown": "20.3",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Oak Skin",
+      "cooldown": "16.6",
+      "casttime": "0.6",
+      "magnitude": "0"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "At-Will",
+      "powername": "Penetrating Arrows",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "90"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Split the Sky",
+      "cooldown": "16.6",
+      "casttime": "1.5",
+      "magnitude": "225x5"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "At-Will",
+      "powername": "Storm Strike",
+      "cooldown": "0",
+      "casttime": "0.6",
+      "magnitude": "110"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Thorn Strike",
+      "cooldown": "7.3",
+      "casttime": "0.7",
+      "magnitude": "500 - 750"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Thorn Ward",
+      "cooldown": "20.3",
+      "casttime": "1.5",
+      "magnitude": "200x6"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden",
+      "powertype": "Encounter",
+      "powername": "Throw Caution",
+      "cooldown": "11",
+      "casttime": "0.5",
+      "magnitude": "500"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Bait and Switch",
+      "cooldown": "23.1",
+      "casttime": "0.65",
+      "magnitude": "0"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Blade Flurry",
+      "cooldown": "11.5",
+      "casttime": "0.45",
+      "magnitude": "300"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Cloud of Steel",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "40"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Courage Breaker",
+      "cooldown": "0",
+      "casttime": "2",
+      "magnitude": "1200"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Hateful Knives",
+      "cooldown": "0",
+      "casttime": "1.8",
+      "magnitude": "2000"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Lashing Blade",
+      "cooldown": "11.5",
+      "casttime": "1",
+      "magnitude": "715"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Path of the Blade",
+      "cooldown": "15.4",
+      "casttime": "0.8",
+      "magnitude": "450"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Sly Flourish",
+      "cooldown": "0",
+      "casttime": "0.26",
+      "magnitude": "40"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Smoke Bomb",
+      "cooldown": "21.2",
+      "casttime": "0.5",
+      "magnitude": "350"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Whirlwind of Blades",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "450"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Encounter",
+      "powername": "Assassinate",
+      "cooldown": "14.4",
+      "casttime": "0.95",
+      "magnitude": "845"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Daily",
+      "powername": "Bloodbath",
+      "cooldown": "0",
+      "casttime": "0.25",
+      "magnitude": "1800"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Encounter",
+      "powername": "Dazing Strike",
+      "cooldown": "9.6",
+      "casttime": "0.45",
+      "magnitude": "300"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Encounter",
+      "powername": "Deft Strike",
+      "cooldown": "13.4",
+      "casttime": "0.9",
+      "magnitude": "700"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "At-Will",
+      "powername": "Duelist's Flurry",
+      "cooldown": "0",
+      "casttime": "0.15",
+      "magnitude": "35"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "At-Will",
+      "powername": "Gloaming Cut",
+      "cooldown": "0",
+      "casttime": "1.1",
+      "magnitude": "150"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Encounter",
+      "powername": "Impossible to Catch",
+      "cooldown": "19.2",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Daily",
+      "powername": "Shocking Execution",
+      "cooldown": "0",
+      "casttime": "1.5",
+      "magnitude": "2200"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin",
+      "powertype": "Encounter",
+      "powername": "Wicked Reminder",
+      "cooldown": "17.3",
+      "casttime": "0.5",
+      "magnitude": "800"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Encounter",
+      "powername": "Blitz",
+      "cooldown": "13.4",
+      "casttime": "0.9",
+      "magnitude": "360"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "At-Will",
+      "powername": "Disheartening Strike",
+      "cooldown": "0",
+      "casttime": "0.9",
+      "magnitude": "40"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Encounter",
+      "powername": "Impact Shot",
+      "cooldown": "9.6",
+      "casttime": "0.9",
+      "magnitude": "585"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Daily",
+      "powername": "Killing Storm",
+      "cooldown": "0",
+      "casttime": "0.2",
+      "magnitude": "165"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Daily",
+      "powername": "Lurker's Assault",
+      "cooldown": "0",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Encounter",
+      "powername": "Shadow Strike",
+      "cooldown": "15.4",
+      "casttime": "1",
+      "magnitude": "715"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Encounter",
+      "powername": "Shadowy Disappearance",
+      "cooldown": "13.4",
+      "casttime": "0.4",
+      "magnitude": "325"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "At-Will",
+      "powername": "Shuriken Toss",
+      "cooldown": "0",
+      "casttime": "0.53",
+      "magnitude": "60"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife",
+      "powertype": "Encounter",
+      "powername": "Vengeance's Pursuit",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "200"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Arms of Hadar",
+      "cooldown": "1.8",
+      "casttime": "0.95",
+      "magnitude": "85"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Brood of Hadar",
+      "cooldown": "0",
+      "casttime": "1.3",
+      "magnitude": "1600"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Dark Helix",
+      "cooldown": "0",
+      "casttime": "0.8",
+      "magnitude": "125"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Eldritch Blast",
+      "cooldown": "0",
+      "casttime": "0.38",
+      "magnitude": "45"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Flames of Phlegethos",
+      "cooldown": "0",
+      "casttime": "1.45",
+      "magnitude": "1300"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Blades of Vanquished Armies",
+      "cooldown": "12.4",
+      "casttime": "0.7",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Curse Bite",
+      "cooldown": "10",
+      "casttime": "0.7",
+      "magnitude": "325"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Dreadtheft",
+      "cooldown": "12.4",
+      "casttime": "0.55",
+      "magnitude": "510"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Fiery Bolt",
+      "cooldown": "13.9",
+      "casttime": "0.75",
+      "magnitude": "260"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Daily",
+      "powername": "Gates of Hell",
+      "cooldown": "0",
+      "casttime": "1.05",
+      "magnitude": "1125"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Hadar's Grasp",
+      "cooldown": "15.5",
+      "casttime": "0.55",
+      "magnitude": "300"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "At-Will",
+      "powername": "Hand of Blight Melee",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Hellfire Ring",
+      "cooldown": "11.6",
+      "casttime": "1.13",
+      "magnitude": "175"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "At-Will",
+      "powername": "Hellish Rebuke",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "60"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Infernal Spheres",
+      "cooldown": "18.6",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Killing Flames",
+      "cooldown": "12.4",
+      "casttime": "0.68",
+      "magnitude": "650-975"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Daily",
+      "powername": "Soul Siphon",
+      "cooldown": "0",
+      "casttime": "2.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Daily",
+      "powername": "Tyrannical Curse",
+      "cooldown": "0",
+      "casttime": "0.9",
+      "magnitude": "1150"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer",
+      "powertype": "Encounter",
+      "powername": "Vampiric Embrace",
+      "cooldown": "10.8",
+      "casttime": "0.6",
+      "magnitude": "275"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Blades of Vanquished Armies",
+      "cooldown": "12.4",
+      "casttime": "0.7",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Dreadtheft",
+      "cooldown": "12.4",
+      "casttime": "0.55",
+      "magnitude": "510"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Hadar's Grasp",
+      "cooldown": "15.5",
+      "casttime": "0.55",
+      "magnitude": "300"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "At-Will",
+      "powername": "Infernal Barrier",
+      "cooldown": "0.5",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Pillar of Power",
+      "cooldown": "19.4",
+      "casttime": "0.5",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Revitalize",
+      "cooldown": "0.5",
+      "casttime": "0.8",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Daily",
+      "powername": "Soul Barrier",
+      "cooldown": "0",
+      "casttime": "0.48",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Daily",
+      "powername": "Soul Pact",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "At-Will",
+      "powername": "Soul Reconstruction",
+      "cooldown": "1",
+      "casttime": "0",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Daily",
+      "powername": "Soul Siphon",
+      "cooldown": "0",
+      "casttime": "2.2",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Soulstorm",
+      "cooldown": "0.4",
+      "casttime": "1.1",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Vampiric Embrace",
+      "cooldown": "0.5",
+      "casttime": "0.6",
+      "magnitude": "275"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Warlock's Bargain",
+      "cooldown": "23.3",
+      "casttime": "0.9",
+      "magnitude": "0"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver",
+      "powertype": "Encounter",
+      "powername": "Wraith's Shadow",
+      "cooldown": "16.3",
+      "casttime": "0.8",
+      "magnitude": "500"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Arcane Singularity",
+      "cooldown": "0",
+      "casttime": "1.8",
+      "magnitude": "1200"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Entangling Force",
+      "cooldown": "15.3",
+      "casttime": "0.4",
+      "magnitude": "600"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Ice Knife",
+      "cooldown": "0",
+      "casttime": "1",
+      "magnitude": "2300"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Icy Terrain",
+      "cooldown": "18.2",
+      "casttime": "0.8",
+      "magnitude": "400"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Magic Missile",
+      "cooldown": "0",
+      "casttime": "0.35",
+      "magnitude": "60"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Daily",
+      "powername": "Oppressive Force",
+      "cooldown": "0",
+      "casttime": "0.9",
+      "magnitude": "420"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Ray of Enfeeblement",
+      "cooldown": "17.2",
+      "casttime": "0.34",
+      "magnitude": "520"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "At-Will",
+      "powername": "Ray of Frost",
+      "cooldown": "0",
+      "casttime": "0.5",
+      "magnitude": "65"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Repel",
+      "cooldown": "10.5",
+      "casttime": "0.05",
+      "magnitude": "580"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "",
+      "powertype": "Encounter",
+      "powername": "Shield",
+      "cooldown": "17.2",
+      "casttime": "0.53",
+      "magnitude": "0"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "At-Will",
+      "powername": "Arcane Bolt",
+      "cooldown": "0",
+      "casttime": "0.7",
+      "magnitude": "120"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Encounter",
+      "powername": "Arcane Conduit",
+      "cooldown": "15.3",
+      "casttime": "0.4",
+      "magnitude": "300"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Daily",
+      "powername": "Arcane Empowerment",
+      "cooldown": "0",
+      "casttime": "1.3",
+      "magnitude": "0"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Encounter",
+      "powername": "Arcane Tempest",
+      "cooldown": "12.1",
+      "casttime": "0.35",
+      "magnitude": "400"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Encounter",
+      "powername": "Disintegrate",
+      "cooldown": "7.6",
+      "casttime": "0.35",
+      "magnitude": "500 or 750"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Encounter",
+      "powername": "Lightning Bolt",
+      "cooldown": "13.4",
+      "casttime": "0.72",
+      "magnitude": "350"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Daily",
+      "powername": "Maelstrom of Chaos",
+      "cooldown": "0",
+      "casttime": "2.13",
+      "magnitude": "1400"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "Encounter",
+      "powername": "Steal Time",
+      "cooldown": "17.2",
+      "casttime": "0.6",
+      "magnitude": "350"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist",
+      "powertype": "At-Will",
+      "powername": "Storm Pillar",
+      "cooldown": "0",
+      "casttime": "1.6",
+      "magnitude": "40-100"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Encounter",
+      "powername": "Chill Strike",
+      "cooldown": "14.3",
+      "casttime": "0.4",
+      "magnitude": "660"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "At-Will",
+      "powername": "Chilling Cloud",
+      "cooldown": "0",
+      "casttime": "0.4",
+      "magnitude": "90"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Encounter",
+      "powername": "Conduit of Ice",
+      "cooldown": "12.4",
+      "casttime": "0.8",
+      "magnitude": "350"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Encounter",
+      "powername": "Fanning the Flame",
+      "cooldown": "21.1",
+      "casttime": "0.6",
+      "magnitude": "500"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Encounter",
+      "powername": "Fireball",
+      "cooldown": "19.1",
+      "casttime": "1.1",
+      "magnitude": "350"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Daily",
+      "powername": "Furious Immolation",
+      "cooldown": "0",
+      "casttime": "2",
+      "magnitude": "900"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Daily",
+      "powername": "Ice Storm",
+      "cooldown": "0",
+      "casttime": "1.9",
+      "magnitude": "1200"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "Encounter",
+      "powername": "Icy Rays",
+      "cooldown": "17.4",
+      "casttime": "0",
+      "magnitude": "600-850"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge",
+      "powertype": "At-Will",
+      "powername": "Scorching Burst",
+      "cooldown": "0",
+      "casttime": "1.7",
+      "magnitude": "60-110"
+    }
+  ],
+  "companions": [
+    {
+      "name": "Abyssal Chicken",
+      "comptype": "Companion",
+      "playerbonusname": "Abyssal Guidance",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Acolyte of Kelemvor",
+      "comptype": "Companion",
+      "playerbonusname": "Acolyte's Wisdom",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Air Archon",
+      "comptype": "Companion",
+      "playerbonusname": "Air Archon's Insight",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Alchemist Experimenter",
+      "comptype": "Companion",
+      "playerbonusname": "Alchemist's Discipline",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Alpha Compy",
+      "comptype": "Companion",
+      "playerbonusname": "Compy's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Alphonse Knox",
+      "comptype": "Companion",
+      "playerbonusname": "Alphonse Knox's Discipline",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Ambush Drake",
+      "comptype": "Companion",
+      "playerbonusname": "Ambush Drake's Instincts",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Angel of Protection",
+      "comptype": "Companion",
+      "playerbonusname": "Angel's Insight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Aoth Fezim & Brightwing",
+      "comptype": "Companion",
+      "playerbonusname": "Aoth's Wisdom",
+      "enhancementpower": "Keen Eyes"
+    },
+    {
+      "name": "Apprentice Healer",
+      "comptype": "Companion",
+      "playerbonusname": "Apprentice's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Aranea",
+      "comptype": "Companion",
+      "playerbonusname": "Aranea's Wisdom",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Armored Orc Wolf",
+      "comptype": "Companion",
+      "playerbonusname": "Orc Wolf's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Assassin Drake",
+      "comptype": "Companion",
+      "playerbonusname": "Assassin Drake's Presence",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Astral Deva",
+      "comptype": "Companion",
+      "playerbonusname": "Astral Deva's Insight",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Baby Displacer Beast",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Displacer Beast's Presence",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Barbarian Shaman",
+      "comptype": "Companion",
+      "playerbonusname": "Barbarian Shaman's Wisdom",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Batiri",
+      "comptype": "Companion",
+      "playerbonusname": "Batiri's Wisdom",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Battlefield Medic",
+      "comptype": "Companion",
+      "playerbonusname": "Battlefield Medic's Wisdom",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Bear Cub",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Bear's Instincts",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Black Death Scorpion",
+      "comptype": "Companion",
+      "playerbonusname": "Black Scorpion's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Black Dragon Ioun Stone",
+      "comptype": "Augment",
+      "playerbonusname": "Black Dragon's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Black Ice Ioun Stone",
+      "comptype": "Augment",
+      "playerbonusname": "Black Ice Stone's Insight",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Black Ice Prospector",
+      "comptype": "Companion",
+      "playerbonusname": "Dwarf Pickman's Discipline",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Blacksmith",
+      "comptype": "Companion",
+      "playerbonusname": "Blacksmith's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Blaspheme Assassin",
+      "comptype": "Companion",
+      "playerbonusname": "Spiteful Presence",
+      "enhancementpower": "Exploit Weakness"
+    },
+    {
+      "name": "Blink Dog",
+      "comptype": "Companion",
+      "playerbonusname": "Blinkdog's Presence",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Blue Fire Eye",
+      "comptype": "Companion",
+      "playerbonusname": "Fire Eye's Insight",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Boar",
+      "comptype": "Companion",
+      "playerbonusname": "Boar's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Boar Shoat",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Boar's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Bobby the Barbarian",
+      "comptype": "Companion",
+      "playerbonusname": "Bobby's Vigor",
+      "enhancementpower": "Unflinching Will"
+    },
+    {
+      "name": "Book Imp",
+      "comptype": "Companion",
+      "playerbonusname": "Bookimp's Presence",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Bruenor Battlehammer",
+      "comptype": "Companion",
+      "playerbonusname": "Bruenor's Bulwark",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Bulette Pup",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Bulette's Presence",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Butterfly",
+      "comptype": "Augment",
+      "playerbonusname": "Butterfly's Grace",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Cambion Magus",
+      "comptype": "Companion",
+      "playerbonusname": "Cambion's Insight",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Cantankerous Mage",
+      "comptype": "Companion",
+      "playerbonusname": "Cantankerous Mage's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Cat",
+      "comptype": "Augment",
+      "playerbonusname": "Cat's Instincts",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Catti-Brie",
+      "comptype": "Companion",
+      "playerbonusname": "Catti's Coordination",
+      "enhancementpower": "Master of Craft"
+    },
+    {
+      "name": "Cave Bear",
+      "comptype": "Companion",
+      "playerbonusname": "Cave Bear's Instincts",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Celeste",
+      "comptype": "Companion",
+      "playerbonusname": "Celeste's Wisdom",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Chicken",
+      "comptype": "Augment",
+      "playerbonusname": "Chicken's Instincts",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Chultan Hunter",
+      "comptype": "Companion",
+      "playerbonusname": "Chultan Hunter's Discipline",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Chultan Tiger",
+      "comptype": "Companion",
+      "playerbonusname": "Tiger's Instincts",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Cleric Disciple",
+      "comptype": "Companion",
+      "playerbonusname": "Cleric Disciple's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Cockatrice",
+      "comptype": "Companion",
+      "playerbonusname": "Cockatrice's Presence",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Cold Iron Warrior",
+      "comptype": "Companion",
+      "playerbonusname": "Cold Iron Warrior's Discipline",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Coldlight Walker",
+      "comptype": "Companion",
+      "playerbonusname": "Coldlight Walker's Gaze",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Con Artist",
+      "comptype": "Companion",
+      "playerbonusname": "Conartist's Discipline",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Corbin the Venerated",
+      "comptype": "Companion",
+      "playerbonusname": "Corbin's Confidence",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Crab",
+      "comptype": "Companion",
+      "playerbonusname": "Crab's Instincts",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Crystal Golem",
+      "comptype": "Companion",
+      "playerbonusname": "Crystal Golem's Presence",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Cunning Mimic - Account",
+      "comptype": "Companion",
+      "playerbonusname": "Cunning Hunter",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Cyclops War Drummer",
+      "comptype": "Companion",
+      "playerbonusname": "War Drummer's Discipline",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Damaran Shepherd",
+      "comptype": "Companion",
+      "playerbonusname": "Damaran Shepherd's Instincts",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Dancing Blade",
+      "comptype": "Companion",
+      "playerbonusname": "Dancing Blade's Insight",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Dancing Shield",
+      "comptype": "Companion",
+      "playerbonusname": "Dancing Shield's Insight",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Dark Dealer",
+      "comptype": "Companion",
+      "playerbonusname": "Dark Dealings",
+      "enhancementpower": "Honed Instincts"
+    },
+    {
+      "name": "Death Slaad",
+      "comptype": "Companion",
+      "playerbonusname": "Death Slaad's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Dedicated Squire",
+      "comptype": "Companion",
+      "playerbonusname": "Squire's Discipline",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Deepcrow Hatchling",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Deepcrow's Presence",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Deva Champion",
+      "comptype": "Companion",
+      "playerbonusname": "Deva Champion's Insight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Diana the Acrobat",
+      "comptype": "Companion",
+      "playerbonusname": "Acrobatic Speed",
+      "enhancementpower": "Enduring Alacrity"
+    },
+    {
+      "name": "Displacer Beast",
+      "comptype": "Companion",
+      "playerbonusname": "Pouncer's Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Dog",
+      "comptype": "Companion",
+      "playerbonusname": "Dog's Instincts",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Dragon Hunter",
+      "comptype": "Companion",
+      "playerbonusname": "Dragon's Bane",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Dragonborn Brawler",
+      "comptype": "Companion",
+      "playerbonusname": "Dragonborn's Brawler's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Dragonborn Grillmaster",
+      "comptype": "Companion",
+      "playerbonusname": "Hot Foot",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Dragonborn Raider",
+      "comptype": "Companion",
+      "playerbonusname": "Dragonborn Raider's Discipline",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Dread Warrior",
+      "comptype": "Companion",
+      "playerbonusname": "Dreadwarrior's Insight",
+      "enhancementpower": "Slowed Reactions"
+    },
+    {
+      "name": "Drizzt Do'Urden",
+      "comptype": "Companion",
+      "playerbonusname": "Drizzt's Devastation",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Duergar Guard",
+      "comptype": "Companion",
+      "playerbonusname": "Duergar Guard's Discipline",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Duergar Theurge",
+      "comptype": "Companion",
+      "playerbonusname": "Duergar Theurge's Discipline",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Dwarven Battlerager",
+      "comptype": "Companion",
+      "playerbonusname": "Battlerager's Discipline",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Earl the Chickenmancer",
+      "comptype": "Companion",
+      "playerbonusname": "Chickenmancer's Discipline",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Earth Archon",
+      "comptype": "Companion",
+      "playerbonusname": "Earth Archon's Insight",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Eladrin",
+      "comptype": "Companion",
+      "playerbonusname": "Eladrin's Senses",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Elemental Air Cultist",
+      "comptype": "Companion",
+      "playerbonusname": "Elemental Cultist's Wisdom",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Elite Intern",
+      "comptype": "Companion",
+      "playerbonusname": "Elite Intern's Wisdom",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Elminster Aumar",
+      "comptype": "Companion",
+      "playerbonusname": "Effulgent Epuration",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Elminster Simulacrum",
+      "comptype": "Companion",
+      "playerbonusname": "Elminster's Chain Lightning",
+      "enhancementpower": "Precision Breaker"
+    },
+    {
+      "name": "Energon",
+      "comptype": "Companion",
+      "playerbonusname": "Xegyi's Insight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Eric the Cavalier",
+      "comptype": "Companion",
+      "playerbonusname": "I'm Just a Little Adventurer",
+      "enhancementpower": "Enduring Guard"
+    },
+    {
+      "name": "Erinyes of Avernus",
+      "comptype": "Companion",
+      "playerbonusname": "Erinyes's Defense",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Erinyes of Belial",
+      "comptype": "Companion",
+      "playerbonusname": "Erinyes's Wisdom",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Etrien",
+      "comptype": "Companion",
+      "playerbonusname": "Etrien's Exuberance",
+      "enhancementpower": "Master of Craft"
+    },
+    {
+      "name": "Faithful Initiate",
+      "comptype": "Companion",
+      "playerbonusname": "Cleric's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Fawn of Shiallia",
+      "comptype": "Companion",
+      "playerbonusname": "Fawn's Instincts",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Feral Velociraptor",
+      "comptype": "Companion",
+      "playerbonusname": "Feral Raptor's Instincts",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Festive Tiger",
+      "comptype": "Augment",
+      "playerbonusname": "Lord of the Wilderness",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Fey Panther",
+      "comptype": "Companion",
+      "playerbonusname": "Feypanther's Presence",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Feywild Sylph",
+      "comptype": "Companion",
+      "playerbonusname": "Sylph's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Fire Archon",
+      "comptype": "Companion",
+      "playerbonusname": "Fire Archon's Insight",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Fireblossom Zealot",
+      "comptype": "Companion",
+      "playerbonusname": "Doom And Bloom",
+      "enhancementpower": "Reinvigorate"
+    },
+    {
+      "name": "Flame Sprite",
+      "comptype": "Companion",
+      "playerbonusname": "Flamesprite's Insight",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Flaming Skull",
+      "comptype": "Companion",
+      "playerbonusname": "Cryptic Insight",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Flapjack",
+      "comptype": "Companion",
+      "playerbonusname": "Flumph's Inspiration",
+      "enhancementpower": "Enduring Senses"
+    },
+    {
+      "name": "Flumph",
+      "comptype": "Companion",
+      "playerbonusname": "Intelligent & Wise",
+      "enhancementpower": "Impactful Maneuvers"
+    },
+    {
+      "name": "Frost Mimic",
+      "comptype": "Companion",
+      "playerbonusname": "Deceptive Insight",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Frozen Galeb Duhr",
+      "comptype": "Companion",
+      "playerbonusname": "Ice Galeb Duhr's Presence",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Galeb Duhr",
+      "comptype": "Companion",
+      "playerbonusname": "Galeb Duhr's Presence",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Gelatinous Cube",
+      "comptype": "Augment",
+      "playerbonusname": "Gelatinous Cube's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Ghost",
+      "comptype": "Companion",
+      "playerbonusname": "Ghost's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Githyanki",
+      "comptype": "Companion",
+      "playerbonusname": "Githyanki Vigor",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Goat",
+      "comptype": "Augment",
+      "playerbonusname": "Goat's Instincts",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Golden Bulette Pup - Account",
+      "comptype": "Augment",
+      "playerbonusname": "Golden Bulette Pup's Presence",
+      "enhancementpower": "Reinvigorate"
+    },
+    {
+      "name": "Golden Cat - Account",
+      "comptype": "Augment",
+      "playerbonusname": "Golden Cat's Instincts",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Golden Deep Crow Egg - Account",
+      "comptype": "Augment",
+      "playerbonusname": "Golden Deep Crow's Presence",
+      "enhancementpower": "Honed Instincts"
+    },
+    {
+      "name": "Golden Goat - Account",
+      "comptype": "Augment",
+      "playerbonusname": "Golden Goat's Instincts",
+      "enhancementpower": "Master of Craft"
+    },
+    {
+      "name": "Goldfish",
+      "comptype": "Augment",
+      "playerbonusname": "Goldfish's Instincts",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Grazilaxx",
+      "comptype": "Companion",
+      "playerbonusname": "Grazilaxx's Wisdom",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Green Slime",
+      "comptype": "Companion",
+      "playerbonusname": "Slime's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Greenscale Bowman",
+      "comptype": "Companion",
+      "playerbonusname": "Greenscale Hunter's Discipline",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Grung",
+      "comptype": "Companion",
+      "playerbonusname": "Grung's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Halfling Wayward Wizard",
+      "comptype": "Companion",
+      "playerbonusname": "Wayward Wisdom",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Hank the Ranger",
+      "comptype": "Companion",
+      "playerbonusname": "Hank's Aim",
+      "enhancementpower": "Enduring Precision"
+    },
+    {
+      "name": "Harper Bard",
+      "comptype": "Companion",
+      "playerbonusname": "Bard's Discipline",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Hawk",
+      "comptype": "Companion",
+      "playerbonusname": "Hawk's Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Hell Hound",
+      "comptype": "Companion",
+      "playerbonusname": "Hell Hound's Senses",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Helmite Paladin Ghost",
+      "comptype": "Companion",
+      "playerbonusname": "Ghost Paladin's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Hezrou",
+      "comptype": "Companion",
+      "playerbonusname": "Hezrou's Defense",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Honey Badger",
+      "comptype": "Companion",
+      "playerbonusname": "Honeybadger's Instincts",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Hunting Drake",
+      "comptype": "Companion",
+      "playerbonusname": "Hunting Drake's Presence",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Hunting Hawk",
+      "comptype": "Companion",
+      "playerbonusname": "Hunting Hawk's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Ice Sprite",
+      "comptype": "Companion",
+      "playerbonusname": "Icesprite's Insight",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Icosahedron Ioun Stone",
+      "comptype": "Augment",
+      "playerbonusname": "Icosahedron Stone's Insight",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Incubus",
+      "comptype": "Companion",
+      "playerbonusname": "Fiendish Charmer's Distraction",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Infant Gorilla",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Gorilla's Instincts",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Intellect Devourer",
+      "comptype": "Companion",
+      "playerbonusname": "Intellect Devourer's Presence",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Ioun Stone of Allure",
+      "comptype": "Augment",
+      "playerbonusname": "Alluring Insight",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Ioun Stone of Might",
+      "comptype": "Augment",
+      "playerbonusname": "Mighty Insight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Ioun Stone of Radiance",
+      "comptype": "Augment",
+      "playerbonusname": "Radiant Insight",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Ioun Stone of the Feywild",
+      "comptype": "Augment",
+      "playerbonusname": "Radiant Insight",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Iron Golem",
+      "comptype": "Companion",
+      "playerbonusname": "Iron Golem's Presence",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Jagged Dancing Blade",
+      "comptype": "Companion",
+      "playerbonusname": "Jagged Blade's Insight",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Jarlaxle Baenre",
+      "comptype": "Companion",
+      "playerbonusname": "Maestro's Observation",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Joy Dancer of Lliira",
+      "comptype": "Augment",
+      "playerbonusname": "Dance of Joy",
+      "enhancementpower": "Reinvigorate"
+    },
+    {
+      "name": "Juvenile Jade Dragonnel",
+      "comptype": "Augment",
+      "playerbonusname": "Greenscale Hunter's Discipline",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Kavatos Stormeye",
+      "comptype": "Companion",
+      "playerbonusname": "Storm Eyes",
+      "enhancementpower": "Master of Craft"
+    },
+    {
+      "name": "Kenku Archer",
+      "comptype": "Companion",
+      "playerbonusname": "Kenku Archer's Wisdom",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Kingfisher's Intern",
+      "comptype": "Companion",
+      "playerbonusname": "Kingfisher's Wisdom",
+      "enhancementpower": "Slowed Reactions"
+    },
+    {
+      "name": "Kuo-Toa",
+      "comptype": "Companion",
+      "playerbonusname": "Kuo-Toa's Instincts",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Laughing Skull",
+      "comptype": "Companion",
+      "playerbonusname": "Cryptic Insight",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Lava Galeb Duhr",
+      "comptype": "Companion",
+      "playerbonusname": "Lava Galeb Duhr's Presence",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Leprechaun",
+      "comptype": "Companion",
+      "playerbonusname": "Leprechaun's Insight",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Lich",
+      "comptype": "Companion",
+      "playerbonusname": "Undying Overlord",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Lich Makos",
+      "comptype": "Companion",
+      "playerbonusname": "Consume Soul",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Lightfoot Thief",
+      "comptype": "Companion",
+      "playerbonusname": "Halfling Thief's Discipline",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Lillend",
+      "comptype": "Companion",
+      "playerbonusname": "Lillend's Insight",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Linu La'neral",
+      "comptype": "Companion",
+      "playerbonusname": "Divine Answers",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Little White",
+      "comptype": "Augment",
+      "playerbonusname": "Phasespider's Instincts",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Lizardfolk Shaman",
+      "comptype": "Companion",
+      "playerbonusname": "Lizardman Shaman's Wisdom",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Lulu the Hollyphant",
+      "comptype": "Companion",
+      "playerbonusname": "Hollyphant's Guidance",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Mage Slayer",
+      "comptype": "Companion",
+      "playerbonusname": "Mageslayer's Assault",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Makos",
+      "comptype": "Companion",
+      "playerbonusname": "Makos' Wisdom",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Man at Arms",
+      "comptype": "Companion",
+      "playerbonusname": "Man-at-Arms's Discipline",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Manticore",
+      "comptype": "Companion",
+      "playerbonusname": "Manticore's Presence",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Mercenary",
+      "comptype": "Companion",
+      "playerbonusname": "Mercenary's Discipline",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Mini Apparatus of Gond",
+      "comptype": "Augment",
+      "playerbonusname": "Gond's Insight",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Minotaur Mercenary",
+      "comptype": "Companion",
+      "playerbonusname": "Igneous Skin",
+      "enhancementpower": "Impactful Maneuvers"
+    },
+    {
+      "name": "Minsc",
+      "comptype": "Companion",
+      "playerbonusname": "The Bigger They Are",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Minstrel",
+      "comptype": "Companion",
+      "playerbonusname": "Minstrel's Discipline",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Moonshae Druid",
+      "comptype": "Companion",
+      "playerbonusname": "Moonshae Druid's Wisdom",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Myconid",
+      "comptype": "Companion",
+      "playerbonusname": "Myconid's Presence",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Mystagogue",
+      "comptype": "Companion",
+      "playerbonusname": "Mystagogue's Wisdom",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Mystic Phoera",
+      "comptype": "Companion",
+      "playerbonusname": "Mystic Phoera's Presence",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Netherese Arcanist",
+      "comptype": "Companion",
+      "playerbonusname": "Netherese Warlock's Wisdom",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Neverember Guard",
+      "comptype": "Companion",
+      "playerbonusname": "Neverember Guard's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Neverember Guard Archer",
+      "comptype": "Companion",
+      "playerbonusname": "Archer Guard's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Neverwinter Knight",
+      "comptype": "Companion",
+      "playerbonusname": "Neverwinter Knight's Discipline",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Owl",
+      "comptype": "Companion",
+      "playerbonusname": "Owl's Instincts",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Owlbear Cub",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Owlbear's Presence",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Ox Stot",
+      "comptype": "Augment",
+      "playerbonusname": "Ox Stot's Instincts",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Panda",
+      "comptype": "Augment",
+      "playerbonusname": "Panda's Prowess",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Panther",
+      "comptype": "Companion",
+      "playerbonusname": "Panther's Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Paranoid Delusion",
+      "comptype": "Companion",
+      "playerbonusname": "Delusional Insight",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Pewter Golem",
+      "comptype": "Companion",
+      "playerbonusname": "Pewter Golem's Presence",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Phase Spider",
+      "comptype": "Companion",
+      "playerbonusname": "Phasespider's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Phoera",
+      "comptype": "Companion",
+      "playerbonusname": "Phoera's Presence",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Pig",
+      "comptype": "Companion",
+      "playerbonusname": "Pig's Instincts",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Polar Bear Cub",
+      "comptype": "Augment",
+      "playerbonusname": "Baby Polar Bear's Instincts",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Portal Hound",
+      "comptype": "Companion",
+      "playerbonusname": "Portalhound's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Portobello DaVinci",
+      "comptype": "Companion",
+      "playerbonusname": "Dungeon Master's Wisdom",
+      "enhancementpower": "Precision Breaker"
+    },
+    {
+      "name": "Presto the Magician",
+      "comptype": "Companion",
+      "playerbonusname": "Presto's Wisdom",
+      "enhancementpower": "Precision Breaker"
+    },
+    {
+      "name": "Priestess of Sehanine Moonbow",
+      "comptype": "Companion",
+      "playerbonusname": "Sehanine's Wisdom",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Priestess of Sune",
+      "comptype": "Companion",
+      "playerbonusname": "Sune's Wisdom",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Pseudodragon",
+      "comptype": "Companion",
+      "playerbonusname": "Pseudodragon's Presence",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Quasit",
+      "comptype": "Augment",
+      "playerbonusname": "Quasit's Insight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Quickling",
+      "comptype": "Companion",
+      "playerbonusname": "Quickling's Wisdom",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Rabbit Kit",
+      "comptype": "Augment",
+      "playerbonusname": "Elusive Rabbit",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Rat Pup",
+      "comptype": "Augment",
+      "playerbonusname": "Rat Pup's Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Razorwood",
+      "comptype": "Companion",
+      "playerbonusname": "Twigblight's Insight",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Rebel Mercenary",
+      "comptype": "Companion",
+      "playerbonusname": "Sellsword's Distinct Discipline",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Red Dragon Ioun Stone",
+      "comptype": "Augment",
+      "playerbonusname": "Dragon's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Red Slaad",
+      "comptype": "Companion",
+      "playerbonusname": "Red Slaad's Presence",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Redcap Powrie",
+      "comptype": "Companion",
+      "playerbonusname": "Redcap's Wisdom",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Redeemed Fallen",
+      "comptype": "Companion",
+      "playerbonusname": "Forgotten Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Regis",
+      "comptype": "Companion",
+      "playerbonusname": "Regis's Reflexes",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Remorhaz",
+      "comptype": "Companion",
+      "playerbonusname": "Remorhaz's Presence",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Renegade Evoker",
+      "comptype": "Companion",
+      "playerbonusname": "Evoker's Wisdom",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Renegade Illusionist",
+      "comptype": "Companion",
+      "playerbonusname": "Illusory Wisdom",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Repentant Dragon Cultist",
+      "comptype": "Companion",
+      "playerbonusname": "Repentent Cultist's Discipline",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Rimefire Golem",
+      "comptype": "Companion",
+      "playerbonusname": "Rimefire Golem's Presence",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Riotous Rothé",
+      "comptype": "Companion",
+      "playerbonusname": "Snow Worries",
+      "enhancementpower": "Reinvigorate"
+    },
+    {
+      "name": "Rumpadump",
+      "comptype": "Companion",
+      "playerbonusname": "Invigorating Spores",
+      "enhancementpower": "Mobility"
+    },
+    {
+      "name": "Rust Monster",
+      "comptype": "Companion",
+      "playerbonusname": "Rustmonster's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Savage Allosaur",
+      "comptype": "Companion",
+      "playerbonusname": "Allosaur's Instincts",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Sellsword",
+      "comptype": "Companion",
+      "playerbonusname": "Sellsword's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Sergeant Knox",
+      "comptype": "Companion",
+      "playerbonusname": "Sergeant Knox's Wisdom",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Shadar-kai Witch",
+      "comptype": "Companion",
+      "playerbonusname": "Sense Through the Shadowfell",
+      "enhancementpower": ""
+    },
+    {
+      "name": "Shadow Demon",
+      "comptype": "Companion",
+      "playerbonusname": "Shadow Demon's Presence",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Shadow Elemental",
+      "comptype": "Companion",
+      "playerbonusname": "Shadow Force",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Shieldmaiden",
+      "comptype": "Companion",
+      "playerbonusname": "Shieldmaiden's Discipline",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Siege Master",
+      "comptype": "Companion",
+      "playerbonusname": "Siege Master's Discipline",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Silver-Scaled Cleric Disciple",
+      "comptype": "Companion",
+      "playerbonusname": "Silverscale Cleric's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Skeletal Dog",
+      "comptype": "Companion",
+      "playerbonusname": "Skeleton Dog's Instincts",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Skeleton",
+      "comptype": "Companion",
+      "playerbonusname": "Boney Wisdom",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Skyblazer",
+      "comptype": "Companion",
+      "playerbonusname": "Skyblazer's Sight",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Slyblade Kobold",
+      "comptype": "Companion",
+      "playerbonusname": "Slyblade Kobold's Discipline",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Snow Leopard",
+      "comptype": "Companion",
+      "playerbonusname": "Snow Leopard's Instincts",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Snowy Fawn",
+      "comptype": "Companion",
+      "playerbonusname": "Snow Fawn's Instincts",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Songstress",
+      "comptype": "Companion",
+      "playerbonusname": "Songstress Serenade",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Soradiel",
+      "comptype": "Companion",
+      "playerbonusname": "Divine Judgement",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Spined Devil",
+      "comptype": "Companion",
+      "playerbonusname": "Spined Devil's Influence",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Splinters",
+      "comptype": "Companion",
+      "playerbonusname": "Broom's Insight",
+      "enhancementpower": "Slowed Reactions"
+    },
+    {
+      "name": "Sprite",
+      "comptype": "Companion",
+      "playerbonusname": "Sprite's Insight",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Staldorf",
+      "comptype": "Companion",
+      "playerbonusname": "Staldorf's Presence",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Stalwart Golden Lion",
+      "comptype": "Companion",
+      "playerbonusname": "Celestial Lion's Presence",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Star of Simril",
+      "comptype": "Augment",
+      "playerbonusname": "Star of Simril's Insight",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Storm Rider",
+      "comptype": "Companion",
+      "playerbonusname": "Stormrider's Discipline",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Stronghold's Cleric",
+      "comptype": "Companion",
+      "playerbonusname": "Stronghold Cleric's Wisdom",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Succubus",
+      "comptype": "Companion",
+      "playerbonusname": "Fiendish Charmer's Distraction",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Sun of Sune",
+      "comptype": "Companion",
+      "playerbonusname": "Sun's Insight",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Swashbuckler",
+      "comptype": "Companion",
+      "playerbonusname": "Swashbuckler's Discipline",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Sylph",
+      "comptype": "Companion",
+      "playerbonusname": "Sylph's Insight",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "Tamed Velociraptor",
+      "comptype": "Companion",
+      "playerbonusname": "Raptor's Instincts",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Tomb Spider",
+      "comptype": "Companion",
+      "playerbonusname": "Tombspider's Instincts",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Traveling Entertainer",
+      "comptype": "Companion",
+      "playerbonusname": "Entertainer's Discipline",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Trobriand's Construct",
+      "comptype": "Companion",
+      "playerbonusname": "Construct's Instincts",
+      "enhancementpower": "Fortification"
+    },
+    {
+      "name": "Tutor",
+      "comptype": "Companion",
+      "playerbonusname": "Tutor's Discipline",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Vallenhas Elite Soldier",
+      "comptype": "Companion",
+      "playerbonusname": "Vallenhas' Discipline",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Vampire Bride",
+      "comptype": "Companion",
+      "playerbonusname": "Vampire's Kiss",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Vanguard of the Citadel",
+      "comptype": "Companion",
+      "playerbonusname": "Divine Insight",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Vicious Dire Wolf",
+      "comptype": "Companion",
+      "playerbonusname": "Vicious Direwolf's Presence",
+      "enhancementpower": "Weapon Break"
+    },
+    {
+      "name": "Vistani Wanderer",
+      "comptype": "Companion",
+      "playerbonusname": "Vistani's Discipline",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Volcanic Galeb Duhr",
+      "comptype": "Companion",
+      "playerbonusname": "Volcanic Galeb Duhr's Presence",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Wandering Scarecrow",
+      "comptype": "Companion",
+      "playerbonusname": "Scarecrow's Presence",
+      "enhancementpower": "Blurred Vision"
+    },
+    {
+      "name": "War Boar",
+      "comptype": "Companion",
+      "playerbonusname": "War Boar's Instincts",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "War Dog",
+      "comptype": "Companion",
+      "playerbonusname": "Wardog's Instincts",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Water Archon",
+      "comptype": "Companion",
+      "playerbonusname": "Water Archon's Insight",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Watler",
+      "comptype": "Augment",
+      "playerbonusname": "Watler's Presence",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Wayward Wizard",
+      "comptype": "Companion",
+      "playerbonusname": "Wayward Wizard's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Wererat Thief",
+      "comptype": "Companion",
+      "playerbonusname": "Wererat Discipline",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Werewolf",
+      "comptype": "Companion",
+      "playerbonusname": "Werewolf's Presence",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Wiggins the Undead Intern",
+      "comptype": "Companion",
+      "playerbonusname": "Wiggin's Wisdom",
+      "enhancementpower": "Counteract"
+    },
+    {
+      "name": "Wild Hunt Rider",
+      "comptype": "Companion",
+      "playerbonusname": "Wild Hunter's Discipline",
+      "enhancementpower": "Precision"
+    },
+    {
+      "name": "Will-O'-Wisp",
+      "comptype": "Companion",
+      "playerbonusname": "Willowisp's Insight",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Windsoul Genasi",
+      "comptype": "Companion",
+      "playerbonusname": "Windsoul Genasi's Gale",
+      "enhancementpower": "Vulnerability"
+    },
+    {
+      "name": "Winter Fox",
+      "comptype": "Augment",
+      "playerbonusname": "Winterfox's Oblige",
+      "enhancementpower": "Master of Craft"
+    },
+    {
+      "name": "Winter Wolf",
+      "comptype": "Companion",
+      "playerbonusname": "Winter Wolf's Instincts",
+      "enhancementpower": "Dulled Senses"
+    },
+    {
+      "name": "Wolf",
+      "comptype": "Companion",
+      "playerbonusname": "Wolf's Instincts",
+      "enhancementpower": "Acute Senses"
+    },
+    {
+      "name": "Wulfgar",
+      "comptype": "Companion",
+      "playerbonusname": "Wulfgar's Wreckling",
+      "enhancementpower": "Armor Break"
+    },
+    {
+      "name": "Xaryxian Defector",
+      "comptype": "Companion",
+      "playerbonusname": "Xaryxian Precision",
+      "enhancementpower": "Enduring Precision"
+    },
+    {
+      "name": "Xuna",
+      "comptype": "Companion",
+      "playerbonusname": "Xuna's Wisdom",
+      "enhancementpower": "Potent Precision"
+    },
+    {
+      "name": "Yeth Hound",
+      "comptype": "Companion",
+      "playerbonusname": "Yethhound's Presence",
+      "enhancementpower": "Potency"
+    },
+    {
+      "name": "Yojimbo",
+      "comptype": "Companion",
+      "playerbonusname": "Yojimbo's Discipline",
+      "enhancementpower": "Anticipation"
+    },
+    {
+      "name": "Young Yeti",
+      "comptype": "Companion",
+      "playerbonusname": "Yeti's Presence",
+      "enhancementpower": "Perfect Vision"
+    },
+    {
+      "name": "Zariel",
+      "comptype": "Companion",
+      "playerbonusname": "Divine Judgement",
+      "enhancementpower": "Redemption"
+    },
+    {
+      "name": "Zhentarim Warlock",
+      "comptype": "Companion",
+      "playerbonusname": "Zhentarim Warlock's Wisdom",
+      "enhancementpower": "Perfect Vision"
+    }
+  ],
+  "paragons": [
+    {
+      "class": "Barbarian",
+      "paragon": "Blademaster"
+    },
+    {
+      "class": "Barbarian",
+      "paragon": "Sentinel"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Minstrel"
+    },
+    {
+      "class": "Bard",
+      "paragon": "Songblade"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Arbiter"
+    },
+    {
+      "class": "Cleric",
+      "paragon": "Devout"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Dreadnought"
+    },
+    {
+      "class": "Fighter",
+      "paragon": "Vanguard"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Justicar"
+    },
+    {
+      "class": "Paladin",
+      "paragon": "Oathkeeper"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Hunter"
+    },
+    {
+      "class": "Ranger",
+      "paragon": "Warden"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Assassin"
+    },
+    {
+      "class": "Rogue",
+      "paragon": "Whisperknife"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Hellbringer"
+    },
+    {
+      "class": "Warlock",
+      "paragon": "Soulweaver"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Arcanist"
+    },
+    {
+      "class": "Wizard",
+      "paragon": "Thaumaturge"
+    }
+  ],
+  "mounts": [
+    {
+      "name": "Actions Speak Louder",
+      "combattext": "Your zodar armor rushes in, striking your targeted enemy and bolstering your abilities.~Magnitude: 2,400~Added Effect: Damage Reduction +15%~Added Effect: Damage Dealt +15%~Added Effect: Outgoing Healing +15%~Duration: 10 seconds"
+    },
+    {
+      "name": "Arcane Maelstrom",
+      "combattext": "Summons your Arcane Whirlwind, who travels forward damaging enemies and knocking aside those it collides with.~Magnitude: <g>~Apply Effect: Collision~Magnitude: <f>"
+    },
+    {
+      "name": "Arcane Siege Volley",
+      "combattext": "Summons your Siege Bear, who dispenses a barrage of cannon fire on location once per second for the next 10 seconds.~Magnitude: <l> per volley"
+    },
+    {
+      "name": "Aureal Armament",
+      "combattext": "Summon your Celestial Lion to knock back nearby foes.~Apply Effect: Shield <a%>% of party member's Maximum Hitpoints~Duration: 10s~Apply Effect: After 10 seconds party members gain up to 3 stacks of Radiant Weapon based on the amount of shield remaining.~~Radiant Weapon grants 2% additional damage as radiant damage for 12 seconds. You may have no more than 8 stacks of Radiant Weapon from any source."
+    },
+    {
+      "name": "Bat Swarm",
+      "combattext": "Summon a swarm of bats which will release you from most control effects.~Apply Effect: Increases your damage by <c%>%~Duration: 10s~Apply Effect: Slows your target by <c%>%~Duration: 10s~Apply Effect: Increases incoming damage to target by <c%>%~Duration: 10s~Apply Effect: Reduces target's outgoing damage by <c%>%~Duration: 10s~Apply Effect: Reduces target's critical chance by <c%>%~Duration: 10s"
+    },
+    {
+      "name": "Beholder's Might",
+      "combattext": "You are empowered by the might of beholders, becoming stronger, tougher, faster, and more skilled in combat.~Apply Effect: Increase your Base Damage Boost by 15%~Duration: 10 seconds~Apply Effect: Increase your Accuracy by 15%~Duration: 10 seconds~Apply Effect: Increase your Critical Severity by 15%~Duration: 10 seconds"
+    },
+    {
+      "name": "Bigby's Crushing Hand",
+      "combattext": "Summons your Bigby's Hand, who stuns a single target enemy and deals damage. If the target is immune to control effects, then additional damage is applied.~Magnitude: 2,550~Control Immune Magnitude: 450~Apply Effect: Stun~Duration: 3s"
+    },
+    {
+      "name": "Black Ice Storm",
+      "combattext": "Summons your Black Ice Warhorse, electrifying your target and nearby enemies.~Magnitude: <d>"
+    },
+    {
+      "name": "Call of the Cosmos",
+      "combattext": "Summon your Cosmic Stag that brings with it a rain of stars.~Apply Effect: DoT~Magnitude: <h>~Duration: 8s~Apply Effect: Slow target by 45%~Duration: 8s"
+    },
+    {
+      "name": "Call of the Heavens",
+      "combattext": "Summon your Cosmic Stag that brings with it a rain of stars.~Apply Effect: DoT~Magnitude: <h>~Duration: 8s~Apply Effect: Slow target by 45%~Duration: 8s"
+    },
+    {
+      "name": "Call of the Stars",
+      "combattext": "Summon your Celestial Stag that brings with it a rain of stars.~Apply Effect: DoT~Magnitude: <h>~Duration: 8s~Apply Effect: Slow target by 30%~Duration: 8s"
+    },
+    {
+      "name": "Cannon Siege Volley",
+      "combattext": "Summons your Siege Bear, who dispenses a barrage of cannon fire on location once per second for the next 10 seconds.~Magnitude: <l> per volley"
+    },
+    {
+      "name": "Cauldron Fumes",
+      "combattext": "Summons your Hag's Cauldron, which billows forth a cloud of fumes on location for the next 10 seconds.~Magnitude: <l> per second~Allies within the fumes: +15 Accuracy. and +15 Combat Advantage"
+    },
+    {
+      "name": "Cauldron Gasses",
+      "combattext": "Summons your Hag's Cauldron, which billows forth a cloud of fumes on location for the next 10 seconds.~Magnitude: <l> per second~Allies within the fumes: +15 Accuracy. and +15 Combat Advantage"
+    },
+    {
+      "name": "Commander Tyrannosaurus Rex'em",
+      "combattext": "Summons the Tyrannosaur, causing fear in your enemies.~Apply Effect: Root~Duration: 3s~Apply Effect: Incoming Damage to the target increased by <c%>%~Duration: 10s~Additional Effect: Minion Consume"
+    },
+    {
+      "name": "Confetti Catastrophe",
+      "combattext": "Summon your Confetti Machination to run towards your target and explode, dealing damage to your target and nearby enemies. A field of fluttering confetti lingers after the blast to obscure your actions against your foes for the next 10 seconds.~Magnitude: 800~Enemies within the field: -7.5% Accuracy, and -7.5% Critical Avoidance."
+    },
+    {
+      "name": "Crystal Eruption",
+      "combattext": "A powerful eruption of crystals which damage your target and nearby enemies.~Magnitude: <d>"
+    },
+    {
+      "name": "Deep Crow Shriek",
+      "combattext": "You harness the power of a Deep Crow releasing a shriek as you strengthen in battle.~Apply Effect: Increases your damage by <c%>%~Duration: 10s~Apply Effect: Roots enemies around you granting combat advantage against them.~Duration: 3s"
+    },
+    {
+      "name": "Disintegration Beam",
+      "combattext": "Summon your Beholder Personal Tank to blast enemies with disintegration beams in a line.~Magnitude: <d>"
+    },
+    {
+      "name": "Divine Intervention",
+      "combattext": "Summon a celestial being to knock back all nearby enemies.~Magnitude: <d>~Apply Effect: Additional damage to Devils, Demons, and Fiends~Magnitude: <h>"
+    },
+    {
+      "name": "Dragon Nugget Bomb",
+      "combattext": "Dragon Chicken explodes in a fiery ball. It deals damage to all foes, making them more vulnerable and reducing their damage and knocking them down briefly.~AoE Magnitude: 700~Apply Effect: Knockdown~Apply Effect: Enemies take 15% more damage~Duration: 10 seconds~Apply Effect: Reduces target's damage by 15%~Duration: 10 seconds"
+    },
+    {
+      "name": "Dragonbone Whirl",
+      "combattext": "Summon your Dragonbone Golem as bones that swirl around you, pulsing damage to a random enemy every second.~Apply Effect: Magnitude: 3,450~Duration: 10s"
+    },
+    {
+      "name": "Eclipsed Armament",
+      "combattext": "Summon your Eclipse Lion to block out the sun.~Magnitude: ???~Apply Effect: Increase incoming damage to target by <c%>%~Duration: 10s~Apply Effect: Decrease outgoing damage from target by <c%>%~Duration: 10s"
+    },
+    {
+      "name": "Empowered Dragonbone Whirl",
+      "combattext": "Summon your Dragonbone Golem as bones that swirl around you, pulsing damage to a random enemy every second.~Apply Effect: Magnitude: 3,450~Duration: 10s"
+    },
+    {
+      "name": "Explosive Equalizer",
+      "combattext": "Blast out damage at nearby enemies.~Magnitude: <d>"
+    },
+    {
+      "name": "Ferocious Roar",
+      "combattext": "Summons your Armored Bulette, who roars at foes in front of you.~Magnitude: <e>~Apply Effect: Reduces target's outgoing damage by <c%>%~Duration: 10s"
+    },
+    {
+      "name": "Flail Snail",
+      "combattext": "Summons your Flail Snail to knock enemies aside.~Magnitude: <d>"
+    },
+    {
+      "name": "Frozen Retribution",
+      "combattext": "Summon a barrier of frost which will release you from most control effects.~Apply Effect: Increases your damage by <d%>%~Duration: 10s~Apply Effect: Slows your target by <d%>%~Duration: 10s~Apply Effect: Reduces target's deflect by <d%>%~Duration: 10s~Apply Effect: Reduces target's outgoing damage by <d%>%~Duration: 10s~Apply Effect: Reduces target's critical chance by <d%>%~Duration: 10s"
+    },
+    {
+      "name": "Frozen Stamp",
+      "combattext": "Summons your Frost Giantess, who stamps down, causing a frozen impact.~Magnitude: 800~Apply Effect: Stun~Duration: 3s"
+    },
+    {
+      "name": "Giant Toad Tongue Lash",
+      "combattext": "Summons a Giant Toad that lashes its tongue at the target.~Magnitude: <a>~Additional Effect: Minion Consume"
+    },
+    {
+      "name": "Golden Touch",
+      "combattext": "Summons your Golden Warhorse to attack your target.~Magnitude: <a>"
+    },
+    {
+      "name": "Grand Inspiration",
+      "combattext": "Summons your Pegasus who flaps its mighty wings, releasing an immense gale that damages your foes and strengthens your party for the next 10 seconds.~Magnitude: <t>~Allies gain: +<d%>% Forte, and one of the following based on role.~DPS: +<d%>% Damage~Tank: +<d%>% Damage Resistance~Healer: +<d%>% Outgoing Healing"
+    },
+    {
+      "name": "Ground Slam",
+      "combattext": "Summond the island, which levitates and drops down on the ground and causing a shockwave within 30 ft of where it lands.~Magnitude: 600~Apply Effect: Stun~Duration: 3s~Apply Effect: Increase dealt damage to targets by 15%~Duration: 10s"
+    },
+    {
+      "name": "Hamstphere",
+      "combattext": "The Giant Space Hamster shields your party and yourself, while granting you swiftness and stability.~Apply Effect: Shield: 20% of your party's Maximum Hit Points~Duration: 10s~Added Effect: Immunity to Crowd Control effects~Added Effect: +45% Movement Speed~Duration: 10s"
+    },
+    {
+      "name": "Harrowing Screech",
+      "combattext": "Summon your Golden Armored Griffon to release a harrowing screech at nearby enemies.~Apply Effect: Reduce target outgoing damage by <c%>%~Duration: 10s~Apply Effect: Stun~Duration: 3s~Apply Effect: Increases your Forte, Critical Avoidance, and Awareness by 5%~Duration: 10s"
+    },
+    {
+      "name": "Hell on Faerûn",
+      "combattext": "Summons the Hellfire Engine which shoots devestating hellfire out of its mouth.~Magnitude: <i>~Apply Effect: DoT~Magnitude: <j>~Duration: 5s"
+    },
+    {
+      "name": "Hell's Impact",
+      "combattext": "Summons your Balgora from the depths of Avernus, who slams his fists down with a hellish impact.~Magnitude: 750~Apply Effect: DoT~Magnitude: 20~Duration: 10s~Additional Effect: Incoming Damage to the target increased by <d%>%~Duration: 10s"
+    },
+    {
+      "name": "Hot Streak",
+      "combattext": "The Bestial Fire Archon attacks enemies in a line, leaving magma pools that deal periodic damage and weaken enemies.~Magnitude: 400~Magma Pool Total Magnitude: 460~Duration: 10s~Added Effect: +15% increased damage taken."
+    },
+    {
+      "name": "Imperious Stomp",
+      "combattext": "Summons your Emperor Beetle, who flies in and lands violently.~Magnitude: <e>~Apply Effect: Stun~Duration: 1.5s"
+    },
+    {
+      "name": "Intoxicating Venom",
+      "combattext": "Unleash your Regal Cobra at the target location. The Cobra spins while spewing venom from its fangs, inflicting damage on enemies and empowering nearby allies who remain within the target area.~Total Magnitude: 905~Added Effect: +12% Accuracy~Added Effect: +4% Power~Duration: 10s"
+    },
+    {
+      "name": "Invigorating Foxfire",
+      "combattext": "Your Red Mountain Fox summons a ring of foxfire, dealing periodic damage to your target and nearby enemies, while increasing nearby allies' Recharge Speed.~Total Magnitude: 920~Added Effect: +15% Recharge Speed~Duration: 10s"
+    },
+    {
+      "name": "Legendary Balloon Bombardment",
+      "combattext": "Summons your reconnaissance balloon and have it shower your enemies with a bombardment of Treasure.~Magnitude: 800~Apply Effect: Incoming Damage to the target increased by <s%>%~Duration: 10s~Treasure drops within 15' of where targets are struck.~When picked up by you or an ally, the Treasure will increase a random stat by 1.5% for 10 seconds."
+    },
+    {
+      "name": "Lolth's Gift",
+      "combattext": "Summons a Vision of Lolth, who bestows her gift to allies and foes alike who stay within 20' for the next 10 seconds.~~DoT Magnitude: 115 per second.~Allies: Adds 1 stack every 0.5s of +1.5% Power and Critical Severity, and 0.75% Defense and Awareness. Stacks up to 20x."
+    },
+    {
+      "name": "Magnificent Inspiration",
+      "combattext": "Summons your Pegasus who flaps its mighty wings, releasing an immense gale that damages your foes and strengthens your party for the next 10 seconds.~Magnitude: <t>~Allies gain: +<d%>% Forte, and one of the following based on role.~DPS: +<d%>% Damage~Tank: +<d%>% Damage Resistance~Healer: +<d%>% Outgoing Healing"
+    },
+    {
+      "name": "Marvelous Balloon Bombardment",
+      "combattext": "Summons your reconnaissance balloon and have it shower your enemies with a bombardment of Treasure.~Magnitude: 800~Apply Effect: Incoming Damage to the target increased by <s%>%~Duration: 10s~Treasure drops within 15' of where targets are struck.~When picked up by you or an ally, the Treasure will increase a random stat by 1.5% for 10 seconds."
+    },
+    {
+      "name": "Meteoric Impact",
+      "combattext": "Summons your Barlgura from the depths of Avernus, who slams his fists down in an incredible impact.~Magnitude: <e>~Apply Effect: Stun~Duration: 1.5s"
+    },
+    {
+      "name": "Mighty Dragon's Roar",
+      "combattext": "Summon forth a mighty red dragon, whose roar will release you from most control effects.~Apply Effect: Increases your Base Damage Boost by 15%~Duration: 10s~Apply Effect: Increases your Critical Strike and Accuracy by 15%~Duration: 10s~Apply Effect: Reduces target's outgoing damage by 15%~Duration: 10s~Apply Effect: Reduces target's critical avoidance by 15%~Duration: 10s"
+    },
+    {
+      "name": "Mossy Flail Snail",
+      "combattext": "Summons your Flail Snail to knock enemies aside.~Magnitude: <d>"
+    },
+    {
+      "name": "Mow Down",
+      "combattext": "Summons your Infernal War Machine that speeds towards nearby enemies.~Magnitude: <g>~Apply Effect: Collision~Magnitude: <f>"
+    },
+    {
+      "name": "Mystic Fireball",
+      "combattext": "Summon your Dragonnel to spit a fireball upon your target and nearby enemies.~Magnitude: 600~Apply Effect: DoT~Magnitude: 77~Duration: 6s"
+    },
+    {
+      "name": "Mythic Tyrannosaurus Rex'em",
+      "combattext": "Summons the Tyrannosaur, causing fear in your enemies.~Apply Effect: Root~Duration: 3s~Apply Effect: Incoming Damage to the target increased by <c%>%~Duration: 10s~Additional Effect: Minion Consume"
+    },
+    {
+      "name": "Necrotic Roar",
+      "combattext": "The Glorious Undead Lion roars and strikes fear into the hearts of your enemies. It deals damage to all foes, making them more vulnerable and reducing their accuracy.~AoE Magnitude: 700~Apply Effect: Stun~Duration: 2.6s~Apply Effect: Enemies take 16% more damage~Duration: 10s~Apply Effect: Reduces target accuracy by 16%~Duration: 10s"
+    },
+    {
+      "name": "Neverwinter Armament",
+      "combattext": "The Barded Neverwintan Lion's roar bolsters your strength and grants advantage against your enemies.~Apply Effect: Knockdown~Duration: 10s~Apply Effect: Grants you combat advantage against your foes.~Duration: 6s~Apply Effect: Increases your Strength, Intelligence, and Charisma by 3.~Duration: 10s~Apply Effect: Increases your Maximum HP by 6%.~Duration: 10s"
+    },
+    {
+      "name": "Path of Fire",
+      "combattext": "Summons your Imperial Rage Drake, who rushes forward, dealing fire damage.~Magnitude: <d>"
+    },
+    {
+      "name": "Perilous Polymorph Potion",
+      "combattext": "Conjure an enchanted cauldron that sprews forth seething, crimson energy, scorching all enemies in its wake, dealing 400 AoE damage. The cauldron's wicked fumes weaken all who inhale them, damaging them over time and reducing their Defense and Critical Avoidance by -7.5%. Less foes are further cursed, twisted into pathetic, scurrying creatures - easy prey for the slaughter."
+    },
+    {
+      "name": "Piercing Screech",
+      "combattext": "Summon your Armored Griffon to release an earsplitting screech at nearby enemies.~Apply Effect: Reduce target outgoing damage by <c%>%~Duration: 10s~Apply Effect: Stun~Duration: 3s~Apply Effect: Increases your Intelligence, Wisdom, and Charisma by 3~Duration: 10s"
+    },
+    {
+      "name": "Protector's Hand",
+      "combattext": "Summons your Neverwinter's Hand, which envelops around you and your party as a barrier of force.~Apply Effect: Shield: 20% of party member's Maximum Hitpoints~Duration: 10s~Apply Effect: Decrease incoming damage to you and nearby allies by 5%~Duration: 10s~Apply Effect: Increase your Combat Advantage to you and nearby allies by <L%>%~Duration: 10s"
+    },
+    {
+      "name": "Psionic Blast",
+      "combattext": "Summon your Brain Stealer Dragon to blast psychic energy to all enemies within a cone in front of you.~Magnitude: 800~Apply Effect: Increase Incoming Damage to Targets by 15%~Duration: 10s"
+    },
+    {
+      "name": "Rabbit Hole",
+      "combattext": "Summons your New Year's Rabbit at the targeted location, who pops its head out of the ground and knocks back enemies.~Magnitude: <m>"
+    },
+    {
+      "name": "Radical Radiance",
+      "combattext": "You glow with a radical radiance, becoming stronger, tougher, faster, and more skilled in combat.~Apply Effect: Increase your damage by 15%~Duration: 10 seconds~Apply Effect: Increase your Forte by 15%~Duration: 10 seconds~Apply Effect: Increase your AP Gain by 7.5%~Duration: 10 seconds"
+    },
+    {
+      "name": "Rain of Spines",
+      "combattext": "Summon your Runeclad Manticore to unleash a torrent of spines from its barbed tail upon your foes.~Magnitude: <e>~Apply Effect: Knockdown~Duration: 1.5s"
+    },
+    {
+      "name": "Rejuvenating Favor",
+      "combattext": "Healing from your devoted mount.~Apply Effect: HoT~Magnitude: <b%>~Duration: 10s"
+    },
+    {
+      "name": "Relentless Hunter",
+      "combattext": "Summons your loyal Underdark Lizard who releases a mighty warcry, emboldering you and your party for the next 15 seconds.~All Allies gain: +<s%>% Combat Advantage and Defense.~You also gain: +<s%>% Accuracy."
+    },
+    {
+      "name": "Resonating Screech",
+      "combattext": "Summon your Feywild Griffon to release an Resonating screech at nearby enemies.~Apply Effect: Reduce target outgoing damage by <c%>%~Duration: 10s~Apply Effect: Stun~Duration: 3s~Apply Effect: Increases your Intelligence, Wisdom and Charisma by 3~Durations: 10s"
+    },
+    {
+      "name": "Rimefire Retribution",
+      "combattext": "Summon a barrier of frost which will release you from most control effects.~Apply Effect: Increases your damage by <d%>%~Duration: 10s~Apply Effect: Slows your target by <d%>%~Duration: 10s~Apply Effect: Reduces target's deflect by <d%>%~Duration: 10s~Apply Effect: Reduces target's outgoing damage by <d%>%~Duration: 10s~Apply Effect: Reduces target's critical chance by <d%>%~Duration: 10s"
+    },
+    {
+      "name": "Rush of Despair",
+      "combattext": "Your Skeletal Steed unleashes a trail of ink black smoke, withering foes in front of you.~Apply Effect: DoT~Magnitude: <k>~Duration: 6s~Apply Effect: Slow targets by 30%~Duration: 6s"
+    },
+    {
+      "name": "Rush of Torment",
+      "combattext": "Your Hellfire Steed unleashes a trail of fire, burning foes in front of you.~Apply Effect: DoT~Magnitude: <k>~Duration: 6s~Apply Effect: Slow targets by 30%~Duration: 6s"
+    },
+    {
+      "name": "Sand Coffin",
+      "combattext": "Summon your Umber Hulk underneath your target to attempt to draw enemies underground. Creates a field for 6s which grants the following effects:~Apply Effect: DoT~Magnitude: 345~Apply Effect: Slows targets by 20%~Apply Effect: Allies have combat advantage against foes within the field~Additional Effect: Minion Consume"
+    },
+    {
+      "name": "School's in Session",
+      "combattext": "The Space Guppy School rushes in and circles the target, causing a vortex which pulls nearby enemies towards the center.~Total Magnitude: 700~Apply Effect: Daze~Duration: 4.5s"
+    },
+    {
+      "name": "Shadowy Rush",
+      "combattext": "Rapidly rush in the direction you're moving, dodging attacks and leaving a trail of shadow that bursts for damage.~Magnitude: 1,000"
+    },
+    {
+      "name": "Skyhold Alligator's Bellow",
+      "combattext": "The Alligator's Bellow bolsters your fighting resolve and strikes fear into the hearts of your enemies. It deals damage to all foes within 50' of the Alligator and causes them to deal reduced damage.~AoE Magnitude: 730~Apply Effect: Reduce Target Outgoing Damage by 15%~Duration: 10s~Self Effect: Reduces Incoming Damage by 15%~Duration: 10s"
+    },
+    {
+      "name": "Spinning Axe Strike",
+      "combattext": "Summons your armored axe beak to attack nearby foes with a spinning strike.~Magnitude: <d>"
+    },
+    {
+      "name": "Spinning Axe Strike (Teal)",
+      "combattext": "Summons your armored axe beak to attack nearby foes with a spinning strike.~Magnitude: <d>"
+    },
+    {
+      "name": "Spore Explosion",
+      "combattext": "Summon your myconid Bulette ….."
+    },
+    {
+      "name": "Strider Fire",
+      "combattext": "Summons your Armored Giant Strider to attack your target and nearby enemies.~Magnitude: <d>"
+    },
+    {
+      "name": "Tenser's Transformation",
+      "combattext": "You are transformed into a virtual fighting machine, becoming stronger, tougher, faster, and more skilled in combat.~Apply Effect: Increase your damage by <c%>%~Duration: 10 seconds~Apply Effect: Increase your speed by <c%>%~Duration: 10 seconds~Apply Effect: Increase your Strength, Dexterity, and Constitution by 1~Duration: 10 seconds"
+    },
+    {
+      "name": "Terrifying Roar",
+      "combattext": "Summon your Champion's Armored Bulette, who roars at foes in front of you.~Magnitude: <e>~Apply Effect: Stun~Duration: 3s"
+    },
+    {
+      "name": "Tiger's Charge",
+      "combattext": "Summons your New Year's Tiger, who rushes forward, dealing radiant damage.~Magnitude: 200"
+    },
+    {
+      "name": "Trample",
+      "combattext": "Summon your War Triceratops to charge into the fray knocking back foes.~Magnitude: <d>"
+    },
+    {
+      "name": "Tunnel Vision",
+      "combattext": "A strong single target attack~Magnitude: <a>"
+    },
+    {
+      "name": "Uni's Charge",
+      "combattext": "Uni the Unicorn charges in, stunning a single target and dealing damage. Control-immune targets take additional damage. She then casts an aura, enhancing Combat Advantage for party members within 50'.~Magnitude: 2250~Control Immune Magnitude: 450~Apply Effect: Stun~Duration: 3s~Added Effect: Aura: 5% Combat Advantage~Duration: 10 seconds"
+    },
+    {
+      "name": "Volcanic Flail Snail",
+      "combattext": "Summons your Flail Snail to knock enemies aside.~Magnitude: <d>"
+    },
+    {
+      "name": "Vortex",
+      "combattext": "The Carpet of Flying rushes in and circles the target causing a vortex which pulls nearby enemies towards the center.~Magnitude: <d>"
+    },
+    {
+      "name": "Warpainted Tyrannosaurus Rex'em",
+      "combattext": "Summons the Tyrannosaur, causing fear in your enemies.~Apply Effect: Root~Duration: 3s~Apply Effect: Incoming Damage to the target increased by <c%>%~Duration: 10s~Additional Effect: Minion Consume"
+    },
+    {
+      "name": "Wicked Lich",
+      "combattext": "Summons a skeletal rider to assault the target, knocking them from their feet and greatly inspiring the summoner!~Magnitude: 2,400~Apply Effect: Increase your damage by 15%~Duration: 10 seconds"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "Alaric's Artillery Beacon",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Apocalypse Dagger",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Arcturia's Music Box",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Arcturia's Resonating Music Box",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Arma-Egg-On",
+      "quality": "Mythic",
+      "itemlevel": 2600
+    },
+    {
+      "name": "Assassin's Dice",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Assassin's Knife",
+      "quality": "Mythic",
+      "itemlevel": 2000
+    },
+    {
+      "name": "Astral Seed Tendril",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Aurora's Whole Realms Catalogue",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Beacon of Meteor Swarm",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Beacon of Simril",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Beacon of the Astral Sea",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Belial's Portal Stone",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Black Dragon's Mark",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Black Ice Beholder",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Bloodbrass Pistol",
+      "quality": "Mythic",
+      "itemlevel": 2000
+    },
+    {
+      "name": "Bloodcrystal Raven Skull",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Blue Dragon's Mark",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Broken Halo",
+      "quality": "Mythic",
+      "itemlevel": 2600
+    },
+    {
+      "name": "Bruenor's Helm",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Champion's Banner",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Charm of the Serpent",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Crimson Calamity",
+      "quality": "Mythic",
+      "itemlevel": 2600
+    },
+    {
+      "name": "Crystal of Soul's Flight",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Darkened Storyteller's Journal",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Decanter of Atropal Essence",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Deck of a Few Things",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Defender's Banner",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Demogorgon's Reach",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Draconic Essence",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Dragonbone Blades",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Dragonbone Wand",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Emblem of the Seldarine",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Empowered Illusionist's Mask",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Envenomed Storyteller's Journal",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Erratic Drift Globe",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Eye of Lathandar",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Eye of Odran",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Eye of the Giant",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Flask of Brewing",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Flayed Storyteller's Journal",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Forgehammer of Gond",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Fragmented Key of Stars",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Frozen Storyteller's Journal",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Globe of the Third Eye",
+      "quality": "Epic",
+      "itemlevel": 310
+    },
+    {
+      "name": "Golden Memories",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Gond's Anvil of Creation",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Grace of Pelor",
+      "quality": "Mythic",
+      "itemlevel": 2000
+    },
+    {
+      "name": "Green Dragon's Mark",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Halaster's Blast Scepter",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Heart of the Black Dragon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Heart of the Blue Dragon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Heart of the Green Dragon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Heart of the Red Dragon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Heart of the Volcano",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Heart of the White Dragon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Horn of Valhalla",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Illusionist's Mask",
+      "quality": "Legendary",
+      "itemlevel": 600
+    },
+    {
+      "name": "Imbued Staff of Flowers",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Jewel of the Caldera",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Jewel of the North",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Kessell's Spheres of Annihilation",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Lantern of Revelation",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Lostmauth's Horn of Blasting",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Manticore Talon",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Marco's Mystic Marker",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Marilith Mask",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Mystic Bolt",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Mythallar Fragment",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Neverwinter's Standard",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Nightflame Censer",
+      "quality": "Mythic",
+      "itemlevel": 2600
+    },
+    {
+      "name": "Oghma's Token of Free Movement",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Portable Spelljammer Detector",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Realm Engine Core",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Red Dragon's Mark",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Refulgent Diamond Pin",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Repurposed Phylactory",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Ring of Fowl Weather",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Rod of Imperial Restraint",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Rod of Pain",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Scintillating Symbol of Air",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Scintillating Symbol of Earth",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Scintillating Symbol of Fire",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Scintillating Symbol of Water",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Sealing Parchment",
+      "quality": "Mythic",
+      "itemlevel": 2600
+    },
+    {
+      "name": "Searing Conduit of Magma",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Shard of Orcus' Wand",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Shard of Valindra's Crown",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Siege Master's War Horn",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Siegebreaker's Banner",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Barbarian",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Bard",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Cleric",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Fighter",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Nine",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Paladin",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Ranger",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Rogue",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Warlock",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sigil of the Wizard",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Skull Lord Staff",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Soul Sight Crystal",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sovereign's Sporestaff",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Sparkling Fey Emblem",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sphere of Black Ice",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Staff of Flowers",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Sword of Zariel",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Symbol of Air",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Symbol of Earth",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Symbol of Fire",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Symbol of Water",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tactician's Banner",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tarokka Deck",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tentacle Rod",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Thayan Book of the Dead",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Thirst",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tiamat's Arcane Globe",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Tiamat's Orb of Majesty",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Token of Chromatic Storm",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tome of Ascendance",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Trial Placeholder 1200",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Trial Placeholder 1500",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Trial Placeholder 1800",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Trial Placeholder 600",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Trobriand's Overcharged Ring",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Trobriand's Ring",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Tymora's Spinning Coin",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Vanguard's Banner",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Vibrating Erratic Drift Globe",
+      "quality": "Mythic",
+      "itemlevel": 1800
+    },
+    {
+      "name": "Wand of Domination",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    },
+    {
+      "name": "Waters of Elah'zad",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Waukeen's Horde",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Wheel of Elements",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "White Dragon's Mark",
+      "quality": "Mythic",
+      "itemlevel": 1200
+    },
+    {
+      "name": "Wrath of Kossuth",
+      "quality": "Mythic",
+      "itemlevel": 2000
+    },
+    {
+      "name": "Wyvern-Venom Coated Knives",
+      "quality": "Mythic",
+      "itemlevel": 600
+    },
+    {
+      "name": "Xeleth's Blast Scepter",
+      "quality": "Mythic",
+      "itemlevel": 1500
+    }
+  ]
+}

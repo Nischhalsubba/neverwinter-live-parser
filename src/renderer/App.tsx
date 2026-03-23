@@ -8,6 +8,7 @@ import type {
   TargetStat,
   TimelinePoint
 } from "../shared/types";
+import { getPowerMeta, inferBuildFromSkills, isKnownCompanion } from "./nwMetadata";
 
 const INITIAL_STATE: AppState = {
   watcherStatus: "idle",
@@ -64,6 +65,9 @@ type PlayerRow = {
   timeline: TimelinePoint[];
   encounters: CombatantEncounterStat[];
   deaths: number;
+  className: string | null;
+  paragon: string | null;
+  buildConfidence: number;
 };
 
 const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
@@ -229,6 +233,7 @@ function buildPlayerRows(
       const dps = sourceMembers.reduce((total, member) => total + member.dps, 0);
       const hps = sourceMembers.reduce((total, member) => total + member.hps, 0);
       const topSkills = mergeSkills(sourceMembers.flatMap((member) => member.topSkills));
+      const inferredBuild = inferBuildFromSkills(topSkills);
 
       return {
         id: groupKey,
@@ -247,7 +252,10 @@ function buildPlayerRows(
         targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
         timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
         encounters: mergeEncounters(sourceMembers.flatMap((member) => member.encounters)),
-        deaths: sourceMembers.reduce((total, member) => total + member.deaths, 0)
+        deaths: sourceMembers.reduce((total, member) => total + member.deaths, 0),
+        className: inferredBuild.className,
+        paragon: inferredBuild.paragon,
+        buildConfidence: inferredBuild.confidence
       };
     })
     .sort((left, right) => right.totalDamage - left.totalDamage);
@@ -689,6 +697,12 @@ export function App() {
                     >
                       <span>
                         {player.displayName}
+                        {player.className && (
+                          <small className="pill class-pill">
+                            {player.className}
+                            {player.paragon ? ` / ${player.paragon}` : ""}
+                          </small>
+                        )}
                         {player.companionCount > 0 && (
                           <small className="pill">
                             {player.companionCount} companion
@@ -718,6 +732,17 @@ export function App() {
                     <p className="muted">
                       {includeCompanions ? "With companion damage" : "Without companion damage"}
                     </p>
+                    {selectedPlayer?.className && (
+                      <div className="detail-badges">
+                        <span className="pill class-pill">
+                          {selectedPlayer.className}
+                          {selectedPlayer.paragon ? ` / ${selectedPlayer.paragon}` : ""}
+                        </span>
+                        <span className="pill subtle-pill">
+                          {(selectedPlayer.buildConfidence * 100).toFixed(0)}% confidence
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <button onClick={() => setIncludeCompanions((value) => !value)}>
                     {includeCompanions ? "Pets Included" : "Pets Excluded"}
@@ -780,7 +805,14 @@ export function App() {
                           <div className="table">
                             {selectedPlayer.topSkills.slice(0, 8).map((skill) => (
                               <div className="row" key={skill.abilityName}>
-                                <span>{skill.abilityName}</span>
+                                <span>
+                                  {skill.abilityName}
+                                  {getPowerMeta(skill.abilityName) && (
+                                    <small className="pill subtle-pill">
+                                      {getPowerMeta(skill.abilityName)?.powertype}
+                                    </small>
+                                  )}
+                                </span>
                                 <strong>{formatShort(skill.total)}</strong>
                               </div>
                             ))}
@@ -816,7 +848,14 @@ export function App() {
                           <div className="table">
                             {selectedPlayer.topSkills.map((skill) => (
                               <div className="row" key={skill.abilityName}>
-                                <span>{skill.abilityName}</span>
+                                <span>
+                                  {skill.abilityName}
+                                  {getPowerMeta(skill.abilityName) && (
+                                    <small className="pill subtle-pill">
+                                      {getPowerMeta(skill.abilityName)?.powertype}
+                                    </small>
+                                  )}
+                                </span>
                                 <span>{formatNumber(skill.hits)} hits</span>
                                 <strong>{formatShort(skill.total)}</strong>
                               </div>
@@ -836,7 +875,12 @@ export function App() {
                           <div className="table">
                             {selectedPlayer.targets.map((target) => (
                               <div className="row" key={target.targetName}>
-                                <span>{target.targetName}</span>
+                                <span>
+                                  {target.targetName}
+                                  {isKnownCompanion(target.targetName) && (
+                                    <small className="pill subtle-pill">Companion</small>
+                                  )}
+                                </span>
                                 <span>{formatNumber(target.hits)} hits</span>
                                 <strong>{formatShort(target.totalDamage)}</strong>
                               </div>
