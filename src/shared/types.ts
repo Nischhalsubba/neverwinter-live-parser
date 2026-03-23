@@ -127,6 +127,16 @@ export type DebugState = {
   currentOffset: number;
 };
 
+export type SystemUsageSnapshot = {
+  sampledAt: number;
+  processCpuPercent: number;
+  processMemoryMb: number;
+  systemMemoryUsedMb: number;
+  systemMemoryTotalMb: number;
+  systemMemoryPercent: number;
+  uptimeSec: number;
+};
+
 export type AppState = {
   watcherStatus: WatcherStatus;
   selectedLogFolder: string | null;
@@ -137,6 +147,7 @@ export type AppState = {
   recentEncounters: EncounterSnapshot[];
   analysis: AnalysisSnapshot;
   debug: DebugState;
+  system: SystemUsageSnapshot;
 };
 
 export type MonitoringConfig = {

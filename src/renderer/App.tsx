@@ -30,6 +30,15 @@ const INITIAL_STATE: AppState = {
     parseIssues: [],
     activeFilePath: null,
     currentOffset: 0
+  },
+  system: {
+    sampledAt: Date.now(),
+    processCpuPercent: 0,
+    processMemoryMb: 0,
+    systemMemoryUsedMb: 0,
+    systemMemoryTotalMb: 0,
+    systemMemoryPercent: 0,
+    uptimeSec: 0
   }
 };
 

@@ -87,6 +87,36 @@ function formatPercent(value: number, digits = 1): string {
   return `${(value * 100).toFixed(digits)}%`;
 }
 
+function formatUptime(totalSeconds: number): string {
+  const hours = Math.floor(totalSeconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+    .toString()
+    .padStart(2, "0");
+  const seconds = Math.floor(totalSeconds % 60)
+    .toString()
+    .padStart(2, "0");
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+function getRuntimeLabel(state: AppState): string {
+  if (state.watcherStatus === "error") {
+    return "FAULTED";
+  }
+  if (state.analysis.mode === "live") {
+    return "LIVE";
+  }
+  if (state.analysis.mode === "imported") {
+    return "IMPORTED";
+  }
+  return "IDLE";
+}
+
+function getSourceLabel(state: AppState): string {
+  return state.importedLogFile ?? state.activeLogFile ?? state.analysis.sourcePath ?? "No source linked";
+}
+
 function initialsFromName(value: string | null | undefined): string {
   if (!value) {
     return "OP";
@@ -488,14 +518,17 @@ function SetupView(props: ShellProps) {
         <section className="oa-panel">
           <SectionHeading icon="memory" eyebrow="Telemetry Environment" title="Runtime profile" />
           <div className="oa-kv-list">
-            <div><span>Core Engine</span><strong>Obsidian-v4</strong></div>
+            <div><span>Runtime</span><strong>{getRuntimeLabel(state)}</strong></div>
             <div><span>Analysis Mode</span><strong>{state.analysis.mode}</strong></div>
             <div><span>Watcher</span><strong>{state.watcherStatus}</strong></div>
-            <div><span>Source</span><strong>{state.analysis.sourcePath ?? "not linked"}</strong></div>
+            <div><span>Source</span><strong>{getSourceLabel(state)}</strong></div>
             <div><span>Duration</span><strong>{formatDuration(state.analysis.durationMs)}</strong></div>
+            <div><span>Process CPU</span><strong>{state.system.processCpuPercent.toFixed(1)}%</strong></div>
+            <div><span>Process Memory</span><strong>{state.system.processMemoryMb.toFixed(1)} MB</strong></div>
+            <div><span>System Memory</span><strong>{state.system.systemMemoryUsedMb.toFixed(0)} / {state.system.systemMemoryTotalMb.toFixed(0)} MB</strong></div>
           </div>
           <div className="oa-tip">
-            The parser engine remains separate from the UI, so visual changes do not alter encounter logic.
+            Source path, parser state, and system usage are sampled live from the running app.
           </div>
         </section>
 
@@ -540,7 +573,10 @@ function LiveOverviewView({
       <header className="oa-screen-topline">
         <div>
           <h1>Party Overview</h1>
-          <p><Icon name="location_on" className="oa-inline-icon" /> {current?.label ?? "Awaiting combat activity"}</p>
+          <p>
+            <Icon name="location_on" className="oa-inline-icon" />{" "}
+            {current?.label ?? (state.analysis.mode === "imported" ? "Recorded log analysis" : "Waiting for combat events")}
+          </p>
         </div>
         <div className="oa-toolbar">
           <button className="oa-switch-card" onClick={props.onToggleCompanions}>
@@ -557,9 +593,9 @@ function LiveOverviewView({
       </header>
 
       <div className="oa-card-grid four">
-        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint="Live party aggregate" />
+        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={`${state.analysis.mode} aggregate`} />
         <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} combatants tracked`} />
-        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Build inference confidence" />
+        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Inference confidence" />
         <StatCard label="Total Time" value={formatDuration(state.analysis.durationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} deaths detected`} />
       </div>
 
@@ -1054,7 +1090,7 @@ function PlayerView({
               <h1>{player.displayName}</h1>
               <span className="oa-badge">{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</span>
             </div>
-            <p>Focus: {player.topSkills[0]?.abilityName ?? "No parsed powers yet"}</p>
+            <p>Focus: {player.topSkills[0]?.abilityName ?? "No parsed power events"}</p>
           </div>
         </div>
         <div className="oa-hero-metrics">
@@ -1203,30 +1239,30 @@ function SettingsView({
       <div className="oa-settings-grid">
         <section className="oa-panel">
           <div className="oa-profile-hero">
-            <div className="oa-settings-avatar">{initialsFromName(selectedPlayer?.displayName ?? "System Admin")}</div>
+            <div className="oa-settings-avatar">{initialsFromName(selectedPlayer?.displayName ?? "No player")}</div>
             <div>
               <div className="oa-player-title-row">
-                <h1>{selectedPlayer?.displayName ?? "SYSTEM_ADMIN"}</h1>
-                <span className="oa-badge">User Control Node</span>
+                <h1>{selectedPlayer?.displayName ?? "No player selected"}</h1>
+                <span className="oa-badge">{getRuntimeLabel(props.state)}</span>
               </div>
-              <p>"The blade speaks once; the parser records it forever."</p>
+              <p>{getSourceLabel(props.state)}</p>
             </div>
           </div>
           <div className="oa-card-grid three">
-            <StatCard label="Total Time" value={`${Math.max(1, Math.round(props.state.analysis.durationMs / 3_600_000))} hours`} tone="secondary" icon="schedule" />
+            <StatCard label="Session Time" value={formatDuration(props.state.analysis.durationMs)} tone="secondary" icon="schedule" />
             <StatCard label="Peak DPS" value={formatShort(Math.max(0, ...props.playerRows.map((row) => row.dps)))} tone="primary" icon="trending_up" />
-            <StatCard label="Primary Class" value={selectedPlayer?.className ?? "Unknown"} tone="tertiary" icon="swords" />
+            <StatCard label="Primary Class" value={selectedPlayer?.className ?? "Unavailable"} tone="tertiary" icon="swords" />
           </div>
         </section>
 
         <section className="oa-panel">
-          <SectionHeading icon="settings" eyebrow="App Configuration" title="Global protocol" />
+          <SectionHeading icon="settings" eyebrow="App Configuration" title="Runtime configuration" />
           <div className="oa-field-stack">
             <label className="oa-field">
               <span>Log file directory</span>
               <div className="oa-input-row">
                 <div className="oa-input-shell">
-                  <input readOnly value={props.folderInput || props.state.analysis.sourcePath || "Not configured"} />
+                  <input readOnly value={props.folderInput || getSourceLabel(props.state)} />
                 </div>
                 <button className="oa-button secondary" onClick={props.onChooseFolder}>
                   <Icon name="folder_open" />
@@ -1275,6 +1311,12 @@ function SettingsView({
                 }
               />
             </label>
+            <div className="oa-kv-list">
+              <div><span>Process CPU</span><strong>{props.state.system.processCpuPercent.toFixed(1)}%</strong></div>
+              <div><span>Process Memory</span><strong>{props.state.system.processMemoryMb.toFixed(1)} MB</strong></div>
+              <div><span>System RAM</span><strong>{props.state.system.systemMemoryPercent.toFixed(1)}%</strong></div>
+              <div><span>App Uptime</span><strong>{formatUptime(props.state.system.uptimeSec)}</strong></div>
+            </div>
           </div>
         </section>
 
@@ -1311,7 +1353,7 @@ function NotificationsPanel({ state }: { state: AppState }) {
     ...state.debug.latestRawLines.slice(-2).reverse().map((line) => ({
       title: "Log stream active",
       detail: line,
-      time: "just now",
+      time: new Date(state.system.sampledAt).toLocaleTimeString(),
       tone: "secondary" as const
     })),
     ...state.debug.parseIssues.slice(-4).reverse().map((issue) => ({
@@ -1346,15 +1388,25 @@ function DiagnosticsPanel({ state }: { state: AppState }) {
     state.analysis.totalLines > 0
       ? state.debug.unknownEvents.length / state.analysis.totalLines
       : 0;
+  const systemHealth =
+    state.watcherStatus === "error"
+      ? "faulted"
+      : state.system.processCpuPercent > 85
+        ? "high load"
+        : "stable";
 
   return (
     <aside className="oa-overlay diagnostics">
-      <SectionHeading icon="memory" eyebrow="System Diagnostics" title="Parser health" actions={<span className="oa-pill">node_04 stable</span>} />
+      <SectionHeading icon="memory" eyebrow="System Diagnostics" title="Parser health" actions={<span className="oa-pill">{systemHealth}</span>} />
       <div className="oa-kv-list">
         <div><span>Core Engine</span><strong>{state.watcherStatus === "error" ? "Faulted" : "Operational"}</strong></div>
-        <div><span>Log Latency</span><strong>{state.analysis.mode === "idle" ? "--" : "<16ms"}</strong></div>
+        <div><span>Analysis Source</span><strong>{getSourceLabel(state)}</strong></div>
         <div><span>Read Offset</span><strong>{formatNumber(state.debug.currentOffset)}</strong></div>
         <div><span>Unknown Rate</span><strong>{formatPercent(unknownRate, 2)}</strong></div>
+        <div><span>Process CPU</span><strong>{state.system.processCpuPercent.toFixed(1)}%</strong></div>
+        <div><span>Process Memory</span><strong>{state.system.processMemoryMb.toFixed(1)} MB</strong></div>
+        <div><span>System RAM</span><strong>{state.system.systemMemoryPercent.toFixed(1)}%</strong></div>
+        <div><span>App Uptime</span><strong>{formatUptime(state.system.uptimeSec)}</strong></div>
       </div>
     </aside>
   );
@@ -1364,7 +1416,9 @@ export function ObsidianScreens(props: ShellProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [compareMode, setCompareMode] = useState(false);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
-  const activePlayerName = props.selectedPlayer?.displayName ?? "SYSTEM_ADMIN";
+  const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
+  const runtimeLabel = getRuntimeLabel(props.state);
+  const sourceLabel = getSourceLabel(props.state);
   const sessionSeconds = Math.floor(props.state.analysis.durationMs / 1000);
   const sessionTimer = `${Math.floor(sessionSeconds / 3600)
     .toString()
@@ -1467,7 +1521,7 @@ export function ObsidianScreens(props: ShellProps) {
             <div className="oa-sidebar-avatar">{initialsFromName(activePlayerName)}</div>
             <div>
               <strong>{activePlayerName}</strong>
-              <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : "Engine Operator"}</span>
+              <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : sourceLabel}</span>
             </div>
           </div>
           <button className="oa-button session" onClick={() => props.onViewChange("setup")}>
@@ -1476,7 +1530,7 @@ export function ObsidianScreens(props: ShellProps) {
           <div className="oa-sidebar-status">
             <div className="oa-system-pill">
               <span className="oa-system-dot" />
-              <span>Engine Ready</span>
+              <span>{runtimeLabel}</span>
             </div>
           </div>
         </div>
@@ -1494,10 +1548,11 @@ export function ObsidianScreens(props: ShellProps) {
               <span className="oa-title-lock">{props.view === "settings" ? "PROFILE SETTINGS" : "NEVERWINTER LIVE PARSER"}</span>
             )}
             <div className="oa-session-group">
-              <span className="oa-session-pill">SESSION: ACTIVE</span>
+              <span className="oa-session-pill">SESSION: {runtimeLabel}</span>
               <div className="oa-session-meta">
                 <span>{sessionTimer}</span>
-                <span>SYSTEM: NOMINAL</span>
+                <span>CPU: {props.state.system.processCpuPercent.toFixed(1)}%</span>
+                <span>RAM: {props.state.system.processMemoryMb.toFixed(0)} MB</span>
               </div>
             </div>
           </div>
@@ -1545,7 +1600,7 @@ export function ObsidianScreens(props: ShellProps) {
 
         <div className="oa-floating-status">
           <span className="oa-system-dot" />
-          <span>{props.state.analysis.mode === "idle" ? "Idle" : "Live"}</span>
+          <span>{runtimeLabel}</span>
           <strong>{formatShort(props.state.analysis.parsedEvents)} events</strong>
         </div>
 

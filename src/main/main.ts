@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Store from "electron-store";
@@ -16,6 +17,60 @@ const settingsStore = new Store<{ selectedLogFolder: string | null }>({
 });
 
 let mainWindow: BrowserWindow | null = null;
+let telemetryTimer: NodeJS.Timeout | null = null;
+let lastCpuUsage = process.cpuUsage();
+let lastCpuSampleAt = process.hrtime.bigint();
+
+function toMegabytes(value: number): number {
+  return Number((value / (1024 * 1024)).toFixed(1));
+}
+
+function getSystemUsage() {
+  const now = process.hrtime.bigint();
+  const elapsedMicros = Number(now - lastCpuSampleAt) / 1000;
+  const cpuUsage = process.cpuUsage(lastCpuUsage);
+  const cpuTimeMicros = cpuUsage.user + cpuUsage.system;
+  const processCpuPercent =
+    elapsedMicros > 0
+      ? Number(
+          (
+            (cpuTimeMicros / elapsedMicros / Math.max(1, os.cpus().length)) *
+            100
+          ).toFixed(1)
+        )
+      : 0;
+
+  lastCpuUsage = process.cpuUsage();
+  lastCpuSampleAt = now;
+
+  const processMemoryMb = toMegabytes(process.memoryUsage().rss);
+  const systemMemoryTotalMb = toMegabytes(os.totalmem());
+  const systemMemoryFreeMb = toMegabytes(os.freemem());
+  const systemMemoryUsedMb = Number(
+    Math.max(0, systemMemoryTotalMb - systemMemoryFreeMb).toFixed(1)
+  );
+  const systemMemoryPercent =
+    systemMemoryTotalMb > 0
+      ? Number(((systemMemoryUsedMb / systemMemoryTotalMb) * 100).toFixed(1))
+      : 0;
+
+  return {
+    sampledAt: Date.now(),
+    processCpuPercent,
+    processMemoryMb,
+    systemMemoryUsedMb,
+    systemMemoryTotalMb,
+    systemMemoryPercent,
+    uptimeSec: Math.floor(process.uptime())
+  };
+}
+
+function withTelemetry(state: AppState): AppState {
+  return {
+    ...state,
+    system: getSystemUsage()
+  };
+}
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -41,27 +96,27 @@ function createWindow(): void {
 }
 
 function emitState(state: AppState): void {
-  mainWindow?.webContents.send("monitoring:state", state);
+  mainWindow?.webContents.send("monitoring:state", withTelemetry(state));
 }
 
 monitor.on("state", (state) => emitState(state));
 
 ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
   settingsStore.set("selectedLogFolder", config.folderPath);
-  return monitor.start(config);
+  return withTelemetry(await monitor.start(config));
 });
 
 ipcMain.handle("monitoring:importFile", async (_event, filePath: string) =>
-  monitor.importLogFile(filePath)
+  withTelemetry(await monitor.importLogFile(filePath))
 );
-ipcMain.handle("monitoring:stop", async () => monitor.stop());
+ipcMain.handle("monitoring:stop", async () => withTelemetry(await monitor.stop()));
 ipcMain.handle("monitoring:getState", async () => {
   const state = monitor.getState();
   const savedFolder = settingsStore.get("selectedLogFolder");
-  return {
+  return withTelemetry({
     ...state,
     selectedLogFolder: state.selectedLogFolder ?? savedFolder
-  };
+  });
 });
 
 ipcMain.handle("dialog:selectFolder", async () => {
@@ -90,6 +145,9 @@ ipcMain.handle("dialog:selectLogFile", async () => {
 
 app.whenReady().then(() => {
   createWindow();
+  telemetryTimer = setInterval(() => {
+    emitState(monitor.getState());
+  }, 2000);
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -99,6 +157,10 @@ app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
+  if (telemetryTimer) {
+    clearInterval(telemetryTimer);
+    telemetryTimer = null;
+  }
   if (process.platform !== "darwin") {
     app.quit();
   }
