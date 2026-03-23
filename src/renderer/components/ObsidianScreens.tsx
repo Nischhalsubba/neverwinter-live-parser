@@ -20,6 +20,7 @@ type ShellProps = {
   view: View;
   detailTab: DetailTab;
   playerRows: PlayerRow[];
+  livePlayerRows: PlayerRow[];
   selectedPlayer: PlayerRow | null;
   selectedEncounter: EncounterSnapshot | null;
   availableEncounters: EncounterSnapshot[];
@@ -114,6 +115,34 @@ function getRuntimeLabel(state: AppState): string {
   return "IDLE";
 }
 
+function getSessionIndicator(state: AppState): {
+  label: string;
+  detail: string;
+  tone: "live" | "old" | "idle";
+} {
+  if (state.watcherStatus === "watching" && state.analysis.mode === "live") {
+    return {
+      label: "LIVE",
+      detail: "Tracking",
+      tone: "live"
+    };
+  }
+
+  if (state.analysis.mode === "imported") {
+    return {
+      label: "OLD LOG",
+      detail: "Viewing imported log",
+      tone: "old"
+    };
+  }
+
+  return {
+    label: "IDLE",
+    detail: "Not running",
+    tone: "idle"
+  };
+}
+
 function getSourceLabel(state: AppState): string {
   return state.importedLogFile ?? state.activeLogFile ?? state.analysis.sourcePath ?? "No source linked";
 }
@@ -130,6 +159,23 @@ function getCombatLogTimestampLabel(filePath: string | null): string {
 
   const [, year, month, day, hour, minute, second] = match;
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+function classifyLineTags(line: string): Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> {
+  const tags: Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> = [];
+  const lowered = line.toLowerCase();
+
+  if (lowered.includes("critical")) {
+    tags.push({ label: "Critical", tone: "critical" });
+  }
+  if (lowered.includes("flank") || lowered.includes("combat advantage") || lowered.includes("|ca")) {
+    tags.push({ label: "CA", tone: "advantage" });
+  }
+  if (lowered.includes("hitpoints")) {
+    tags.push({ label: "Heal", tone: "heal" });
+  }
+
+  return tags;
 }
 
 function initialsFromName(value: string | null | undefined): string {
@@ -429,6 +475,7 @@ function LibraryView() {
 
 function SetupView(props: ShellProps) {
   const { state } = props;
+  const isLiveRunning = state.watcherStatus === "watching" && state.analysis.mode === "live";
   const processingRate =
     state.analysis.durationMs > 0
       ? Math.round(state.analysis.totalLines / Math.max(1, state.analysis.durationMs / 1000))
@@ -467,12 +514,20 @@ function SetupView(props: ShellProps) {
               <button
                 className="oa-button primary wide"
                 onClick={props.onStartMonitoring}
-                disabled={props.starting || !props.folderInput.trim() || !props.isDesktopRuntime}
+                disabled={props.starting || isLiveRunning || !props.folderInput.trim() || !props.isDesktopRuntime}
               >
-                <Icon name="play_arrow" filled />
-                Start Monitoring
+                <Icon
+                  name={isLiveRunning || props.starting ? "autorenew" : "play_arrow"}
+                  filled={!isLiveRunning && !props.starting}
+                  className={isLiveRunning || props.starting ? "oa-spin" : undefined}
+                />
+                {isLiveRunning ? "Running" : props.starting ? "Starting..." : "Start Monitoring"}
               </button>
-              <button className="oa-button secondary" onClick={props.onStopMonitoring}>
+              <button
+                className="oa-button secondary"
+                onClick={props.onStopMonitoring}
+                disabled={!isLiveRunning || props.starting}
+              >
                 <Icon name="stop" />
                 Stop
               </button>
@@ -596,6 +651,7 @@ function LiveOverviewView({
   const totalDeaths = filteredPlayers.reduce((sum, player) => sum + player.deaths, 0);
   const selectedForCompare = compareMode ? filteredPlayers.slice(0, 3) : [];
   const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
+  const liveDurationMs = current?.durationMs ?? 0;
 
   return (
     <section className="oa-screen">
@@ -622,10 +678,10 @@ function LiveOverviewView({
       </header>
 
       <div className="oa-card-grid four">
-        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={`${state.analysis.mode} aggregate`} />
-        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} combatants tracked`} />
-        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Inference confidence" />
-        <StatCard label="Total Time" value={formatDuration(state.analysis.durationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} deaths detected`} />
+        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={current ? "current encounter" : "waiting for live combat"} />
+        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live players tracked`} />
+        <StatCard label="Party Synergy" value={`${Math.round(filteredPlayers.reduce((sum, row) => sum + row.buildConfidence, 0) / Math.max(1, filteredPlayers.length) * 100)}%`} icon="group" hint="Live class inference confidence" />
+        <StatCard label="Total Time" value={formatDuration(liveDurationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
       </div>
 
       {compareMode && selectedForCompare.length ? (
@@ -655,7 +711,7 @@ function LiveOverviewView({
           actions={
             <div className="oa-search">
               <Icon name="search" className="oa-inline-icon" />
-              <input value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search players..." />
+              <input value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search players, powers, targets, logs..." />
             </div>
           }
         />
@@ -686,10 +742,10 @@ function LiveOverviewView({
               </span>
               <span className="tone-secondary-text">{formatShort(player.dps)}</span>
               <span>{formatNumber(player.hits)}</span>
-              <span>{formatDuration(state.analysis.durationMs)}</span>
+              <span>{formatDuration(liveDurationMs)}</span>
             </button>
           ))}
-          {!filteredPlayers.length ? <div className="oa-empty-state">No players match the current search.</div> : null}
+          {!filteredPlayers.length ? <div className="oa-empty-state">{current ? "No current-encounter players match the current search." : "Waiting for current live combat events."}</div> : null}
         </div>
       </section>
     </section>
@@ -1441,12 +1497,122 @@ function DiagnosticsPanel({ state }: { state: AppState }) {
   );
 }
 
+function GlobalSearchPanel({
+  query,
+  players,
+  encounters,
+  state,
+  onSelectPlayer,
+  onSelectEncounter
+}: {
+  query: string;
+  players: PlayerRow[];
+  encounters: EncounterSnapshot[];
+  state: AppState;
+  onSelectPlayer: (playerId: string) => void;
+  onSelectEncounter: (encounterId: string) => void;
+}) {
+  const lowered = query.trim().toLowerCase();
+  if (!lowered) {
+    return null;
+  }
+
+  const matchedPlayers = players
+    .filter((player) => {
+      const paragon = player.paragon?.toLowerCase() ?? "";
+      const className = player.className?.toLowerCase() ?? "";
+      return (
+        player.displayName.toLowerCase().includes(lowered) ||
+        paragon.includes(lowered) ||
+        className.includes(lowered) ||
+        player.topSkills.some((skill) => skill.abilityName.toLowerCase().includes(lowered)) ||
+        player.targets.some((target) => target.targetName.toLowerCase().includes(lowered))
+      );
+    })
+    .slice(0, 6);
+
+  const matchedEncounters = encounters
+    .filter((encounter) => encounter.label.toLowerCase().includes(lowered))
+    .slice(0, 6);
+
+  const matchedLines = [
+    ...state.debug.latestRawLines,
+    ...state.debug.parseIssues.map((issue) => issue.line).filter(Boolean)
+  ]
+    .filter((line, index, source) => source.indexOf(line) === index)
+    .filter((line) => line.toLowerCase().includes(lowered))
+    .slice(0, 8);
+
+  const hasResults = matchedPlayers.length || matchedEncounters.length || matchedLines.length;
+
+  return (
+    <aside className="oa-overlay search-results">
+      <SectionHeading icon="travel_explore" eyebrow="Global Search" title={`Results for "${query}"`} />
+      {!hasResults ? <div className="oa-empty-state">No matches across players, encounters, or live lines.</div> : null}
+      {matchedPlayers.length ? (
+        <div className="oa-search-section">
+          <strong>Players</strong>
+          <div className="oa-search-list">
+            {matchedPlayers.map((player) => (
+              <button key={player.id} className="oa-search-result" onClick={() => onSelectPlayer(player.id)}>
+                <span className="oa-avatar-frame">{initialsFromName(player.displayName)}</span>
+                <span>
+                  <strong>{player.displayName}</strong>
+                  <small>{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</small>
+                </span>
+                <span className="oa-search-metric">{formatShort(player.totalDamage)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {matchedEncounters.length ? (
+        <div className="oa-search-section">
+          <strong>Encounters</strong>
+          <div className="oa-search-list">
+            {matchedEncounters.map((encounter) => (
+              <button key={encounter.id} className="oa-search-result" onClick={() => onSelectEncounter(encounter.id)}>
+                <span className="oa-status-chip stable">{formatDuration(encounter.durationMs)}</span>
+                <span>
+                  <strong>{encounter.label}</strong>
+                  <small>{formatShort(encounter.totalDamage)} total damage</small>
+                </span>
+                <span className="oa-search-metric">{formatShort(encounter.dps)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {matchedLines.length ? (
+        <div className="oa-search-section">
+          <strong>Live lines</strong>
+          <div className="oa-event-list compact">
+            {matchedLines.map((line, index) => (
+              <article className="oa-event-card" key={`${line}-${index}`}>
+                <div>
+                  <div className="oa-line-tags">
+                    {classifyLineTags(line).map((tag) => (
+                      <span key={`${index}-${tag.label}`} className={`oa-line-tag ${tag.tone}`}>{tag.label}</span>
+                    ))}
+                  </div>
+                  <p>{line}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </aside>
+  );
+}
+
 export function ObsidianScreens(props: ShellProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [compareMode, setCompareMode] = useState(false);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
   const runtimeLabel = getRuntimeLabel(props.state);
+  const sessionIndicator = getSessionIndicator(props.state);
   const sourceLabel = getSourceLabel(props.state);
   const sessionSeconds = Math.floor(props.state.analysis.durationMs / 1000);
   const sessionTimer = `${Math.floor(sessionSeconds / 3600)
@@ -1455,21 +1621,30 @@ export function ObsidianScreens(props: ShellProps) {
     .toString()
     .padStart(2, "0")}:${(sessionSeconds % 60).toString().padStart(2, "0")}`;
 
-  const filteredPlayers = useMemo(() => {
+  const filterRows = (rows: PlayerRow[]) => {
     if (!searchQuery.trim()) {
-      return props.playerRows;
+      return rows;
     }
 
     const query = searchQuery.toLowerCase();
-    return props.playerRows.filter((player) => {
+    return rows.filter((player) => {
       const className = player.className?.toLowerCase() ?? "";
+      const paragon = player.paragon?.toLowerCase() ?? "";
       return (
         player.displayName.toLowerCase().includes(query) ||
         className.includes(query) ||
-        player.topSkills.some((skill) => skill.abilityName.toLowerCase().includes(query))
+        paragon.includes(query) ||
+        player.topSkills.some((skill) => skill.abilityName.toLowerCase().includes(query)) ||
+        player.targets.some((target) => target.targetName.toLowerCase().includes(query))
       );
     });
-  }, [props.playerRows, searchQuery]);
+  };
+
+  const filteredPlayers = useMemo(() => filterRows(props.playerRows), [props.playerRows, searchQuery]);
+  const filteredLivePlayers = useMemo(
+    () => filterRows(props.livePlayerRows),
+    [props.livePlayerRows, searchQuery]
+  );
 
   const rootStyle = {
     "--oa-overlay-opacity": `${settings.overlayOpacity / 100}`
@@ -1557,9 +1732,9 @@ export function ObsidianScreens(props: ShellProps) {
             New Session
           </button>
           <div className="oa-sidebar-status">
-            <div className="oa-system-pill">
+            <div className={`oa-system-pill ${sessionIndicator.tone}`}>
               <span className="oa-system-dot" />
-              <span>{runtimeLabel}</span>
+              <span>{sessionIndicator.label}</span>
             </div>
           </div>
         </div>
@@ -1605,7 +1780,7 @@ export function ObsidianScreens(props: ShellProps) {
           {props.view === "live" ? (
             <LiveOverviewView
               props={props}
-              filteredPlayers={filteredPlayers}
+              filteredPlayers={filteredLivePlayers}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               compareMode={compareMode}
@@ -1627,14 +1802,25 @@ export function ObsidianScreens(props: ShellProps) {
           </div>
         ) : null}
 
-        <div className="oa-floating-status">
+        <div className={`oa-floating-status ${sessionIndicator.tone}`}>
           <span className="oa-system-dot" />
-          <span>{runtimeLabel}</span>
-          <strong>{formatShort(props.state.analysis.parsedEvents)} events</strong>
+          <span>{sessionIndicator.label}</span>
+          <strong>{sessionIndicator.detail}</strong>
         </div>
 
         {props.notificationsOpen ? <NotificationsPanel state={props.state} /> : null}
         {props.diagnosticsOpen ? <DiagnosticsPanel state={props.state} /> : null}
+        <GlobalSearchPanel
+          query={searchQuery}
+          players={props.playerRows}
+          encounters={props.availableEncounters}
+          state={props.state}
+          onSelectPlayer={(playerId) => props.onSelectPlayer(playerId)}
+          onSelectEncounter={(encounterId) => {
+            props.onSelectEncounter(encounterId);
+            props.onViewChange("players");
+          }}
+        />
       </div>
     </div>
   );

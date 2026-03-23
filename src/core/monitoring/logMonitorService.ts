@@ -188,15 +188,40 @@ export class LogMonitorService extends EventEmitter {
     return this.getState();
   }
 
+  private resetLiveSession(activeFile: string | null): void {
+    const preservedFolder = this.state.selectedLogFolder;
+    this.readerState = createInitialReaderState();
+    this.encounterManager = new EncounterManager(10_000);
+    this.combatantTracker = new CombatantTracker();
+    this.state = {
+      ...createInitialAppState(),
+      watcherStatus: "watching",
+      selectedLogFolder: preservedFolder,
+      activeLogFile: activeFile,
+      analysis: {
+        ...createInitialAppState().analysis,
+        mode: "live",
+        sourcePath: activeFile ?? preservedFolder
+      },
+      system: this.state.system
+    };
+    this.state.debug.activeFilePath = activeFile;
+  }
+
   private async refreshActiveFile(folderPath: string): Promise<void> {
     const activeFile = await detectActiveLogFile(
       folderPath,
       this.state.activeLogFile ?? this.liveTrackingFilePath
     );
     if (activeFile !== this.state.activeLogFile) {
-      this.state.activeLogFile = activeFile;
-      this.state.debug.activeFilePath = activeFile;
-      this.state.analysis.sourcePath = activeFile ?? folderPath;
+      const hadActiveFile = Boolean(this.state.activeLogFile);
+      if (hadActiveFile) {
+        this.resetLiveSession(activeFile);
+      } else {
+        this.state.activeLogFile = activeFile;
+        this.state.debug.activeFilePath = activeFile;
+        this.state.analysis.sourcePath = activeFile ?? folderPath;
+      }
     }
   }
 

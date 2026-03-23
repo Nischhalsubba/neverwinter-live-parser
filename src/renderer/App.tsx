@@ -83,6 +83,14 @@ export function App() {
     () => buildPlayerRows(state.analysis.combatants, includeCompanions),
     [includeCompanions, state.analysis.combatants]
   );
+  const livePlayerRows = useMemo(
+    () =>
+      buildPlayerRows(state.analysis.combatants, includeCompanions, {
+        encounterId: state.currentEncounter?.id ?? null,
+        encounterDurationMs: state.currentEncounter?.durationMs ?? 0
+      }),
+    [includeCompanions, state.analysis.combatants, state.currentEncounter]
+  );
 
   const availableEncounters = useMemo(
     () => getEncounterSnapshots(state.recentEncounters, state.currentEncounter),
@@ -211,6 +219,7 @@ export function App() {
       view={view}
       detailTab={detailTab}
       playerRows={playerRows}
+      livePlayerRows={livePlayerRows}
       selectedPlayer={selectedPlayer}
       selectedEncounter={selectedEncounter}
       availableEncounters={availableEncounters}
