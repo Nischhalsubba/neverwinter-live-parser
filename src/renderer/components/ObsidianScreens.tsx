@@ -1,4 +1,15 @@
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from "recharts";
 import metadata from "../../shared/data/nw-metadata.json";
 import type {
   AppState,
@@ -315,40 +326,6 @@ function TimelineSvg({
   );
 }
 
-function TimelineHeatmap({ skills, timeline }: { skills: SkillStat[]; timeline: TimelinePoint[] }) {
-  const topSkills = skills.slice(0, 5);
-  const seconds = timeline.slice(0, 24);
-  const peak = Math.max(1, ...seconds.map((entry) => entry.damage));
-
-  return (
-    <div className="oa-heatmap">
-      {topSkills.map((skill, skillIndex) => (
-        <div className="oa-heatmap-row" key={skill.abilityName}>
-          <div className="oa-heatmap-label">
-            <div className="oa-ability-chip">{skill.abilityName.slice(0, 2).toUpperCase()}</div>
-            <span>{skill.abilityName}</span>
-          </div>
-          <div className="oa-heatmap-grid">
-            {seconds.map((point) => {
-              const intensity = Math.max(
-                0.12,
-                Math.min(1, ((point.damage / peak) * (1 - skillIndex * 0.08)))
-              );
-              return (
-                <span
-                  key={`${skill.abilityName}-${point.second}`}
-                  style={{ opacity: intensity }}
-                  className={skillIndex % 2 === 0 ? "tone-primary" : "tone-secondary"}
-                />
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function ProgressBar({
   value,
   max,
@@ -367,65 +344,128 @@ function ProgressBar({
   );
 }
 
-function BuildHealingRows(player: PlayerRow): Array<{
-  label: string;
-  subtype: string;
-  ticks: number;
-  total: number;
-  average: number;
-  max: number;
-  critRate: number;
-}> {
-  if (player.totalHealing <= 0) {
-    return [];
-  }
-
-  const sourceSkills = player.topSkills.slice(0, 5);
-  const totalWeight = Math.max(1, sourceSkills.reduce((sum, skill) => sum + skill.total, 0));
-
-  return sourceSkills.map((skill, index) => {
-    const weight = skill.total / totalWeight;
-    const total = Math.round(player.totalHealing * Math.max(0.08, weight));
-    const ticks = Math.max(8, Math.round(player.hits * Math.max(0.04, weight * 0.6)));
-    return {
-      label: skill.abilityName,
-      subtype: index % 2 === 0 ? "Direct Heal" : "Over Time",
-      ticks,
-      total,
-      average: Math.round(total / ticks),
-      max: Math.round(total / Math.max(1, ticks / 3)),
-      critRate: Math.min(0.95, player.critRate * (0.65 + index * 0.06))
-    };
-  });
-}
-
 function buildDamageTakenRows(player: PlayerRow, encounters: EncounterSnapshot[]) {
-  return encounters.map((encounter, index) => {
+  const maxAmount = Math.max(
+    1,
+    ...encounters.map(
+      (encounter) =>
+        player.encounters.find((entry) => entry.encounterId === encounter.id)?.damageTaken ?? 0
+    )
+  );
+
+  return encounters.map((encounter) => {
     const encounterStat =
       player.encounters.find((entry) => entry.encounterId === encounter.id) ?? null;
     const amount = encounterStat?.damageTaken ?? 0;
     return {
       label: encounter.label,
       amount,
-      status: index % 3 === 0 ? "spike" : index % 3 === 1 ? "stable" : "recover"
+      status:
+        amount >= maxAmount * 0.66 ? "spike" : amount >= maxAmount * 0.33 ? "stable" : "recover"
     };
   });
 }
 
 function buildDamageRows(player: PlayerRow, sortMode: "total" | "dps", durationMs: number) {
   return [...player.topSkills]
+    .filter((skill) => skill.kind === "damage")
     .map((skill) => {
       const meta = getPowerMeta(skill.abilityName);
       return {
         abilityName: skill.abilityName,
         hits: skill.hits,
-        critRate: player.critRate,
+        critRate: skill.hits === 0 ? 0 : skill.critCount / skill.hits,
+        flankRate: skill.hits === 0 ? 0 : skill.flankCount / skill.hits,
         total: skill.total,
         dps: durationMs > 0 ? skill.total / (durationMs / 1000) : 0,
         type: meta?.powertype ?? "Combat Power"
       };
     })
     .sort((left, right) => (sortMode === "total" ? right.total - left.total : right.dps - left.dps));
+}
+
+function buildHealingRows(player: PlayerRow) {
+  return player.topSkills
+    .filter((skill) => skill.kind === "heal")
+    .sort((left, right) => right.total - left.total)
+    .map((skill) => ({
+      label: skill.abilityName,
+      ticks: skill.hits,
+      total: skill.total,
+      average: skill.hits === 0 ? 0 : skill.total / skill.hits,
+      critRate: skill.hits === 0 ? 0 : skill.critCount / skill.hits
+    }));
+}
+
+function PowerContributionChart({ skills }: { skills: SkillStat[] }) {
+  const rows = skills.slice(0, 8).map((skill) => ({
+    name: skill.abilityName,
+    total: Math.round(skill.total)
+  }));
+
+  if (!rows.length) {
+    return <div className="oa-empty-state">No power usage was parsed for this selection.</div>;
+  }
+
+  return (
+    <div className="oa-chart-box">
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={rows} layout="vertical" margin={{ top: 8, right: 18, bottom: 8, left: 8 }}>
+          <CartesianGrid stroke="rgba(205, 189, 255, 0.08)" horizontal={false} />
+          <XAxis type="number" stroke="rgba(229,225,228,0.45)" tickFormatter={(value) => formatShort(value)} />
+          <YAxis type="category" width={150} dataKey="name" stroke="rgba(229,225,228,0.45)" tick={{ fontSize: 11 }} />
+          <Tooltip
+            contentStyle={{
+              background: "rgba(19,19,21,0.96)",
+              border: "1px solid rgba(205,189,255,0.18)",
+              borderRadius: 12
+            }}
+            formatter={(value: number) => formatShort(value)}
+          />
+          <Bar dataKey="total" fill="#cdbdff" radius={[6, 6, 6, 6]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function CombatTimelineChart({ points }: { points: TimelinePoint[] }) {
+  if (!points.length) {
+    return <div className="oa-empty-state">No timeline buckets were parsed for this selection.</div>;
+  }
+
+  return (
+    <div className="oa-chart-box">
+      <ResponsiveContainer width="100%" height={320}>
+        <AreaChart data={points} margin={{ top: 12, right: 12, bottom: 0, left: 0 }}>
+          <defs>
+            <linearGradient id="oaDamageGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#cdbdff" stopOpacity={0.45} />
+              <stop offset="100%" stopColor="#cdbdff" stopOpacity={0.02} />
+            </linearGradient>
+            <linearGradient id="oaHealingGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#7cf5c5" stopOpacity={0.32} />
+              <stop offset="100%" stopColor="#7cf5c5" stopOpacity={0.02} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid stroke="rgba(205, 189, 255, 0.08)" />
+          <XAxis dataKey="second" stroke="rgba(229,225,228,0.45)" tickFormatter={(value) => `${value}s`} />
+          <YAxis stroke="rgba(229,225,228,0.45)" tickFormatter={(value) => formatShort(value)} />
+          <Tooltip
+            contentStyle={{
+              background: "rgba(19,19,21,0.96)",
+              border: "1px solid rgba(205,189,255,0.18)",
+              borderRadius: 12
+            }}
+            formatter={(value: number) => formatShort(value)}
+            labelFormatter={(value) => `${value}s`}
+          />
+          <Area type="monotone" dataKey="damage" stroke="#cdbdff" fill="url(#oaDamageGradient)" strokeWidth={2} />
+          <Area type="monotone" dataKey="healing" stroke="#7cf5c5" fill="url(#oaHealingGradient)" strokeWidth={2} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
 }
 
 function LibraryView() {
@@ -506,6 +546,9 @@ function SetupView(props: ShellProps) {
                 </div>
                 <button className="oa-button secondary" onClick={props.onChooseFolder}>
                   Browse
+                </button>
+                <button className="oa-button secondary" onClick={props.onChooseImportFile}>
+                  Choose Log File
                 </button>
               </div>
             </label>
@@ -785,12 +828,12 @@ function PlayerOverviewTab({
         <section className="oa-panel">
           <SectionHeading icon="swords" eyebrow="Top Damage Powers" title="Contribution profile" />
           <div className="oa-list-panel">
-            {player.topSkills.slice(0, 8).map((skill) => {
-              const max = player.topSkills[0]?.total ?? 1;
+            {player.topSkills.filter((skill) => skill.kind === "damage").slice(0, 8).map((skill) => {
+              const max = player.topSkills.filter((entry) => entry.kind === "damage")[0]?.total ?? 1;
               const share = skill.total / Math.max(1, totalDamage);
               const meta = getPowerMeta(skill.abilityName);
               return (
-                <div className="oa-list-row" key={skill.abilityName}>
+                <div className="oa-list-row" key={`${skill.kind}-${skill.abilityName}`}>
                   <div>
                     <strong>{skill.abilityName}</strong>
                     <small>{meta?.powertype ?? "Combat Power"}</small>
@@ -835,17 +878,18 @@ function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter
     encounter === null
       ? player.timeline
       : player.timeline.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000));
+  const powerRows = player.topSkills.filter((skill) => skill.kind === "damage");
 
   return (
     <div className="oa-tab-layout">
       <section className="oa-panel">
         <SectionHeading icon="insights" eyebrow="Telemetry" title="DPS flow over time" actions={<span className="oa-pill">Peak: {formatShort(Math.max(0, ...points.map((point) => point.damage)))}</span>} />
-        <TimelineSvg points={points} mode="damage" accent="primary" />
+        <CombatTimelineChart points={points} />
       </section>
 
       <section className="oa-panel">
-        <SectionHeading icon="grid_view" eyebrow="Rotation Heatmap" title="Power activation rhythm" />
-        <TimelineHeatmap skills={player.topSkills} timeline={points} />
+        <SectionHeading icon="bar_chart" eyebrow="Power Contribution" title="Top parsed powers" />
+        <PowerContributionChart skills={powerRows} />
       </section>
     </div>
   );
@@ -896,7 +940,7 @@ function PlayerDamageTab({
                 <div className="oa-power-icon">{row.abilityName.slice(0, 2).toUpperCase()}</div>
                 <div>
                   <strong>{row.abilityName}</strong>
-                  <small>{row.type}</small>
+                  <small>{row.type} • Crit {formatPercent(row.critRate)} • CA {formatPercent(row.flankRate)}</small>
                   <ProgressBar value={row.total} max={maxTotal} />
                 </div>
               </div>
@@ -941,7 +985,7 @@ function PlayerDamageTab({
 }
 
 function PlayerHealingTab({ player }: { player: PlayerRow }) {
-  const rows = BuildHealingRows(player);
+  const rows = buildHealingRows(player);
   const max = Math.max(...rows.map((row) => row.total), 1);
 
   return (
@@ -952,32 +996,30 @@ function PlayerHealingTab({ player }: { player: PlayerRow }) {
         <StatCard label="Critical Frequency" value={formatPercent(player.critRate)} tone="secondary" icon="target" />
       </div>
       <section className="oa-panel">
-        <SectionHeading icon="volunteer_activism" eyebrow="Healing Done" title="Outgoing healing breakdown" actions={<span className="oa-pill">Total Events: {formatNumber(rows.reduce((sum, row) => sum + row.ticks, 0))}</span>} />
-        {rows.length ? (
-          <div className="oa-data-table">
-            <div className="oa-data-head healing">
-              <span>Power</span>
-              <span>Ticks</span>
-              <span>Total</span>
-              <span>% Breakdown</span>
-              <span>Avg</span>
-              <span>Max</span>
-              <span>Crit%</span>
-            </div>
-            {rows.map((row) => (
-              <div className="oa-data-row healing" key={row.label}>
-                <div>
-                  <strong>{row.label}</strong>
-                  <small>{row.subtype}</small>
-                </div>
-                <span>{formatNumber(row.ticks)}</span>
-                <span>{formatShort(row.total)}</span>
-                <span><ProgressBar value={row.total} max={max} tone="primary" /></span>
-                <span>{formatNumber(row.average)}</span>
-                <span>{formatNumber(row.max)}</span>
-                <span className="tone-secondary-text">{formatPercent(row.critRate)}</span>
+          <SectionHeading icon="volunteer_activism" eyebrow="Healing Done" title="Outgoing healing breakdown" actions={<span className="oa-pill">Total Events: {formatNumber(rows.reduce((sum, row) => sum + row.ticks, 0))}</span>} />
+          {rows.length ? (
+            <div className="oa-data-table">
+              <div className="oa-data-head healing">
+                <span>Power</span>
+                <span>Ticks</span>
+                <span>Total</span>
+                <span>% Breakdown</span>
+                <span>Avg</span>
+                <span>Crit%</span>
               </div>
-            ))}
+              {rows.map((row) => (
+                <div className="oa-data-row healing" key={row.label}>
+                  <div>
+                    <strong>{row.label}</strong>
+                    <small>Parsed healing events</small>
+                  </div>
+                  <span>{formatNumber(row.ticks)}</span>
+                  <span>{formatShort(row.total)}</span>
+                  <span><ProgressBar value={row.total} max={max} tone="primary" /></span>
+                  <span>{formatNumber(row.average)}</span>
+                  <span className="tone-secondary-text">{formatPercent(row.critRate)}</span>
+                </div>
+              ))}
           </div>
         ) : (
           <div className="oa-empty-state">No outgoing healing was parsed for this player.</div>
@@ -1111,20 +1153,23 @@ function PlayerOtherTab({ player }: { player: PlayerRow }) {
 }
 
 function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState }) {
-  const issues = state.debug.parseIssues.slice(-10).reverse();
+  const deathRelatedIssues = state.debug.parseIssues
+    .filter((issue) => issue.line.toLowerCase().includes(player.displayName.toLowerCase()))
+    .slice(-10)
+    .reverse();
 
   return (
     <div className="oa-tab-layout">
       <div className="oa-card-grid three">
         <StatCard label="Death Count" value={formatNumber(player.deaths)} tone="error" icon="dangerous" />
-        <StatCard label="Parse Issues" value={formatNumber(issues.length)} icon="bug_report" />
+        <StatCard label="Player-Matched Issues" value={formatNumber(deathRelatedIssues.length)} icon="bug_report" />
         <StatCard label="Unknown Events" value={formatNumber(state.debug.unknownEvents.length)} icon="help" />
       </div>
       <section className="oa-panel">
-        <SectionHeading icon="dangerous" eyebrow="Fatal events" title="Death and parser issue feed" />
+        <SectionHeading icon="dangerous" eyebrow="Fatal events" title="Death and log issue feed" />
         <div className="oa-event-list">
-          {issues.length ? (
-            issues.map((issue, index) => (
+          {player.deaths > 0 || deathRelatedIssues.length ? (
+            deathRelatedIssues.map((issue, index) => (
               <article className="oa-event-card" key={`${issue.seenAt}-${index}`}>
                 <div className="oa-event-accent tone-error" />
                 <div>
@@ -1135,7 +1180,7 @@ function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState
               </article>
             ))
           ) : (
-            <div className="oa-empty-state">No death-adjacent parser issues are currently tracked.</div>
+            <div className="oa-empty-state">No death lines have been parsed for this player in the current log data.</div>
           )}
         </div>
       </section>

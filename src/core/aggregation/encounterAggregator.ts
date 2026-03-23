@@ -71,10 +71,19 @@ export function applyEventToEncounter(
     const current = encounter.skillTotals.get(event.abilityName) ?? {
       abilityName: event.abilityName,
       total: 0,
-      hits: 0
+      hits: 0,
+      critCount: 0,
+      flankCount: 0,
+      kind: event.eventType
     };
     current.total += amount;
     current.hits += 1;
+    if (event.critical) {
+      current.critCount += 1;
+    }
+    if (event.flags?.some((flag) => flag.toLowerCase() === "flank")) {
+      current.flankCount += 1;
+    }
     encounter.skillTotals.set(event.abilityName, current);
   }
 }

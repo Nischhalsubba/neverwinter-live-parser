@@ -88,8 +88,9 @@ export class CombatantTracker {
       combatant.totalHealing += amount;
       combatant.hits += 1;
     } else if (event.eventType === "damageTaken") {
-      combatant.damageTaken += amount;
-      combatant.hits += 1;
+      const targetCombatant = this.getOrCreateCombatantFromTarget(event);
+      targetCombatant.damageTaken += amount;
+      targetCombatant.hits += 1;
     } else if (event.eventType === "death") {
       combatant.deaths += 1;
     }
@@ -102,14 +103,24 @@ export class CombatantTracker {
     }
 
     if (event.abilityName && (event.eventType === "damage" || event.eventType === "heal")) {
-      const current = combatant.skillTotals.get(event.abilityName) ?? {
+      const skillKey = `${event.eventType}:${event.abilityName}`;
+      const current = combatant.skillTotals.get(skillKey) ?? {
         abilityName: event.abilityName,
         total: 0,
-        hits: 0
+        hits: 0,
+        critCount: 0,
+        flankCount: 0,
+        kind: event.eventType
       };
       current.total += amount;
       current.hits += 1;
-      combatant.skillTotals.set(event.abilityName, current);
+      if (event.critical) {
+        current.critCount += 1;
+      }
+      if (event.flags?.some((flag) => flag.toLowerCase() === "flank")) {
+        current.flankCount += 1;
+      }
+      combatant.skillTotals.set(skillKey, current);
     }
 
     const offsetSeconds = this.startedAt
@@ -233,6 +244,35 @@ export class CombatantTracker {
       ownerName: event.sourceOwnerName || event.sourceName || id,
       displayName: event.sourceName || id,
       type: event.sourceType ?? "unknown",
+      totalDamage: 0,
+      totalHealing: 0,
+      damageTaken: 0,
+      hits: 0,
+      critCount: 0,
+      flankCount: 0,
+      deaths: 0,
+      skillTotals: new Map<string, SkillStat>(),
+      targetTotals: new Map<string, TargetStat>(),
+      timeline: new Map<number, TimelinePoint>(),
+      encounterTotals: new Map<string, MutableEncounterTotals>()
+    };
+    this.combatants.set(id, created);
+    return created;
+  }
+
+  private getOrCreateCombatantFromTarget(event: CombatEvent): MutableCombatant {
+    const id = event.targetId || event.targetName || "unknown-target";
+    const existing = this.combatants.get(id);
+    if (existing) {
+      return existing;
+    }
+
+    const created: MutableCombatant = {
+      id,
+      ownerId: event.targetId || id,
+      ownerName: event.targetName || id,
+      displayName: event.targetName || id,
+      type: event.targetType ?? "unknown",
       totalDamage: 0,
       totalHealing: 0,
       damageTaken: 0,

@@ -42,6 +42,12 @@ const INITIAL_STATE: AppState = {
   }
 };
 
+function getParentDirectory(filePath: string): string {
+  const parts = filePath.split(/[\\/]/);
+  parts.pop();
+  return parts.join("\\");
+}
+
 export function App() {
   const [state, setState] = useState(INITIAL_STATE);
   const [view, setView] = useState<View>("setup");
@@ -145,6 +151,7 @@ export function App() {
     const filePath = await api.selectLogFile();
     if (filePath) {
       setImportFilePath(filePath);
+      setFolderInput((current) => current || getParentDirectory(filePath));
     }
   }
 

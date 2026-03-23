@@ -104,15 +104,21 @@ function mergeSkills(skills: SkillStat[]): SkillStat[] {
   const totals = new Map<string, SkillStat>();
 
   for (const skill of skills) {
-    const current = totals.get(skill.abilityName) ?? {
+    const key = `${skill.kind}:${skill.abilityName}`;
+    const current = totals.get(key) ?? {
       abilityName: skill.abilityName,
       total: 0,
-      hits: 0
+      hits: 0,
+      critCount: 0,
+      flankCount: 0,
+      kind: skill.kind
     };
 
     current.total += skill.total;
     current.hits += skill.hits;
-    totals.set(skill.abilityName, current);
+    current.critCount += skill.critCount;
+    current.flankCount += skill.flankCount;
+    totals.set(key, current);
   }
 
   return Array.from(totals.values())

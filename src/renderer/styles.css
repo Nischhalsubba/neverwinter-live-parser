@@ -737,9 +737,14 @@ input {
 }
 
 .oa-input-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.oa-input-row > .oa-input-shell {
+  flex: 1 1 320px;
 }
 
 .oa-input-shell {
@@ -931,7 +936,7 @@ input {
 
 .oa-data-head.healing,
 .oa-data-row.healing {
-  grid-template-columns: minmax(0, 1.5fr) 90px 110px minmax(130px, 1fr) 90px 90px 80px;
+  grid-template-columns: minmax(0, 1.5fr) 90px 110px minmax(130px, 1fr) 90px 80px;
 }
 
 .oa-data-head.damage-taken,
@@ -1008,6 +1013,11 @@ input {
 .oa-list-panel {
   display: grid;
   gap: 12px;
+}
+
+.oa-chart-box {
+  width: 100%;
+  min-height: 280px;
 }
 
 .oa-list-row {

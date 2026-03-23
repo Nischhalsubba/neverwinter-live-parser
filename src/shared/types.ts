@@ -44,6 +44,9 @@ export type SkillStat = {
   abilityName: string;
   total: number;
   hits: number;
+  critCount: number;
+  flankCount: number;
+  kind: "damage" | "heal";
 };
 
 export type TimelinePoint = {
