@@ -1,5 +1,5 @@
-import { startTransition, useEffect, useMemo, useState } from "react";
-import type { AppState } from "../shared/types";
+import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
+import type { AppState, DiscoveredLogCandidate } from "../shared/types";
 import {
   buildPlayerRows,
   getEncounterSnapshots,
@@ -85,6 +85,8 @@ export function App() {
   const [rendererSettings, setRendererSettings] = useState<ProfileSettings>(loadRendererSettings);
   const [pendingSnapshot, setPendingSnapshot] = useState<AppState | null>(null);
   const [lastFrameAppliedAt, setLastFrameAppliedAt] = useState(0);
+  const [logCandidates, setLogCandidates] = useState<DiscoveredLogCandidate[]>([]);
+  const [discoveringLogs, setDiscoveringLogs] = useState(false);
 
   useEffect(() => {
     const api = window.neverwinterApi;
@@ -99,6 +101,10 @@ export function App() {
         setFolderInput(snapshot.selectedLogFolder ?? "");
         setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
       });
+    });
+
+    void api.discoverLogs().then((candidates) => {
+      setLogCandidates(candidates);
     });
 
     return api.onState((snapshot) => {
@@ -150,22 +156,26 @@ export function App() {
     return () => window.clearTimeout(timeout);
   }, [pendingSnapshot, rendererSettings.targetFps, lastFrameAppliedAt]);
 
+  const deferredCombatants = useDeferredValue(state.analysis.combatants);
+  const deferredCurrentEncounter = useDeferredValue(state.currentEncounter);
+  const deferredRecentEncounters = useDeferredValue(state.recentEncounters);
+
   const playerRows = useMemo(
-    () => buildPlayerRows(state.analysis.combatants, includeCompanions),
-    [includeCompanions, state.analysis.combatants]
+    () => buildPlayerRows(deferredCombatants, includeCompanions),
+    [deferredCombatants, includeCompanions]
   );
   const livePlayerRows = useMemo(
     () =>
-      buildPlayerRows(state.analysis.combatants, includeCompanions, {
-        encounterId: state.currentEncounter?.id ?? null,
-        encounterDurationMs: state.currentEncounter?.durationMs ?? 0
+      buildPlayerRows(deferredCombatants, includeCompanions, {
+        encounterId: deferredCurrentEncounter?.id ?? null,
+        encounterDurationMs: deferredCurrentEncounter?.durationMs ?? 0
       }),
-    [includeCompanions, state.analysis.combatants, state.currentEncounter]
+    [deferredCombatants, includeCompanions, deferredCurrentEncounter]
   );
 
   const availableEncounters = useMemo(
-    () => getEncounterSnapshots(state.recentEncounters, state.currentEncounter),
-    [state.currentEncounter, state.recentEncounters]
+    () => getEncounterSnapshots(deferredRecentEncounters, deferredCurrentEncounter),
+    [deferredCurrentEncounter, deferredRecentEncounters]
   );
 
   useEffect(() => {
@@ -217,6 +227,21 @@ export function App() {
     if (filePath) {
       setImportFilePath(filePath);
       setFolderInput((current) => current || getParentDirectory(filePath));
+    }
+  }
+
+  async function discoverLogs() {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    setDiscoveringLogs(true);
+    try {
+      const candidates = await api.discoverLogs();
+      setLogCandidates(candidates);
+    } finally {
+      setDiscoveringLogs(false);
     }
   }
 
@@ -301,6 +326,8 @@ export function App() {
       diagnosticsOpen={diagnosticsOpen}
       folderInput={folderInput}
       importFilePath={importFilePath}
+      logCandidates={logCandidates}
+      discoveringLogs={discoveringLogs}
       starting={starting}
       onViewChange={setView}
       onDetailTabChange={setDetailTab}
@@ -308,6 +335,13 @@ export function App() {
       onImportFileChange={setImportFilePath}
       onChooseFolder={() => void chooseFolder()}
       onChooseImportFile={() => void chooseImportFile()}
+      onDiscoverLogs={() => void discoverLogs()}
+      onUseDiscoveredCandidate={(candidate) => {
+        setFolderInput(candidate.folderPath);
+        if (candidate.filePath) {
+          setImportFilePath(candidate.filePath);
+        }
+      }}
       onStartMonitoring={() => void startMonitoring()}
       onStartMonitoringFromFile={() => void startMonitoringFromFile()}
       onImportLogFile={() => void importLogFile()}

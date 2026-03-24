@@ -1,5 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
-import type { AppState, MonitoringConfig } from "../shared/types.js";
+import type {
+  AppState,
+  DiscoveredLogCandidate,
+  MonitoringConfig
+} from "../shared/types.js";
 
 type StateListener = (state: AppState) => void;
 
@@ -11,6 +15,8 @@ const api = {
   stopMonitoring: () =>
     ipcRenderer.invoke("monitoring:stop") as Promise<AppState>,
   getState: () => ipcRenderer.invoke("monitoring:getState") as Promise<AppState>,
+  discoverLogs: () =>
+    ipcRenderer.invoke("monitoring:discoverLogs") as Promise<DiscoveredLogCandidate[]>,
   selectFolder: () =>
     ipcRenderer.invoke("dialog:selectFolder") as Promise<string | null>,
   selectLogFile: () =>

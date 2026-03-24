@@ -31,6 +31,7 @@ import {
 } from "../../shared/mechanicsModel";
 import type {
   AppState,
+  DiscoveredLogCandidate,
   EncounterSnapshot,
   SkillStat,
   TimelinePoint
@@ -59,6 +60,8 @@ type ShellProps = {
   diagnosticsOpen: boolean;
   folderInput: string;
   importFilePath: string;
+  logCandidates: DiscoveredLogCandidate[];
+  discoveringLogs: boolean;
   starting: boolean;
   onViewChange: (view: View) => void;
   onDetailTabChange: (tab: DetailTab) => void;
@@ -66,6 +69,8 @@ type ShellProps = {
   onImportFileChange: (value: string) => void;
   onChooseFolder: () => void;
   onChooseImportFile: () => void;
+  onDiscoverLogs: () => void;
+  onUseDiscoveredCandidate: (candidate: DiscoveredLogCandidate) => void;
   onStartMonitoring: () => void;
   onStartMonitoringFromFile: () => void;
   onImportLogFile: () => void;
@@ -409,6 +414,31 @@ function classifyLineTags(line: string): Array<{ label: string; tone: "critical"
   return tags;
 }
 
+function buildDamageTags(input: {
+  critical?: boolean;
+  critCount?: number;
+  flankCount?: number;
+  family?: string;
+}): Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> {
+  const tags: Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> = [];
+
+  if (input.critical || (input.critCount ?? 0) > 0) {
+    tags.push({ label: "Crit Hit", tone: "critical" });
+  }
+  if ((input.flankCount ?? 0) > 0) {
+    tags.push({ label: "CA Hit", tone: "advantage" });
+  }
+  if (input.family === "artifact") {
+    tags.push({ label: "Artifact", tone: "heal" });
+  } else if (input.family === "mount") {
+    tags.push({ label: "Mount", tone: "heal" });
+  } else if (input.family === "pet") {
+    tags.push({ label: "Pet", tone: "heal" });
+  }
+
+  return tags;
+}
+
 function initialsFromName(value: string | null | undefined): string {
   if (!value) {
     return "OP";
@@ -560,6 +590,19 @@ function ProgressBar({
   return (
     <div className="oa-progress">
       <div className={`oa-progress-fill tone-${tone}`} style={{ width: `${width}%` }} />
+    </div>
+  );
+}
+
+function ChartSkeleton({ rows = 4 }: { rows?: number }) {
+  return (
+    <div className="oa-skeleton-chart" aria-hidden="true">
+      <div className="oa-skeleton-chart-hero" />
+      <div className="oa-skeleton-chart-bars">
+        {Array.from({ length: rows }).map((_, index) => (
+          <span className="oa-skeleton-bar" key={index} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -1687,7 +1730,37 @@ function SetupView(props: ShellProps) {
                 <Icon name="stop" />
                 Stop
               </button>
+              <button
+                className="oa-button tertiary"
+                onClick={props.onDiscoverLogs}
+                disabled={props.discoveringLogs || !props.isDesktopRuntime}
+              >
+                <Icon
+                  name={props.discoveringLogs ? "autorenew" : "travel_explore"}
+                  className={props.discoveringLogs ? "oa-spin" : undefined}
+                />
+                {props.discoveringLogs ? "Scanning drives..." : "Auto Detect"}
+              </button>
             </div>
+
+            {props.logCandidates.length ? (
+              <div className="oa-list-panel">
+                {props.logCandidates.slice(0, 5).map((candidate) => (
+                  <div className="oa-list-row compact" key={candidate.folderPath}>
+                    <div>
+                      <strong>{candidate.filePath ?? candidate.folderPath}</strong>
+                      <small>{candidate.sourceHint} • {candidate.timestampLabel}</small>
+                    </div>
+                    <button
+                      className="oa-button secondary"
+                      onClick={() => props.onUseDiscoveredCandidate(candidate)}
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
             <div className="oa-mini-panel">
               <strong>Latest tracked combat log</strong>
@@ -2166,6 +2239,7 @@ function PlayerOverviewTab({
 function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter: EncounterSnapshot | null }) {
   const [mode, setMode] = useState<"dps" | "effects">("dps");
   const [familyFilter, setFamilyFilter] = useState<"all" | "class" | "proc" | "pet">("all");
+  const [chartsReady, setChartsReady] = useState(false);
   const points =
     encounter === null
       ? player.timeline
@@ -2183,6 +2257,18 @@ function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter
   const rotationRows = buildRotationHeatmap(player);
   const maxActivationUses = Math.max(1, ...activationRows.map((row) => row.uses));
 
+  useEffect(() => {
+    setChartsReady(false);
+    const firstFrame = window.requestAnimationFrame(() => {
+      const secondFrame = window.requestAnimationFrame(() => {
+        setChartsReady(true);
+      });
+      return () => window.cancelAnimationFrame(secondFrame);
+    });
+
+    return () => window.cancelAnimationFrame(firstFrame);
+  }, [player.id, encounter?.id, mode, familyFilter]);
+
   return (
     <div className="oa-tab-layout">
       <section className="oa-panel">
@@ -2197,12 +2283,16 @@ function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter
             </div>
           }
         />
-        {mode === "dps" ? <CombatTimelineChart points={points} /> : <EffectTimelineChart points={points} />}
+        {chartsReady ? (
+          mode === "dps" ? <CombatTimelineChart points={points} /> : <EffectTimelineChart points={points} />
+        ) : (
+          <ChartSkeleton rows={5} />
+        )}
       </section>
 
       <section className="oa-panel">
         <SectionHeading icon="bar_chart" eyebrow="Power Contribution" title="Top parsed powers" />
-        <PowerContributionChart skills={powerRows} />
+        {chartsReady ? <PowerContributionChart skills={powerRows} /> : <ChartSkeleton rows={4} />}
       </section>
 
       <section className="oa-panel">
@@ -2263,27 +2353,31 @@ function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter
 
       <section className="oa-panel">
         <SectionHeading icon="grid_view" eyebrow="Rotation Heatmap" title="5s buckets, top powers by damage" />
-        <div className="oa-heatmap">
-          {rotationRows.map((row) => (
-            <div className="oa-heatmap-row" key={row.abilityName}>
-              <div className="oa-heatmap-label">{row.abilityName}</div>
-              <div className="oa-heatmap-cells">
-                {row.cells.map((cell) => (
-                  <span
-                    key={`${row.abilityName}-${cell.second}`}
-                    className="oa-heatmap-cell"
-                    style={{
-                      opacity: cell.count === 0 ? 0.18 : Math.min(1, 0.24 + cell.count / 4),
-                      background: cell.count === 0 ? "rgba(205, 189, 255, 0.12)" : `rgba(205, 189, 255, ${Math.min(0.92, 0.22 + cell.count / 5)})`
-                    }}
-                    title={`${row.abilityName} at ${cell.second}s: ${cell.count} uses`}
-                  />
-                ))}
+        {chartsReady ? (
+          <div className="oa-heatmap">
+            {rotationRows.map((row) => (
+              <div className="oa-heatmap-row" key={row.abilityName}>
+                <div className="oa-heatmap-label">{row.abilityName}</div>
+                <div className="oa-heatmap-cells">
+                  {row.cells.map((cell) => (
+                    <span
+                      key={`${row.abilityName}-${cell.second}`}
+                      className="oa-heatmap-cell"
+                      style={{
+                        opacity: cell.count === 0 ? 0.18 : Math.min(1, 0.24 + cell.count / 4),
+                        background: cell.count === 0 ? "rgba(205, 189, 255, 0.12)" : `rgba(205, 189, 255, ${Math.min(0.92, 0.22 + cell.count / 5)})`
+                      }}
+                      title={`${row.abilityName} at ${cell.second}s: ${cell.count} uses`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-          {!rotationRows.length ? <div className="oa-empty-state">No damage activations were parsed for a rotation heatmap.</div> : null}
-        </div>
+            ))}
+            {!rotationRows.length ? <div className="oa-empty-state">No damage activations were parsed for a rotation heatmap.</div> : null}
+          </div>
+        ) : (
+          <ChartSkeleton rows={6} />
+        )}
       </section>
 
       <section className="oa-panel">
@@ -2680,6 +2774,16 @@ function PlayerHighestHitTab({ player }: { player: PlayerRow }) {
                   <small>
                     {row.powerType} • {row.critical ? "Critical peak" : "Normal peak"} • {row.second}s
                   </small>
+                  <div className="oa-library-pill-row">
+                    {buildDamageTags({
+                      critical: row.critical,
+                      family: row.family
+                    }).map((tag) => (
+                      <span className={`oa-badge subtle tone-${tag.tone}`} key={`${row.abilityName}-${row.second}-${tag.label}`}>
+                        {tag.label}
+                      </span>
+                    ))}
+                  </div>
                   <ProgressBar value={row.amount} max={maxHit} />
                 </div>
               </div>

@@ -809,6 +809,49 @@ input {
   position: relative;
 }
 
+.oa-skeleton-chart {
+  display: grid;
+  gap: 18px;
+  min-height: 280px;
+}
+
+.oa-skeleton-chart-hero,
+.oa-skeleton-bar {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(205, 189, 255, 0.08);
+}
+
+.oa-skeleton-chart-hero::after,
+.oa-skeleton-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  animation: oaSkeleton 1.2s linear infinite;
+}
+
+.oa-skeleton-chart-hero {
+  min-height: 180px;
+}
+
+.oa-skeleton-chart-bars {
+  display: grid;
+  gap: 10px;
+}
+
+.oa-skeleton-bar {
+  min-height: 16px;
+}
+
+@keyframes oaSkeleton {
+  to {
+    transform: translateX(100%);
+  }
+}
+
 .oa-section-head {
   display: flex;
   justify-content: space-between;
@@ -850,6 +893,24 @@ input {
   background: rgba(189, 244, 255, 0.08);
   color: var(--oa-secondary);
   border-color: rgba(189, 244, 255, 0.14);
+}
+
+.oa-badge.tone-critical {
+  color: #ffd36e;
+  border-color: rgba(255, 211, 110, 0.28);
+  background: rgba(255, 211, 110, 0.1);
+}
+
+.oa-badge.tone-advantage {
+  color: #ffb38a;
+  border-color: rgba(255, 179, 138, 0.26);
+  background: rgba(255, 179, 138, 0.1);
+}
+
+.oa-badge.tone-heal {
+  color: #9af1bb;
+  border-color: rgba(154, 241, 187, 0.24);
+  background: rgba(154, 241, 187, 0.1);
 }
 
 .oa-class-pill {

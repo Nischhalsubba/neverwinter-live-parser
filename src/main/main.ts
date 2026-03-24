@@ -1,10 +1,15 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Store from "electron-store";
 import { LogMonitorService } from "../core/monitoring/logMonitorService.js";
-import type { AppState, MonitoringConfig } from "../shared/types.js";
+import type {
+  AppState,
+  DiscoveredLogCandidate,
+  MonitoringConfig
+} from "../shared/types.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -70,6 +75,126 @@ function withTelemetry(state: AppState): AppState {
     ...state,
     system: getSystemUsage()
   };
+}
+
+function getDriveRoots(): string[] {
+  const drives: string[] = [];
+  for (let charCode = 67; charCode <= 90; charCode += 1) {
+    drives.push(`${String.fromCharCode(charCode)}:\\`);
+  }
+  return drives;
+}
+
+function parseCombatLogTimestamp(filePath: string): string {
+  const match = path
+    .basename(filePath)
+    .match(/combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})\.log$/i);
+  if (!match) {
+    return "Unknown timestamp";
+  }
+
+  const [, year, month, day, hour, minute, second] = match;
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+async function pathExists(targetPath: string): Promise<boolean> {
+  try {
+    await fs.access(targetPath);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findLatestCombatLog(folderPath: string): Promise<string | null> {
+  try {
+    const entries = await fs.readdir(folderPath, { withFileTypes: true });
+    const logFiles = entries
+      .filter(
+        (entry) =>
+          entry.isFile() &&
+          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.log$/i.test(entry.name)
+      )
+      .map((entry) => path.join(folderPath, entry.name))
+      .sort((left, right) => right.localeCompare(left));
+
+    return logFiles[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> {
+  const suffixes = [
+    path.join(
+      "Program Files (x86)",
+      "Steam",
+      "steamapps",
+      "common",
+      "Cryptic Studios",
+      "Neverwinter",
+      "Live",
+      "logs",
+      "GameClient"
+    ),
+    path.join(
+      "Program Files",
+      "Steam",
+      "steamapps",
+      "common",
+      "Cryptic Studios",
+      "Neverwinter",
+      "Live",
+      "logs",
+      "GameClient"
+    ),
+    path.join(
+      "SteamLibrary",
+      "steamapps",
+      "common",
+      "Cryptic Studios",
+      "Neverwinter",
+      "Live",
+      "logs",
+      "GameClient"
+    ),
+    path.join("Games", "Neverwinter", "Live", "logs", "GameClient"),
+    path.join("Neverwinter", "Live", "logs", "GameClient")
+  ];
+
+  const homes = [os.homedir(), path.join(os.homedir(), "Documents")];
+  const candidates = new Map<string, DiscoveredLogCandidate>();
+  const roots = [...getDriveRoots(), ...homes];
+
+  for (const root of roots) {
+    for (const suffix of suffixes) {
+      const folderPath = path.isAbsolute(suffix) ? suffix : path.join(root, suffix);
+      if (!(await pathExists(folderPath))) {
+        continue;
+      }
+
+      const latestLog = await findLatestCombatLog(folderPath);
+      candidates.set(folderPath.toLowerCase(), {
+        folderPath,
+        filePath: latestLog,
+        timestampLabel: latestLog ? parseCombatLogTimestamp(latestLog) : "No combat log found yet",
+        sourceHint: root.endsWith(":\\") ? `Detected on drive ${root}` : `Detected near ${root}`
+      });
+    }
+  }
+
+  return Array.from(candidates.values()).sort((left, right) => {
+    if (left.filePath && right.filePath) {
+      return right.filePath.localeCompare(left.filePath);
+    }
+    if (left.filePath) {
+      return -1;
+    }
+    if (right.filePath) {
+      return 1;
+    }
+    return left.folderPath.localeCompare(right.folderPath);
+  });
 }
 
 function createWindow(): void {
@@ -158,6 +283,8 @@ ipcMain.handle("dialog:selectLogFile", async () => {
   }
   return result.filePaths[0] ?? null;
 });
+
+ipcMain.handle("monitoring:discoverLogs", async () => discoverCombatLogCandidates());
 
 app.whenReady().then(() => {
   createWindow();

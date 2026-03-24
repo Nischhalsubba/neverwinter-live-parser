@@ -190,3 +190,10 @@ export type MonitoringConfig = {
   filePath?: string | null;
   inactivityTimeoutMs: number;
 };
+
+export type DiscoveredLogCandidate = {
+  folderPath: string;
+  filePath: string | null;
+  timestampLabel: string;
+  sourceHint: string;
+};

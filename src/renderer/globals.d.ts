@@ -1,10 +1,15 @@
-import type { AppState, MonitoringConfig } from "../shared/types";
+import type {
+  AppState,
+  DiscoveredLogCandidate,
+  MonitoringConfig
+} from "../shared/types";
 
 type NeverwinterApi = {
   startMonitoring: (config: MonitoringConfig) => Promise<AppState>;
   importLogFile: (filePath: string) => Promise<AppState>;
   stopMonitoring: () => Promise<AppState>;
   getState: () => Promise<AppState>;
+  discoverLogs: () => Promise<DiscoveredLogCandidate[]>;
   selectFolder: () => Promise<string | null>;
   selectLogFile: () => Promise<string | null>;
   onState: (listener: (state: AppState) => void) => () => void;
