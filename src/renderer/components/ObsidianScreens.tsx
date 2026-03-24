@@ -8,6 +8,7 @@ import {
   Cell,
   Pie,
   PieChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -558,7 +559,7 @@ function SectionHeading({
   );
 }
 
-function TimelineSvg({
+function TimelineChart({
   points,
   mode,
   accent = "primary"
@@ -567,59 +568,59 @@ function TimelineSvg({
   mode: "damage" | "healing";
   accent?: "primary" | "secondary";
 }) {
-  const source = points.length
-    ? points
-    : [{ second: 0, damage: 0, healing: 0, hits: 0 }];
-  const width = 960;
-  const height = 260;
-  const maxValue = Math.max(1, ...source.map((point) => (mode === "damage" ? point.damage : point.healing)));
-  const linePoints = source
-    .map((point, index) => {
-      const x = source.length > 1 ? (index / (source.length - 1)) * width : 0;
-      const value = mode === "damage" ? point.damage : point.healing;
-      const y = height - 18 - (value / maxValue) * (height - 42);
-      return `${x},${y}`;
-    })
-    .join(" ");
-  const areaPath = `M0 ${height} L${linePoints.replaceAll(" ", " L")} L${width} ${height} Z`;
+  const source = points.length ? points : [{ second: 0, damage: 0, healing: 0, hits: 0 }];
+  const valueKey = mode === "damage" ? "damage" : "healing";
+  const color = accent === "primary" ? "#cdbdff" : "#bdf4ff";
   const peak = source.reduce((best, point) => {
     const value = mode === "damage" ? point.damage : point.healing;
     return value > best.value ? { second: point.second, value } : best;
   }, { second: 0, value: 0 });
-  const peakIndex = source.findIndex((point) => point.second === peak.second);
-  const peakX = source.length > 1 ? (peakIndex / (source.length - 1)) * width : 0;
-  const peakY = height - 18 - (peak.value / maxValue) * (height - 42);
 
   return (
-    <div className="oa-timeline-shell">
-      <svg className={`oa-timeline-svg accent-${accent}`} viewBox={`0 0 ${width} ${height}`}>
-        <defs>
-          <linearGradient id={`oa-area-${mode}-${accent}`} x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor={accent === "primary" ? "#cdbdff" : "#bdf4ff"} stopOpacity="0.28" />
-            <stop offset="100%" stopColor={accent === "primary" ? "#cdbdff" : "#bdf4ff"} stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <line
-            key={index}
-            x1="0"
-            x2={width}
-            y1={18 + index * ((height - 36) / 4)}
-            y2={18 + index * ((height - 36) / 4)}
-            className="oa-grid-line"
+    <div className="oa-chart-box">
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={source} margin={{ top: 12, right: 12, bottom: 0, left: 0 }}>
+          <defs>
+            <linearGradient id={`oa-area-${mode}-${accent}`} x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+              <stop offset="100%" stopColor={color} stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <CartesianGrid stroke="rgba(205, 189, 255, 0.08)" vertical={false} />
+          <XAxis
+            dataKey="second"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fill: "rgba(229,225,228,0.56)", fontSize: 11 }}
+            tickFormatter={(value) => `${value}s`}
           />
-        ))}
-        <path d={areaPath} fill={`url(#oa-area-${mode}-${accent})`} />
-        <polyline className="oa-line-path" fill="none" points={linePoints} />
-        <line className="oa-peak-line" x1={peakX} x2={peakX} y1="12" y2={height - 8} />
-        <circle className="oa-peak-dot" cx={peakX} cy={peakY} r="4" />
-      </svg>
-      <div className="oa-timeline-footer">
-        <span>0s</span>
-        <span>{Math.round((source.at(-1)?.second ?? 0) / 4)}s</span>
-        <span>{Math.round((source.at(-1)?.second ?? 0) / 2)}s</span>
-        <span>{source.at(-1)?.second ?? 0}s</span>
-      </div>
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tick={{ fill: "rgba(229,225,228,0.56)", fontSize: 11 }}
+            tickFormatter={(value) => formatShort(Number(value))}
+          />
+          <Tooltip
+            contentStyle={{
+              background: "rgba(23,27,34,0.96)",
+              border: "1px solid rgba(91,186,213,0.14)",
+              borderRadius: 12,
+              color: "#F3EEE6"
+            }}
+            formatter={(value: number) => formatShort(value)}
+            labelFormatter={(value) => `T: ${value}s`}
+          />
+          <ReferenceLine x={peak.second} stroke={color} strokeDasharray="4 4" />
+          <Area
+            type="monotone"
+            dataKey={valueKey}
+            stroke={color}
+            strokeWidth={2}
+            fill={`url(#oa-area-${mode}-${accent})`}
+            activeDot={{ r: 4, fill: color, stroke: "#171B22", strokeWidth: 2 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
       <div className="oa-timeline-tooltip">
         <p>T: {peak.second}s</p>
         <strong>{formatShort(peak.value)}</strong>
@@ -2777,7 +2778,7 @@ function PlayerTimingTab({ player, encounter }: { player: PlayerRow; encounter: 
       </div>
       <section className="oa-panel">
         <SectionHeading icon="schedule" eyebrow="Cadence" title="Timeline pacing" />
-        <TimelineSvg points={points} mode="damage" accent="secondary" />
+        <TimelineChart points={points} mode="damage" accent="secondary" />
       </section>
     </div>
   );
