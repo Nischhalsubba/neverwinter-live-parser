@@ -208,6 +208,14 @@ function Icon({
   );
 }
 
+function InlineHelp({ text }: { text: string }) {
+  return (
+    <span className="oa-inline-help" title={text} aria-label={text}>
+      <Icon name="help" className="oa-inline-help-icon" />
+    </span>
+  );
+}
+
 function ClassAvatar({
   className,
   fallback
@@ -1110,7 +1118,11 @@ function LiveOverviewView({
   searchQuery,
   onSearchChange,
   compareMode,
-  onToggleCompare
+  compareSelection,
+  onToggleCompareSelection,
+  onToggleComparePlayer,
+  onStartCompare,
+  onExitCompare
 }: {
   props: ShellProps;
   filteredPlayers: PlayerRow[];
@@ -1119,14 +1131,22 @@ function LiveOverviewView({
   onLiveFocusChange: (target: string) => void;
   searchQuery: string;
   onSearchChange: (value: string) => void;
-  compareMode: boolean;
-  onToggleCompare: () => void;
+  compareMode: "idle" | "selecting" | "active";
+  compareSelection: string[];
+  onToggleCompareSelection: () => void;
+  onToggleComparePlayer: (playerId: string) => void;
+  onStartCompare: () => void;
+  onExitCompare: () => void;
 }) {
   const { state } = props;
   const current = state.currentEncounter;
-  const totalDamage = filteredPlayers.reduce((sum, player) => sum + player.totalDamage, 0);
-  const totalDeaths = filteredPlayers.reduce((sum, player) => sum + player.deaths, 0);
-  const selectedForCompare = compareMode ? filteredPlayers.slice(0, 3) : [];
+  const comparePool =
+    compareMode === "active"
+      ? filteredPlayers.filter((player) => compareSelection.includes(player.id))
+      : filteredPlayers;
+  const totalDamage = comparePool.reduce((sum, player) => sum + player.totalDamage, 0);
+  const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
+  const selectedForCompare = filteredPlayers.filter((player) => compareSelection.includes(player.id));
   const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
   const liveDurationMs = current?.durationMs ?? 0;
   const focusedTargetSummary =
@@ -1158,16 +1178,41 @@ function LiveOverviewView({
           </p>
         </div>
         <div className="oa-toolbar">
-          <button className="oa-switch-card" onClick={props.onToggleCompanions}>
-            <span>Split Pets</span>
+          <button className="oa-switch-card" onClick={props.onToggleCompanions} title="Turn companion damage on or off in the player totals.">
+            <span>Split Pets <InlineHelp text="Turn companion damage on or off in the player totals." /></span>
             <div className={`oa-switch ${props.includeCompanions ? "is-on" : ""}`}>
               <div />
             </div>
           </button>
-          <button className="oa-button primary" onClick={onToggleCompare}>
-            <Icon name="compare_arrows" />
-            {compareMode ? "Hide Compare" : "Compare Players"}
-          </button>
+          {compareMode === "idle" ? (
+            <button className="oa-button primary" onClick={onToggleCompareSelection} title="Choose the exact players you want to compare side by side.">
+              <Icon name="compare_arrows" />
+              Compare Players
+            </button>
+          ) : null}
+          {compareMode === "selecting" ? (
+            <>
+              <button
+                className="oa-button primary"
+                onClick={onStartCompare}
+                disabled={compareSelection.length < 2}
+                title="Start a focused comparison using only the checked players."
+              >
+                <Icon name="play_arrow" />
+                Start Compare
+              </button>
+              <button className="oa-button secondary" onClick={onExitCompare}>
+                <Icon name="arrow_back" />
+                Go Back
+              </button>
+            </>
+          ) : null}
+          {compareMode === "active" ? (
+            <button className="oa-button secondary" onClick={onExitCompare}>
+              <Icon name="arrow_back" />
+              Go Back
+            </button>
+          ) : null}
         </div>
       </header>
 
@@ -1268,9 +1313,16 @@ function LiveOverviewView({
         </section>
       </div>
 
-      {compareMode && selectedForCompare.length ? (
+      {compareMode === "selecting" ? (
         <section className="oa-panel">
-          <SectionHeading icon="compare" eyebrow="Compare Overlay" title="Top player snapshot" />
+          <SectionHeading icon="fact_check" eyebrow="Compare Setup" title="Pick exactly the players you want to compare" />
+          <p className="oa-panel-description">Check two or more players below, then press <strong>Start Compare</strong>. The live view will switch to a focused comparison using only those players.</p>
+        </section>
+      ) : null}
+
+      {compareMode === "active" && selectedForCompare.length ? (
+        <section className="oa-panel">
+          <SectionHeading icon="compare" eyebrow="Compare Overlay" title="Selected player comparison" />
           <div className="oa-compare-grid">
             {selectedForCompare.map((player) => (
               <article className="oa-mini-panel" key={player.id}>
@@ -1291,7 +1343,7 @@ function LiveOverviewView({
         <SectionHeading
           icon="groups"
           eyebrow="Party Contribution"
-          title="Live combat table"
+          title={compareMode === "active" ? "Compared players only" : "Live combat table"}
           actions={
             <div className="oa-search">
               <Icon name="search" className="oa-inline-icon" />
@@ -1309,10 +1361,28 @@ function LiveOverviewView({
             <span>Hits</span>
             <span>Duration</span>
           </div>
-          {filteredPlayers.map((player, index) => (
-            <button className="oa-table-row party" key={player.id} onClick={() => props.onSelectPlayer(player.id)}>
+          {(compareMode === "active" ? comparePool : filteredPlayers).map((player, index) => (
+            <button
+              className="oa-table-row party"
+              key={player.id}
+              onClick={() =>
+                compareMode === "selecting"
+                  ? onToggleComparePlayer(player.id)
+                  : props.onSelectPlayer(player.id)
+              }
+            >
               <span className="oa-rank">{String(index + 1).padStart(2, "0")}</span>
               <span className="oa-player-cell">
+                {compareMode === "selecting" ? (
+                  <input
+                    className="oa-compare-checkbox"
+                    type="checkbox"
+                    checked={compareSelection.includes(player.id)}
+                    onChange={() => onToggleComparePlayer(player.id)}
+                    onClick={(event) => event.stopPropagation()}
+                    aria-label={`Select ${player.displayName} for compare`}
+                  />
+                ) : null}
                 <span className="oa-avatar-frame">
                   <ClassAvatar className={player.className} fallback={initialsFromName(player.displayName)} />
                 </span>
@@ -1331,7 +1401,7 @@ function LiveOverviewView({
               <span>{formatDuration(liveDurationMs)}</span>
             </button>
           ))}
-          {!filteredPlayers.length ? <div className="oa-empty-state">{current ? "No current-encounter players match the current search." : "Waiting for current live combat events."}</div> : null}
+          {!(compareMode === "active" ? comparePool : filteredPlayers).length ? <div className="oa-empty-state">{current ? "No players match the current search or compare filter." : "Waiting for current live combat events."}</div> : null}
         </div>
       </section>
     </section>
@@ -2587,7 +2657,8 @@ function GlobalSearchPanel({
 
 export function ObsidianScreens(props: ShellProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [compareMode, setCompareMode] = useState(false);
+  const [compareMode, setCompareMode] = useState<"idle" | "selecting" | "active">("idle");
+  const [compareSelection, setCompareSelection] = useState<string[]>([]);
   const [liveFocusTarget, setLiveFocusTarget] = useState("all");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const settings = props.rendererSettings;
@@ -2798,7 +2869,23 @@ export function ObsidianScreens(props: ShellProps) {
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
               compareMode={compareMode}
-              onToggleCompare={() => setCompareMode((value) => !value)}
+              compareSelection={compareSelection}
+              onToggleCompareSelection={() => {
+                setCompareMode("selecting");
+                setCompareSelection([]);
+              }}
+              onToggleComparePlayer={(playerId) => {
+                setCompareSelection((current) =>
+                  current.includes(playerId)
+                    ? current.filter((entry) => entry !== playerId)
+                    : [...current, playerId]
+                );
+              }}
+              onStartCompare={() => setCompareMode("active")}
+              onExitCompare={() => {
+                setCompareMode("idle");
+                setCompareSelection([]);
+              }}
             />
           ) : null}
           {props.view === "players" ? <PlayerView props={props} searchQuery={searchQuery} /> : null}

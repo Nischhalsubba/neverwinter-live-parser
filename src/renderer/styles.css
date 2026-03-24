@@ -468,6 +468,16 @@ input {
   border-color: rgba(255, 154, 84, 0.28);
 }
 
+.oa-inline-help {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(229, 225, 228, 0.6);
+}
+
+.oa-inline-help-icon {
+  font-size: 0.95rem;
+}
+
 .oa-system-pill.idle .oa-system-dot,
 .oa-floating-status.idle .oa-system-dot {
   background: #ff6b6b;
@@ -1117,6 +1127,13 @@ input {
 .oa-kv-list > div,
 .oa-setting-row {
   justify-content: space-between;
+}
+
+.oa-compare-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--oa-primary-strong);
+  flex: 0 0 auto;
 }
 
 .oa-tip,
