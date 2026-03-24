@@ -35,7 +35,9 @@ import type {
   DiscoveredLogCandidate,
   EncounterSnapshot,
   SkillStat,
-  TimelinePoint
+  TimelinePoint,
+  HighestHitStat,
+  TargetStat
 } from "../../shared/types";
 import { classifyPowerFamily, getClassVisualMeta, getPowerMeta, getPowerVisualMeta, isKnownCompanion } from "../nwMetadata";
 import type { DetailTab, LiveScopeMode, PlayerRow, View } from "../analysisViewModel";
@@ -131,6 +133,37 @@ type DebuffCatalogEntry = {
   description: string;
   keywords: string[];
 };
+
+type DrilldownDetail =
+  | {
+      kind: "power";
+      title: string;
+      subtitle: string;
+      rows: Array<{ label: string; value: string }>;
+      timeline?: TimelinePoint[];
+      events: Array<{ title: string; subtitle: string; metric: string }>;
+    }
+  | {
+      kind: "target";
+      title: string;
+      subtitle: string;
+      rows: Array<{ label: string; value: string }>;
+      events: Array<{ title: string; subtitle: string; metric: string }>;
+    }
+  | {
+      kind: "hit";
+      title: string;
+      subtitle: string;
+      rows: Array<{ label: string; value: string }>;
+      events: Array<{ title: string; subtitle: string; metric: string }>;
+    }
+  | {
+      kind: "artifact";
+      title: string;
+      subtitle: string;
+      rows: Array<{ label: string; value: string }>;
+      events: Array<{ title: string; subtitle: string; metric: string }>;
+    };
 
 const DEBUFF_PATTERNS: Array<{ keyword: string; label: string }> = [
   { keyword: "damage taken", label: "Damage Taken" },
@@ -1336,6 +1369,9 @@ function LibraryReferenceWorkbench() {
     nwHubClasses.classes[0]?.className ?? "Fighter"
   );
   const [artifactCategoryTab, setArtifactCategoryTab] = useState<LibraryCategory | "all">("all");
+  const [artifactSortMode, setArtifactSortMode] = useState<
+    "category" | "highestDebuff" | "highestDamage" | "highestSupport"
+  >("category");
   const cards = [
     { label: "NW Hub classes", value: formatNumber(nwHubClasses.classes.length), icon: "shield_person" },
     { label: "NW Hub powers", value: formatNumber(nwHubClasses.powers.length), icon: "deployed_code" },
@@ -1427,6 +1463,27 @@ function LibraryReferenceWorkbench() {
       return { ...artifact, category, scores };
     })
     .sort((left, right) => {
+      if (artifactSortMode === "highestDebuff") {
+        return (
+          Math.max(...right.effects.damageTakenPct, 0) -
+            Math.max(...left.effects.damageTakenPct, 0) ||
+          left.name.localeCompare(right.name)
+        );
+      }
+      if (artifactSortMode === "highestDamage") {
+        return (
+          categoryStrength(right.scores, "damage") -
+            categoryStrength(left.scores, "damage") ||
+          left.name.localeCompare(right.name)
+        );
+      }
+      if (artifactSortMode === "highestSupport") {
+        return (
+          categoryStrength(right.scores, "support") -
+            categoryStrength(left.scores, "support") ||
+          left.name.localeCompare(right.name)
+        );
+      }
       const activeCategory = (artifactCategoryTab === "all"
         ? left.category
         : artifactCategoryTab) as LibraryCategory;
@@ -1613,6 +1670,28 @@ function LibraryReferenceWorkbench() {
           icon="diamond"
           eyebrow="Artifact Intelligence"
           title="Artifact breakdown by strongest debuff, damage, support, and defense value"
+          actions={
+            <div className="oa-library-filter">
+              <label className="oa-library-filter-label" htmlFor="artifact-sort-picker">
+                Sort
+              </label>
+              <select
+                id="artifact-sort-picker"
+                className="oa-library-select"
+                value={artifactSortMode}
+                onChange={(event) =>
+                  setArtifactSortMode(
+                    event.target.value as "category" | "highestDebuff" | "highestDamage" | "highestSupport"
+                  )
+                }
+              >
+                <option value="category">Best by Category</option>
+                <option value="highestDebuff">Highest Debuff to Lowest</option>
+                <option value="highestDamage">Highest Damage to Lowest</option>
+                <option value="highestSupport">Highest Support to Lowest</option>
+              </select>
+            </div>
+          }
         />
         <div className="oa-subtab-shell">
           {artifactTabs.map((tab) => (
@@ -2309,11 +2388,13 @@ function LiveOverviewView({
 function PlayerOverviewTab({
   player,
   encounter,
-  allEncounters
+  allEncounters,
+  onOpenDetail
 }: {
   player: PlayerRow;
   encounter: EncounterSnapshot | null;
   allEncounters: EncounterSnapshot[];
+  onOpenDetail: (detail: DrilldownDetail) => void;
 }) {
   const encounterStat =
     encounter ? player.encounters.find((entry) => entry.encounterId === encounter.id) ?? null : null;
@@ -2344,7 +2425,7 @@ function PlayerOverviewTab({
               const share = skill.total / Math.max(1, totalDamage);
               const meta = getPowerMeta(skill.abilityName);
               return (
-                <div className="oa-list-row" key={`${skill.kind}-${skill.abilityName}`}>
+                <button className="oa-list-row oa-clickable-row" key={`${skill.kind}-${skill.abilityName}`} onClick={() => onOpenDetail(buildPowerDrilldown(player, skill.abilityName))}>
                   <div>
                     <strong>{skill.abilityName}</strong>
                     <small>{meta?.powertype ?? "Combat Power"}</small>
@@ -2356,7 +2437,7 @@ function PlayerOverviewTab({
                     <span>{formatPercent(share)}</span>
                     <strong>{formatShort(skill.total)}</strong>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -2366,7 +2447,7 @@ function PlayerOverviewTab({
           <SectionHeading icon="outbound" eyebrow="Damage by target" title="Mob, boss, and phase split" />
           <div className="oa-list-panel">
             {player.targets.slice(0, 8).map((target) => (
-              <div className="oa-list-row compact" key={target.targetName}>
+              <button className="oa-list-row compact oa-clickable-row" key={target.targetName} onClick={() => onOpenDetail(buildTargetDrilldown(player, target))}>
                 <div>
                   <strong>{target.targetName}</strong>
                   <small>{isKnownCompanion(target.targetName) ? "Companion entity" : "Encounter target"}</small>
@@ -2375,7 +2456,7 @@ function PlayerOverviewTab({
                   <span>{formatNumber(target.hits)} hits</span>
                   <strong>{formatShort(target.totalDamage)}</strong>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </section>
@@ -2596,12 +2677,14 @@ function PlayerDamageTab({
   player,
   encounter,
   allEncounters,
-  searchQuery
+  searchQuery,
+  onOpenDetail
 }: {
   player: PlayerRow;
   encounter: EncounterSnapshot | null;
   allEncounters: EncounterSnapshot[];
   searchQuery: string;
+  onOpenDetail: (detail: DrilldownDetail) => void;
 }) {
   const [sortMode, setSortMode] = useState<"total" | "dps">("total");
   const durationMs = encounter?.durationMs ?? allEncounters.at(-1)?.durationMs ?? 0;
@@ -2632,7 +2715,7 @@ function PlayerDamageTab({
             <span>Total Damage</span>
           </div>
           {rows.map((row) => (
-            <div className="oa-data-row damage" key={row.abilityName}>
+            <button className="oa-data-row damage oa-clickable-row" key={row.abilityName} onClick={() => onOpenDetail(buildPowerDrilldown(player, row.abilityName))}>
               <div className="oa-power-cell">
               <div className="oa-power-icon">
                 <PowerVisual powerName={row.abilityName} fallback={row.abilityName.slice(0, 2).toUpperCase()} />
@@ -2649,7 +2732,7 @@ function PlayerDamageTab({
                 <strong>{formatShort(row.total)}</strong>
                 <small>{formatPercent(row.total / Math.max(1, player.totalDamage))} of total</small>
               </span>
-            </div>
+            </button>
           ))}
         </div>
       </section>
@@ -2667,7 +2750,7 @@ function PlayerDamageTab({
             .filter((target) => target.targetName.toLowerCase().includes(searchQuery.toLowerCase()))
             .slice(0, 10)
             .map((target) => (
-              <div className="oa-data-row target" key={target.targetName}>
+              <button className="oa-data-row target oa-clickable-row" key={target.targetName} onClick={() => onOpenDetail(buildTargetDrilldown(player, target))}>
                 <div>
                   <strong>{target.targetName}</strong>
                   <small>{isKnownCompanion(target.targetName) ? "Companion entity" : "Encounter target"}</small>
@@ -2675,7 +2758,7 @@ function PlayerDamageTab({
                 <span>{formatNumber(target.hits)}</span>
                 <span>{formatNumber(target.critCount)}</span>
                 <span className="oa-right-stat"><strong>{formatShort(target.totalDamage)}</strong></span>
-              </div>
+              </button>
             ))}
         </div>
       </section>
@@ -2683,7 +2766,7 @@ function PlayerDamageTab({
   );
 }
 
-function PlayerHealingTab({ player }: { player: PlayerRow }) {
+function PlayerHealingTab({ player, onOpenDetail }: { player: PlayerRow; onOpenDetail: (detail: DrilldownDetail) => void; }) {
   const rows = buildHealingRows(player);
   const max = Math.max(...rows.map((row) => row.total), 1);
 
@@ -2707,7 +2790,7 @@ function PlayerHealingTab({ player }: { player: PlayerRow }) {
                 <span>Crit%</span>
               </div>
               {rows.map((row) => (
-                <div className="oa-data-row healing" key={row.label}>
+                <button className="oa-data-row healing oa-clickable-row" key={row.label} onClick={() => onOpenDetail(buildPowerDrilldown(player, row.label))}>
                   <div>
                     <strong>{row.label}</strong>
                     <small>Parsed healing events</small>
@@ -2717,7 +2800,7 @@ function PlayerHealingTab({ player }: { player: PlayerRow }) {
                   <span><ProgressBar value={row.total} max={max} tone="primary" /></span>
                   <span>{formatNumber(row.average)}</span>
                   <span className="tone-secondary-text">{formatPercent(row.critRate)}</span>
-                </div>
+                </button>
               ))}
           </div>
         ) : (
@@ -2730,10 +2813,12 @@ function PlayerHealingTab({ player }: { player: PlayerRow }) {
 
 function PlayerDamageTakenTab({
   player,
-  encounters
+  encounters,
+  onOpenDetail
 }: {
   player: PlayerRow;
   encounters: EncounterSnapshot[];
+  onOpenDetail: (detail: DrilldownDetail) => void;
 }) {
   const rows = buildDamageTakenRows(player, encounters);
 
@@ -2755,7 +2840,16 @@ function PlayerDamageTakenTab({
             <span>Damage Taken</span>
           </div>
           {rows.map((row) => (
-            <div className="oa-data-row damage-taken" key={row.label}>
+            <button className="oa-data-row damage-taken oa-clickable-row" key={row.label} onClick={() => onOpenDetail({
+              kind: "target",
+              title: row.label,
+              subtitle: "Incoming pressure detail for this encounter or segment.",
+              rows: [
+                { label: "Damage Taken", value: formatShort(row.amount) },
+                { label: "Status", value: row.status }
+              ],
+              events: []
+            })}>
               <div>
                 <strong>{row.label}</strong>
                 <small>Incoming pressure timeline</small>
@@ -2763,7 +2857,7 @@ function PlayerDamageTakenTab({
               <span className={`oa-status-chip ${row.status}`}>{row.status}</span>
               <span><ProgressBar value={row.amount} max={Math.max(...rows.map((entry) => entry.amount), 1)} tone="error" /></span>
               <span className="oa-right-stat"><strong>{formatShort(row.amount)}</strong></span>
-            </div>
+            </button>
           ))}
         </div>
       </section>
@@ -2868,7 +2962,7 @@ function buildHighestHitRows(player: PlayerRow) {
   });
 }
 
-function PlayerHighestHitTab({ player }: { player: PlayerRow }) {
+function PlayerHighestHitTab({ player, onOpenDetail }: { player: PlayerRow; onOpenDetail: (detail: DrilldownDetail) => void; }) {
   const rows = buildHighestHitRows(player);
   const maxHit = Math.max(1, ...rows.map((row) => row.amount));
 
@@ -2912,7 +3006,7 @@ function PlayerHighestHitTab({ player }: { player: PlayerRow }) {
             <span>Peak Hit</span>
           </div>
           {rows.map((row) => (
-            <div className="oa-data-row damage" key={`${row.abilityName}-${row.targetName ?? "no-target"}-${row.second}`}>
+            <button className="oa-data-row damage oa-clickable-row" key={`${row.abilityName}-${row.targetName ?? "no-target"}-${row.second}`} onClick={() => onOpenDetail(buildHighestHitDrilldown(player, row))}>
               <div className="oa-power-cell">
                 <div className="oa-power-icon">
                   <PowerVisual powerName={row.abilityName} fallback={row.abilityName.slice(0, 2).toUpperCase()} />
@@ -2945,7 +3039,7 @@ function PlayerHighestHitTab({ player }: { player: PlayerRow }) {
                     : "No magnitude match"}
                 </small>
               </span>
-            </div>
+            </button>
           ))}
           {!rows.length ? (
             <div className="oa-empty-state">
@@ -3179,7 +3273,139 @@ function buildArtifactDamageRows(player: PlayerRow) {
     .sort((left, right) => right.totalDamage - left.totalDamage);
 }
 
-function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
+function buildPowerDrilldown(player: PlayerRow, abilityName: string): DrilldownDetail {
+  const skills = player.topSkills.filter((skill) => skill.abilityName === abilityName);
+  const totalDamage = skills
+    .filter((skill) => skill.kind === "damage")
+    .reduce((sum, skill) => sum + skill.total, 0);
+  const totalHealing = skills
+    .filter((skill) => skill.kind === "heal")
+    .reduce((sum, skill) => sum + skill.total, 0);
+  const hits = skills.reduce((sum, skill) => sum + skill.hits, 0);
+  const critCount = skills.reduce((sum, skill) => sum + skill.critCount, 0);
+  const flankCount = skills.reduce((sum, skill) => sum + skill.flankCount, 0);
+  const moments = player.damageMoments.filter((moment) => moment.abilityName === abilityName);
+  const targetTotals = new Map<string, number>();
+
+  for (const moment of moments) {
+    const target = moment.targetName ?? "Unknown target";
+    targetTotals.set(target, (targetTotals.get(target) ?? 0) + moment.amount);
+  }
+
+  const events = Array.from(targetTotals.entries())
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 12)
+    .map(([target, amount]) => ({
+      title: target,
+      subtitle: "Damage dealt to this target",
+      metric: formatShort(amount)
+    }));
+
+  return {
+    kind: "power",
+    title: abilityName,
+    subtitle: "Comprehensive power breakdown from parsed combat-log hits and totals.",
+    rows: [
+      { label: "Damage", value: formatShort(totalDamage) },
+      { label: "Healing", value: formatShort(totalHealing) },
+      { label: "Hits", value: formatNumber(hits) },
+      { label: "Crit Rate", value: formatPercent(hits ? critCount / hits : 0) },
+      { label: "CA Rate", value: formatPercent(hits ? flankCount / hits : 0) },
+      { label: "Largest Hit", value: formatShort(Math.max(0, ...moments.map((moment) => moment.amount))) }
+    ],
+    timeline: player.timeline,
+    events
+  };
+}
+
+function buildTargetDrilldown(player: PlayerRow, target: TargetStat): DrilldownDetail {
+  const moments = player.damageMoments.filter((moment) => moment.targetName === target.targetName);
+  const powers = new Map<string, number>();
+
+  for (const moment of moments) {
+    powers.set(moment.abilityName, (powers.get(moment.abilityName) ?? 0) + moment.amount);
+  }
+
+  const events = Array.from(powers.entries())
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 12)
+    .map(([abilityName, amount]) => ({
+      title: abilityName,
+      subtitle: "Damage dealt with this power",
+      metric: formatShort(amount)
+    }));
+
+  return {
+    kind: "target",
+    title: target.targetName,
+    subtitle: "All parsed outgoing damage against this target.",
+    rows: [
+      { label: "Total Damage", value: formatShort(target.totalDamage) },
+      { label: "Hits", value: formatNumber(target.hits) },
+      { label: "Crits", value: formatNumber(target.critCount) },
+      {
+        label: "Crit Rate",
+        value: formatPercent(target.hits ? target.critCount / target.hits : 0)
+      }
+    ],
+    events
+  };
+}
+
+function buildHighestHitDrilldown(player: PlayerRow, row: ReturnType<typeof buildHighestHitRows>[number]): DrilldownDetail {
+  const related = player.damageMoments
+    .filter((moment) => moment.abilityName === row.abilityName)
+    .sort((left, right) => right.amount - left.amount)
+    .slice(0, 12);
+
+  return {
+    kind: "hit",
+    title: row.abilityName,
+    subtitle: "Peak-hit detail and nearby hits for this specific damage source.",
+    rows: [
+      { label: "Peak Hit", value: formatShort(row.amount) },
+      { label: "Target", value: row.targetName ?? "Unknown target" },
+      { label: "Occurred At", value: `${row.second}s` },
+      { label: "Critical", value: row.critical ? "Yes" : "No" },
+      { label: "Family", value: row.family },
+      { label: "Power Type", value: row.powerType }
+    ],
+    events: related.map((moment) => ({
+      title: `${moment.targetName ?? "Unknown target"} • ${moment.second}s`,
+      subtitle: moment.critical ? "Critical hit" : "Normal hit",
+      metric: formatShort(moment.amount)
+    }))
+  };
+}
+
+function buildArtifactDrilldown(player: PlayerRow, row: ReturnType<typeof buildArtifactDamageRows>[number]): DrilldownDetail {
+  const windowEnd = row.activatedAt + row.durationSec;
+  const moments = player.damageMoments
+    .filter((moment) => moment.second >= row.activatedAt && moment.second < windowEnd)
+    .sort((left, right) => right.amount - left.amount)
+    .slice(0, 12);
+
+  return {
+    kind: "artifact",
+    title: row.artifactName,
+    subtitle: "Damage window immediately following artifact activation.",
+    rows: [
+      { label: "Activated At", value: `${row.activatedAt}s` },
+      { label: "Window", value: `${row.durationSec}s` },
+      { label: "Total Damage", value: formatShort(row.totalDamage) },
+      { label: "Window DPS", value: formatShort(row.dps) },
+      { label: "Hits", value: formatNumber(row.hitCount) },
+      { label: "Crits", value: formatNumber(row.critHits) }
+    ],
+    events: moments.map((moment) => ({
+      title: `${moment.abilityName} • ${moment.second}s`,
+      subtitle: moment.targetName ?? "Unknown target",
+      metric: formatShort(moment.amount)
+    }))
+  };
+}
+
+function PlayerArtifactDamageTab({ player, onOpenDetail }: { player: PlayerRow; onOpenDetail: (detail: DrilldownDetail) => void; }) {
   const rows = buildArtifactDamageRows(player);
 
   return (
@@ -3214,7 +3440,7 @@ function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
             <span>Strongest Hit</span>
           </div>
           {rows.map((row) => (
-            <div className="oa-data-row healing" key={`${row.artifactName}-${row.activatedAt}`}>
+            <button className="oa-data-row healing oa-clickable-row" key={`${row.artifactName}-${row.activatedAt}`} onClick={() => onOpenDetail(buildArtifactDrilldown(player, row))}>
               <div className="oa-power-cell">
                 <div className="oa-power-icon">
                   <PowerVisual powerName={row.artifactName} fallback={row.artifactName.slice(0, 2).toUpperCase()} />
@@ -3233,7 +3459,7 @@ function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
                 <strong>{formatShort(row.strongestHit.amount)}</strong>
                 <small>{row.strongestHit.abilityName}</small>
               </span>
-            </div>
+            </button>
           ))}
           {!rows.length ? (
             <div className="oa-empty-state">
@@ -3246,6 +3472,60 @@ function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
   );
 }
 
+function DetailDrawer({
+  detail,
+  onClose
+}: {
+  detail: DrilldownDetail;
+  onClose: () => void;
+}) {
+  return (
+    <aside className="oa-overlay oa-detail-drawer">
+      <div className="oa-detail-drawer-head">
+        <div>
+          <p className="oa-eyebrow">{detail.kind}</p>
+          <h3>{detail.title}</h3>
+          <p className="oa-panel-description">{detail.subtitle}</p>
+        </div>
+        <button className="oa-icon-button" onClick={onClose} title="Close detail view">
+          <Icon name="close" />
+        </button>
+      </div>
+      <div className="oa-card-grid three">
+        {detail.rows.map((row) => (
+          <StatCard key={`${detail.title}-${row.label}`} label={row.label} value={row.value} />
+        ))}
+      </div>
+      {detail.timeline?.length ? (
+        <section className="oa-panel">
+          <SectionHeading icon="show_chart" eyebrow="Timeline" title="Timeline for this detail" />
+          <TimelineChart points={detail.timeline} mode="damage" />
+        </section>
+      ) : null}
+      <section className="oa-panel">
+        <SectionHeading icon="list" eyebrow="Breakdown" title="Detailed event and target breakdown" />
+        <div className="oa-list-panel">
+          {detail.events.length ? (
+            detail.events.map((event) => (
+              <div className="oa-list-row" key={`${detail.title}-${event.title}-${event.metric}`}>
+                <div>
+                  <strong>{event.title}</strong>
+                  <small>{event.subtitle}</small>
+                </div>
+                <div className="oa-list-metric">
+                  <strong>{event.metric}</strong>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="oa-empty-state">No further breakdown is available for this row yet.</div>
+          )}
+        </div>
+      </section>
+    </aside>
+  );
+}
+
 function PlayerView({
   props,
   searchQuery
@@ -3253,6 +3533,7 @@ function PlayerView({
   props: ShellProps;
   searchQuery: string;
 }) {
+  const [detail, setDetail] = useState<DrilldownDetail | null>(null);
   const player = props.selectedPlayer;
   if (!player) {
     return <section className="oa-screen"><div className="oa-empty-state">Select a player from the party overview to inspect the detailed breakdown.</div></section>;
@@ -3338,21 +3619,22 @@ function PlayerView({
       </section>
 
       {props.detailTab === "overview" ? (
-        <PlayerOverviewTab player={player} encounter={encounter} allEncounters={props.availableEncounters} />
+        <PlayerOverviewTab player={player} encounter={encounter} allEncounters={props.availableEncounters} onOpenDetail={setDetail} />
       ) : null}
       {props.detailTab === "timeline" ? <PlayerTimelineTab player={player} encounter={encounter} /> : null}
       {props.detailTab === "damageOut" ? (
-        <PlayerDamageTab player={player} encounter={encounter} allEncounters={props.availableEncounters} searchQuery={searchQuery} />
+        <PlayerDamageTab player={player} encounter={encounter} allEncounters={props.availableEncounters} searchQuery={searchQuery} onOpenDetail={setDetail} />
       ) : null}
-      {props.detailTab === "healing" ? <PlayerHealingTab player={player} /> : null}
-      {props.detailTab === "damageTaken" ? <PlayerDamageTakenTab player={player} encounters={props.availableEncounters} /> : null}
+      {props.detailTab === "healing" ? <PlayerHealingTab player={player} onOpenDetail={setDetail} /> : null}
+      {props.detailTab === "damageTaken" ? <PlayerDamageTakenTab player={player} encounters={props.availableEncounters} onOpenDetail={setDetail} /> : null}
       {props.detailTab === "timing" ? <PlayerTimingTab player={player} encounter={encounter} /> : null}
       {props.detailTab === "positioning" ? <PlayerPositioningTab player={player} /> : null}
       {props.detailTab === "other" ? <PlayerOtherTab player={player} /> : null}
-      {props.detailTab === "highestHit" ? <PlayerHighestHitTab player={player} /> : null}
+      {props.detailTab === "highestHit" ? <PlayerHighestHitTab player={player} onOpenDetail={setDetail} /> : null}
       {props.detailTab === "debuffs" ? <PlayerDebuffsTab player={player} /> : null}
       {props.detailTab === "deaths" ? <PlayerDeathsTab player={player} state={props.state} /> : null}
-      {props.detailTab === "artifactDamage" ? <PlayerArtifactDamageTab player={player} /> : null}
+      {props.detailTab === "artifactDamage" ? <PlayerArtifactDamageTab player={player} onOpenDetail={setDetail} /> : null}
+      {detail ? <DetailDrawer detail={detail} onClose={() => setDetail(null)} /> : null}
     </section>
   );
 }
