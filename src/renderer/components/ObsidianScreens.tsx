@@ -120,6 +120,8 @@ const CHART_COLORS = [
   "#c6a7ff"
 ];
 
+const ONBOARDING_HELP_STORAGE_KEY = "oa-setup-helper-dismissed";
+
 const DETAIL_TAB_COPY: Record<DetailTab, string> = {
   overview: "Combat-log totals for the selected player or encounter, including outgoing damage, healing, incoming damage, and top target splits.",
   timeline: "Time-bucketed combat-log activity for this player, showing when damage and healing events landed and which powers drove the parse.",
@@ -1889,12 +1891,40 @@ function LiveOverviewView({
   onExitCompare: () => void;
 }) {
   const { state } = props;
+  const [sortKey, setSortKey] = useState<"damage" | "healing" | "taken" | "dps" | "hits" | "name">("damage");
+  const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc");
   const current = state.currentEncounter;
-  const comparePool =
+  const baseRows =
     compareMode === "active"
       ? filteredPlayers.filter((player) => compareSelection.includes(player.id))
       : filteredPlayers;
+  const comparePool = useMemo(() => {
+    const rows = [...baseRows];
+    rows.sort((left, right) => {
+      const direction = sortDirection === "desc" ? -1 : 1;
+      const compareNumber = (a: number, b: number) => (a === b ? 0 : a > b ? direction : -direction);
+      if (sortKey === "name") {
+        return left.displayName.localeCompare(right.displayName) * direction;
+      }
+      if (sortKey === "healing") {
+        return compareNumber(left.totalHealing, right.totalHealing);
+      }
+      if (sortKey === "taken") {
+        return compareNumber(left.damageTaken, right.damageTaken);
+      }
+      if (sortKey === "dps") {
+        return compareNumber(left.dps, right.dps);
+      }
+      if (sortKey === "hits") {
+        return compareNumber(left.hits, right.hits);
+      }
+      return compareNumber(left.totalDamage, right.totalDamage);
+    });
+    return rows;
+  }, [baseRows, sortDirection, sortKey]);
   const totalDamage = comparePool.reduce((sum, player) => sum + player.totalDamage, 0);
+  const totalHealing = comparePool.reduce((sum, player) => sum + player.totalHealing, 0);
+  const totalTaken = comparePool.reduce((sum, player) => sum + player.damageTaken, 0);
   const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
   const selectedForCompare = filteredPlayers.filter((player) => compareSelection.includes(player.id));
   const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
@@ -1913,6 +1943,22 @@ function LiveOverviewView({
           label: row.name,
           value: row.totalDamage
         })) ?? [];
+
+  function toggleSort(nextKey: "damage" | "healing" | "taken" | "dps" | "hits" | "name") {
+    if (sortKey === nextKey) {
+      setSortDirection((currentDirection) => (currentDirection === "desc" ? "asc" : "desc"));
+      return;
+    }
+    setSortKey(nextKey);
+    setSortDirection(nextKey === "name" ? "asc" : "desc");
+  }
+
+  function sortMarker(key: "damage" | "healing" | "taken" | "dps" | "hits" | "name") {
+    if (sortKey !== key) {
+      return "swap_vert";
+    }
+    return sortDirection === "desc" ? "south" : "north";
+  }
 
   return (
     <section className="oa-screen">
@@ -1989,8 +2035,8 @@ function LiveOverviewView({
       <div className="oa-card-grid four">
         <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={current ? "current encounter" : "waiting for live combat"} />
         <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live player rows from combat log`} />
-        <StatCard label="Tracked Targets" value={formatNumber(liveFocusOptions.length)} icon="my_location" hint={liveFocusTarget === "all" ? "all current targets hit" : `focused on ${liveFocusTarget}`} />
-        <StatCard label="Total Time" value={formatDuration(liveDurationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
+        <StatCard label="Total Healing" value={formatShort(totalHealing)} icon="healing" hint="healing parsed from the current combat-log slice" />
+        <StatCard label="Damage Taken" value={formatShort(totalTaken)} tone="tertiary" icon="shield" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
       </div>
 
       <div className="oa-split-grid">
@@ -2104,14 +2150,16 @@ function LiveOverviewView({
         <div className="oa-table-shell">
           <div className="oa-table-head party">
             <span>#</span>
-            <span>Player</span>
+            <button className="oa-sort-button" onClick={() => toggleSort("name")}>Player <Icon name={sortMarker("name")} className="oa-sort-icon" /></button>
             <span>Class</span>
-            <span>Damage</span>
-            <span>DPS</span>
-            <span>Hits</span>
+            <button className="oa-sort-button" onClick={() => toggleSort("damage")}>Damage <Icon name={sortMarker("damage")} className="oa-sort-icon" /></button>
+            <button className="oa-sort-button" onClick={() => toggleSort("healing")}>Healing <Icon name={sortMarker("healing")} className="oa-sort-icon" /></button>
+            <button className="oa-sort-button" onClick={() => toggleSort("taken")}>Taken <Icon name={sortMarker("taken")} className="oa-sort-icon" /></button>
+            <button className="oa-sort-button" onClick={() => toggleSort("dps")}>DPS <Icon name={sortMarker("dps")} className="oa-sort-icon" /></button>
+            <button className="oa-sort-button" onClick={() => toggleSort("hits")}>Hits <Icon name={sortMarker("hits")} className="oa-sort-icon" /></button>
             <span>Duration</span>
           </div>
-          {(compareMode === "active" ? comparePool : filteredPlayers).map((player, index) => (
+          {comparePool.map((player, index) => (
             <button
               className="oa-table-row party"
               key={player.id}
@@ -2144,14 +2192,16 @@ function LiveOverviewView({
               <span><em className="oa-class-pill">{player.className ?? "Unknown"}</em></span>
               <span>
                 <strong>{formatShort(player.totalDamage)}</strong>
-                <ProgressBar value={player.totalDamage} max={Math.max(...filteredPlayers.map((entry) => entry.totalDamage), 1)} />
+                <ProgressBar value={player.totalDamage} max={Math.max(...comparePool.map((entry) => entry.totalDamage), 1)} />
               </span>
+              <span className="tone-secondary-text">{formatShort(player.totalHealing)}</span>
+              <span>{formatShort(player.damageTaken)}</span>
               <span className="tone-secondary-text">{formatShort(player.dps)}</span>
               <span>{formatNumber(player.hits)}</span>
               <span>{formatDuration(liveDurationMs)}</span>
             </button>
           ))}
-          {!(compareMode === "active" ? comparePool : filteredPlayers).length ? <div className="oa-empty-state">{current ? "No players match the current search or compare filter." : "Waiting for current live combat events."}</div> : null}
+          {!comparePool.length ? <div className="oa-empty-state">{current ? "No players match the current search or compare filter." : "Waiting for current live combat events."}</div> : null}
         </div>
       </section>
     </section>
@@ -3540,6 +3590,13 @@ export function ObsidianScreens(props: ShellProps) {
   const [compareSelection, setCompareSelection] = useState<string[]>([]);
   const [liveFocusTarget, setLiveFocusTarget] = useState("all");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showSetupHelper, setShowSetupHelper] = useState(() => {
+    try {
+      return window.localStorage.getItem(ONBOARDING_HELP_STORAGE_KEY) !== "1";
+    } catch {
+      return true;
+    }
+  });
   const settings = props.rendererSettings;
   const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
   const runtimeLabel = getRuntimeLabel(props.state);
@@ -3619,6 +3676,15 @@ export function ObsidianScreens(props: ShellProps) {
     { id: "settings", label: "Settings", icon: "settings" }
   ];
 
+  function dismissSetupHelper() {
+    setShowSetupHelper(false);
+    try {
+      window.localStorage.setItem(ONBOARDING_HELP_STORAGE_KEY, "1");
+    } catch {
+      // Ignore storage failures in preview mode.
+    }
+  }
+
   return (
     <div
       className={`obsidian-architect ${settings.visualCore} ${props.isDesktopRuntime ? "desktop-runtime" : ""} ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${settings.compactMode ? "compact-mode" : ""} ${settings.reducedMotion ? "reduced-motion" : ""} ${settings.smoothTables ? "smooth-tables" : ""}`}
@@ -3643,6 +3709,7 @@ export function ObsidianScreens(props: ShellProps) {
             <button
               className={`oa-nav-item ${props.view === "live" || props.view === "players" ? "active" : ""}`}
               onClick={() => props.onViewChange("live")}
+              title="Live"
             >
               <Icon name="sensors" />
               <span>Live</span>
@@ -3658,6 +3725,7 @@ export function ObsidianScreens(props: ShellProps) {
                     props.onViewChange("players");
                     props.onDetailTabChange(tab.id);
                   }}
+                  title={tab.label}
                 >
                   <span>{tab.label}</span>
                   {tab.id === "deaths" && (props.selectedPlayer?.deaths ?? 0) > 0 ? (
@@ -3673,6 +3741,7 @@ export function ObsidianScreens(props: ShellProps) {
               key={item.id}
               className={`oa-nav-item ${props.view === item.id ? "active" : ""}`}
               onClick={() => props.onViewChange(item.id)}
+              title={item.label}
             >
               <Icon name={item.icon} />
               <span>{item.label}</span>
@@ -3746,6 +3815,28 @@ export function ObsidianScreens(props: ShellProps) {
         </header>
 
         <main className="oa-main-scroll">
+          {showSetupHelper ? (
+            <section className="oa-panel oa-onboarding-panel">
+              <div className="oa-onboarding-copy">
+                <span className="oa-badge subtle">Start Here</span>
+                <strong>To begin, open session setup and connect your combat log.</strong>
+                <p>
+                  Click the <strong>folder</strong> button in the top-right corner, then either choose your Neverwinter
+                  log folder and press <strong>Start Monitoring</strong>, or select a single log file to analyze.
+                </p>
+              </div>
+              <div className="oa-button-pair">
+                <button className="oa-button primary" onClick={() => props.onViewChange("setup")}>
+                  <Icon name="folder_open" />
+                  Open Setup
+                </button>
+                <button className="oa-button secondary" onClick={dismissSetupHelper}>
+                  <Icon name="close" />
+                  Dismiss
+                </button>
+              </div>
+            </section>
+          ) : null}
           {props.view === "setup" ? <SetupView {...props} /> : null}
           {props.view === "live" ? (
             <LiveOverviewView
