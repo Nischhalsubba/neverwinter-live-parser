@@ -1,9 +1,9 @@
 import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
 
-const VALID_LOG_PATTERN = /^combatlog_.*\.log$/i;
+const VALID_LOG_PATTERN = /^combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})(?:\.(?:log|txt))?$/i;
 const TIMESTAMPED_LOG_PATTERN =
-  /^combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})\.log$/i;
+  /^combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})(?:\.(?:log|txt))?$/i;
 
 type LogCandidate = {
   candidate: string;

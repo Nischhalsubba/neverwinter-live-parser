@@ -89,7 +89,7 @@ function getDriveRoots(): string[] {
 function parseCombatLogTimestamp(filePath: string): string {
   const match = path
     .basename(filePath)
-    .match(/combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})\.log$/i);
+    .match(/combatlog_(\d{4})-(\d{2})-(\d{2})_(\d{2})-(\d{2})-(\d{2})(?:\.(?:log|txt))?$/i);
   if (!match) {
     return "Unknown timestamp";
   }
@@ -114,7 +114,7 @@ async function findLatestCombatLog(folderPath: string): Promise<string | null> {
       .filter(
         (entry) =>
           entry.isFile() &&
-          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.log$/i.test(entry.name)
+          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(entry.name)
       )
       .map((entry) => path.join(folderPath, entry.name))
       .sort((left, right) => right.localeCompare(left));
@@ -162,7 +162,7 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
       .filter(
         (entry) =>
           entry.isFile() &&
-          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.log$/i.test(entry.name)
+          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(entry.name)
       )
       .map((entry) => path.join(folderPath, entry.name))
       .sort((left, right) => right.localeCompare(left))[0];
@@ -306,7 +306,21 @@ ipcMain.handle("dialog:selectLogFile", async () => {
   if (result.canceled) {
     return null;
   }
-  return result.filePaths[0] ?? null;
+  const selected = result.filePaths[0] ?? null;
+  if (!selected) {
+    return null;
+  }
+  if (!/^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(path.basename(selected))) {
+    await dialog.showMessageBox({
+      type: "warning",
+      title: "Invalid log file",
+      message: "Please select a Neverwinter combat log file.",
+      detail:
+        "Only files named like combatlog_YYYY-MM-DD_HH-MM-SS are supported for live parsing and recorded analysis."
+    });
+    return null;
+  }
+  return selected;
 });
 
 ipcMain.handle("monitoring:discoverLogs", async () => discoverCombatLogCandidates());

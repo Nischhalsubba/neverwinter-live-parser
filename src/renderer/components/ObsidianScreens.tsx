@@ -1731,18 +1731,44 @@ function SetupView(props: ShellProps) {
     state.analysis.durationMs > 0
       ? Math.round(state.analysis.totalLines / Math.max(1, state.analysis.durationMs / 1000))
       : 0;
+  const selectedLogTimestamp = getCombatLogTimestampLabel(state.activeLogFile);
 
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Configuration & Setup</p>
         <h1>Connect the Neverwinter combat log</h1>
-        <p>Select the active `combatlog_YYYY-MM-DD_HH-MM-SS.log` directory or a single recorded log file, then track or analyze only what the parser reads from that log.</p>
+        <p>
+          Start here the first time you open the app. The parser only watches Neverwinter files
+          named <code>combatlog_YYYY-MM-DD_HH-MM-SS</code>, so voice chat, crash, shutdown, and
+          shader files are ignored automatically.
+        </p>
       </header>
 
       <div className="oa-setup-grid">
         <section className="oa-panel oa-panel-hero">
-          <SectionHeading icon="folder_special" eyebrow="Combat Log Source" title="Live watch and recorded log analysis" />
+          <SectionHeading
+            icon="folder_special"
+            eyebrow="Combat Log Source"
+            title="Choose the folder or file you want to track"
+          />
+          <div className="oa-setup-steps">
+            <article className="oa-setup-step">
+              <strong>1. Auto Detect</strong>
+              <p>Search this Windows PC for real Neverwinter combatlog files only.</p>
+            </article>
+            <article className="oa-setup-step">
+              <strong>2. Confirm the correct result</strong>
+              <p>Pick the candidate that shows your latest combatlog file and timestamp.</p>
+            </article>
+            <article className="oa-setup-step">
+              <strong>3. Start live or analyze recorded</strong>
+              <p>
+                Live tracking follows the newest combatlog in that folder. Recorded analysis opens
+                one file only.
+              </p>
+            </article>
+          </div>
           <div className="oa-field-stack">
             <label className="oa-field">
               <span>Combat log path</span>
@@ -1752,7 +1778,7 @@ function SetupView(props: ShellProps) {
                   <input
                     value={props.folderInput}
                     onChange={(event) => props.onFolderInputChange(event.target.value)}
-                    placeholder="C:\\Games\\Neverwinter\\Live\\logs\\GameClient"
+                    placeholder="Leave empty, then use Auto Detect or Browse to the GameClient folder"
                   />
                 </div>
                 <button className="oa-button secondary" onClick={props.onChooseFolder}>
@@ -1818,14 +1844,18 @@ function SetupView(props: ShellProps) {
             ) : null}
             {props.hasScannedLogs && !props.discoveringLogs && !props.logCandidates.length ? (
               <div className="oa-empty-state">
-                No `combatlog_YYYY-MM-DD_HH-MM-SS.log` files were found during the Windows drive scan.
+                No Neverwinter combatlog files were found on this PC. Try Browse if the game is
+                installed in an uncommon location.
               </div>
             ) : null}
 
             <div className="oa-mini-panel">
               <strong>Latest tracked combat log</strong>
               <p>{state.activeLogFile ?? "No active combat log selected"}</p>
-              <p className="oa-muted-copy">Timestamp: {getCombatLogTimestampLabel(state.activeLogFile)}</p>
+              <p className="oa-muted-copy">Timestamp: {selectedLogTimestamp}</p>
+              <p className="oa-muted-copy">
+                Only files that begin with <code>combatlog_</code> are monitored.
+              </p>
             </div>
 
             <label className="oa-field">
@@ -1836,7 +1866,7 @@ function SetupView(props: ShellProps) {
                   <input
                     value={props.importFilePath}
                     onChange={(event) => props.onImportFileChange(event.target.value)}
-                    placeholder="C:\\Logs\\combatlog_2026-03-23.log"
+                    placeholder="Choose one combatlog file for a recorded parse"
                   />
                 </div>
                 <button className="oa-button secondary" onClick={props.onChooseImportFile}>

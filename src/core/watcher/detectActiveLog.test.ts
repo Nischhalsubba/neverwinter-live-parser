@@ -43,6 +43,32 @@ describe("detectActiveLogFile", () => {
 
     await expect(detectActiveLogFile(folder, selected)).resolves.toBe(selected);
   });
+
+  it("recognizes combat logs without a file extension", async () => {
+    const folder = await mkdtemp(path.join(os.tmpdir(), "nw-log-test-"));
+    tempDirs.push(folder);
+
+    const older = path.join(folder, "combatlog_2026-03-23_00-00-00");
+    const newer = path.join(folder, "combatlog_2026-03-24_07-00-00");
+
+    await writeFile(older, "older");
+    await writeFile(newer, "newer");
+
+    await expect(detectActiveLogFile(folder)).resolves.toBe(newer);
+  });
+
+  it("recognizes combat logs saved as txt files", async () => {
+    const folder = await mkdtemp(path.join(os.tmpdir(), "nw-log-test-"));
+    tempDirs.push(folder);
+
+    const older = path.join(folder, "combatlog_2026-03-23_00-00-00.txt");
+    const newer = path.join(folder, "combatlog_2026-03-24_07-00-00.txt");
+
+    await writeFile(older, "older");
+    await writeFile(newer, "newer");
+
+    await expect(detectActiveLogFile(folder)).resolves.toBe(newer);
+  });
 });
 
 describe("parseCombatLogTimestamp", () => {
@@ -56,5 +82,15 @@ describe("parseCombatLogTimestamp", () => {
     expect(date.getHours()).toBe(0);
     expect(date.getMinutes()).toBe(0);
     expect(date.getSeconds()).toBe(0);
+  });
+
+  it("extracts timestamps from filenames without a file extension", () => {
+    const parsed = parseCombatLogTimestamp("combatlog_2026-03-24_07-00-00");
+    expect(parsed).not.toBeNull();
+  });
+
+  it("extracts timestamps from txt combat logs", () => {
+    const parsed = parseCombatLogTimestamp("combatlog_2026-03-24_07-00-00.txt");
+    expect(parsed).not.toBeNull();
   });
 });

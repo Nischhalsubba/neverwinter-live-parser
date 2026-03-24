@@ -71,7 +71,7 @@ function getParentDirectory(filePath: string): string {
 
 export function App() {
   const [state, setState] = useState(INITIAL_STATE);
-  const [view, setView] = useState<View>("live");
+  const [view, setView] = useState<View>("setup");
   const [detailTab, setDetailTab] = useState<DetailTab>("overview");
   const [folderInput, setFolderInput] = useState("");
   const [importFilePath, setImportFilePath] = useState("");
