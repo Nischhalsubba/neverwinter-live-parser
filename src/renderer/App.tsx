@@ -87,6 +87,7 @@ export function App() {
   const [lastFrameAppliedAt, setLastFrameAppliedAt] = useState(0);
   const [logCandidates, setLogCandidates] = useState<DiscoveredLogCandidate[]>([]);
   const [discoveringLogs, setDiscoveringLogs] = useState(false);
+  const [hasScannedLogs, setHasScannedLogs] = useState(false);
 
   useEffect(() => {
     const api = window.neverwinterApi;
@@ -98,13 +99,9 @@ export function App() {
     void api.getState().then((snapshot) => {
       startTransition(() => {
         setState(snapshot);
-        setFolderInput(snapshot.selectedLogFolder ?? "");
+        setFolderInput(snapshot.watcherStatus === "watching" ? snapshot.selectedLogFolder ?? "" : "");
         setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
       });
-    });
-
-    void api.discoverLogs().then((candidates) => {
-      setLogCandidates(candidates);
     });
 
     return api.onState((snapshot) => {
@@ -237,6 +234,8 @@ export function App() {
     }
 
     setDiscoveringLogs(true);
+    setLogCandidates([]);
+    setHasScannedLogs(true);
     try {
       const candidates = await api.discoverLogs();
       setLogCandidates(candidates);
@@ -308,6 +307,7 @@ export function App() {
 
     const snapshot = await api.stopMonitoring();
     setState(snapshot);
+    setFolderInput("");
   }
 
   return (
@@ -328,6 +328,7 @@ export function App() {
       importFilePath={importFilePath}
       logCandidates={logCandidates}
       discoveringLogs={discoveringLogs}
+      hasScannedLogs={hasScannedLogs}
       starting={starting}
       onViewChange={setView}
       onDetailTabChange={setDetailTab}

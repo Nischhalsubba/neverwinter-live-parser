@@ -62,6 +62,7 @@ type ShellProps = {
   importFilePath: string;
   logCandidates: DiscoveredLogCandidate[];
   discoveringLogs: boolean;
+  hasScannedLogs: boolean;
   starting: boolean;
   onViewChange: (view: View) => void;
   onDetailTabChange: (tab: DetailTab) => void;
@@ -1761,6 +1762,11 @@ function SetupView(props: ShellProps) {
                     </button>
                   </div>
                 ))}
+              </div>
+            ) : null}
+            {props.hasScannedLogs && !props.discoveringLogs && !props.logCandidates.length ? (
+              <div className="oa-empty-state">
+                No `combatlog_YYYY-MM-DD_HH-MM-SS.log` files were found during the Windows drive scan.
               </div>
             ) : null}
 

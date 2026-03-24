@@ -1,4 +1,5 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -79,7 +80,7 @@ function withTelemetry(state: AppState): AppState {
 
 function getDriveRoots(): string[] {
   const drives: string[] = [];
-  for (let charCode = 67; charCode <= 90; charCode += 1) {
+  for (let charCode = 65; charCode <= 90; charCode += 1) {
     drives.push(`${String.fromCharCode(charCode)}:\\`);
   }
   return drives;
@@ -125,61 +126,69 @@ async function findLatestCombatLog(folderPath: string): Promise<string | null> {
 }
 
 async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> {
-  const suffixes = [
-    path.join(
-      "Program Files (x86)",
-      "Steam",
-      "steamapps",
-      "common",
-      "Cryptic Studios",
-      "Neverwinter",
-      "Live",
-      "logs",
-      "GameClient"
-    ),
-    path.join(
-      "Program Files",
-      "Steam",
-      "steamapps",
-      "common",
-      "Cryptic Studios",
-      "Neverwinter",
-      "Live",
-      "logs",
-      "GameClient"
-    ),
-    path.join(
-      "SteamLibrary",
-      "steamapps",
-      "common",
-      "Cryptic Studios",
-      "Neverwinter",
-      "Live",
-      "logs",
-      "GameClient"
-    ),
-    path.join("Games", "Neverwinter", "Live", "logs", "GameClient"),
-    path.join("Neverwinter", "Live", "logs", "GameClient")
-  ];
-
-  const homes = [os.homedir(), path.join(os.homedir(), "Documents")];
   const candidates = new Map<string, DiscoveredLogCandidate>();
-  const roots = [...getDriveRoots(), ...homes];
 
-  for (const root of roots) {
-    for (const suffix of suffixes) {
-      const folderPath = path.isAbsolute(suffix) ? suffix : path.join(root, suffix);
-      if (!(await pathExists(folderPath))) {
-        continue;
-      }
+  const roots = [];
+  for (const drive of getDriveRoots()) {
+    if (await pathExists(drive)) {
+      roots.push(drive);
+    }
+  }
 
-      const latestLog = await findLatestCombatLog(folderPath);
+  const ignoredDirectoryNames = new Set([
+    "$recycle.bin",
+    "system volume information",
+    "windows",
+    "programdata",
+    "recovery",
+    "msocache",
+    "perflogs",
+    "temp",
+    "tmp"
+  ]);
+
+  const queue = [...roots];
+
+  while (queue.length) {
+    const folderPath = queue.shift()!;
+    let entries: Dirent[];
+    try {
+      entries = await fs.readdir(folderPath, { withFileTypes: true });
+    } catch {
+      continue;
+    }
+
+    const latestLog = entries
+      .filter(
+        (entry) =>
+          entry.isFile() &&
+          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}\.log$/i.test(entry.name)
+      )
+      .map((entry) => path.join(folderPath, entry.name))
+      .sort((left, right) => right.localeCompare(left))[0];
+
+    if (latestLog) {
       candidates.set(folderPath.toLowerCase(), {
         folderPath,
         filePath: latestLog,
-        timestampLabel: latestLog ? parseCombatLogTimestamp(latestLog) : "No combat log found yet",
-        sourceHint: root.endsWith(":\\") ? `Detected on drive ${root}` : `Detected near ${root}`
+        timestampLabel: parseCombatLogTimestamp(latestLog),
+        sourceHint: `Detected on drive ${path.parse(folderPath).root}`
       });
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) {
+        continue;
+      }
+      const normalizedName = entry.name.toLowerCase();
+      if (
+        ignoredDirectoryNames.has(normalizedName) ||
+        normalizedName.startsWith("$") ||
+        normalizedName === "node_modules"
+      ) {
+        continue;
+      }
+      queue.push(path.join(folderPath, entry.name));
     }
   }
 
@@ -194,7 +203,7 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
       return 1;
     }
     return left.folderPath.localeCompare(right.folderPath);
-  });
+  }).slice(0, 20);
 }
 
 function createWindow(): void {
