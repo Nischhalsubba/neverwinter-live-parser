@@ -4,6 +4,7 @@ import type {
   CombatEvent,
   CombatantEncounterStat,
   CombatantSnapshot,
+  DamageMomentStat,
   EncounterSnapshot,
   EffectStat,
   HighestHitStat,
@@ -37,6 +38,7 @@ type MutableCombatant = {
   skillTotals: Map<string, SkillStat>;
   targetTotals: Map<string, TargetStat>;
   highestHits: Map<string, HighestHitStat>;
+  damageMoments: DamageMomentStat[];
   timeline: Map<number, TimelinePoint>;
   activations: ActivationStat[];
   effects: Map<string, EffectStat>;
@@ -80,6 +82,14 @@ export class CombatantTracker {
     if (event.eventType === "damage") {
       combatant.totalDamage += amount;
       combatant.hits += 1;
+      combatant.damageMoments.push({
+        second: offsetSeconds,
+        abilityName: event.abilityName ?? "Unknown source",
+        amount,
+        targetName: event.targetName,
+        critical: Boolean(event.critical),
+        sourceType: event.sourceType
+      });
       if (event.targetName) {
         const targetKey = normalizeEntityName(event.targetName) || event.targetName;
         const target = combatant.targetTotals.get(targetKey) ?? {
@@ -257,6 +267,9 @@ export class CombatantTracker {
         highestHits: Array.from(combatant.highestHits.values())
           .sort((left, right) => right.amount - left.amount)
           .slice(0, 24),
+        damageMoments: combatant.damageMoments
+          .slice()
+          .sort((left, right) => left.second - right.second),
         timeline: Array.from(combatant.timeline.values()).sort(
           (left, right) => left.second - right.second
         ),
@@ -321,6 +334,7 @@ export class CombatantTracker {
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
       highestHits: new Map<string, HighestHitStat>(),
+      damageMoments: [],
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
       effects: new Map<string, EffectStat>(),
@@ -353,6 +367,7 @@ export class CombatantTracker {
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
       highestHits: new Map<string, HighestHitStat>(),
+      damageMoments: [],
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
       effects: new Map<string, EffectStat>(),

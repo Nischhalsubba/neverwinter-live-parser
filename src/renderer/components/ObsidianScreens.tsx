@@ -134,7 +134,8 @@ const DETAIL_TAB_COPY: Record<DetailTab, string> = {
   other: "Supplemental parser facts from the combat log, including skill inventory, targets tracked, companions, and build inference.",
   highestHit: "The hardest single-hit damage events found in the combat log, grouped across class powers, mounts, artifacts, companions, and other damage sources.",
   debuffs: "Known Neverwinter debuff sources for class kits and combat-log overlap between your damage activations and debuffs seen on the target.",
-  deaths: "Death lines and closely related parser issues matched to this player from the current combat log."
+  deaths: "Death lines and closely related parser issues matched to this player from the current combat log.",
+  artifactDamage: "Artifact activations detected in the combat log and the exact damage you dealt in the 20 seconds after each artifact use."
 };
 
 type DebuffCatalogEntry = {
@@ -3109,6 +3110,103 @@ function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState
   );
 }
 
+function buildArtifactDamageRows(player: PlayerRow) {
+  return player.activations
+    .filter(
+      (activation) =>
+        activation.kind !== "unknown" &&
+        classifyPowerFamily(activation.abilityName, activation.sourceType) === "artifact"
+    )
+    .map((activation) => {
+      const windowEnd = activation.second + 20;
+      const damageWindow = player.damageMoments.filter(
+        (moment) => moment.second >= activation.second && moment.second < windowEnd
+      );
+      const totalDamage = damageWindow.reduce((sum, moment) => sum + moment.amount, 0);
+      const critHits = damageWindow.filter((moment) => moment.critical).length;
+      const strongestHit = damageWindow.reduce(
+        (best, moment) => (moment.amount > best.amount ? moment : best),
+        { abilityName: "None", amount: 0, targetName: undefined as string | undefined }
+      );
+
+      return {
+        artifactName: activation.abilityName,
+        activatedAt: activation.second,
+        totalDamage,
+        dps: totalDamage / 20,
+        hitCount: damageWindow.length,
+        critHits,
+        strongestHit
+      };
+    })
+    .sort((left, right) => right.totalDamage - left.totalDamage);
+}
+
+function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
+  const rows = buildArtifactDamageRows(player);
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid three">
+        <StatCard label="Artifact Uses" value={formatNumber(rows.length)} icon="diamond" tone="secondary" />
+        <StatCard
+          label="Best 20s Window"
+          value={formatShort(rows[0]?.totalDamage ?? 0)}
+          tone="primary"
+          icon="bolt"
+          hint={rows[0] ? `${rows[0].artifactName} at ${rows[0].activatedAt}s` : "No artifact use detected"}
+        />
+        <StatCard
+          label="Avg 20s Burst"
+          value={formatShort(rows.length ? rows.reduce((sum, row) => sum + row.totalDamage, 0) / rows.length : 0)}
+          icon="trending_up"
+          hint="Damage dealt in the 20 seconds after each artifact activation"
+        />
+      </div>
+
+      <section className="oa-panel">
+        <SectionHeading icon="diamond" eyebrow="Artifact Damage" title="Damage done in the 20 seconds after artifact activation" />
+        <div className="oa-data-table">
+          <div className="oa-data-head healing">
+            <span>Artifact</span>
+            <span>Activated</span>
+            <span>20s Damage</span>
+            <span>20s DPS</span>
+            <span>Hits / Crits</span>
+            <span>Strongest Hit</span>
+          </div>
+          {rows.map((row) => (
+            <div className="oa-data-row healing" key={`${row.artifactName}-${row.activatedAt}`}>
+              <div className="oa-power-cell">
+                <div className="oa-power-icon">
+                  <PowerVisual powerName={row.artifactName} fallback={row.artifactName.slice(0, 2).toUpperCase()} />
+                </div>
+                <div>
+                  <strong>{row.artifactName}</strong>
+                  <small>20 second damage window after use</small>
+                </div>
+              </div>
+              <span>{row.activatedAt}s</span>
+              <span className="oa-right-stat"><strong>{formatShort(row.totalDamage)}</strong></span>
+              <span>{formatShort(row.dps)}</span>
+              <span>{formatNumber(row.hitCount)} / {formatNumber(row.critHits)}</span>
+              <span className="oa-right-stat">
+                <strong>{formatShort(row.strongestHit.amount)}</strong>
+                <small>{row.strongestHit.abilityName}</small>
+              </span>
+            </div>
+          ))}
+          {!rows.length ? (
+            <div className="oa-empty-state">
+              No artifact activation windows were detected for this player in the current combat log.
+            </div>
+          ) : null}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function PlayerView({
   props,
   searchQuery
@@ -3215,6 +3313,7 @@ function PlayerView({
       {props.detailTab === "highestHit" ? <PlayerHighestHitTab player={player} /> : null}
       {props.detailTab === "debuffs" ? <PlayerDebuffsTab player={player} /> : null}
       {props.detailTab === "deaths" ? <PlayerDeathsTab player={player} state={props.state} /> : null}
+      {props.detailTab === "artifactDamage" ? <PlayerArtifactDamageTab player={player} /> : null}
     </section>
   );
 }
@@ -3842,7 +3941,7 @@ export function ObsidianScreens(props: ShellProps) {
             ) : (
               <div className="oa-app-title">
                 <div className="oa-brand-mark compact">
-                  <Icon name="auto_awesome" />
+                  <Icon name="architecture" />
                 </div>
                 <div>
                   <span className="oa-title-lock">Neverwinter Live Parser</span>

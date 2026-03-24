@@ -92,6 +92,15 @@ export type HighestHitStat = {
   sourceType?: ActorType;
 };
 
+export type DamageMomentStat = {
+  second: number;
+  abilityName: string;
+  amount: number;
+  targetName?: string;
+  critical: boolean;
+  sourceType?: ActorType;
+};
+
 export type CombatantEncounterStat = {
   encounterId: string;
   totalDamage: number;
@@ -136,6 +145,7 @@ export type CombatantSnapshot = {
   topSkills: SkillStat[];
   targets: TargetStat[];
   highestHits: HighestHitStat[];
+  damageMoments: DamageMomentStat[];
   timeline: TimelinePoint[];
   activations: ActivationStat[];
   effects: EffectStat[];

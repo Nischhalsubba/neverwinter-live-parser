@@ -2,6 +2,7 @@ import type {
   ActivationStat,
   CombatantEncounterStat,
   CombatantSnapshot,
+  DamageMomentStat,
   EncounterSnapshot,
   EffectStat,
   HighestHitStat,
@@ -34,7 +35,8 @@ export type DetailTab =
   | "other"
   | "highestHit"
   | "debuffs"
-  | "deaths";
+  | "deaths"
+  | "artifactDamage";
 
 export type PlayerRow = {
   id: string;
@@ -52,6 +54,7 @@ export type PlayerRow = {
   companionCount: number;
   targets: TargetStat[];
   highestHits: HighestHitStat[];
+  damageMoments: DamageMomentStat[];
   timeline: TimelinePoint[];
   activations: ActivationStat[];
   effects: EffectStat[];
@@ -78,7 +81,8 @@ export const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
   { id: "other", label: "Other" },
   { id: "highestHit", label: "Highest Hit" },
   { id: "debuffs", label: "Debuffs" },
-  { id: "deaths", label: "Deaths" }
+  { id: "deaths", label: "Deaths" },
+  { id: "artifactDamage", label: "Artifact Damage" }
 ];
 
 export function formatNumber(value: number): string {
@@ -200,6 +204,12 @@ function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
   }
 
   return Array.from(totals.values()).sort((left, right) => left.second - right.second);
+}
+
+function mergeDamageMoments(points: DamageMomentStat[]): DamageMomentStat[] {
+  return points
+    .slice()
+    .sort((left, right) => left.second - right.second);
 }
 
 function mergeActivations(activations: ActivationStat[]): ActivationStat[] {
@@ -372,6 +382,7 @@ export function buildPlayerRows(
         companionCount: members.filter((member) => member.type === "companion").length,
         targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
         highestHits: mergeHighestHits(sourceMembers.flatMap((member) => member.highestHits)),
+        damageMoments: mergeDamageMoments(sourceMembers.flatMap((member) => member.damageMoments)),
         timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
         activations: mergeActivations(sourceMembers.flatMap((member) => member.activations)),
         effects: mergeEffects(sourceMembers.flatMap((member) => member.effects)),
