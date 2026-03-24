@@ -30,6 +30,8 @@
 html,
 body,
 #root {
+  width: 100%;
+  height: 100%;
   min-height: 100%;
 }
 
@@ -41,6 +43,7 @@ body {
     var(--oa-bg);
   color: var(--oa-text);
   font-family: "Inter", sans-serif;
+  overflow: hidden;
 }
 
 button,
@@ -83,7 +86,8 @@ input {
 }
 
 .obsidian-architect {
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
   height: 100vh;
   display: grid;
@@ -106,8 +110,10 @@ input {
 .oa-sidebar {
   position: sticky;
   top: 0;
+  width: 100%;
   height: 100vh;
   max-height: 100vh;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   background: #131315;
@@ -496,14 +502,22 @@ input {
 .oa-main {
   position: relative;
   min-width: 0;
-  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+  height: 100vh;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr);
+  overflow: hidden;
 }
 
 .oa-topbar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 15;
   height: 56px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -566,13 +580,14 @@ input {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  width: min(100%, 320px);
   min-width: 220px;
+  max-width: 100%;
   padding: 0.68rem 0.95rem;
   border-radius: 999px;
   background: rgba(14, 14, 16, 0.92);
   border: 1px solid rgba(205, 189, 255, 0.15);
   color: rgba(229, 225, 228, 0.65);
-  min-width: 0;
 }
 
 .oa-search input {
@@ -626,8 +641,9 @@ input {
   min-width: 0;
   width: 100%;
   max-width: 100%;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
 }
@@ -740,6 +756,9 @@ input {
 .oa-screen {
   display: grid;
   gap: 24px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
 .oa-screen-hero,
@@ -798,6 +817,8 @@ input {
   background: var(--oa-surface-low);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .oa-panel,
@@ -1259,6 +1280,9 @@ input {
 
 .oa-terminal {
   min-height: 220px;
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
   padding: 18px;
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.35);
@@ -1271,6 +1295,8 @@ input {
 .oa-table-shell,
 .oa-data-table {
   display: grid;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   border-radius: 12px;
@@ -1985,11 +2011,15 @@ input {
 .oa-overlay {
   top: 72px;
   width: min(420px, calc(100vw - 320px));
+  max-height: calc(100vh - 112px);
+  overflow: auto;
 }
 
 .oa-overlay.diagnostics {
   right: 468px;
   width: min(320px, calc(100vw - 320px));
+  max-height: calc(100vh - 112px);
+  overflow: auto;
 }
 
 .oa-floating-status,
@@ -2074,6 +2104,7 @@ input {
   .oa-sidebar {
     position: relative;
     height: auto;
+    max-height: none;
   }
 
   .oa-topbar {
@@ -2082,6 +2113,11 @@ input {
     align-items: start;
     height: auto;
     padding: 16px;
+  }
+
+  .oa-main {
+    height: 100vh;
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .oa-main-scroll {
@@ -2104,6 +2140,10 @@ input {
 }
 
 @media (max-width: 860px) {
+  body {
+    overflow: auto;
+  }
+
   .oa-card-grid.three,
   .oa-card-grid.four,
   .oa-card-grid.eight,
