@@ -238,6 +238,46 @@ function InlineHelp({ text }: { text: string }) {
   );
 }
 
+function AssetImage({
+  localSrc,
+  remoteSrc,
+  alt,
+  className,
+  fallback
+}: {
+  localSrc: string | null | undefined;
+  remoteSrc?: string | null | undefined;
+  alt: string;
+  className: string;
+  fallback: ReactNode;
+}) {
+  const [source, setSource] = useState<string | null>(localSrc ?? remoteSrc ?? null);
+
+  useEffect(() => {
+    setSource(localSrc ?? remoteSrc ?? null);
+  }, [localSrc, remoteSrc]);
+
+  if (!source) {
+    return <>{fallback}</>;
+  }
+
+  return (
+    <img
+      className={className}
+      src={source}
+      alt={alt}
+      loading="lazy"
+      onError={() => {
+        if (remoteSrc && source !== remoteSrc) {
+          setSource(remoteSrc);
+          return;
+        }
+        setSource(null);
+      }}
+    />
+  );
+}
+
 function ClassAvatar({
   className,
   fallback
@@ -246,10 +286,14 @@ function ClassAvatar({
   fallback: string;
 }) {
   const meta = getClassVisualMeta(className);
-  return meta?.emblemPath ? (
-    <img className="oa-avatar-image" src={meta.emblemPath} alt={className ?? fallback} />
-  ) : (
-    <>{fallback}</>
+  return (
+    <AssetImage
+      className="oa-avatar-image"
+      localSrc={meta?.emblemPath}
+      remoteSrc={"emblemUrl" in (meta ?? {}) ? meta?.emblemUrl : null}
+      alt={className ?? fallback}
+      fallback={fallback}
+    />
   );
 }
 
@@ -261,10 +305,14 @@ function PowerVisual({
   fallback: string;
 }) {
   const meta = getPowerVisualMeta(powerName);
-  return meta?.iconPath ? (
-    <img className="oa-power-image" src={meta.iconPath} alt={powerName} loading="lazy" />
-  ) : (
-    <>{fallback}</>
+  return (
+    <AssetImage
+      className="oa-power-image"
+      localSrc={"iconPath" in (meta ?? {}) ? meta?.iconPath : null}
+      remoteSrc={"iconUrl" in (meta ?? {}) ? meta?.iconUrl : null}
+      alt={powerName}
+      fallback={fallback}
+    />
   );
 }
 
@@ -990,11 +1038,13 @@ function LibraryView() {
           {previewArtifacts.map((artifact) => (
             <article className="oa-power-gallery-card" key={artifact.name}>
               <div className="oa-power-icon large">
-                {artifact.iconPath ? (
-                  <img className="oa-power-image" src={artifact.iconPath} alt={artifact.name} loading="lazy" />
-                ) : (
-                  artifact.name.slice(0, 2).toUpperCase()
-                )}
+                <AssetImage
+                  className="oa-power-image"
+                  localSrc={artifact.iconPath}
+                  remoteSrc={artifact.iconUrl}
+                  alt={artifact.name}
+                  fallback={artifact.name.slice(0, 2).toUpperCase()}
+                />
               </div>
               <div>
                 <strong>{artifact.name}</strong>
@@ -1175,11 +1225,13 @@ function LibraryReferenceView() {
                     {items.map((item) => (
                       <div className="oa-library-entry" key={`${selectedClassReference.className}-${category}-${item.name}`}>
                         <div className="oa-power-icon">
-                          {"iconPath" in item && item.iconPath ? (
-                            <img className="oa-power-image" src={item.iconPath} alt={item.name} loading="lazy" />
-                          ) : (
-                            item.name.slice(0, 2).toUpperCase()
-                          )}
+                          <AssetImage
+                            className="oa-power-image"
+                            localSrc={"iconPath" in item ? item.iconPath : null}
+                            remoteSrc={"iconUrl" in item ? item.iconUrl : null}
+                            alt={item.name}
+                            fallback={item.name.slice(0, 2).toUpperCase()}
+                          />
                         </div>
                         <div>
                           <strong>{item.name}</strong>
@@ -1219,11 +1271,13 @@ function LibraryReferenceView() {
             <article className="oa-library-artifact-card" key={artifact.name}>
               <div className="oa-library-artifact-head">
                 <div className="oa-power-icon large">
-                  {artifact.iconPath ? (
-                    <img className="oa-power-image" src={artifact.iconPath} alt={artifact.name} loading="lazy" />
-                  ) : (
-                    artifact.name.slice(0, 2).toUpperCase()
-                  )}
+                  <AssetImage
+                    className="oa-power-image"
+                    localSrc={artifact.iconPath}
+                    remoteSrc={artifact.iconUrl}
+                    alt={artifact.name}
+                    fallback={artifact.name.slice(0, 2).toUpperCase()}
+                  />
                 </div>
                 <div>
                   <strong>{artifact.name}</strong>
@@ -1529,16 +1583,13 @@ function LibraryReferenceWorkbench() {
                         key={`${selectedClassReference.className}-${category}-${item.name}`}
                       >
                         <div className="oa-power-icon">
-                          {"iconPath" in item && item.iconPath ? (
-                            <img
-                              className="oa-power-image"
-                              src={item.iconPath}
-                              alt={item.name}
-                              loading="lazy"
-                            />
-                          ) : (
-                            item.name.slice(0, 2).toUpperCase()
-                          )}
+                          <AssetImage
+                            className="oa-power-image"
+                            localSrc={"iconPath" in item ? item.iconPath : null}
+                            remoteSrc={"iconUrl" in item ? item.iconUrl : null}
+                            alt={item.name}
+                            fallback={item.name.slice(0, 2).toUpperCase()}
+                          />
                         </div>
                         <div>
                           <strong>{item.name}</strong>
@@ -2958,15 +3009,17 @@ function PlayerDebuffsTab({ player }: { player: PlayerRow }) {
             <span>Description</span>
           </div>
           {classCatalog.slice(0, 24).map((entry) => (
-            <div className="oa-data-row healing" key={`${entry.className}-${entry.sourceType}-${entry.name}`}>
-              <div className="oa-power-cell">
-                <div className="oa-power-icon">
-                  {entry.iconPath ? (
-                    <img className="oa-power-image" src={entry.iconPath} alt={entry.name} loading="lazy" />
-                  ) : (
-                    entry.name.slice(0, 2).toUpperCase()
-                  )}
-                </div>
+              <div className="oa-data-row healing" key={`${entry.className}-${entry.sourceType}-${entry.name}`}>
+                <div className="oa-power-cell">
+                  <div className="oa-power-icon">
+                    <AssetImage
+                      className="oa-power-image"
+                      localSrc={entry.iconPath}
+                      remoteSrc={undefined}
+                      alt={entry.name}
+                      fallback={entry.name.slice(0, 2).toUpperCase()}
+                    />
+                  </div>
                 <div>
                   <strong>{entry.name}</strong>
                   <small>{entry.paragonPath ?? "Base kit"}</small>

@@ -91,7 +91,7 @@ input {
   min-height: 100vh;
   height: 100vh;
   display: grid;
-  grid-template-columns: 224px minmax(0, 1fr);
+  grid-template-columns: 208px minmax(0, 1fr);
   background: var(--oa-bg);
   overflow: hidden;
   transition: grid-template-columns calc(180ms * var(--oa-motion-factor)) ease;
@@ -104,7 +104,7 @@ input {
 }
 
 .obsidian-architect.sidebar-collapsed {
-  grid-template-columns: 80px minmax(0, 1fr);
+  grid-template-columns: 72px minmax(0, 1fr);
 }
 
 .oa-sidebar {
@@ -125,9 +125,9 @@ input {
 .oa-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   min-height: 46px;
-  padding: 0 14px;
+  padding: 0 10px;
   border-bottom: 1px solid #2c3442;
 }
 
@@ -180,7 +180,7 @@ input {
 .oa-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 10px;
+  padding: 10px 8px;
   display: grid;
   gap: 2px;
 }
@@ -259,10 +259,10 @@ input {
 
 .oa-nav-item {
   min-height: 40px;
-  padding: 8px 10px;
+  padding: 7px 9px;
   border-radius: 8px;
   font-family: "Inter", sans-serif;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
 }
 
 .oa-nav-item:hover,
@@ -292,16 +292,16 @@ input {
 .oa-subnav {
   display: grid;
   gap: 2px;
-  margin-left: 14px;
-  padding-left: 12px;
+  margin-left: 10px;
+  padding-left: 10px;
   border-left: 1px solid rgba(91, 186, 213, 0.14);
 }
 
 .oa-subnav-item {
   justify-content: space-between;
-  padding: 5px 8px;
+  padding: 4px 7px;
   font-family: "Inter", sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -343,16 +343,16 @@ input {
 }
 
 .sidebar-collapsed .oa-brand {
-  padding: 0 14px;
+  padding: 0 10px;
 }
 
 .sidebar-collapsed .oa-nav {
-  padding: 12px 8px;
+  padding: 10px 6px;
 }
 
 .sidebar-collapsed .oa-nav-item {
   justify-content: center;
-  padding: 8px;
+  padding: 7px;
 }
 
 .sidebar-collapsed .oa-nav-item.active {
@@ -381,7 +381,7 @@ input {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
   border-radius: 12px;
   background: var(--oa-surface-low);
 }
@@ -696,7 +696,7 @@ button {
 }
 
 .oa-main-scroll {
-  padding: 32px;
+  padding: 24px;
   min-width: 0;
   width: 100%;
   max-width: 100%;
@@ -2181,6 +2181,10 @@ button {
 }
 
 @media (max-width: 1320px) {
+  .obsidian-architect {
+    grid-template-columns: 192px minmax(0, 1fr);
+  }
+
   .oa-card-grid.four,
   .oa-compare-grid,
   .oa-library-grid,

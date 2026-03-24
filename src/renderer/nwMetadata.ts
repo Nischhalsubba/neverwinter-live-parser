@@ -16,6 +16,45 @@ function normalizeName(value: string): string {
   return value.trim().toLowerCase();
 }
 
+function canonicalizeName(value: string): string {
+  return normalizeName(value).replace(/[^a-z0-9]+/g, "");
+}
+
+function buildDualIndex<T extends { [key: string]: unknown }>(
+  entries: T[],
+  nameGetter: (entry: T) => string | null | undefined
+) {
+  const exact = new Map<string, T>();
+  const canonical = new Map<string, T>();
+
+  for (const entry of entries) {
+    const raw = nameGetter(entry);
+    if (!raw) {
+      continue;
+    }
+
+    exact.set(normalizeName(raw), entry);
+    canonical.set(canonicalizeName(raw), entry);
+  }
+
+  return { exact, canonical };
+}
+
+function lookupDualIndex<T>(
+  source: { exact: Map<string, T>; canonical: Map<string, T> },
+  value: string | null | undefined
+): T | null {
+  if (!value) {
+    return null;
+  }
+
+  return (
+    source.exact.get(normalizeName(value)) ??
+    source.canonical.get(canonicalizeName(value)) ??
+    null
+  );
+}
+
 const powerByName = new Map<string, PlayerPowerMeta>(
   metadata.playerPowers.map((power) => [normalizeName(power.powername), power])
 );
@@ -35,22 +74,15 @@ const artifactByName = new Map<string, ArtifactMeta>(
 const nwHubClassByName = new Map<string, NwHubClassMeta>(
   nwHubClasses.classes.map((entry) => [normalizeName(entry.className), entry])
 );
+const nwHubClassLookup = buildDualIndex(nwHubClasses.classes, (entry) => entry.className);
 
-const nwHubPowerByName = new Map<string, NwHubPowerMeta>(
-  nwHubClasses.powers.map((entry) => [normalizeName(entry.name), entry])
-);
+const nwHubPowerLookup = buildDualIndex(nwHubClasses.powers, (entry) => entry.name);
 
-const nwHubFeatByName = new Map<string, NwHubFeatMeta>(
-  nwHubClasses.feats.map((entry) => [normalizeName(entry.name), entry])
-);
+const nwHubFeatLookup = buildDualIndex(nwHubClasses.feats, (entry) => entry.name);
 
-const nwHubFeatureByName = new Map<string, NwHubFeatureMeta>(
-  nwHubClasses.features.map((entry) => [normalizeName(entry.name), entry])
-);
+const nwHubFeatureLookup = buildDualIndex(nwHubClasses.features, (entry) => entry.name);
 
-const nwHubArtifactByName = new Map<string, NwHubArtifactMeta>(
-  artifactData.artifacts.map((entry) => [normalizeName(entry.name), entry])
-);
+const nwHubArtifactLookup = buildDualIndex(artifactData.artifacts, (entry) => entry.name);
 
 export type InferredBuild = {
   className: string | null;
@@ -78,18 +110,17 @@ export function getClassVisualMeta(className: string | null | undefined): NwHubC
   if (!className) {
     return null;
   }
-  return nwHubClassByName.get(normalizeName(className)) ?? null;
+  return lookupDualIndex(nwHubClassLookup, className);
 }
 
 export function getPowerVisualMeta(
   powerName: string
 ): NwHubPowerMeta | NwHubFeatMeta | NwHubFeatureMeta | NwHubArtifactMeta | null {
-  const normalized = normalizeName(powerName);
   return (
-    nwHubPowerByName.get(normalized) ??
-    nwHubFeatByName.get(normalized) ??
-    nwHubFeatureByName.get(normalized) ??
-    nwHubArtifactByName.get(normalized) ??
+    lookupDualIndex(nwHubPowerLookup, powerName) ??
+    lookupDualIndex(nwHubFeatLookup, powerName) ??
+    lookupDualIndex(nwHubFeatureLookup, powerName) ??
+    lookupDualIndex(nwHubArtifactLookup, powerName) ??
     null
   );
 }
@@ -110,7 +141,7 @@ export function classifyPowerFamily(
   if (getArtifactMeta(powerName)) {
     return "artifact";
   }
-  if (nwHubArtifactByName.has(normalizeName(powerName))) {
+  if (lookupDualIndex(nwHubArtifactLookup, powerName)) {
     return "artifact";
   }
   if (isKnownCompanion(powerName)) {
