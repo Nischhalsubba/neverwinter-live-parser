@@ -2,6 +2,8 @@ import chokidar, { type FSWatcher } from "chokidar";
 import { EventEmitter } from "node:events";
 import { open } from "node:fs/promises";
 import path from "node:path";
+import { Worker } from "node:worker_threads";
+import { fileURLToPath } from "node:url";
 import type {
   AppState,
   CombatEvent,
@@ -21,6 +23,13 @@ import { EncounterManager } from "../encounter/encounterManager.js";
 
 const MAX_DEBUG_ITEMS = 50;
 const MIN_EMIT_INTERVAL_MS = 100;
+const IMPORT_WORKER_MIN_BYTES = 8 * 1024 * 1024;
+const IMPORT_WORKER_URL = new URL(
+  path.extname(fileURLToPath(import.meta.url)) === ".ts"
+    ? "./importWorker.ts"
+    : "./importWorker.js",
+  import.meta.url
+);
 
 function createInitialAppState(): AppState {
   return {
@@ -163,6 +172,20 @@ export class LogMonitorService extends EventEmitter {
 
   async importLogFile(filePath: string): Promise<AppState> {
     await this.stop();
+
+    const fileStats = await open(filePath, "r").then(async (handle) => {
+      try {
+        return await handle.stat();
+      } finally {
+        await handle.close();
+      }
+    });
+
+    if (fileStats.size >= IMPORT_WORKER_MIN_BYTES) {
+      this.state = await this.importLogFileInWorker(filePath);
+      this.scheduleEmitState(true);
+      return this.getState();
+    }
 
     this.state = {
       ...createInitialAppState(),
@@ -310,6 +333,45 @@ export class LogMonitorService extends EventEmitter {
     } finally {
       await fileHandle.close();
     }
+  }
+
+  private async importLogFileInWorker(filePath: string): Promise<AppState> {
+    return new Promise<AppState>((resolve, reject) => {
+      const worker = new Worker(fileURLToPath(IMPORT_WORKER_URL), {
+        workerData: {
+          filePath,
+          inactivityTimeoutMs: 10_000
+        }
+      });
+
+      const cleanup = () => {
+        worker.removeAllListeners("message");
+        worker.removeAllListeners("error");
+        worker.removeAllListeners("exit");
+      };
+
+      worker.once("message", (message: { ok: boolean; state?: AppState; error?: string }) => {
+        cleanup();
+        if (message.ok && message.state) {
+          resolve(message.state);
+          return;
+        }
+        reject(new Error(message.error ?? "Import worker failed without a message."));
+      });
+
+      worker.once("error", (error) => {
+        cleanup();
+        reject(error);
+      });
+
+      worker.once("exit", (code) => {
+        if (code === 0) {
+          return;
+        }
+        cleanup();
+        reject(new Error(`Import worker exited with code ${code}.`));
+      });
+    });
   }
 
   private consumeEvent(event: CombatEvent): void {
