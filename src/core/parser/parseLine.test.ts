@@ -75,17 +75,41 @@ describe("parseLine", () => {
     }
   });
 
-  it("returns an issue for display-only lines", () => {
+  it("classifies display-only power name lines as benign buff records", () => {
     const result = parseLine(
       "26:02:14:19:10:10.1::Ilerae Shielderae,P[518778448@33856673 Ilerae Shielderae@meljiu#75254]," +
         ",*,,*,Critical Touch,Pn.W0mmhm,Null,ShowPowerDisplayName,0,0"
     );
 
-    expect(result.kind).toBe("issue");
-    if (result.kind === "issue") {
-      expect(result.issue.reason).toMatch(/classify/i);
+    expect(result.kind).toBe("event");
+    if (result.kind === "event") {
       expect(result.event.sourceName).toBe("Ilerae Shielderae");
-      expect(result.event.eventType).toBe("unknown");
+      expect(result.event.eventType).toBe("buff");
+    }
+  });
+
+  it("classifies negative power lines as debuffs instead of parser issues", () => {
+    const result = parseLine(
+      "26:03:23:22:01:33.4::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,,*,Constricting Arrow,Pn.Tsj6qq1,Power,,-12.9652,0"
+    );
+
+    expect(result.kind).toBe("event");
+    if (result.kind === "event") {
+      expect(result.event.eventType).toBe("debuff");
+      expect(result.event.abilityName).toBe("Constricting Arrow");
+    }
+  });
+
+  it("keeps targeted physical show-power lines as damage", () => {
+    const result = parseLine(
+      "26:03:23:22:01:33.6::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Lightning Flash,Pn.Wnize81,Physical,ShowPowerDisplayName,2698.43,0"
+    );
+
+    expect(result.kind).toBe("event");
+    if (result.kind === "event") {
+      expect(result.event.eventType).toBe("damage");
+      expect(result.event.targetName).toBe("Target Dummy");
+      expect(result.event.amount).toBeCloseTo(2698.43);
     }
   });
 

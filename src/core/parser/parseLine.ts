@@ -87,35 +87,61 @@ function findReferenceIndexes(parts: string[]): number[] {
 
 function inferEventType(
   amount: number,
+  magnitude: number,
   school: string,
   flags: string[],
   sourceType: CombatEvent["sourceType"],
-  targetType: CombatEvent["targetType"]
+  targetType: CombatEvent["targetType"],
+  hasTargetActor: boolean
 ): CombatEvent["eventType"] {
   const loweredSchool = school.toLowerCase();
   const loweredFlags = flags.map((flag) => flag.toLowerCase());
-  const isDisplayOnly =
-    loweredFlags.includes("showpowerdisplayname") ||
-    loweredFlags.includes("immune") ||
+  const absoluteAmount = Math.abs(amount);
+  const absoluteMagnitude = Math.abs(magnitude);
+  const strongestValue = Math.max(absoluteAmount, absoluteMagnitude);
+  const displayFlag = loweredFlags.includes("showpowerdisplayname");
+  const immuneFlag = loweredFlags.includes("immune");
+  const nonCombatSchool =
     loweredSchool === "null" ||
     loweredSchool === "power" ||
     loweredSchool === "soulweave" ||
     loweredSchool === "stat_power" ||
-    loweredSchool === "damagetrigger";
+    loweredSchool === "damagetrigger" ||
+    loweredSchool === "triggercomplex";
+  const healSignal =
+    loweredSchool === "hitpoints" && (amount < 0 || magnitude < 0 || strongestValue > 0);
 
-  if (isDisplayOnly || amount === 0) {
-    return "unknown";
+  if (immuneFlag) {
+    return "buff";
   }
 
-  if (amount < 0 && loweredSchool === "hitpoints") {
+  if (healSignal) {
     return "heal";
   }
 
-  if (amount > 0) {
+  if (hasTargetActor && strongestValue > 0 && !nonCombatSchool) {
     if (sourceType === "npc" && (targetType === "player" || targetType === "companion")) {
       return "damageTaken";
     }
     return "damage";
+  }
+
+  if (displayFlag || nonCombatSchool || strongestValue === 0) {
+    if (amount < 0 || magnitude < 0) {
+      return "debuff";
+    }
+    return "buff";
+  }
+
+  if (amount > 0 || magnitude > 0) {
+    if (sourceType === "npc" && (targetType === "player" || targetType === "companion")) {
+      return "damageTaken";
+    }
+    return "damage";
+  }
+
+  if (amount < 0 || magnitude < 0) {
+    return "debuff";
   }
 
   return "unknown";
@@ -214,7 +240,16 @@ export function parseLine(line: string): ParseResult {
     : [];
   const sourceType = parseActorType(sourceId, sourceName, sourceOwnerId, true);
   const targetType = parseActorType(targetId, targetName, undefined, false);
-  const eventType = inferEventType(amount, school, flags, sourceType, targetType);
+  const hasTargetActor = targetId !== "*" && targetName.length > 0;
+  const eventType = inferEventType(
+    amount,
+    magnitude,
+    school,
+    flags,
+    sourceType,
+    targetType,
+    hasTargetActor
+  );
 
   if (targetRefIndex < 0 || !isActorReference(targetId)) {
     return buildUnknown(line, "Could not align Neverwinter actor fields");
