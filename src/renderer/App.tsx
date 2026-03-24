@@ -1,8 +1,10 @@
-import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
+import { startTransition, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { AppState, DiscoveredLogCandidate } from "../shared/types";
 import {
   buildPlayerRows,
   getEncounterSnapshots,
+  hasMeaningfulEncounter,
+  type LiveScopeMode,
   type DetailTab,
   type View
 } from "./analysisViewModel";
@@ -84,7 +86,7 @@ export function App() {
   const [isDesktopRuntime, setIsDesktopRuntime] = useState(Boolean(window.neverwinterApi));
   const [rendererSettings, setRendererSettings] = useState<ProfileSettings>(loadRendererSettings);
   const [pendingSnapshot, setPendingSnapshot] = useState<AppState | null>(null);
-  const [lastFrameAppliedAt, setLastFrameAppliedAt] = useState(0);
+  const lastFrameAppliedAt = useRef(0);
   const [logCandidates, setLogCandidates] = useState<DiscoveredLogCandidate[]>([]);
   const [discoveringLogs, setDiscoveringLogs] = useState(false);
   const [hasScannedLogs, setHasScannedLogs] = useState(false);
@@ -120,9 +122,11 @@ export function App() {
 
     const minFrameMs = rendererSettings.targetFps === 120 ? 8 : 16;
     const now = performance.now();
-    const elapsed = now - lastFrameAppliedAt;
+    const elapsed = now - lastFrameAppliedAt.current;
 
     if (elapsed >= minFrameMs) {
+      // Keep renderer updates coalesced to the chosen cadence instead of re-rendering
+      // on every main-process state emission.
       startTransition(() => {
         setState(pendingSnapshot);
         setImportFilePath((current) =>
@@ -132,7 +136,7 @@ export function App() {
         );
       });
       setPendingSnapshot(null);
-      setLastFrameAppliedAt(now);
+      lastFrameAppliedAt.current = now;
       return;
     }
 
@@ -147,11 +151,11 @@ export function App() {
         );
       });
       setPendingSnapshot(null);
-      setLastFrameAppliedAt(appliedAt);
+      lastFrameAppliedAt.current = appliedAt;
     }, minFrameMs - elapsed);
 
     return () => window.clearTimeout(timeout);
-  }, [pendingSnapshot, rendererSettings.targetFps, lastFrameAppliedAt]);
+  }, [pendingSnapshot, rendererSettings.targetFps]);
 
   const deferredCombatants = useDeferredValue(state.analysis.combatants);
   const deferredCurrentEncounter = useDeferredValue(state.currentEncounter);
@@ -161,7 +165,7 @@ export function App() {
     () => buildPlayerRows(deferredCombatants, includeCompanions),
     [deferredCombatants, includeCompanions]
   );
-  const livePlayerRows = useMemo(
+  const encounterScopedLiveRows = useMemo(
     () =>
       buildPlayerRows(deferredCombatants, includeCompanions, {
         encounterId: deferredCurrentEncounter?.id ?? null,
@@ -169,6 +173,40 @@ export function App() {
       }),
     [deferredCombatants, includeCompanions, deferredCurrentEncounter]
   );
+  const hasEncounterScopedRows = useMemo(
+    () =>
+      encounterScopedLiveRows.some(
+        (row) =>
+          row.totalDamage > 0 ||
+          row.totalHealing > 0 ||
+          row.damageTaken > 0 ||
+          row.hits > 0
+      ),
+    [encounterScopedLiveRows]
+  );
+  const liveScope: LiveScopeMode =
+    hasMeaningfulEncounter(deferredCurrentEncounter) && hasEncounterScopedRows
+      ? "encounter"
+      : "session";
+  const livePlayerRows = liveScope === "encounter" ? encounterScopedLiveRows : playerRows;
+  const liveDiagnostics = useMemo(() => {
+    const diagnostics: string[] = [];
+    if (
+      state.analysis.mode === "live" &&
+      state.analysis.totalLines > 0 &&
+      livePlayerRows.length === 0
+    ) {
+      diagnostics.push(
+        "The tracked combat log has parsed lines, but the active live scope produced no visible player rows."
+      );
+    }
+    diagnostics.push(
+      liveScope === "encounter"
+        ? "Live Scope: Current Encounter"
+        : "Live Scope: Tracked Session"
+    );
+    return diagnostics;
+  }, [livePlayerRows.length, liveScope, state.analysis.mode, state.analysis.totalLines]);
 
   const availableEncounters = useMemo(
     () => getEncounterSnapshots(deferredRecentEncounters, deferredCurrentEncounter),
@@ -308,6 +346,9 @@ export function App() {
     const snapshot = await api.stopMonitoring();
     setState(snapshot);
     setFolderInput("");
+    setImportFilePath("");
+    setPendingSnapshot(null);
+    setView("setup");
   }
 
   return (
@@ -317,6 +358,8 @@ export function App() {
       detailTab={detailTab}
       playerRows={playerRows}
       livePlayerRows={livePlayerRows}
+      liveScope={liveScope}
+      liveDiagnostics={liveDiagnostics}
       selectedPlayer={selectedPlayer}
       selectedEncounter={selectedEncounter}
       availableEncounters={availableEncounters}

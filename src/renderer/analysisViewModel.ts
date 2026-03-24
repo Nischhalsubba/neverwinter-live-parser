@@ -65,6 +65,8 @@ export type PlayerRow = {
   buildConfidence: number;
 };
 
+export type LiveScopeMode = "encounter" | "session";
+
 type BuildPlayerRowsOptions = {
   encounterId?: string | null;
   encounterDurationMs?: number;
@@ -403,4 +405,18 @@ export function getEncounterSnapshots(
   return [...recentEncounters]
     .sort((left, right) => left.startedAt - right.startedAt)
     .concat(currentEncounter ? [currentEncounter] : []);
+}
+
+export function hasMeaningfulEncounter(encounter: EncounterSnapshot | null): boolean {
+  if (!encounter) {
+    return false;
+  }
+
+  return (
+    encounter.totalDamage > 0 ||
+    encounter.totalHealing > 0 ||
+    encounter.damageTaken > 0 ||
+    encounter.hitCount > 0 ||
+    encounter.eventCount > 1
+  );
 }

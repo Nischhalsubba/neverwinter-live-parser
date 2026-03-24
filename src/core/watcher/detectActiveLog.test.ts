@@ -16,7 +16,7 @@ afterEach(async () => {
 });
 
 describe("detectActiveLogFile", () => {
-  it("prefers the newest timestamped combat log by filename", async () => {
+  it("prefers the most recently written combat log even if its filename timestamp is older", async () => {
     const folder = await mkdtemp(path.join(os.tmpdir(), "nw-log-test-"));
     tempDirs.push(folder);
 
@@ -28,7 +28,7 @@ describe("detectActiveLogFile", () => {
     await utimes(older, new Date("2026-03-23T23:59:59"), new Date("2026-03-23T23:59:59"));
     await utimes(newer, new Date("2026-03-23T00:00:01"), new Date("2026-03-23T00:00:01"));
 
-    await expect(detectActiveLogFile(folder)).resolves.toBe(newer);
+    await expect(detectActiveLogFile(folder)).resolves.toBe(older);
   });
 
   it("keeps a selected current file until a newer timestamped log exists", async () => {

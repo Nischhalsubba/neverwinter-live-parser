@@ -61,7 +61,7 @@ function createInitialAppState(): AppState {
 export class LogMonitorService extends EventEmitter {
   private state = createInitialAppState();
   private watcher: FSWatcher | null = null;
-  private readonly pollIntervalMs = 1000;
+  private readonly pollIntervalMs = 250;
   private readerState: ReaderState = createInitialReaderState();
   private encounterManager = new EncounterManager(10_000);
   private combatantTracker = new CombatantTracker();
@@ -69,6 +69,7 @@ export class LogMonitorService extends EventEmitter {
   private liveTrackingFilePath: string | null = null;
   private lastEmittedAt = 0;
   private pendingEmitTimer: NodeJS.Timeout | null = null;
+  private refreshInFlight = false;
 
   getState(): AppState {
     return structuredClone(this.state);
@@ -116,16 +117,26 @@ export class LogMonitorService extends EventEmitter {
       }
     });
 
+    // Windows file notifications are not always reliable for game logs, so the
+    // watcher and the poller both funnel through the same refresh path.
     const refresh = async () => {
+      if (this.refreshInFlight) {
+        return;
+      }
+      this.refreshInFlight = true;
       const previousActiveFile = this.state.activeLogFile;
       const previousOffset = this.state.debug.currentOffset;
-      await this.refreshActiveFile(resolvedFolderPath);
-      await this.readNewLines();
-      if (
-        this.state.activeLogFile !== previousActiveFile ||
-        this.state.debug.currentOffset !== previousOffset
-      ) {
-        this.scheduleEmitState();
+      try {
+        await this.refreshActiveFile(resolvedFolderPath);
+        await this.readNewLines();
+        if (
+          this.state.activeLogFile !== previousActiveFile ||
+          this.state.debug.currentOffset !== previousOffset
+        ) {
+          this.scheduleEmitState();
+        }
+      } finally {
+        this.refreshInFlight = false;
       }
     };
 
@@ -139,6 +150,7 @@ export class LogMonitorService extends EventEmitter {
     });
 
     this.flushTimer = setInterval(() => {
+      void refresh();
       this.encounterManager.flush();
       this.syncEncounterState();
       this.scheduleEmitState();
@@ -189,6 +201,8 @@ export class LogMonitorService extends EventEmitter {
       clearTimeout(this.pendingEmitTimer);
       this.pendingEmitTimer = null;
     }
+
+    this.refreshInFlight = false;
 
     if (this.watcher) {
       await this.watcher.close();

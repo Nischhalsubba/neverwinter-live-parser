@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { CombatantSnapshot } from "../shared/types";
-import { buildPlayerRows } from "./analysisViewModel";
+import type { CombatantSnapshot, EncounterSnapshot } from "../shared/types";
+import { buildPlayerRows, hasMeaningfulEncounter } from "./analysisViewModel";
 
 function createCombatant(partial: Partial<CombatantSnapshot>): CombatantSnapshot {
   return {
@@ -143,5 +143,49 @@ describe("buildPlayerRows", () => {
     expect(rows[0].targets).toHaveLength(1);
     expect(rows[0].targets[0].totalDamage).toBe(140);
     expect(rows[0].highestHits[0].amount).toBe(1500);
+  });
+});
+
+describe("hasMeaningfulEncounter", () => {
+  it("treats zeroed placeholder encounters as not meaningful", () => {
+    const encounter: EncounterSnapshot = {
+      id: "enc-1",
+      label: "Encounter",
+      startedAt: Date.now(),
+      durationMs: 1000,
+      totalDamage: 0,
+      totalHealing: 0,
+      damageTaken: 0,
+      dps: 0,
+      hps: 0,
+      critCount: 0,
+      hitCount: 0,
+      critRate: 0,
+      topSkills: [],
+      eventCount: 1
+    };
+
+    expect(hasMeaningfulEncounter(encounter)).toBe(false);
+  });
+
+  it("treats encounters with real combat totals as meaningful", () => {
+    const encounter: EncounterSnapshot = {
+      id: "enc-2",
+      label: "Conjured Fighter",
+      startedAt: Date.now(),
+      durationMs: 12000,
+      totalDamage: 120000,
+      totalHealing: 0,
+      damageTaken: 0,
+      dps: 10000,
+      hps: 0,
+      critCount: 3,
+      hitCount: 12,
+      critRate: 0.25,
+      topSkills: [],
+      eventCount: 14
+    };
+
+    expect(hasMeaningfulEncounter(encounter)).toBe(true);
   });
 });

@@ -32,7 +32,15 @@ export function parseCombatLogTimestamp(filePath: string): number | null {
 }
 
 function compareCandidates(left: LogCandidate, right: LogCandidate): number {
-  if (left.timestampMs !== null && right.timestampMs !== null && left.timestampMs !== right.timestampMs) {
+  if (left.mtimeMs !== right.mtimeMs) {
+    return right.mtimeMs - left.mtimeMs;
+  }
+
+  if (
+    left.timestampMs !== null &&
+    right.timestampMs !== null &&
+    left.timestampMs !== right.timestampMs
+  ) {
     return right.timestampMs - left.timestampMs;
   }
 
@@ -42,10 +50,6 @@ function compareCandidates(left: LogCandidate, right: LogCandidate): number {
 
   if (left.timestampMs === null && right.timestampMs !== null) {
     return 1;
-  }
-
-  if (left.mtimeMs !== right.mtimeMs) {
-    return right.mtimeMs - left.mtimeMs;
   }
 
   return right.candidate.localeCompare(left.candidate);
@@ -84,6 +88,24 @@ export async function detectActiveLogFile(
 
   if (withStats.length === 0) {
     return null;
+  }
+
+  if (currentFilePath) {
+    const currentCandidate = withStats.find((candidate) => candidate.candidate === currentFilePath);
+    if (currentCandidate) {
+      const currentTimestamp = currentCandidate.timestampMs;
+      const newerTimestampExists = withStats.some(
+        (candidate) =>
+          candidate.candidate !== currentFilePath &&
+          candidate.timestampMs !== null &&
+          currentTimestamp !== null &&
+          candidate.timestampMs > currentTimestamp
+      );
+
+      if (!newerTimestampExists) {
+        return currentFilePath;
+      }
+    }
   }
 
   withStats.sort((left, right) =>

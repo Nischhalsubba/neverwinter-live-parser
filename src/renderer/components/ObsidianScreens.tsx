@@ -38,7 +38,7 @@ import type {
   TimelinePoint
 } from "../../shared/types";
 import { classifyPowerFamily, getClassVisualMeta, getPowerMeta, getPowerVisualMeta, isKnownCompanion } from "../nwMetadata";
-import type { DetailTab, PlayerRow, View } from "../analysisViewModel";
+import type { DetailTab, LiveScopeMode, PlayerRow, View } from "../analysisViewModel";
 import {
   DETAIL_TABS,
   formatDuration,
@@ -52,6 +52,8 @@ type ShellProps = {
   detailTab: DetailTab;
   playerRows: PlayerRow[];
   livePlayerRows: PlayerRow[];
+  liveScope: LiveScopeMode;
+  liveDiagnostics: string[];
   selectedPlayer: PlayerRow | null;
   selectedEncounter: EncounterSnapshot | null;
   availableEncounters: EncounterSnapshot[];
@@ -1982,7 +1984,14 @@ function LiveOverviewView({
   const { state } = props;
   const [sortKey, setSortKey] = useState<"damage" | "healing" | "taken" | "dps" | "hits" | "name">("damage");
   const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc");
-  const current = state.currentEncounter;
+  const current = props.liveScope === "encounter" ? state.currentEncounter : null;
+  const liveDurationMs =
+    props.liveScope === "encounter"
+      ? state.currentEncounter?.durationMs ?? 0
+      : state.analysis.durationMs;
+  const liveDurationSeconds = Math.max(1, liveDurationMs / 1000);
+  const liveScopeLabel =
+    props.liveScope === "encounter" ? "Live Scope: Current Encounter" : "Live Scope: Tracked Session";
   const baseRows =
     compareMode === "active"
       ? filteredPlayers.filter((player) => compareSelection.includes(player.id))
@@ -2016,8 +2025,7 @@ function LiveOverviewView({
   const totalTaken = comparePool.reduce((sum, player) => sum + player.damageTaken, 0);
   const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
   const selectedForCompare = filteredPlayers.filter((player) => compareSelection.includes(player.id));
-  const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
-  const liveDurationMs = current?.durationMs ?? 0;
+  const computedDps = totalDamage / liveDurationSeconds;
   const focusedTargetSummary =
     liveFocusTarget === "all"
       ? null
@@ -2056,11 +2064,17 @@ function LiveOverviewView({
           <h1>Party Overview</h1>
           <p>
             <Icon name="location_on" className="oa-inline-icon" />{" "}
-            {current?.label ?? (state.analysis.mode === "imported" ? "Recorded log analysis" : "Waiting for combat events")}
+            {current?.label ??
+              (state.analysis.mode === "imported"
+                ? "Recorded log analysis"
+                : props.liveScope === "session"
+                  ? "Tracked combat log session"
+                  : "Waiting for combat events")}
           </p>
           <p className="oa-page-description">
             Real-time combat-log summary of the currently tracked fight, with player output, target focus, and live target distribution.
           </p>
+          <p className="oa-page-kicker">{liveScopeLabel}</p>
         </div>
         <div className="oa-toolbar">
           <button className="oa-switch-card" onClick={props.onToggleCompanions} title="Turn companion damage on or off in the player totals.">
@@ -2122,7 +2136,13 @@ function LiveOverviewView({
       </div>
 
       <div className="oa-card-grid four">
-        <StatCard label="Total Encounter DPS" value={formatShort(current?.dps ?? peakDps)} tone="secondary" icon="bolt" hint={current ? "current encounter" : "waiting for live combat"} />
+        <StatCard
+          label={props.liveScope === "encounter" ? "Current Encounter DPS" : "Tracked Session DPS"}
+          value={formatShort(props.liveScope === "encounter" ? current?.dps ?? computedDps : computedDps)}
+          tone="secondary"
+          icon="bolt"
+          hint={props.liveScope === "encounter" ? "current encounter" : "tracked combat log session"}
+        />
         <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live player rows from combat log`} />
         <StatCard label="Total Healing" value={formatShort(totalHealing)} icon="healing" hint="healing parsed from the current combat-log slice" />
         <StatCard label="Damage Taken" value={formatShort(totalTaken)} tone="tertiary" icon="shield" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
@@ -2290,7 +2310,13 @@ function LiveOverviewView({
               <span>{formatDuration(liveDurationMs)}</span>
             </button>
           ))}
-          {!comparePool.length ? <div className="oa-empty-state">{current ? "No players match the current search or compare filter." : "Waiting for current live combat events."}</div> : null}
+          {!comparePool.length ? (
+            <div className="oa-empty-state">
+              {props.liveScope === "encounter"
+                ? "No players match the current search or compare filter."
+                : "No players were found in the tracked combat log session for the current filters."}
+            </div>
+          ) : null}
         </div>
       </section>
     </section>
@@ -3633,7 +3659,15 @@ function NotificationsPanel({ state }: { state: AppState }) {
   );
 }
 
-function DiagnosticsPanel({ state }: { state: AppState }) {
+function DiagnosticsPanel({
+  state,
+  liveScope,
+  liveDiagnostics
+}: {
+  state: AppState;
+  liveScope: LiveScopeMode;
+  liveDiagnostics: string[];
+}) {
   const unknownRate =
     state.analysis.totalLines > 0
       ? state.debug.unknownEvents.length / state.analysis.totalLines
@@ -3651,6 +3685,7 @@ function DiagnosticsPanel({ state }: { state: AppState }) {
       <div className="oa-kv-list">
         <div><span>Core Engine</span><strong>{state.watcherStatus === "error" ? "Faulted" : "Operational"}</strong></div>
         <div><span>Analysis Source</span><strong>{getSourceLabel(state)}</strong></div>
+        <div><span>Live Scope</span><strong>{liveScope === "encounter" ? "Current Encounter" : "Tracked Session"}</strong></div>
         <div><span>Read Offset</span><strong>{formatNumber(state.debug.currentOffset)}</strong></div>
         <div><span>Unknown Rate</span><strong>{formatPercent(unknownRate, 2)}</strong></div>
         <div><span>Process CPU</span><strong>{state.system.processCpuPercent.toFixed(1)}%</strong></div>
@@ -3658,6 +3693,13 @@ function DiagnosticsPanel({ state }: { state: AppState }) {
         <div><span>System RAM</span><strong>{state.system.systemMemoryPercent.toFixed(1)}%</strong></div>
         <div><span>App Uptime</span><strong>{formatUptime(state.system.uptimeSec)}</strong></div>
       </div>
+      {liveDiagnostics.length ? (
+        <div className="oa-tip">
+          {liveDiagnostics.map((item) => (
+            <div key={item}>{item}</div>
+          ))}
+        </div>
+      ) : null}
     </aside>
   );
 }
@@ -3860,7 +3902,7 @@ export function ObsidianScreens(props: ShellProps) {
 
   const navItems: Array<{ id: View; label: string; icon: string }> = [
     { id: "recent", label: "Encounters", icon: "history_edu" },
-    { id: "library", label: "Powers", icon: "deployed_code" },
+    { id: "library", label: "Library", icon: "menu_book" },
     { id: "debug", label: "Debug", icon: "bug_report" },
     { id: "settings", label: "Settings", icon: "settings" }
   ];
@@ -4078,7 +4120,13 @@ export function ObsidianScreens(props: ShellProps) {
         </div>
 
         {props.notificationsOpen ? <NotificationsPanel state={props.state} /> : null}
-        {props.diagnosticsOpen ? <DiagnosticsPanel state={props.state} /> : null}
+        {props.diagnosticsOpen ? (
+          <DiagnosticsPanel
+            state={props.state}
+            liveScope={props.liveScope}
+            liveDiagnostics={props.liveDiagnostics}
+          />
+        ) : null}
         <GlobalSearchPanel
           query={searchQuery}
           players={props.playerRows}

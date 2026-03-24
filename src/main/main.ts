@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Store from "electron-store";
 import { LogMonitorService } from "../core/monitoring/logMonitorService.js";
+import { writeErrorLog } from "./errorLogger.js";
 import type {
   AppState,
   DiscoveredLogCandidate,
@@ -110,16 +111,28 @@ async function pathExists(targetPath: string): Promise<boolean> {
 async function findLatestCombatLog(folderPath: string): Promise<string | null> {
   try {
     const entries = await fs.readdir(folderPath, { withFileTypes: true });
-    const logFiles = entries
+    const logFiles = await Promise.all(
+      entries
       .filter(
         (entry) =>
           entry.isFile() &&
           /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(entry.name)
       )
-      .map((entry) => path.join(folderPath, entry.name))
-      .sort((left, right) => right.localeCompare(left));
+      .map(async (entry) => {
+        const fullPath = path.join(folderPath, entry.name);
+        const stats = await fs.stat(fullPath);
+        return { fullPath, mtimeMs: stats.mtimeMs };
+      })
+    );
 
-    return logFiles[0] ?? null;
+    logFiles.sort((left, right) => {
+      if (left.mtimeMs !== right.mtimeMs) {
+        return right.mtimeMs - left.mtimeMs;
+      }
+      return right.fullPath.localeCompare(left.fullPath);
+    });
+
+    return logFiles[0]?.fullPath ?? null;
   } catch {
     return null;
   }
@@ -158,14 +171,7 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
       continue;
     }
 
-    const latestLog = entries
-      .filter(
-        (entry) =>
-          entry.isFile() &&
-          /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(entry.name)
-      )
-      .map((entry) => path.join(folderPath, entry.name))
-      .sort((left, right) => right.localeCompare(left))[0];
+    const latestLog = await findLatestCombatLog(folderPath);
 
     if (latestLog) {
       candidates.set(folderPath.toLowerCase(), {
@@ -233,7 +239,6 @@ function createWindow(): void {
 
   if (isDev) {
     void mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL!);
-    mainWindow.webContents.openDevTools({ mode: "detach" });
   } else {
     void mainWindow.loadFile(path.join(__dirname, "../../dist/index.html"));
   }
@@ -246,6 +251,13 @@ function createWindow(): void {
 
   mainWindow.on("closed", () => {
     mainWindow = null;
+  });
+
+  mainWindow.webContents.on("render-process-gone", (_event, details) => {
+    void writeErrorLog(
+      new Error(`Renderer process exited: ${details.reason} (exitCode=${details.exitCode})`),
+      "Renderer process gone"
+    );
   });
 }
 
@@ -262,13 +274,21 @@ function emitState(state: AppState): void {
   if (!canEmitToWindow()) {
     return;
   }
-  mainWindow!.webContents.send("monitoring:state", withTelemetry(state));
+  try {
+    // Renderer disposal can race with the telemetry timer during reloads or window close.
+    mainWindow!.webContents.send("monitoring:state", withTelemetry(state));
+  } catch (error) {
+    void writeErrorLog(error, "Failed to send monitoring state to renderer");
+  }
 }
 
 monitor.on("state", (state) => emitState(state));
 
 ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
-  settingsStore.set("selectedLogFolder", config.folderPath);
+  settingsStore.set(
+    "selectedLogFolder",
+    config.folderPath ?? (config.filePath ? path.dirname(config.filePath) : null)
+  );
   return withTelemetry(await monitor.start(config));
 });
 
@@ -328,14 +348,25 @@ ipcMain.handle("monitoring:discoverLogs", async () => discoverCombatLogCandidate
 app.whenReady().then(() => {
   createWindow();
   telemetryTimer = setInterval(() => {
+    if (!canEmitToWindow()) {
+      return;
+    }
     emitState(monitor.getState());
-  }, 2000);
+  }, 3000);
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
+});
+
+process.on("uncaughtException", (error) => {
+  void writeErrorLog(error, "Uncaught exception in main process");
+});
+
+process.on("unhandledRejection", (reason) => {
+  void writeErrorLog(reason, "Unhandled rejection in main process");
 });
 
 app.on("window-all-closed", () => {
