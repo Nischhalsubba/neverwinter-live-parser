@@ -6,7 +6,11 @@ import {
   type DetailTab,
   type View
 } from "./analysisViewModel";
-import { ObsidianScreens } from "./components/ObsidianScreens";
+import {
+  DEFAULT_SETTINGS,
+  ObsidianScreens,
+  type ProfileSettings
+} from "./components/ObsidianScreens";
 
 const INITIAL_STATE: AppState = {
   watcherStatus: "idle",
@@ -42,6 +46,23 @@ const INITIAL_STATE: AppState = {
   }
 };
 
+const SETTINGS_STORAGE_KEY = "obsidian-renderer-settings";
+
+function loadRendererSettings(): ProfileSettings {
+  try {
+    const raw = window.localStorage.getItem(SETTINGS_STORAGE_KEY);
+    if (!raw) {
+      return DEFAULT_SETTINGS;
+    }
+    return {
+      ...DEFAULT_SETTINGS,
+      ...JSON.parse(raw)
+    };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
 function getParentDirectory(filePath: string): string {
   const parts = filePath.split(/[\\/]/);
   parts.pop();
@@ -61,6 +82,9 @@ export function App() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [isDesktopRuntime, setIsDesktopRuntime] = useState(Boolean(window.neverwinterApi));
+  const [rendererSettings, setRendererSettings] = useState<ProfileSettings>(loadRendererSettings);
+  const [pendingSnapshot, setPendingSnapshot] = useState<AppState | null>(null);
+  const [lastFrameAppliedAt, setLastFrameAppliedAt] = useState(0);
 
   useEffect(() => {
     const api = window.neverwinterApi;
@@ -78,16 +102,53 @@ export function App() {
     });
 
     return api.onState((snapshot) => {
+      setPendingSnapshot(snapshot);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(rendererSettings));
+  }, [rendererSettings]);
+
+  useEffect(() => {
+    if (!pendingSnapshot) {
+      return;
+    }
+
+    const minFrameMs = rendererSettings.targetFps === 120 ? 8 : 16;
+    const now = performance.now();
+    const elapsed = now - lastFrameAppliedAt;
+
+    if (elapsed >= minFrameMs) {
       startTransition(() => {
-        setState(snapshot);
+        setState(pendingSnapshot);
         setImportFilePath((current) =>
           current.trim()
             ? current
-            : snapshot.importedLogFile ?? snapshot.activeLogFile ?? ""
+            : pendingSnapshot.importedLogFile ?? pendingSnapshot.activeLogFile ?? ""
         );
       });
-    });
-  }, []);
+      setPendingSnapshot(null);
+      setLastFrameAppliedAt(now);
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      const appliedAt = performance.now();
+      startTransition(() => {
+        setState(pendingSnapshot);
+        setImportFilePath((current) =>
+          current.trim()
+            ? current
+            : pendingSnapshot.importedLogFile ?? pendingSnapshot.activeLogFile ?? ""
+        );
+      });
+      setPendingSnapshot(null);
+      setLastFrameAppliedAt(appliedAt);
+    }, minFrameMs - elapsed);
+
+    return () => window.clearTimeout(timeout);
+  }, [pendingSnapshot, rendererSettings.targetFps, lastFrameAppliedAt]);
 
   const playerRows = useMemo(
     () => buildPlayerRows(state.analysis.combatants, includeCompanions),
@@ -260,6 +321,8 @@ export function App() {
       onToggleNotifications={() => setNotificationsOpen((value) => !value)}
       onToggleDiagnostics={() => setDiagnosticsOpen((value) => !value)}
       onBackToPlayers={() => setView("live")}
+      rendererSettings={rendererSettings}
+      onRendererSettingsChange={setRendererSettings}
     />
   );
 }

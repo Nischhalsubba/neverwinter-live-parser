@@ -20,6 +20,7 @@
   --oa-outline: #494456;
   --oa-ghost: rgba(205, 189, 255, 0.15);
   --oa-overlay-opacity: 0.85;
+  --oa-motion-factor: 1;
 }
 
 * {
@@ -86,7 +87,7 @@ input {
   display: grid;
   grid-template-columns: 256px minmax(0, 1fr);
   background: var(--oa-bg);
-  transition: grid-template-columns 180ms ease;
+  transition: grid-template-columns calc(180ms * var(--oa-motion-factor)) ease;
 }
 
 .obsidian-architect.obsidian-flux {
@@ -176,7 +177,45 @@ input {
   width: 100%;
   text-align: left;
   color: rgba(229, 225, 228, 0.6);
-  transition: 180ms ease;
+  transition: calc(180ms * var(--oa-motion-factor)) ease;
+}
+
+.obsidian-architect.reduced-motion *,
+.obsidian-architect.reduced-motion *::before,
+.obsidian-architect.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+.obsidian-architect.smooth-tables .oa-main-scroll,
+.obsidian-architect.smooth-tables .oa-table-shell,
+.obsidian-architect.smooth-tables .oa-terminal,
+.obsidian-architect.smooth-tables .oa-data-table,
+.obsidian-architect.smooth-tables .oa-event-list {
+  scroll-behavior: smooth;
+}
+
+.obsidian-architect.compact-mode .oa-panel,
+.obsidian-architect.compact-mode .oa-stat-card,
+.obsidian-architect.compact-mode .oa-table-row,
+.obsidian-architect.compact-mode .oa-data-row,
+.obsidian-architect.compact-mode .oa-list-row,
+.obsidian-architect.compact-mode .oa-event-card {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.obsidian-architect.compact-mode .oa-card-grid,
+.obsidian-architect.compact-mode .oa-setup-grid,
+.obsidian-architect.compact-mode .oa-split-grid,
+.obsidian-architect.compact-mode .oa-settings-grid,
+.obsidian-architect.compact-mode .oa-compare-grid,
+.obsidian-architect.compact-mode .oa-library-grid,
+.obsidian-architect.compact-mode .oa-library-class-grid,
+.obsidian-architect.compact-mode .oa-power-gallery {
+  gap: 12px;
 }
 
 .oa-nav-status-dot {

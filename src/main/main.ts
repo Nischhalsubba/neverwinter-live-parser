@@ -93,10 +93,26 @@ function createWindow(): void {
   } else {
     void mainWindow.loadFile(path.join(__dirname, "../../dist/index.html"));
   }
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+}
+
+function canEmitToWindow(): boolean {
+  return Boolean(
+    mainWindow &&
+      !mainWindow.isDestroyed() &&
+      mainWindow.webContents &&
+      !mainWindow.webContents.isDestroyed()
+  );
 }
 
 function emitState(state: AppState): void {
-  mainWindow?.webContents.send("monitoring:state", withTelemetry(state));
+  if (!canEmitToWindow()) {
+    return;
+  }
+  mainWindow!.webContents.send("monitoring:state", withTelemetry(state));
 }
 
 monitor.on("state", (state) => emitState(state));

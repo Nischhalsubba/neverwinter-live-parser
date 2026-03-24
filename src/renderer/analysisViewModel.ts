@@ -30,6 +30,7 @@ export type DetailTab =
   | "timing"
   | "positioning"
   | "other"
+  | "debuffs"
   | "deaths";
 
 export type PlayerRow = {
@@ -71,6 +72,7 @@ export const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
   { id: "timing", label: "Timing" },
   { id: "positioning", label: "Positioning" },
   { id: "other", label: "Other" },
+  { id: "debuffs", label: "Debuffs" },
   { id: "deaths", label: "Deaths" }
 ];
 

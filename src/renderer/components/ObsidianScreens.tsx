@@ -63,22 +63,32 @@ type ShellProps = {
   onToggleNotifications: () => void;
   onToggleDiagnostics: () => void;
   onBackToPlayers: () => void;
+  rendererSettings: ProfileSettings;
+  onRendererSettingsChange: (next: ProfileSettings) => void;
 };
 
 type ThemeMode = "obsidian-dark" | "obsidian-flux";
 
-type ProfileSettings = {
+export type ProfileSettings = {
   autoStart: boolean;
   soundAlerts: boolean;
   overlayOpacity: number;
   visualCore: ThemeMode;
+  targetFps: 60 | 120;
+  reducedMotion: boolean;
+  compactMode: boolean;
+  smoothTables: boolean;
 };
 
-const DEFAULT_SETTINGS: ProfileSettings = {
+export const DEFAULT_SETTINGS: ProfileSettings = {
   autoStart: true,
   soundAlerts: false,
   overlayOpacity: 85,
-  visualCore: "obsidian-dark"
+  visualCore: "obsidian-dark",
+  targetFps: 60,
+  reducedMotion: false,
+  compactMode: false,
+  smoothTables: true
 };
 
 const CHART_COLORS = [
@@ -101,8 +111,82 @@ const DETAIL_TAB_COPY: Record<DetailTab, string> = {
   timing: "Timing-derived metrics from parsed events, including burst windows, encounter participation, and event cadence.",
   positioning: "Combat-log-supported positioning heuristics such as flank rate, target spread, and hostile target distribution.",
   other: "Supplemental parser facts from the combat log, including skill inventory, targets tracked, companions, and build inference.",
+  debuffs: "Known Neverwinter debuff sources for class kits and combat-log overlap between your damage activations and debuffs seen on the target.",
   deaths: "Death lines and closely related parser issues matched to this player from the current combat log."
 };
+
+type DebuffCatalogEntry = {
+  className: string;
+  sourceType: "power" | "feat" | "feature";
+  name: string;
+  paragonPath: string | null;
+  iconPath: string | null;
+  description: string;
+  keywords: string[];
+};
+
+const DEBUFF_PATTERNS: Array<{ keyword: string; label: string }> = [
+  { keyword: "damage taken", label: "Damage Taken" },
+  { keyword: "damage resistance", label: "Damage Resistance" },
+  { keyword: "less damage", label: "Damage Down" },
+  { keyword: "critical severity", label: "Crit Severity" },
+  { keyword: "critical chance", label: "Crit Chance" },
+  { keyword: "combat advantage", label: "Combat Advantage" },
+  { keyword: "slow", label: "Slow" },
+  { keyword: "slowed", label: "Slow" },
+  { keyword: "stun", label: "Stun" },
+  { keyword: "immobil", label: "Immobilize" },
+  { keyword: "weaken", label: "Weaken" },
+  { keyword: "vulnerability", label: "Vulnerability" },
+  { keyword: "decrease", label: "Decrease" },
+  { keyword: "reduce", label: "Reduce" }
+];
+
+function inferDebuffKeywords(description: string): string[] {
+  const lowered = description.toLowerCase();
+  return Array.from(
+    new Set(
+      DEBUFF_PATTERNS.filter((entry) => lowered.includes(entry.keyword)).map((entry) => entry.label)
+    )
+  );
+}
+
+const DEBUFF_CATALOG: DebuffCatalogEntry[] = [
+  ...nwHubClasses.powers.map((entry) => ({
+    className: entry.className ?? "Unknown",
+    sourceType: "power" as const,
+    name: entry.name,
+    paragonPath: entry.paragonPath ?? null,
+    iconPath: entry.iconPath ?? null,
+    description: entry.description ?? "",
+    keywords: inferDebuffKeywords(entry.description ?? "")
+  })),
+  ...nwHubClasses.feats.map((entry) => ({
+    className: entry.className ?? "Unknown",
+    sourceType: "feat" as const,
+    name: entry.name,
+    paragonPath: entry.paragonPath ?? null,
+    iconPath: entry.iconPath ?? null,
+    description: entry.description ?? "",
+    keywords: inferDebuffKeywords(entry.description ?? "")
+  })),
+  ...nwHubClasses.features.map((entry) => ({
+    className: entry.className ?? "Unknown",
+    sourceType: "feature" as const,
+    name: entry.name,
+    paragonPath: entry.paragonPath ?? null,
+    iconPath: entry.iconPath ?? null,
+    description: entry.description ?? "",
+    keywords: inferDebuffKeywords(entry.description ?? "")
+  }))
+]
+  .filter((entry) => entry.description && entry.keywords.length > 0)
+  .sort((left, right) => {
+    if (left.className !== right.className) {
+      return left.className.localeCompare(right.className);
+    }
+    return left.name.localeCompare(right.name);
+  });
 
 function Icon({
   name,
@@ -1778,6 +1862,160 @@ function PlayerOtherTab({ player }: { player: PlayerRow }) {
   );
 }
 
+function buildDebuffOverlapRows(player: PlayerRow) {
+  const damageSkills = new Map(
+    player.topSkills
+      .filter((skill) => skill.kind === "damage")
+      .map((skill) => [skill.abilityName, skill])
+  );
+  const damageActivations = player.activations.filter((activation) => activation.kind === "damage");
+  const debuffs = player.effects.filter((effect) => effect.kind === "debuff");
+  const rows = new Map<
+    string,
+    {
+      attackName: string;
+      debuffName: string;
+      targetName: string;
+      overlapHits: number;
+      totalDamage: number;
+      totalHits: number;
+      lastSeenSecond: number;
+      family: ReturnType<typeof classifyPowerFamily>;
+    }
+  >();
+
+  for (const activation of damageActivations) {
+    if (!activation.targetName) {
+      continue;
+    }
+
+    for (const debuff of debuffs) {
+      if (debuff.targetName !== activation.targetName) {
+        continue;
+      }
+
+      const activeTimestamp = debuff.timestamps.find(
+        (timestamp) => timestamp <= activation.second && activation.second - timestamp <= 10
+      );
+
+      if (activeTimestamp === undefined) {
+        continue;
+      }
+
+      const key = `${activation.abilityName}::${debuff.abilityName}::${activation.targetName}`;
+      const skill = damageSkills.get(activation.abilityName);
+      const current = rows.get(key) ?? {
+        attackName: activation.abilityName,
+        debuffName: debuff.abilityName,
+        targetName: activation.targetName,
+        overlapHits: 0,
+        totalDamage: skill?.total ?? 0,
+        totalHits: skill?.hits ?? 0,
+        lastSeenSecond: activeTimestamp,
+        family: classifyPowerFamily(debuff.abilityName)
+      };
+
+      current.overlapHits += 1;
+      current.lastSeenSecond = Math.max(current.lastSeenSecond, activeTimestamp);
+      rows.set(key, current);
+    }
+  }
+
+  return Array.from(rows.values()).sort((left, right) => {
+    if (right.overlapHits !== left.overlapHits) {
+      return right.overlapHits - left.overlapHits;
+    }
+    return right.totalDamage - left.totalDamage;
+  });
+}
+
+function PlayerDebuffsTab({ player }: { player: PlayerRow }) {
+  const classCatalog = DEBUFF_CATALOG.filter((entry) =>
+    player.className ? entry.className === player.className : true
+  );
+  const overlapRows = buildDebuffOverlapRows(player).slice(0, 18);
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid three">
+        <StatCard label="Parsed Debuffs" value={formatNumber(player.effects.filter((effect) => effect.kind === "debuff").length)} icon="shield" tone="secondary" />
+        <StatCard label="Known Class Debuffs" value={formatNumber(classCatalog.length)} icon="book_2" hint={player.className ? `${player.className} catalog` : "All class catalogs"} />
+        <StatCard label="Hit / Debuff Overlaps" value={formatNumber(overlapRows.reduce((sum, row) => sum + row.overlapHits, 0))} icon="track_changes" tone="primary" />
+      </div>
+
+      <section className="oa-panel">
+        <SectionHeading icon="book_2" eyebrow="Debuff Catalog" title={player.className ? `${player.className} debuffs and control tools` : "Neverwinter class debuffs"} />
+        <div className="oa-data-table">
+          <div className="oa-data-head healing">
+            <span>Source</span>
+            <span>Class</span>
+            <span>Type</span>
+            <span>Keywords</span>
+            <span>Description</span>
+          </div>
+          {classCatalog.slice(0, 24).map((entry) => (
+            <div className="oa-data-row healing" key={`${entry.className}-${entry.sourceType}-${entry.name}`}>
+              <div className="oa-power-cell">
+                <div className="oa-power-icon">
+                  {entry.iconPath ? (
+                    <img className="oa-power-image" src={entry.iconPath} alt={entry.name} loading="lazy" />
+                  ) : (
+                    entry.name.slice(0, 2).toUpperCase()
+                  )}
+                </div>
+                <div>
+                  <strong>{entry.name}</strong>
+                  <small>{entry.paragonPath ?? "Base kit"}</small>
+                </div>
+              </div>
+              <span>{entry.className}</span>
+              <span>{entry.sourceType}</span>
+              <span className="oa-effect-time-list">{entry.keywords.join(", ")}</span>
+              <span className="oa-effect-time-list">{entry.description}</span>
+            </div>
+          ))}
+          {!classCatalog.length ? <div className="oa-empty-state">No known class debuff metadata was found for this player class.</div> : null}
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="target" eyebrow="Damage / Debuff Overlap" title="Your hits and the debuffs active on the target" />
+        <div className="oa-data-table">
+          <div className="oa-data-head healing">
+            <span>Attack</span>
+            <span>Debuff Up</span>
+            <span>Target</span>
+            <span>Overlap Hits</span>
+            <span>Total Damage</span>
+            <span>Last Seen</span>
+          </div>
+          {overlapRows.map((row) => (
+            <div className="oa-data-row healing" key={`${row.attackName}-${row.debuffName}-${row.targetName}`}>
+              <div>
+                <strong>{row.attackName}</strong>
+                <small>{formatNumber(row.totalHits)} parsed hits</small>
+              </div>
+              <div>
+                <strong>{row.debuffName}</strong>
+                <small>{row.family}</small>
+              </div>
+              <span>{row.targetName}</span>
+              <span>{formatNumber(row.overlapHits)}</span>
+              <span className="oa-right-stat"><strong>{formatShort(row.totalDamage)}</strong></span>
+              <span>{row.lastSeenSecond}s</span>
+            </div>
+          ))}
+          {!overlapRows.length ? (
+            <div className="oa-empty-state">
+              No combat-log debuff overlap was detected for this player yet. This view only populates when debuff lines and damage activations both exist in the log.
+            </div>
+          ) : null}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState }) {
   const deathRelatedIssues = state.debug.parseIssues
     .filter((issue) => issue.line.toLowerCase().includes(player.displayName.toLowerCase()))
@@ -1917,6 +2155,7 @@ function PlayerView({
       {props.detailTab === "timing" ? <PlayerTimingTab player={player} encounter={encounter} /> : null}
       {props.detailTab === "positioning" ? <PlayerPositioningTab player={player} /> : null}
       {props.detailTab === "other" ? <PlayerOtherTab player={player} /> : null}
+      {props.detailTab === "debuffs" ? <PlayerDebuffsTab player={player} /> : null}
       {props.detailTab === "deaths" ? <PlayerDeathsTab player={player} state={props.state} /> : null}
     </section>
   );
@@ -2002,7 +2241,9 @@ function SettingsView({
       <div className="oa-settings-grid">
         <section className="oa-panel">
           <div className="oa-profile-hero">
-            <div className="oa-settings-avatar">{initialsFromName(selectedPlayer?.displayName ?? "No player")}</div>
+            <div className="oa-settings-avatar">
+              <ClassAvatar className={selectedPlayer?.className} fallback={initialsFromName(selectedPlayer?.displayName ?? "No player")} />
+            </div>
             <div>
               <div className="oa-player-title-row">
                 <h1>{selectedPlayer?.displayName ?? "No player selected"}</h1>
@@ -2036,7 +2277,7 @@ function SettingsView({
             <div className="oa-setting-row">
               <div>
                 <strong>Auto-start with Windows</strong>
-                <small>Initialize protocol at login</small>
+                <small>Remember parser setup and arm the live session immediately after launch</small>
               </div>
               <button
                 className={`oa-switch ${settings.autoStart ? "is-on" : ""}`}
@@ -2049,7 +2290,7 @@ function SettingsView({
             <div className="oa-setting-row">
               <div>
                 <strong>Sound Alerts</strong>
-                <small>Combat start notification chime</small>
+                <small>Play a local cue when encounters begin or parser faults appear</small>
               </div>
               <button
                 className={`oa-switch ${settings.soundAlerts ? "is-on" : ""}`}
@@ -2074,11 +2315,69 @@ function SettingsView({
                 }
               />
             </label>
+            <div className="oa-setting-row">
+              <div>
+                <strong>Render Cadence</strong>
+                <small>Coalesce renderer updates to a 60 Hz or 120 Hz target to keep live telemetry smooth</small>
+              </div>
+              <div className="oa-button-pair">
+                <button
+                  className={`oa-pill-button ${settings.targetFps === 60 ? "active" : ""}`}
+                  onClick={() => onSettingsChange({ ...settings, targetFps: 60 })}
+                >
+                  60 FPS
+                </button>
+                <button
+                  className={`oa-pill-button ${settings.targetFps === 120 ? "active" : ""}`}
+                  onClick={() => onSettingsChange({ ...settings, targetFps: 120 })}
+                >
+                  120 FPS
+                </button>
+              </div>
+            </div>
+            <div className="oa-setting-row">
+              <div>
+                <strong>Reduced Motion</strong>
+                <small>Disable non-essential animation and shorten transitions for lower jitter on weaker hardware</small>
+              </div>
+              <button
+                className={`oa-switch ${settings.reducedMotion ? "is-on" : ""}`}
+                onClick={() => onSettingsChange({ ...settings, reducedMotion: !settings.reducedMotion })}
+              >
+                <div />
+              </button>
+            </div>
+            <div className="oa-setting-row">
+              <div>
+                <strong>Compact Data Density</strong>
+                <small>Reduce row and card padding to fit more live combat information onscreen</small>
+              </div>
+              <button
+                className={`oa-switch ${settings.compactMode ? "is-on" : ""}`}
+                onClick={() => onSettingsChange({ ...settings, compactMode: !settings.compactMode })}
+              >
+                <div />
+              </button>
+            </div>
+            <div className="oa-setting-row">
+              <div>
+                <strong>Smooth Table Scrolling</strong>
+                <small>Use native smooth scrolling for live tables and metadata lists</small>
+              </div>
+              <button
+                className={`oa-switch ${settings.smoothTables ? "is-on" : ""}`}
+                onClick={() => onSettingsChange({ ...settings, smoothTables: !settings.smoothTables })}
+              >
+                <div />
+              </button>
+            </div>
             <div className="oa-kv-list">
               <div><span>Process CPU</span><strong>{props.state.system.processCpuPercent.toFixed(1)}%</strong></div>
               <div><span>Process Memory</span><strong>{props.state.system.processMemoryMb.toFixed(1)} MB</strong></div>
               <div><span>System RAM</span><strong>{props.state.system.systemMemoryPercent.toFixed(1)}%</strong></div>
               <div><span>App Uptime</span><strong>{formatUptime(props.state.system.uptimeSec)}</strong></div>
+              <div><span>Target Render Rate</span><strong>{settings.targetFps} Hz</strong></div>
+              <div><span>Motion Profile</span><strong>{settings.reducedMotion ? "Reduced" : "Full"}</strong></div>
             </div>
           </div>
         </section>
@@ -2233,7 +2532,9 @@ function GlobalSearchPanel({
           <div className="oa-search-list">
             {matchedPlayers.map((player) => (
               <button key={player.id} className="oa-search-result" onClick={() => onSelectPlayer(player.id)}>
-                <span className="oa-avatar-frame">{initialsFromName(player.displayName)}</span>
+                <span className="oa-avatar-frame">
+                  <ClassAvatar className={player.className} fallback={initialsFromName(player.displayName)} />
+                </span>
                 <span>
                   <strong>{player.displayName}</strong>
                   <small>{player.className ?? "Unknown"}{player.paragon ? ` / ${player.paragon}` : ""}</small>
@@ -2289,7 +2590,7 @@ export function ObsidianScreens(props: ShellProps) {
   const [compareMode, setCompareMode] = useState(false);
   const [liveFocusTarget, setLiveFocusTarget] = useState("all");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const settings = props.rendererSettings;
   const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
   const runtimeLabel = getRuntimeLabel(props.state);
   const sessionIndicator = getSessionIndicator(props.state);
@@ -2346,7 +2647,8 @@ export function ObsidianScreens(props: ShellProps) {
   }, [liveFocusOptions, liveFocusTarget]);
 
   const rootStyle = {
-    "--oa-overlay-opacity": `${settings.overlayOpacity / 100}`
+    "--oa-overlay-opacity": `${settings.overlayOpacity / 100}`,
+    "--oa-motion-factor": settings.reducedMotion ? "0" : "1"
   } as CSSProperties;
 
   const navItems: Array<{ id: View; label: string; icon: string }> = [
@@ -2358,7 +2660,10 @@ export function ObsidianScreens(props: ShellProps) {
   ];
 
   return (
-    <div className={`obsidian-architect ${settings.visualCore} ${sidebarCollapsed ? "sidebar-collapsed" : ""}`} style={rootStyle}>
+    <div
+      className={`obsidian-architect ${settings.visualCore} ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${settings.compactMode ? "compact-mode" : ""} ${settings.reducedMotion ? "reduced-motion" : ""} ${settings.smoothTables ? "smooth-tables" : ""}`}
+      style={rootStyle}
+    >
       <aside className="oa-sidebar">
         <div className="oa-brand">
           <div className="oa-brand-mark">
@@ -2501,7 +2806,7 @@ export function ObsidianScreens(props: ShellProps) {
           {props.view === "debug" ? <DebugView state={props.state} /> : null}
           {props.view === "library" ? <LibraryView /> : null}
           {props.view === "settings" ? (
-            <SettingsView props={props} settings={settings} onSettingsChange={setSettings} />
+            <SettingsView props={props} settings={settings} onSettingsChange={props.onRendererSettingsChange} />
           ) : null}
         </main>
 
