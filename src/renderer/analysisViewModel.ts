@@ -10,6 +10,8 @@ import type {
 } from "../shared/types";
 import { inferBuildFromSkills } from "./nwMetadata";
 
+const INTEGER_FORMATTER = new Intl.NumberFormat();
+
 export type View =
   | "setup"
   | "live"
@@ -73,7 +75,7 @@ export const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
 ];
 
 export function formatNumber(value: number): string {
-  return new Intl.NumberFormat().format(Math.round(value));
+  return INTEGER_FORMATTER.format(Math.round(value));
 }
 
 export function formatShort(value: number): string {

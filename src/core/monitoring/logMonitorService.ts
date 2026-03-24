@@ -20,6 +20,7 @@ import { parseLine } from "../parser/parseLine.js";
 import { EncounterManager } from "../encounter/encounterManager.js";
 
 const MAX_DEBUG_ITEMS = 50;
+const MIN_EMIT_INTERVAL_MS = 100;
 
 function createInitialAppState(): AppState {
   return {
@@ -66,6 +67,8 @@ export class LogMonitorService extends EventEmitter {
   private combatantTracker = new CombatantTracker();
   private flushTimer: NodeJS.Timeout | null = null;
   private liveTrackingFilePath: string | null = null;
+  private lastEmittedAt = 0;
+  private pendingEmitTimer: NodeJS.Timeout | null = null;
 
   getState(): AppState {
     return structuredClone(this.state);
@@ -114,9 +117,16 @@ export class LogMonitorService extends EventEmitter {
     });
 
     const refresh = async () => {
+      const previousActiveFile = this.state.activeLogFile;
+      const previousOffset = this.state.debug.currentOffset;
       await this.refreshActiveFile(resolvedFolderPath);
       await this.readNewLines();
-      this.emitState();
+      if (
+        this.state.activeLogFile !== previousActiveFile ||
+        this.state.debug.currentOffset !== previousOffset
+      ) {
+        this.scheduleEmitState();
+      }
     };
 
     this.watcher.on("add", () => void refresh());
@@ -125,13 +135,13 @@ export class LogMonitorService extends EventEmitter {
     this.watcher.on("error", (error) => {
       this.state.watcherStatus = "error";
       this.pushIssue(`Watcher error: ${String(error)}`);
-      this.emitState();
+      this.scheduleEmitState(true);
     });
 
     this.flushTimer = setInterval(() => {
       this.encounterManager.flush();
       this.syncEncounterState();
-      this.emitState();
+      this.scheduleEmitState();
     }, this.pollIntervalMs);
 
     await refresh();
@@ -165,7 +175,7 @@ export class LogMonitorService extends EventEmitter {
         : Date.now()
     );
     this.syncEncounterState();
-    this.emitState();
+    this.scheduleEmitState(true);
     return this.getState();
   }
 
@@ -173,6 +183,11 @@ export class LogMonitorService extends EventEmitter {
     if (this.flushTimer) {
       clearInterval(this.flushTimer);
       this.flushTimer = null;
+    }
+
+    if (this.pendingEmitTimer) {
+      clearTimeout(this.pendingEmitTimer);
+      this.pendingEmitTimer = null;
     }
 
     if (this.watcher) {
@@ -184,7 +199,7 @@ export class LogMonitorService extends EventEmitter {
     this.syncEncounterState();
     this.state.watcherStatus = "idle";
     this.liveTrackingFilePath = null;
-    this.emitState();
+    this.scheduleEmitState(true);
     return this.getState();
   }
 
@@ -250,7 +265,6 @@ export class LogMonitorService extends EventEmitter {
   private consumeEvent(event: CombatEvent): void {
     this.encounterManager.consume(event);
     this.combatantTracker.consume(event, this.encounterManager.getCurrentEncounterId());
-    this.syncEncounterState();
   }
 
   private syncEncounterState(): void {
@@ -288,10 +302,34 @@ export class LogMonitorService extends EventEmitter {
       reason,
       seenAt: Date.now()
     });
+    this.scheduleEmitState();
   }
 
   private emitState(): void {
+    this.lastEmittedAt = Date.now();
     this.emit("state", this.getState());
+  }
+
+  private scheduleEmitState(force = false): void {
+    if (force) {
+      if (this.pendingEmitTimer) {
+        clearTimeout(this.pendingEmitTimer);
+        this.pendingEmitTimer = null;
+      }
+      this.emitState();
+      return;
+    }
+
+    if (this.pendingEmitTimer) {
+      return;
+    }
+
+    const elapsed = Date.now() - this.lastEmittedAt;
+    const delay = Math.max(0, MIN_EMIT_INTERVAL_MS - elapsed);
+    this.pendingEmitTimer = setTimeout(() => {
+      this.pendingEmitTimer = null;
+      this.emitState();
+    }, delay);
   }
 
   private consumeLines(lines: string[]): void {

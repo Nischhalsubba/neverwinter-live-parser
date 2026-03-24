@@ -113,6 +113,18 @@ describe("parseLine", () => {
     }
   });
 
+  it("parses scientific-notation combat numbers without dropping the event", () => {
+    const result = parseLine(
+      "26:03:23:22:01:33.6::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Rapid Shot,Pn.Test01,Physical,Critical,1.81504e+06,839927"
+    );
+
+    expect(result.kind).toBe("event");
+    if (result.kind === "event") {
+      expect(result.event.eventType).toBe("damage");
+      expect(result.event.amount).toBeCloseTo(1815040);
+    }
+  });
+
   it("attaches NW Hub artifact effect metadata to artifact activations", () => {
     const result = parseLine(
       "26:03:23:22:01:40.0::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Broken Halo,Pn.Artifact01,Physical,Critical,37914,37914"

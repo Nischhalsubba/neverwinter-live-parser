@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { startTransition, useEffect, useMemo, useState } from "react";
 import type { AppState } from "../shared/types";
 import {
   buildPlayerRows,
@@ -70,18 +70,22 @@ export function App() {
     }
 
     void api.getState().then((snapshot) => {
-      setState(snapshot);
-      setFolderInput(snapshot.selectedLogFolder ?? "");
-      setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
+      startTransition(() => {
+        setState(snapshot);
+        setFolderInput(snapshot.selectedLogFolder ?? "");
+        setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
+      });
     });
 
     return api.onState((snapshot) => {
-      setState(snapshot);
-      setImportFilePath((current) =>
-        current.trim()
-          ? current
-          : snapshot.importedLogFile ?? snapshot.activeLogFile ?? ""
-      );
+      startTransition(() => {
+        setState(snapshot);
+        setImportFilePath((current) =>
+          current.trim()
+            ? current
+            : snapshot.importedLogFile ?? snapshot.activeLogFile ?? ""
+        );
+      });
     });
   }, []);
 

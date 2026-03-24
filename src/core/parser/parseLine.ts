@@ -63,6 +63,16 @@ function normalizeName(value: string | undefined): string {
   return (value ?? "").trim().toLowerCase();
 }
 
+function parseCombatNumber(input: string | undefined): number {
+  if (!input) {
+    return 0;
+  }
+
+  const normalized = input.replace(/,/g, "").trim();
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
 function isCompanionSource(ref: string, name: string | undefined): boolean {
   const loweredName = normalizeName(name);
   const loweredRef = ref.toLowerCase();
@@ -255,8 +265,8 @@ export function parseLine(line: string): ParseResult {
   const abilityId = parts[parts.length - 5]?.trim() ?? "";
   const school = parts[parts.length - 4]?.trim() ?? "";
   const flagsField = parts[parts.length - 3]?.trim() ?? "";
-  const magnitude = Number(parts[parts.length - 2] ?? "0");
-  const amount = Number(parts[parts.length - 1] ?? "0");
+  const magnitude = parseCombatNumber(parts[parts.length - 2]);
+  const amount = parseCombatNumber(parts[parts.length - 1]);
   const hasExplicitSourceActor =
     sourceNameField.length > 0 && sourceIdField.length > 0 && sourceIdField !== "*";
   const sourceName = hasExplicitSourceActor ? sourceNameField : sourceOwnerName;
