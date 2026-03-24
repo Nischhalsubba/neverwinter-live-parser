@@ -21,18 +21,24 @@ const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
 const { app, BrowserWindow, dialog, ipcMain } = electron;
 
 function configureRuntimePaths(): void {
-  const runtimeRoot = path.join(os.tmpdir(), "neverwinter-live-parser");
+  const runtimeRoot = isDev
+    ? path.join(os.tmpdir(), "neverwinter-live-parser", `dev-${process.pid}`)
+    : path.join(os.tmpdir(), "neverwinter-live-parser", "runtime");
+  const userDataPath = path.join(runtimeRoot, "user-data");
   const sessionDataPath = path.join(runtimeRoot, "session-data");
   const gpuCachePath = path.join(runtimeRoot, "gpu-cache");
 
   try {
+    mkdirSync(userDataPath, { recursive: true });
     mkdirSync(sessionDataPath, { recursive: true });
     mkdirSync(gpuCachePath, { recursive: true });
+    app.setPath("userData", userDataPath);
     app.setPath("sessionData", sessionDataPath);
 
-    // Keep Chromium's shader and GPU cache files out of the default profile
-    // path so startup does not fail on locked or synced Windows folders.
+    // Keep Chromium's profile and cache files out of locked/synced Windows
+    // folders, and avoid cache collisions between rapid dev restarts.
     app.commandLine.appendSwitch("disk-cache-dir", gpuCachePath);
+    app.commandLine.appendSwitch("disable-gpu-shader-disk-cache");
   } catch {
     // Fall back to Electron defaults if the temp directory is unavailable.
   }

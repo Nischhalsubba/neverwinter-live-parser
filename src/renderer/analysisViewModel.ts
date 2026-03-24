@@ -8,10 +8,10 @@ import type {
   HighestHitStat,
   SkillStat,
   TargetStat,
-  TimelinePoint
+  TimelinePoint,
 } from "../shared/types";
-import { inferBuildFromSkills } from "./nwMetadata";
-import { normalizeEntityName } from "../shared/mechanicsModel";
+import {inferBuildFromSkills} from "./nwMetadata";
+import {normalizeEntityName} from "../shared/mechanicsModel";
 
 const INTEGER_FORMATTER = new Intl.NumberFormat();
 
@@ -72,19 +72,19 @@ type BuildPlayerRowsOptions = {
   encounterDurationMs?: number;
 };
 
-export const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
-  { id: "overview", label: "Overview" },
-  { id: "timeline", label: "Timeline & Powers" },
-  { id: "damageOut", label: "Damage Out" },
-  { id: "healing", label: "Healing" },
-  { id: "damageTaken", label: "Damage Taken" },
-  { id: "timing", label: "Timing" },
-  { id: "positioning", label: "Positioning" },
-  { id: "other", label: "Other" },
-  { id: "highestHit", label: "Highest Hit" },
-  { id: "debuffs", label: "Debuffs" },
-  { id: "deaths", label: "Deaths" },
-  { id: "artifactDamage", label: "Artifact Damage" }
+export const DETAIL_TABS: Array<{id: DetailTab; label: string}> = [
+  {id: "overview", label: "Overview"},
+  {id: "timeline", label: "Timeline & Powers"},
+  {id: "damageOut", label: "Damage Out"},
+  {id: "healing", label: "Healing"},
+  {id: "damageTaken", label: "Damage Taken"},
+  {id: "timing", label: "Timing"},
+  {id: "positioning", label: "Positioning"},
+  {id: "other", label: "Other"},
+  {id: "highestHit", label: "Highest Hit"},
+  {id: "debuffs", label: "Debuffs"},
+  {id: "deaths", label: "Deaths"},
+  {id: "artifactDamage", label: "Artifact Damage"},
 ];
 
 export function formatNumber(value: number): string {
@@ -130,7 +130,7 @@ function mergeSkills(skills: SkillStat[]): SkillStat[] {
       hits: 0,
       critCount: 0,
       flankCount: 0,
-      kind: skill.kind
+      kind: skill.kind,
     };
 
     current.total += skill.total;
@@ -149,12 +149,13 @@ function mergeTargets(targets: TargetStat[]): TargetStat[] {
   const totals = new Map<string, TargetStat>();
 
   for (const target of targets) {
-    const normalized = normalizeEntityName(target.targetName) || target.targetName;
+    const normalized =
+      normalizeEntityName(target.targetName) || target.targetName;
     const current = totals.get(normalized) ?? {
       targetName: target.targetName.trim(),
       totalDamage: 0,
       hits: 0,
-      critCount: 0
+      critCount: 0,
     };
 
     current.totalDamage += target.totalDamage;
@@ -194,7 +195,7 @@ function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
       healing: 0,
       hits: 0,
       buffs: 0,
-      debuffs: 0
+      debuffs: 0,
     };
 
     current.damage += point.damage;
@@ -205,19 +206,17 @@ function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
     totals.set(point.second, current);
   }
 
-  return Array.from(totals.values()).sort((left, right) => left.second - right.second);
+  return Array.from(totals.values()).sort(
+    (left, right) => left.second - right.second
+  );
 }
 
 function mergeDamageMoments(points: DamageMomentStat[]): DamageMomentStat[] {
-  return points
-    .slice()
-    .sort((left, right) => left.second - right.second);
+  return points.slice().sort((left, right) => left.second - right.second);
 }
 
 function mergeActivations(activations: ActivationStat[]): ActivationStat[] {
-  return activations
-    .slice()
-    .sort((left, right) => left.second - right.second);
+  return activations.slice().sort((left, right) => left.second - right.second);
 }
 
 function mergeEffects(effects: EffectStat[]): EffectStat[] {
@@ -231,7 +230,7 @@ function mergeEffects(effects: EffectStat[]): EffectStat[] {
       kind: effect.kind,
       applications: 0,
       totalMagnitude: 0,
-      timestamps: []
+      timestamps: [],
     };
 
     current.applications += effect.applications;
@@ -243,12 +242,14 @@ function mergeEffects(effects: EffectStat[]): EffectStat[] {
   return Array.from(totals.values())
     .map((effect) => ({
       ...effect,
-      timestamps: effect.timestamps.slice().sort((left, right) => left - right)
+      timestamps: effect.timestamps.slice().sort((left, right) => left - right),
     }))
     .sort((left, right) => right.applications - left.applications);
 }
 
-function mergeEncounters(encounters: CombatantEncounterStat[]): CombatantEncounterStat[] {
+function mergeEncounters(
+  encounters: CombatantEncounterStat[]
+): CombatantEncounterStat[] {
   const totals = new Map<string, CombatantEncounterStat>();
 
   for (const encounter of encounters) {
@@ -257,7 +258,7 @@ function mergeEncounters(encounters: CombatantEncounterStat[]): CombatantEncount
       totalDamage: 0,
       totalHealing: 0,
       damageTaken: 0,
-      hits: 0
+      hits: 0,
     };
 
     current.totalDamage += encounter.totalDamage;
@@ -285,7 +286,9 @@ export function buildPlayerRows(
   for (const combatant of combatants) {
     if (
       encounterId &&
-      !combatant.encounters.some((encounter) => encounter.encounterId === encounterId)
+      !combatant.encounters.some(
+        (encounter) => encounter.encounterId === encounterId
+      )
     ) {
       continue;
     }
@@ -314,28 +317,32 @@ export function buildPlayerRows(
     })
     .map(([groupKey, members]) => {
       const primary =
-        members.find((member) => member.type === "player" || member.id === member.ownerId) ??
-        members[0];
+        members.find(
+          (member) => member.type === "player" || member.id === member.ownerId
+        ) ?? members[0];
       const includedMembers = includeCompanions
         ? members
         : members.filter((member) => member.type !== "companion");
-      const sourceMembers = includedMembers.length > 0 ? includedMembers : [primary];
+      const sourceMembers =
+        includedMembers.length > 0 ? includedMembers : [primary];
       const encounterScopedMembers = sourceMembers.map((member) => {
         if (!encounterId) {
           return {
             totalDamage: member.totalDamage,
             totalHealing: member.totalHealing,
             damageTaken: member.damageTaken,
-            hits: member.hits
+            hits: member.hits,
           };
         }
 
-        const encounter = member.encounters.find((entry) => entry.encounterId === encounterId);
+        const encounter = member.encounters.find(
+          (entry) => entry.encounterId === encounterId
+        );
         return {
           totalDamage: encounter?.totalDamage ?? 0,
           totalHealing: encounter?.totalHealing ?? 0,
           damageTaken: encounter?.damageTaken ?? 0,
-          hits: encounter?.hits ?? 0
+          hits: encounter?.hits ?? 0,
         };
       });
       const totalDamage = encounterScopedMembers.reduce(
@@ -350,7 +357,10 @@ export function buildPlayerRows(
         (total, member) => total + member.damageTaken,
         0
       );
-      const hits = encounterScopedMembers.reduce((total, member) => total + member.hits, 0);
+      const hits = encounterScopedMembers.reduce(
+        (total, member) => total + member.hits,
+        0
+      );
       const critCount = sourceMembers.reduce(
         (total, member) => total + member.critCount,
         0
@@ -359,13 +369,17 @@ export function buildPlayerRows(
         (total, member) => total + member.flankRate * member.hits,
         0
       );
-      const dps = encounterDurationSeconds > 0
-        ? totalDamage / encounterDurationSeconds
-        : sourceMembers.reduce((total, member) => total + member.dps, 0);
-      const hps = encounterDurationSeconds > 0
-        ? totalHealing / encounterDurationSeconds
-        : sourceMembers.reduce((total, member) => total + member.hps, 0);
-      const topSkills = mergeSkills(sourceMembers.flatMap((member) => member.topSkills));
+      const dps =
+        encounterDurationSeconds > 0
+          ? totalDamage / encounterDurationSeconds
+          : sourceMembers.reduce((total, member) => total + member.dps, 0);
+      const hps =
+        encounterDurationSeconds > 0
+          ? totalHealing / encounterDurationSeconds
+          : sourceMembers.reduce((total, member) => total + member.hps, 0);
+      const topSkills = mergeSkills(
+        sourceMembers.flatMap((member) => member.topSkills)
+      );
       const inferredBuild = inferBuildFromSkills(topSkills);
 
       return {
@@ -381,18 +395,36 @@ export function buildPlayerRows(
         dps,
         hps,
         topSkills,
-        companionCount: members.filter((member) => member.type === "companion").length,
-        targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
-        highestHits: mergeHighestHits(sourceMembers.flatMap((member) => member.highestHits)),
-        damageMoments: mergeDamageMoments(sourceMembers.flatMap((member) => member.damageMoments)),
-        timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
-        activations: mergeActivations(sourceMembers.flatMap((member) => member.activations)),
-        effects: mergeEffects(sourceMembers.flatMap((member) => member.effects)),
-        encounters: mergeEncounters(sourceMembers.flatMap((member) => member.encounters)),
-        deaths: sourceMembers.reduce((total, member) => total + member.deaths, 0),
+        companionCount: members.filter((member) => member.type === "companion")
+          .length,
+        targets: mergeTargets(
+          sourceMembers.flatMap((member) => member.targets)
+        ),
+        highestHits: mergeHighestHits(
+          sourceMembers.flatMap((member) => member.highestHits)
+        ),
+        damageMoments: mergeDamageMoments(
+          sourceMembers.flatMap((member) => member.damageMoments)
+        ),
+        timeline: mergeTimeline(
+          sourceMembers.flatMap((member) => member.timeline)
+        ),
+        activations: mergeActivations(
+          sourceMembers.flatMap((member) => member.activations)
+        ),
+        effects: mergeEffects(
+          sourceMembers.flatMap((member) => member.effects)
+        ),
+        encounters: mergeEncounters(
+          sourceMembers.flatMap((member) => member.encounters)
+        ),
+        deaths: sourceMembers.reduce(
+          (total, member) => total + member.deaths,
+          0
+        ),
         className: inferredBuild.className,
         paragon: inferredBuild.paragon,
-        buildConfidence: inferredBuild.confidence
+        buildConfidence: inferredBuild.confidence,
       };
     })
     .sort((left, right) => right.totalDamage - left.totalDamage);
@@ -407,7 +439,9 @@ export function getEncounterSnapshots(
     .concat(currentEncounter ? [currentEncounter] : []);
 }
 
-export function hasMeaningfulEncounter(encounter: EncounterSnapshot | null): boolean {
+export function hasMeaningfulEncounter(
+  encounter: EncounterSnapshot | null
+): boolean {
   if (!encounter) {
     return false;
   }

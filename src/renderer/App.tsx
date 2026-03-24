@@ -9,10 +9,9 @@ import {
   type View
 } from "./analysisViewModel";
 import {
-  DEFAULT_SETTINGS,
-  ObsidianScreens,
-  type ProfileSettings
+  ObsidianScreens
 } from "./components/ObsidianScreens";
+import { DEFAULT_SETTINGS, type ProfileSettings } from "./rendererSettings";
 
 const INITIAL_STATE: AppState = {
   watcherStatus: "idle",
