@@ -1,5 +1,6 @@
 import type {
   ActivationStat,
+  ArtifactActivationStat,
   CombatantEncounterStat,
   CombatantSnapshot,
   DamageMomentStat,
@@ -57,6 +58,7 @@ export type PlayerRow = {
   damageMoments: DamageMomentStat[];
   timeline: TimelinePoint[];
   activations: ActivationStat[];
+  artifactActivations: ArtifactActivationStat[];
   effects: EffectStat[];
   encounters: CombatantEncounterStat[];
   deaths: number;
@@ -217,6 +219,28 @@ function mergeDamageMoments(points: DamageMomentStat[]): DamageMomentStat[] {
 
 function mergeActivations(activations: ActivationStat[]): ActivationStat[] {
   return activations.slice().sort((left, right) => left.second - right.second);
+}
+
+function mergeArtifactActivations(
+  activations: ArtifactActivationStat[]
+): ArtifactActivationStat[] {
+  const merged: ArtifactActivationStat[] = [];
+
+  for (const activation of activations
+    .slice()
+    .sort((left, right) => left.second - right.second)) {
+    const last = merged.at(-1);
+    const isDuplicate =
+      last &&
+      last.abilityName === activation.abilityName &&
+      Math.abs(last.second - activation.second) <= 1;
+
+    if (!isDuplicate) {
+      merged.push(activation);
+    }
+  }
+
+  return merged;
 }
 
 function mergeEffects(effects: EffectStat[]): EffectStat[] {
@@ -411,6 +435,9 @@ export function buildPlayerRows(
         ),
         activations: mergeActivations(
           sourceMembers.flatMap((member) => member.activations)
+        ),
+        artifactActivations: mergeArtifactActivations(
+          sourceMembers.flatMap((member) => member.artifactActivations)
         ),
         effects: mergeEffects(
           sourceMembers.flatMap((member) => member.effects)

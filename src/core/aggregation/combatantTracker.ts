@@ -1,6 +1,7 @@
 import type {
   ActivationStat,
   AnalysisSnapshot,
+  ArtifactActivationStat,
   CombatEvent,
   CombatantEncounterStat,
   CombatantSnapshot,
@@ -41,6 +42,7 @@ type MutableCombatant = {
   damageMoments: DamageMomentStat[];
   timeline: Map<number, TimelinePoint>;
   activations: ActivationStat[];
+  artifactActivations: ArtifactActivationStat[];
   effects: Map<string, EffectStat>;
   encounterTotals: Map<string, MutableEncounterTotals>;
 };
@@ -52,6 +54,7 @@ const MAX_HIGHEST_HITS_PER_COMBATANT = 24;
 const MAX_TRACKED_COMBATANTS = 256;
 const MAX_DAMAGE_MOMENTS_PER_COMBATANT = 4_000;
 const MAX_ACTIVATIONS_PER_COMBATANT = 4_000;
+const MAX_ARTIFACT_ACTIVATIONS_PER_COMBATANT = 256;
 const MAX_EFFECT_TIMESTAMPS = 512;
 
 function pushBounded<T>(items: T[], item: T, maxSize: number): void {
@@ -187,6 +190,35 @@ export class CombatantTracker {
       }, MAX_ACTIVATIONS_PER_COMBATANT);
     }
 
+    if (typeof event.tags?.artifactName === "string") {
+      const artifactName = String(event.tags.artifactName);
+      const durationSec =
+        typeof event.tags.artifactDurationSeconds === "number" &&
+        Number.isFinite(event.tags.artifactDurationSeconds) &&
+        event.tags.artifactDurationSeconds > 0
+          ? Number(event.tags.artifactDurationSeconds)
+          : 20;
+      const latestActivation = combatant.artifactActivations.at(-1);
+      const isDuplicateActivation =
+        latestActivation &&
+        latestActivation.abilityName === artifactName &&
+        Math.abs(latestActivation.second - offsetSeconds) <= 1;
+
+      if (!isDuplicateActivation) {
+        pushBounded(
+          combatant.artifactActivations,
+          {
+            second: offsetSeconds,
+            abilityName: artifactName,
+            targetName: event.targetName,
+            sourceType: event.sourceType,
+            durationSec
+          },
+          MAX_ARTIFACT_ACTIVATIONS_PER_COMBATANT
+        );
+      }
+    }
+
     if ((event.eventType === "buff" || event.eventType === "debuff") && event.abilityName && event.targetName) {
       const effectKey = `${event.eventType}:${event.abilityName}:${event.targetName}`;
       const effect = combatant.effects.get(effectKey) ?? {
@@ -262,6 +294,8 @@ export class CombatantTracker {
 
     const combatants = Array.from(this.combatants.values())
       .filter((combatant) => isPlayerOwnedCombatant(combatant))
+      .sort((left, right) => right.totalDamage - left.totalDamage)
+      .slice(0, MAX_TRACKED_COMBATANTS)
       .map<CombatantSnapshot>((combatant) => ({
         id: combatant.id,
         ownerId: combatant.ownerId,
@@ -295,6 +329,9 @@ export class CombatantTracker {
         activations: combatant.activations
           .slice()
           .sort((left, right) => left.second - right.second),
+        artifactActivations: combatant.artifactActivations
+          .slice()
+          .sort((left, right) => left.second - right.second),
         effects: Array.from(combatant.effects.values())
           .map((effect) => ({
             ...effect,
@@ -315,9 +352,7 @@ export class CombatantTracker {
             return (leftEncounter?.startedAt ?? 0) - (rightEncounter?.startedAt ?? 0);
           }),
         deaths: combatant.deaths
-      }))
-      .sort((left, right) => right.totalDamage - left.totalDamage)
-      .slice(0, MAX_TRACKED_COMBATANTS);
+      }));
 
     return {
       mode,
@@ -357,6 +392,7 @@ export class CombatantTracker {
       damageMoments: [],
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
+      artifactActivations: [],
       effects: new Map<string, EffectStat>(),
       encounterTotals: new Map<string, MutableEncounterTotals>()
     };
@@ -390,6 +426,7 @@ export class CombatantTracker {
       damageMoments: [],
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
+      artifactActivations: [],
       effects: new Map<string, EffectStat>(),
       encounterTotals: new Map<string, MutableEncounterTotals>()
     };

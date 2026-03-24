@@ -3151,14 +3151,10 @@ function PlayerDeathsTab({ player, state }: { player: PlayerRow; state: AppState
 }
 
 function buildArtifactDamageRows(player: PlayerRow) {
-  return player.activations
-    .filter(
-      (activation) =>
-        activation.kind !== "unknown" &&
-        classifyPowerFamily(activation.abilityName, activation.sourceType) === "artifact"
-    )
+  return player.artifactActivations
     .map((activation) => {
-      const windowEnd = activation.second + 20;
+      const durationSec = Math.max(1, activation.durationSec || 20);
+      const windowEnd = activation.second + durationSec;
       const damageWindow = player.damageMoments.filter(
         (moment) => moment.second >= activation.second && moment.second < windowEnd
       );
@@ -3172,8 +3168,9 @@ function buildArtifactDamageRows(player: PlayerRow) {
       return {
         artifactName: activation.abilityName,
         activatedAt: activation.second,
+        durationSec,
         totalDamage,
-        dps: totalDamage / 20,
+        dps: totalDamage / durationSec,
         hitCount: damageWindow.length,
         critHits,
         strongestHit
@@ -3200,16 +3197,17 @@ function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
           label="Avg 20s Burst"
           value={formatShort(rows.length ? rows.reduce((sum, row) => sum + row.totalDamage, 0) / rows.length : 0)}
           icon="trending_up"
-          hint="Damage dealt in the 20 seconds after each artifact activation"
+          hint="Damage dealt in the artifact window after each activation"
         />
       </div>
 
       <section className="oa-panel">
-        <SectionHeading icon="diamond" eyebrow="Artifact Damage" title="Damage done in the 20 seconds after artifact activation" />
+        <SectionHeading icon="diamond" eyebrow="Artifact Damage" title="Damage done after artifact activation" />
         <div className="oa-data-table">
           <div className="oa-data-head healing">
             <span>Artifact</span>
             <span>Activated</span>
+            <span>Window</span>
             <span>20s Damage</span>
             <span>20s DPS</span>
             <span>Hits / Crits</span>
@@ -3227,6 +3225,7 @@ function PlayerArtifactDamageTab({ player }: { player: PlayerRow }) {
                 </div>
               </div>
               <span>{row.activatedAt}s</span>
+              <span>{row.durationSec}s</span>
               <span className="oa-right-stat"><strong>{formatShort(row.totalDamage)}</strong></span>
               <span>{formatShort(row.dps)}</span>
               <span>{formatNumber(row.hitCount)} / {formatNumber(row.critHits)}</span>

@@ -67,6 +67,14 @@ export type ActivationStat = {
   sourceType?: ActorType;
 };
 
+export type ArtifactActivationStat = {
+  second: number;
+  abilityName: string;
+  targetName?: string;
+  sourceType?: ActorType;
+  durationSec: number;
+};
+
 export type EffectStat = {
   abilityName: string;
   targetName: string;
@@ -148,6 +156,7 @@ export type CombatantSnapshot = {
   damageMoments: DamageMomentStat[];
   timeline: TimelinePoint[];
   activations: ActivationStat[];
+  artifactActivations: ArtifactActivationStat[];
   effects: EffectStat[];
   encounters: CombatantEncounterStat[];
   deaths: number;
