@@ -5,6 +5,9 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -74,6 +77,29 @@ const DEFAULT_SETTINGS: ProfileSettings = {
   soundAlerts: false,
   overlayOpacity: 85,
   visualCore: "obsidian-dark"
+};
+
+const CHART_COLORS = [
+  "#cdbdff",
+  "#86e8ff",
+  "#ffb38a",
+  "#9af1bb",
+  "#ffd36e",
+  "#ff8f9f",
+  "#9ea8ff",
+  "#c6a7ff"
+];
+
+const DETAIL_TAB_COPY: Record<DetailTab, string> = {
+  overview: "Combat-log totals for the selected player or encounter, including outgoing damage, healing, incoming damage, and top target splits.",
+  timeline: "Time-bucketed combat-log activity for this player, showing when damage and healing events landed and which powers drove the parse.",
+  damageOut: "Outgoing damage from parsed hit events, grouped by power and hostile target names found in the combat log.",
+  healing: "Healing events parsed from the combat log, grouped by power with tick counts, total output, average tick size, and crit rate.",
+  damageTaken: "Incoming damage recorded against this player in the combat log, shown as encounter-by-encounter intake pressure.",
+  timing: "Timing-derived metrics from parsed events, including burst windows, encounter participation, and event cadence.",
+  positioning: "Combat-log-supported positioning heuristics such as flank rate, target spread, and hostile target distribution.",
+  other: "Supplemental parser facts from the combat log, including skill inventory, targets tracked, companions, and build inference.",
+  deaths: "Death lines and closely related parser issues matched to this player from the current combat log."
 };
 
 function Icon({
@@ -190,6 +216,38 @@ function buildLiveTargetFocus(players: PlayerRow[]): Array<{ name: string; total
   }
 
   return Array.from(totals.values()).sort((left, right) => right.totalDamage - left.totalDamage);
+}
+
+function buildFocusedTargetSummary(
+  players: PlayerRow[],
+  focusTarget: string
+): {
+  totalDamage: number;
+  totalHits: number;
+  critCount: number;
+  contributors: Array<{ name: string; totalDamage: number; hits: number; critCount: number }>;
+} {
+  const contributors = players
+    .map((player) => {
+      const target = player.targets.find((entry) => entry.targetName === focusTarget);
+      return target
+        ? {
+            name: player.displayName,
+            totalDamage: target.totalDamage,
+            hits: target.hits,
+            critCount: target.critCount
+          }
+        : null;
+    })
+    .filter((entry): entry is { name: string; totalDamage: number; hits: number; critCount: number } => entry !== null)
+    .sort((left, right) => right.totalDamage - left.totalDamage);
+
+  return {
+    totalDamage: contributors.reduce((sum, row) => sum + row.totalDamage, 0),
+    totalHits: contributors.reduce((sum, row) => sum + row.hits, 0),
+    critCount: contributors.reduce((sum, row) => sum + row.critCount, 0),
+    contributors
+  };
 }
 
 function classifyLineTags(line: string): Array<{ label: string; tone: "critical" | "advantage" | "heal" | "issue" }> {
@@ -488,6 +546,52 @@ function CombatTimelineChart({ points }: { points: TimelinePoint[] }) {
   );
 }
 
+function ContributionPieChart({
+  data,
+  dataKey,
+  nameKey
+}: {
+  data: Array<Record<string, string | number>>;
+  dataKey: string;
+  nameKey: string;
+}) {
+  if (!data.length) {
+    return <div className="oa-empty-state">No parsed combat-log values are available for this chart.</div>;
+  }
+
+  return (
+    <div className="oa-chart-box">
+      <ResponsiveContainer width="100%" height={280}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey={dataKey}
+            nameKey={nameKey}
+            innerRadius={70}
+            outerRadius={110}
+            paddingAngle={3}
+            stroke="rgba(19, 19, 21, 0.85)"
+            strokeWidth={2}
+          >
+            {data.map((entry, index) => (
+              <Cell key={`${entry[nameKey]}-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip
+            formatter={(value: number) => formatShort(Number(value))}
+            contentStyle={{
+              background: "rgba(27, 27, 29, 0.95)",
+              border: "1px solid rgba(205, 189, 255, 0.16)",
+              borderRadius: "14px",
+              color: "#e5e1e4"
+            }}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
 function LibraryView() {
   const cards = [
     { label: "Player powers", value: formatNumber(metadata.playerPowers.length), icon: "local_fire_department" },
@@ -721,6 +825,20 @@ function LiveOverviewView({
   const selectedForCompare = compareMode ? filteredPlayers.slice(0, 3) : [];
   const peakDps = Math.max(0, ...filteredPlayers.map((player) => player.dps));
   const liveDurationMs = current?.durationMs ?? 0;
+  const focusedTargetSummary =
+    liveFocusTarget === "all"
+      ? null
+      : buildFocusedTargetSummary(props.livePlayerRows, liveFocusTarget);
+  const targetDistributionData =
+    liveFocusTarget === "all"
+      ? liveFocusOptions.slice(0, 8).map((target) => ({
+          label: target.name,
+          value: target.totalDamage
+        }))
+      : focusedTargetSummary?.contributors.slice(0, 8).map((row) => ({
+          label: row.name,
+          value: row.totalDamage
+        })) ?? [];
 
   return (
     <section className="oa-screen">
@@ -730,6 +848,9 @@ function LiveOverviewView({
           <p>
             <Icon name="location_on" className="oa-inline-icon" />{" "}
             {current?.label ?? (state.analysis.mode === "imported" ? "Recorded log analysis" : "Waiting for combat events")}
+          </p>
+          <p className="oa-page-description">
+            Real-time combat-log summary of the currently tracked fight, with player output, target focus, and live target distribution.
           </p>
         </div>
         <div className="oa-toolbar">
@@ -771,6 +892,76 @@ function LiveOverviewView({
         <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live player rows from combat log`} />
         <StatCard label="Tracked Targets" value={formatNumber(liveFocusOptions.length)} icon="my_location" hint={liveFocusTarget === "all" ? "all current targets hit" : `focused on ${liveFocusTarget}`} />
         <StatCard label="Total Time" value={formatDuration(liveDurationMs)} tone="tertiary" icon="timer" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
+      </div>
+
+      <div className="oa-split-grid">
+        <section className="oa-panel">
+          <SectionHeading
+            icon="radar"
+            eyebrow="Focused Target Breakdown"
+            title={liveFocusTarget === "all" ? "Current target distribution" : `${liveFocusTarget} contribution`}
+          />
+          <div className="oa-card-grid three">
+            <StatCard
+              label={liveFocusTarget === "all" ? "Targets" : "Target Damage"}
+              value={formatNumber(liveFocusTarget === "all" ? liveFocusOptions.length : focusedTargetSummary?.contributors.length ?? 0)}
+              icon="my_location"
+              hint={liveFocusTarget === "all" ? "distinct hostile names in current log slice" : formatShort(focusedTargetSummary?.totalDamage ?? 0)}
+            />
+            <StatCard
+              label={liveFocusTarget === "all" ? "Top Target" : "Target Hits"}
+              value={liveFocusTarget === "all" ? (liveFocusOptions[0]?.name ?? "None") : formatNumber(focusedTargetSummary?.totalHits ?? 0)}
+              icon="adjust"
+              hint={liveFocusTarget === "all" ? formatShort(liveFocusOptions[0]?.totalDamage ?? 0) : `${formatPercent((focusedTargetSummary?.critCount ?? 0) / Math.max(1, focusedTargetSummary?.totalHits ?? 0))} crit rate`}
+            />
+            <StatCard
+              label={liveFocusTarget === "all" ? "Focus Share" : "Contributors"}
+              value={
+                liveFocusTarget === "all"
+                  ? formatPercent((liveFocusOptions[0]?.totalDamage ?? 0) / Math.max(1, liveFocusOptions.reduce((sum, row) => sum + row.totalDamage, 0)))
+                  : formatNumber(focusedTargetSummary?.contributors.length ?? 0)
+              }
+              icon="pie_chart"
+              hint={liveFocusTarget === "all" ? "largest target share of current damage" : "players currently hitting this target"}
+            />
+          </div>
+          <ContributionPieChart data={targetDistributionData} dataKey="value" nameKey="label" />
+        </section>
+
+        <section className="oa-panel">
+          <SectionHeading
+            icon="list_alt"
+            eyebrow={liveFocusTarget === "all" ? "Target Table" : "Target Contributors"}
+            title={liveFocusTarget === "all" ? "Current targets by damage" : `Players hitting ${liveFocusTarget}`}
+          />
+          <div className="oa-list-panel">
+            {(liveFocusTarget === "all"
+              ? liveFocusOptions.slice(0, 10).map((row) => ({
+                  label: row.name,
+                  supporting: `${formatNumber(row.hits)} hits`,
+                  metric: formatShort(row.totalDamage)
+                }))
+              : focusedTargetSummary?.contributors.slice(0, 10).map((row) => ({
+                  label: row.name,
+                  supporting: `${formatNumber(row.hits)} hits • ${formatPercent(row.critCount / Math.max(1, row.hits))} crit`,
+                  metric: formatShort(row.totalDamage)
+                })) ?? []
+            ).map((row) => (
+              <div className="oa-list-row compact" key={row.label}>
+                <div>
+                  <strong>{row.label}</strong>
+                  <small>{row.supporting}</small>
+                </div>
+                <div className="oa-list-metric">
+                  <strong>{row.metric}</strong>
+                </div>
+              </div>
+            ))}
+            {!targetDistributionData.length ? (
+              <div className="oa-empty-state">No hostile target names have been parsed in the current combat-log slice yet.</div>
+            ) : null}
+          </div>
+        </section>
       </div>
 
       {compareMode && selectedForCompare.length ? (
@@ -1318,6 +1509,11 @@ function PlayerView({
         </button>
       </div>
 
+      <section className="oa-panel oa-description-panel">
+        <SectionHeading icon="info" eyebrow="Detail View" title={DETAIL_TABS.find((tab) => tab.id === props.detailTab)?.label ?? "Player detail"} />
+        <p className="oa-panel-description">{DETAIL_TAB_COPY[props.detailTab]}</p>
+      </section>
+
       {props.detailTab === "overview" ? (
         <PlayerOverviewTab player={player} encounter={encounter} allEncounters={props.availableEncounters} />
       ) : null}
@@ -1701,6 +1897,7 @@ export function ObsidianScreens(props: ShellProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [compareMode, setCompareMode] = useState(false);
   const [liveFocusTarget, setLiveFocusTarget] = useState("all");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const activePlayerName = props.selectedPlayer?.displayName ?? "No player selected";
   const runtimeLabel = getRuntimeLabel(props.state);
@@ -1770,7 +1967,7 @@ export function ObsidianScreens(props: ShellProps) {
   ];
 
   return (
-    <div className={`obsidian-architect ${settings.visualCore}`} style={rootStyle}>
+    <div className={`obsidian-architect ${settings.visualCore} ${sidebarCollapsed ? "sidebar-collapsed" : ""}`} style={rootStyle}>
       <aside className="oa-sidebar">
         <div className="oa-brand">
           <div className="oa-brand-mark">
@@ -1780,6 +1977,9 @@ export function ObsidianScreens(props: ShellProps) {
             <h2>OBSIDIAN</h2>
             <p>Combat Parser v1.0</p>
           </div>
+          <button className="oa-icon-button oa-sidebar-toggle" onClick={() => setSidebarCollapsed((value) => !value)}>
+            <Icon name={sidebarCollapsed ? "menu_open" : "menu"} />
+          </button>
         </div>
 
         <nav className="oa-nav">
