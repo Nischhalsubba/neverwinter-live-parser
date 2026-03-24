@@ -296,7 +296,7 @@ export class LogMonitorService extends EventEmitter {
             ...result.lines.slice(-MAX_DEBUG_ITEMS),
             ...this.state.debug.latestRawLines
           ].slice(0, MAX_DEBUG_ITEMS);
-          this.consumeLines(result.lines);
+          this.consumeLines(result.lines, false);
         }
       }
 
@@ -305,7 +305,7 @@ export class LogMonitorService extends EventEmitter {
           leftover,
           ...this.state.debug.latestRawLines
         ].slice(0, MAX_DEBUG_ITEMS);
-        this.consumeLines([leftover]);
+        this.consumeLines([leftover], false);
       }
     } finally {
       await fileHandle.close();
@@ -386,7 +386,7 @@ export class LogMonitorService extends EventEmitter {
     }, delay);
   }
 
-  private consumeLines(lines: string[]): void {
+  private consumeLines(lines: string[], syncAnalysis = true): void {
     for (const line of lines) {
       this.combatantTracker.registerLine();
       const parsed = parseLine(line);
@@ -399,6 +399,8 @@ export class LogMonitorService extends EventEmitter {
       this.pushParseIssue(parsed.issue);
     }
 
-    this.syncEncounterState();
+    if (syncAnalysis) {
+      this.syncEncounterState();
+    }
   }
 }
