@@ -3545,6 +3545,16 @@ export function ObsidianScreens(props: ShellProps) {
   const runtimeLabel = getRuntimeLabel(props.state);
   const sessionIndicator = getSessionIndicator(props.state);
   const sourceLabel = getSourceLabel(props.state);
+  const activeEncounterLabel =
+    props.state.currentEncounter?.label ??
+    (props.state.watcherStatus === "watching" ? "Watching combat log" : "Idle");
+  const activeFileName =
+    (
+      props.state.activeLogFile ??
+      props.state.importedLogFile ??
+      props.state.analysis.sourcePath ??
+      ""
+    ).split(/[\\/]/).pop() || "No combat log linked";
   const sessionSeconds = Math.floor(props.state.analysis.durationMs / 1000);
   const sessionTimer = `${Math.floor(sessionSeconds / 3600)
     .toString()
@@ -3603,16 +3613,15 @@ export function ObsidianScreens(props: ShellProps) {
   } as CSSProperties;
 
   const navItems: Array<{ id: View; label: string; icon: string }> = [
-    { id: "setup", label: "Setup", icon: "settings_input_component" },
     { id: "recent", label: "Encounters", icon: "history_edu" },
+    { id: "library", label: "Powers", icon: "deployed_code" },
     { id: "debug", label: "Debug", icon: "bug_report" },
-    { id: "library", label: "Library", icon: "menu_book" },
     { id: "settings", label: "Settings", icon: "settings" }
   ];
 
   return (
     <div
-      className={`obsidian-architect ${settings.visualCore} ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${settings.compactMode ? "compact-mode" : ""} ${settings.reducedMotion ? "reduced-motion" : ""} ${settings.smoothTables ? "smooth-tables" : ""}`}
+      className={`obsidian-architect ${settings.visualCore} ${props.isDesktopRuntime ? "desktop-runtime" : ""} ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${settings.compactMode ? "compact-mode" : ""} ${settings.reducedMotion ? "reduced-motion" : ""} ${settings.smoothTables ? "smooth-tables" : ""}`}
       style={rootStyle}
     >
       <aside className="oa-sidebar">
@@ -3621,8 +3630,8 @@ export function ObsidianScreens(props: ShellProps) {
             <Icon name="architecture" />
           </div>
           <div>
-            <h2>OBSIDIAN</h2>
-            <p>Combat Parser v1.0</p>
+            <h2>Neverwinter</h2>
+            <p>Live Parser</p>
           </div>
           <button className="oa-icon-button oa-sidebar-toggle" onClick={() => setSidebarCollapsed((value) => !value)}>
             <Icon name={sidebarCollapsed ? "menu_open" : "menu"} />
@@ -3630,14 +3639,6 @@ export function ObsidianScreens(props: ShellProps) {
         </div>
 
         <nav className="oa-nav">
-          <button
-            className={`oa-nav-item ${props.view === "setup" ? "active" : ""}`}
-            onClick={() => props.onViewChange("setup")}
-          >
-            <Icon name="settings_input_component" />
-            <span>Setup</span>
-          </button>
-
           <div className="oa-live-group">
             <button
               className={`oa-nav-item ${props.view === "live" || props.view === "players" ? "active" : ""}`}
@@ -3704,36 +3705,43 @@ export function ObsidianScreens(props: ShellProps) {
 
       <div className="oa-main">
         <header className="oa-topbar">
-          <div className="oa-topbar-left">
+          <div className="oa-topbar-left oa-no-drag">
             {props.view === "players" ? (
               <button className="oa-back-control" onClick={props.onBackToPlayers}>
                 <Icon name="arrow_back" />
                 Back to Party
               </button>
             ) : (
-              <span className="oa-title-lock">{props.view === "settings" ? "PROFILE SETTINGS" : "NEVERWINTER LIVE PARSER"}</span>
-            )}
-            <div className="oa-session-group">
-              <span className="oa-session-pill">SESSION: {runtimeLabel}</span>
-              <div className="oa-session-meta">
-                <span>{sessionTimer}</span>
-                <span>CPU: {props.state.system.processCpuPercent.toFixed(1)}%</span>
-                <span>RAM: {props.state.system.processMemoryMb.toFixed(0)} MB</span>
+              <div className="oa-app-title">
+                <div className="oa-brand-mark compact">
+                  <Icon name="auto_awesome" />
+                </div>
+                <div>
+                  <span className="oa-title-lock">Neverwinter Live Parser</span>
+                  <small>Windows combat utility</small>
+                </div>
               </div>
+            )}
+          </div>
+          <div className="oa-titlebar-center">
+            <span className="oa-session-pill">{activeEncounterLabel}</span>
+            <div className="oa-session-meta">
+              <span>{runtimeLabel}</span>
+              <span>{sessionTimer}</span>
+              <span>{activeFileName}</span>
             </div>
           </div>
-          <div className="oa-topbar-right">
-            <label className="oa-search topbar">
-              <Icon name="search" className="oa-inline-icon" />
-              <input
-                value={searchQuery}
-                onChange={(event) => setSearchQuery(event.target.value)}
-                placeholder="QUERY TELEMETRY..."
-              />
-            </label>
+          <div className="oa-topbar-right oa-no-drag">
+            <div className={`oa-system-pill ${sessionIndicator.tone}`}>
+              <span className="oa-system-dot" />
+              <span>{sessionIndicator.label}</span>
+            </div>
+            <span className="oa-titlebar-file">{activeFileName}</span>
+            <button className="oa-icon-button" onClick={() => props.onViewChange("setup")} title="Session setup">
+              <Icon name="folder_open" />
+            </button>
             <button className="oa-icon-button" onClick={props.onToggleNotifications}><Icon name="notifications" /></button>
             <button className="oa-icon-button" onClick={props.onToggleDiagnostics}><Icon name="memory" /></button>
-            <button className="oa-icon-button power"><Icon name="power_settings_new" /></button>
           </div>
         </header>
 

@@ -199,11 +199,21 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    minWidth: 980,
-    minHeight: 680,
-    backgroundColor: "#0f1624",
+    width: 1360,
+    height: 860,
+    minWidth: 1180,
+    minHeight: 720,
+    show: false,
+    backgroundColor: "#0E1117",
+    titleBarStyle: process.platform === "win32" ? "hidden" : "default",
+    titleBarOverlay:
+      process.platform === "win32"
+        ? {
+            color: "#111722",
+            symbolColor: "#F4F1E8",
+            height: 46
+          }
+        : false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -218,6 +228,12 @@ function createWindow(): void {
   } else {
     void mainWindow.loadFile(path.join(__dirname, "../../dist/index.html"));
   }
+
+  mainWindow.once("ready-to-show", () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.show();
+    }
+  });
 
   mainWindow.on("closed", () => {
     mainWindow = null;
