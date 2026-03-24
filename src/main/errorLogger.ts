@@ -1,6 +1,10 @@
-import { app } from "electron";
+import { createRequire } from "node:module";
 import fs from "node:fs/promises";
 import path from "node:path";
+
+const require = createRequire(import.meta.url);
+const electron = require("electron") as typeof import("electron");
+const { app } = electron;
 
 export function getLogDirectory(): string {
   try {

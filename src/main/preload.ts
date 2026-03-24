@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { createRequire } from "node:module";
 import type {
   AppState,
   DiscoveredLogCandidate,
@@ -6,6 +6,9 @@ import type {
 } from "../shared/types.js";
 
 type StateListener = (state: AppState) => void;
+const require = createRequire(import.meta.url);
+const electron = require("electron") as typeof import("electron");
+const { contextBridge, ipcRenderer } = electron;
 
 const api = {
   startMonitoring: (config: MonitoringConfig) =>

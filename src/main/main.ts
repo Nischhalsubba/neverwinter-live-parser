@@ -1,6 +1,6 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
+import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,7 +14,10 @@ import type {
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const require = createRequire(import.meta.url);
+const electron = require("electron") as typeof import("electron");
 const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
+const { app, BrowserWindow, dialog, ipcMain } = electron;
 app.setName("neverwinter-live-parser");
 const monitor = new LogMonitorService();
 
