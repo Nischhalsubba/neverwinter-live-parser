@@ -14,13 +14,15 @@ import {
   YAxis
 } from "recharts";
 import metadata from "../../shared/data/nw-metadata.json";
+import nwHubClasses from "../../shared/data/nw-hub-classes.json";
+import artifactData from "../../shared/data/nw-hub-artifacts.json";
 import type {
   AppState,
   EncounterSnapshot,
   SkillStat,
   TimelinePoint
 } from "../../shared/types";
-import { getPowerMeta, isKnownCompanion } from "../nwMetadata";
+import { classifyPowerFamily, getClassVisualMeta, getPowerMeta, getPowerVisualMeta, isKnownCompanion } from "../nwMetadata";
 import type { DetailTab, PlayerRow, View } from "../analysisViewModel";
 import {
   DETAIL_TABS,
@@ -119,6 +121,36 @@ function Icon({
     >
       {name}
     </span>
+  );
+}
+
+function ClassAvatar({
+  className,
+  fallback
+}: {
+  className: string | null | undefined;
+  fallback: string;
+}) {
+  const meta = getClassVisualMeta(className);
+  return meta?.emblemPath ? (
+    <img className="oa-avatar-image" src={meta.emblemPath} alt={className ?? fallback} />
+  ) : (
+    <>{fallback}</>
+  );
+}
+
+function PowerVisual({
+  powerName,
+  fallback
+}: {
+  powerName: string;
+  fallback: string;
+}) {
+  const meta = getPowerVisualMeta(powerName);
+  return meta?.iconPath ? (
+    <img className="oa-power-image" src={meta.iconPath} alt={powerName} loading="lazy" />
+  ) : (
+    <>{fallback}</>
   );
 }
 
@@ -546,6 +578,114 @@ function CombatTimelineChart({ points }: { points: TimelinePoint[] }) {
   );
 }
 
+function EffectTimelineChart({ points }: { points: TimelinePoint[] }) {
+  if (!points.length) {
+    return <div className="oa-empty-state">No buff or debuff events were parsed for this selection.</div>;
+  }
+
+  return (
+    <div className="oa-chart-box">
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={points}>
+          <CartesianGrid stroke="rgba(205, 189, 255, 0.08)" vertical={false} />
+          <XAxis dataKey="second" stroke="rgba(229, 225, 228, 0.52)" tickFormatter={(value) => `${value}s`} />
+          <YAxis stroke="rgba(229, 225, 228, 0.52)" />
+          <Tooltip
+            formatter={(value: number, name: string) => [formatNumber(Number(value)), name === "debuffs" ? "Debuff applications" : "Buff applications"]}
+            labelFormatter={(value) => `${value}s`}
+            contentStyle={{
+              background: "rgba(27, 27, 29, 0.95)",
+              border: "1px solid rgba(205, 189, 255, 0.16)",
+              borderRadius: "14px",
+              color: "#e5e1e4"
+            }}
+          />
+          <Area type="monotone" dataKey="buffs" stroke="#9af1bb" fill="rgba(154, 241, 187, 0.14)" strokeWidth={2} />
+          <Area type="monotone" dataKey="debuffs" stroke="#ffd36e" fill="rgba(255, 211, 110, 0.18)" strokeWidth={2} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function buildActivationRows(player: PlayerRow) {
+  const rows = new Map<string, {
+    abilityName: string;
+    family: "class" | "proc" | "pet" | "artifact" | "mount" | "unknown";
+    kind: string;
+    uses: number;
+    critCount: number;
+    timestamps: number[];
+  }>();
+
+  for (const activation of player.activations) {
+    if (!activation.abilityName) {
+      continue;
+    }
+    const family = classifyPowerFamily(activation.abilityName, activation.sourceType);
+    const key = `${activation.kind}:${activation.abilityName}:${family}`;
+    const current = rows.get(key) ?? {
+      abilityName: activation.abilityName,
+      family,
+      kind: activation.kind,
+      uses: 0,
+      critCount: 0,
+      timestamps: []
+    };
+    current.uses += 1;
+    current.timestamps.push(activation.second);
+    if (activation.critical) {
+      current.critCount += 1;
+    }
+    rows.set(key, current);
+  }
+
+  return Array.from(rows.values()).sort((left, right) => right.uses - left.uses);
+}
+
+function buildEffectRows(player: PlayerRow) {
+  return player.effects
+    .filter((effect) => effect.kind === "debuff")
+    .map((effect) => ({
+      ...effect,
+      avgGap:
+        effect.timestamps.length > 1
+          ? effect.timestamps
+              .slice(1)
+              .reduce((sum, timestamp, index) => sum + (timestamp - effect.timestamps[index]), 0) /
+            (effect.timestamps.length - 1)
+          : 0
+    }))
+    .sort((left, right) => right.applications - left.applications);
+}
+
+function buildRotationHeatmap(player: PlayerRow) {
+  const damageRows = buildActivationRows(player)
+    .filter((row) => row.kind === "damage")
+    .slice(0, 12);
+  const maxSecond = Math.max(0, ...player.activations.map((activation) => activation.second));
+  const buckets = Array.from(
+    { length: Math.max(1, Math.floor(maxSecond / 5) + 1) },
+    (_, index) => index * 5
+  );
+
+  return damageRows.map((row) => {
+    const counts = new Map<number, number>();
+    for (const timestamp of row.timestamps) {
+      const bucket = Math.floor(timestamp / 5) * 5;
+      counts.set(bucket, (counts.get(bucket) ?? 0) + 1);
+    }
+
+    return {
+      abilityName: row.abilityName,
+      cells: buckets.map((bucket) => ({
+        second: bucket,
+        count: counts.get(bucket) ?? 0
+      }))
+    };
+  });
+}
+
 function ContributionPieChart({
   data,
   dataKey,
@@ -594,24 +734,59 @@ function ContributionPieChart({
 
 function LibraryView() {
   const cards = [
+    { label: "NW Hub classes", value: formatNumber(nwHubClasses.classes.length), icon: "shield_person" },
+    { label: "NW Hub powers", value: formatNumber(nwHubClasses.powers.length), icon: "deployed_code" },
+    { label: "NW Hub feats", value: formatNumber(nwHubClasses.feats.length), icon: "social_leaderboard" },
+    { label: "NW Hub features", value: formatNumber(nwHubClasses.features.length), icon: "diamond" },
     { label: "Player powers", value: formatNumber(metadata.playerPowers.length), icon: "local_fire_department" },
     { label: "Companions", value: formatNumber(metadata.companions.length), icon: "pets" },
     { label: "Artifacts", value: formatNumber(metadata.artifacts.length), icon: "diamond" },
     { label: "Mount powers", value: formatNumber(metadata.mounts.length), icon: "directions_car" }
   ];
 
+  const previewPowers = nwHubClasses.powers.slice(0, 18);
+  const previewArtifacts = artifactData.artifacts.slice(0, 12);
+
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Parser Library</p>
         <h1>Neverwinter metadata vault</h1>
-        <p>Reusable reference data extracted from local game tooling and used to enrich power, class, mount, and companion labels inside the parser.</p>
+        <p>Reusable reference data extracted from local game tooling and NW Hub class resources, now used to enrich class emblems, power icons, paragon labels, and combat-log presentation inside the parser.</p>
       </header>
       <div className="oa-card-grid four">
         {cards.map((card) => (
           <StatCard key={card.label} label={card.label} value={card.value} icon={card.icon} tone="secondary" />
         ))}
       </div>
+      <section className="oa-panel">
+        <SectionHeading icon="shield_person" eyebrow="Class Reference" title="Neverwinter classes, resources, and paragons" />
+        <div className="oa-library-class-grid">
+          {nwHubClasses.classes.map((entry) => (
+            <article className="oa-library-class-card" key={entry.className}>
+              <div className="oa-library-class-head">
+                <div className="oa-portrait small">
+                  <ClassAvatar className={entry.className} fallback={entry.className.slice(0, 2).toUpperCase()} />
+                </div>
+                <div>
+                  <strong>{entry.className}</strong>
+                  <small>{entry.resourceName ?? "No unique class resource"}</small>
+                </div>
+              </div>
+              <div className="oa-library-pill-row">
+                {entry.paragons.map((paragon) => (
+                  <span className="oa-badge subtle" key={`${entry.className}-${paragon.name}`}>
+                    {paragon.name} • {paragon.role}
+                  </span>
+                ))}
+              </div>
+              <p className="oa-library-copy">
+                {entry.hasMasterySlot ? "Has mastery slot support in NW Hub data." : "No mastery slot flag in NW Hub data."}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
       <section className="oa-panel">
         <SectionHeading icon="database" eyebrow="Reference Index" title="Metadata categories" />
         <div className="oa-library-grid">
@@ -631,6 +806,51 @@ function LibraryView() {
             <strong>Build inference</strong>
             <p>Uses known power ownership to infer a likely class and paragon from parsed skill usage.</p>
           </div>
+        </div>
+      </section>
+      <section className="oa-panel">
+        <SectionHeading icon="image" eyebrow="Visual Assets" title="Extracted NW Hub power icons" />
+        <div className="oa-power-gallery">
+          {previewPowers.map((power) => (
+            <article className="oa-power-gallery-card" key={`${power.className}-${power.name}`}>
+              <div className="oa-power-icon large">
+                <PowerVisual powerName={power.name} fallback={power.name.slice(0, 2).toUpperCase()} />
+              </div>
+              <div>
+                <strong>{power.name}</strong>
+                <small>
+                  {power.className}
+                  {power.paragonPath ? ` • ${power.paragonPath}` : ""}
+                  {power.type ? ` • ${power.type}` : ""}
+                </small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="oa-panel">
+        <SectionHeading icon="diamond" eyebrow="Artifact Intelligence" title="Extracted artifact icons and combat effect summaries" />
+        <div className="oa-power-gallery">
+          {previewArtifacts.map((artifact) => (
+            <article className="oa-power-gallery-card" key={artifact.name}>
+              <div className="oa-power-icon large">
+                {artifact.iconPath ? (
+                  <img className="oa-power-image" src={artifact.iconPath} alt={artifact.name} loading="lazy" />
+                ) : (
+                  artifact.name.slice(0, 2).toUpperCase()
+                )}
+              </div>
+              <div>
+                <strong>{artifact.name}</strong>
+                <small>
+                  {artifact.quality} • IL {formatNumber(artifact.itemLevel ?? 0)}
+                  {artifact.effects.damageTakenPct.length
+                    ? ` • +${Math.max(...artifact.effects.damageTakenPct)}% dmg taken`
+                    : ""}
+                </small>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
     </section>
@@ -1009,7 +1229,9 @@ function LiveOverviewView({
             <button className="oa-table-row party" key={player.id} onClick={() => props.onSelectPlayer(player.id)}>
               <span className="oa-rank">{String(index + 1).padStart(2, "0")}</span>
               <span className="oa-player-cell">
-                <span className="oa-avatar-frame">{initialsFromName(player.displayName)}</span>
+                <span className="oa-avatar-frame">
+                  <ClassAvatar className={player.className} fallback={initialsFromName(player.displayName)} />
+                </span>
                 <span>
                   <strong>{player.displayName}</strong>
                   <small>{player.paragon ? `@${player.paragon.toLowerCase().replace(/\s+/g, "_")}` : "@unknown_build"}</small>
@@ -1111,22 +1333,187 @@ function PlayerOverviewTab({
 }
 
 function PlayerTimelineTab({ player, encounter }: { player: PlayerRow; encounter: EncounterSnapshot | null }) {
+  const [mode, setMode] = useState<"dps" | "effects">("dps");
+  const [familyFilter, setFamilyFilter] = useState<"all" | "class" | "proc" | "pet">("all");
   const points =
     encounter === null
       ? player.timeline
       : player.timeline.filter((point) => point.second <= Math.ceil(encounter.durationMs / 1000));
+  const activationRows = buildActivationRows(player).filter((row) => {
+    if (familyFilter === "all") {
+      return true;
+    }
+    return familyFilter === "pet" ? row.family === "pet" : row.family === familyFilter;
+  });
   const powerRows = player.topSkills.filter((skill) => skill.kind === "damage");
+  const effectRows = buildEffectRows(player).filter((effect) =>
+    encounter === null ? true : effect.timestamps.some((timestamp) => timestamp <= Math.ceil(encounter.durationMs / 1000))
+  );
+  const rotationRows = buildRotationHeatmap(player);
+  const maxActivationUses = Math.max(1, ...activationRows.map((row) => row.uses));
 
   return (
     <div className="oa-tab-layout">
       <section className="oa-panel">
-        <SectionHeading icon="insights" eyebrow="Telemetry" title="DPS flow over time" actions={<span className="oa-pill">Peak: {formatShort(Math.max(0, ...points.map((point) => point.damage)))}</span>} />
-        <CombatTimelineChart points={points} />
+        <SectionHeading
+          icon="insights"
+          eyebrow="Timeline"
+          title={mode === "dps" ? "DPS flow over time" : "Buff and debuff application flow"}
+          actions={
+            <div className="oa-button-pair">
+              <button className={`oa-pill-button ${mode === "dps" ? "active" : ""}`} onClick={() => setMode("dps")}>DPS</button>
+              <button className={`oa-pill-button ${mode === "effects" ? "active" : ""}`} onClick={() => setMode("effects")}>Buff/Debuff</button>
+            </div>
+          }
+        />
+        {mode === "dps" ? <CombatTimelineChart points={points} /> : <EffectTimelineChart points={points} />}
       </section>
 
       <section className="oa-panel">
         <SectionHeading icon="bar_chart" eyebrow="Power Contribution" title="Top parsed powers" />
         <PowerContributionChart skills={powerRows} />
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading
+          icon="electric_bolt"
+          eyebrow="Power Activations"
+          title={`${activationRows.reduce((sum, row) => sum + row.uses, 0)} events from the combat log`}
+          actions={
+            <div className="oa-button-pair">
+              <button className={`oa-pill-button ${familyFilter === "all" ? "active" : ""}`} onClick={() => setFamilyFilter("all")}>All</button>
+              <button className={`oa-pill-button ${familyFilter === "class" ? "active" : ""}`} onClick={() => setFamilyFilter("class")}>Class Powers</button>
+              <button className={`oa-pill-button ${familyFilter === "proc" ? "active" : ""}`} onClick={() => setFamilyFilter("proc")}>Procs & Items</button>
+              <button className={`oa-pill-button ${familyFilter === "pet" ? "active" : ""}`} onClick={() => setFamilyFilter("pet")}>Pets</button>
+            </div>
+          }
+        />
+        <div className="oa-activation-legend">
+          <span><span className="oa-dot normal" /> Normal</span>
+          <span><span className="oa-dot crit" /> Crit</span>
+        </div>
+        <div className="oa-activation-grid">
+          {activationRows.slice(0, 16).map((row) => (
+            <div className="oa-activation-row" key={`${row.kind}:${row.abilityName}:${row.family}`}>
+              <div className="oa-activation-name">
+                <span className="oa-inline-power">
+                  <span className="oa-power-icon small">
+                    <PowerVisual powerName={row.abilityName} fallback={row.abilityName.slice(0, 2).toUpperCase()} />
+                  </span>
+                  <span>
+                    <strong>{row.abilityName}</strong>
+                    <small>{row.family} • {row.uses} uses</small>
+                  </span>
+                </span>
+              </div>
+              <div className="oa-activation-track">
+                {row.timestamps.slice(0, 80).map((timestamp, index) => {
+                  const critIndex = row.timestamps.findIndex((value) => value === timestamp);
+                  const relatedActivation = player.activations.find(
+                    (activation) =>
+                      activation.abilityName === row.abilityName &&
+                      activation.second === timestamp &&
+                      activation.kind === row.kind
+                  );
+                  return (
+                    <span
+                      key={`${row.abilityName}-${timestamp}-${index}-${critIndex}`}
+                      className={`oa-activation-mark ${relatedActivation?.critical ? "crit" : "normal"}`}
+                      style={{ left: `${Math.min(100, (timestamp / Math.max(1, points.at(-1)?.second ?? 1)) * 100)}%` }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          {!activationRows.length ? <div className="oa-empty-state">No power activations match the selected family in this combat-log selection.</div> : null}
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="grid_view" eyebrow="Rotation Heatmap" title="5s buckets, top powers by damage" />
+        <div className="oa-heatmap">
+          {rotationRows.map((row) => (
+            <div className="oa-heatmap-row" key={row.abilityName}>
+              <div className="oa-heatmap-label">{row.abilityName}</div>
+              <div className="oa-heatmap-cells">
+                {row.cells.map((cell) => (
+                  <span
+                    key={`${row.abilityName}-${cell.second}`}
+                    className="oa-heatmap-cell"
+                    style={{
+                      opacity: cell.count === 0 ? 0.18 : Math.min(1, 0.24 + cell.count / 4),
+                      background: cell.count === 0 ? "rgba(205, 189, 255, 0.12)" : `rgba(205, 189, 255, ${Math.min(0.92, 0.22 + cell.count / 5)})`
+                    }}
+                    title={`${row.abilityName} at ${cell.second}s: ${cell.count} uses`}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+          {!rotationRows.length ? <div className="oa-empty-state">No damage activations were parsed for a rotation heatmap.</div> : null}
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="schedule" eyebrow="Power Usage Frequency" title="Combat-log activation frequency" />
+        <div className="oa-data-table">
+          <div className="oa-data-head healing">
+            <span>Power</span>
+            <span>Type</span>
+            <span>Uses</span>
+            <span>Crits</span>
+            <span>Avg Gap</span>
+            <span>Usage</span>
+          </div>
+          {activationRows.slice(0, 12).map((row) => {
+            const gaps = row.timestamps.slice(1).map((timestamp, index) => timestamp - row.timestamps[index]);
+            const avgGap = gaps.length ? gaps.reduce((sum, value) => sum + value, 0) / gaps.length : 0;
+            return (
+              <div className="oa-data-row healing" key={`freq-${row.kind}-${row.abilityName}`}>
+                <div>
+                  <strong>{row.abilityName}</strong>
+                  <small>{row.kind}</small>
+                </div>
+                <span>{row.family}</span>
+                <span>{formatNumber(row.uses)}</span>
+                <span>{formatNumber(row.critCount)}</span>
+                <span>{avgGap > 0 ? `${avgGap.toFixed(1)}s` : "--"}</span>
+                <span className="oa-right-stat">
+                  <strong>{formatPercent(row.uses / maxActivationUses)}</strong>
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="shield" eyebrow="Target Debuffs" title="Debuffs present while dealing damage" />
+        <div className="oa-data-table">
+          <div className="oa-data-head healing">
+            <span>Debuff</span>
+            <span>Target</span>
+            <span>Applications</span>
+            <span>Magnitude</span>
+            <span>Last Seen</span>
+            <span>Timeline</span>
+          </div>
+          {effectRows.slice(0, 14).map((effect) => (
+            <div className="oa-data-row healing" key={`${effect.kind}-${effect.abilityName}-${effect.targetName}`}>
+              <div>
+                <strong>{effect.abilityName}</strong>
+                <small>{classifyPowerFamily(effect.abilityName)}</small>
+              </div>
+              <span>{effect.targetName}</span>
+              <span>{formatNumber(effect.applications)}</span>
+              <span>{formatShort(effect.totalMagnitude)}</span>
+              <span>{effect.timestamps.length ? `${effect.timestamps[effect.timestamps.length - 1]}s` : "--"}</span>
+              <span className="oa-effect-time-list">{effect.timestamps.slice(0, 6).map((timestamp) => `${timestamp}s`).join(", ") || "--"}</span>
+            </div>
+          ))}
+          {!effectRows.length ? <div className="oa-empty-state">No debuff applications were parsed for this player in the current combat-log selection.</div> : null}
+        </div>
       </section>
     </div>
   );
@@ -1174,8 +1561,10 @@ function PlayerDamageTab({
           {rows.map((row) => (
             <div className="oa-data-row damage" key={row.abilityName}>
               <div className="oa-power-cell">
-                <div className="oa-power-icon">{row.abilityName.slice(0, 2).toUpperCase()}</div>
-                <div>
+              <div className="oa-power-icon">
+                <PowerVisual powerName={row.abilityName} fallback={row.abilityName.slice(0, 2).toUpperCase()} />
+              </div>
+              <div>
                   <strong>{row.abilityName}</strong>
                   <small>{row.type} • Crit {formatPercent(row.critRate)} • CA {formatPercent(row.flankRate)}</small>
                   <ProgressBar value={row.total} max={maxTotal} />
@@ -1451,7 +1840,9 @@ function PlayerView({
             <Icon name="arrow_back" />
             Back to Party
           </button>
-          <div className="oa-portrait">{initialsFromName(player.displayName)}</div>
+          <div className="oa-portrait">
+            <ClassAvatar className={player.className} fallback={initialsFromName(player.displayName)} />
+          </div>
           <div>
             <div className="oa-player-title-row">
               <h1>{player.displayName}</h1>
@@ -2033,13 +2424,15 @@ export function ObsidianScreens(props: ShellProps) {
         </nav>
 
         <div className="oa-sidebar-footer">
-          <div className="oa-sidebar-profile">
-            <div className="oa-sidebar-avatar">{initialsFromName(activePlayerName)}</div>
-            <div>
-              <strong>{activePlayerName}</strong>
-              <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : sourceLabel}</span>
-            </div>
+        <div className="oa-sidebar-profile">
+          <div className="oa-sidebar-avatar">
+            <ClassAvatar className={props.selectedPlayer?.className} fallback={initialsFromName(activePlayerName)} />
           </div>
+          <div>
+            <strong>{activePlayerName}</strong>
+            <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : sourceLabel}</span>
+          </div>
+        </div>
           <button className="oa-button session" onClick={() => props.onViewChange("setup")}>
             New Session
           </button>

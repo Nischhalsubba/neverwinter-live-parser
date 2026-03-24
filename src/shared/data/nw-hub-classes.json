@@ -1,0 +1,5129 @@
+{
+  "source": "https://www.nw-hub.com/classes",
+  "extractedAt": "2026-03-24T02:31:28.357Z",
+  "classes": [
+    {
+      "className": "Fighter",
+      "slug": "fighter",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/fighter.webp",
+      "emblemPath": "/nw-hub/classes/emblems/fighter.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Dreadnought",
+          "role": "DPS"
+        },
+        {
+          "name": "Vanguard",
+          "role": "Tank"
+        }
+      ]
+    },
+    {
+      "className": "Barbarian",
+      "slug": "barbarian",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/barbarian.webp",
+      "emblemPath": "/nw-hub/classes/emblems/barbarian.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Blademaster",
+          "role": "DPS"
+        },
+        {
+          "name": "Sentinel",
+          "role": "Tank"
+        }
+      ]
+    },
+    {
+      "className": "Paladin",
+      "slug": "paladin",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/paladin.webp",
+      "emblemPath": "/nw-hub/classes/emblems/paladin.webp",
+      "resourceName": "Divine Call",
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Justicar",
+          "role": "Tank"
+        },
+        {
+          "name": "Oathkeeper",
+          "role": "Healer"
+        }
+      ]
+    },
+    {
+      "className": "Cleric",
+      "slug": "cleric",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/cleric.webp",
+      "emblemPath": "/nw-hub/classes/emblems/cleric.webp",
+      "resourceName": "Divinity",
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Arbiter",
+          "role": "DPS"
+        },
+        {
+          "name": "Devout",
+          "role": "Healer"
+        }
+      ]
+    },
+    {
+      "className": "Wizard",
+      "slug": "wizard",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/wizard.webp",
+      "emblemPath": "/nw-hub/classes/emblems/wizard.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Thaumaturge",
+          "role": "DPS"
+        },
+        {
+          "name": "Arcanist",
+          "role": "DPS"
+        }
+      ]
+    },
+    {
+      "className": "Warlock",
+      "slug": "warlock",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/warlock.webp",
+      "emblemPath": "/nw-hub/classes/emblems/warlock.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Hellbringer",
+          "role": "DPS"
+        },
+        {
+          "name": "Soulweaver",
+          "role": "Healer"
+        }
+      ]
+    },
+    {
+      "className": "Rogue",
+      "slug": "rogue",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/rogue.webp",
+      "emblemPath": "/nw-hub/classes/emblems/rogue.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Assassin",
+          "role": "DPS"
+        },
+        {
+          "name": "Whisperknife",
+          "role": "DPS"
+        }
+      ]
+    },
+    {
+      "className": "Ranger",
+      "slug": "ranger",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/ranger.webp",
+      "emblemPath": "/nw-hub/classes/emblems/ranger.webp",
+      "resourceName": null,
+      "hasMasterySlot": true,
+      "paragons": [
+        {
+          "name": "Hunter",
+          "role": "DPS"
+        },
+        {
+          "name": "Warden",
+          "role": "DPS"
+        }
+      ]
+    },
+    {
+      "className": "Bard",
+      "slug": "bard",
+      "emblemUrl": "https://www.nw-hub.com/assets/classes/emblems/bard.webp",
+      "emblemPath": "/nw-hub/classes/emblems/bard.webp",
+      "resourceName": "Performance",
+      "hasMasterySlot": false,
+      "paragons": [
+        {
+          "name": "Songblade",
+          "role": "DPS"
+        },
+        {
+          "name": "Minstrel",
+          "role": "Healer"
+        }
+      ]
+    }
+  ],
+  "powers": [
+    {
+      "name": "Cleave",
+      "logId": "Pn.V94y841",
+      "type": "At-Will",
+      "icon": "fighter_cleave.webp",
+      "description": "Delivers a threefold attack to enemies in a cone before you, dealing physical damage each hit.",
+      "className": "Fighter",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 5
+        },
+        {
+          "magnitude": 100,
+          "apGain": 6
+        },
+        {
+          "magnitude": 150,
+          "apGain": 8
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_cleave.webp",
+      "iconPath": "/nw-hub/powers/fighter_cleave.webp"
+    },
+    {
+      "name": "Brazen Slash",
+      "logId": "Pn.Glqjcf1",
+      "type": "At-Will",
+      "icon": "fighter_brazenslash.webp",
+      "description": "Delivers a threefold attack to target enemy, dealing physical damage each hit. Added Effect: Stamina Restoration.",
+      "className": "Fighter",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 50,
+          "apGain": 3
+        },
+        {
+          "magnitude": 65,
+          "apGain": 4
+        },
+        {
+          "magnitude": 80,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_brazenslash.webp",
+      "iconPath": "/nw-hub/powers/fighter_brazenslash.webp"
+    },
+    {
+      "name": "Weapon Master Strike",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "fighter_weaponmasterstrike.webp",
+      "description": "Deal physical damage to target enemy.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.65,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 130,
+          "apGain": 7
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_weaponmasterstrike.webp",
+      "iconPath": "/nw-hub/powers/fighter_weaponmasterstrike.webp"
+    },
+    {
+      "name": "Tide of Iron",
+      "logId": "Pn.Ugrzfv1",
+      "type": "At-Will",
+      "icon": "fighter_tideofiron.webp",
+      "description": "Deal physical damage to target enemy. Added Effect: Your actions generate more threat. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_tideofiron.webp",
+      "iconPath": "/nw-hub/powers/fighter_tideofiron.webp"
+    },
+    {
+      "name": "Threatening Rush",
+      "logId": "Pn.G9cv7m",
+      "type": "At-Will",
+      "icon": "fighter_threateningrush.webp",
+      "description": "Lunge at target enemy dealing physical damage. Added Effect: Increased Threat. Cannot be executed while rooted.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.4,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 70,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_threateningrush.webp",
+      "iconPath": "/nw-hub/powers/fighter_threateningrush.webp"
+    },
+    {
+      "name": "Shield Bash",
+      "logId": "Pn.Ud8nvn",
+      "type": "At-Will",
+      "icon": "fighter_shieldbash.webp",
+      "description": "Deal physical damage to enemies in a line before you.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 50,
+          "apGain": 4
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_shieldbash.webp",
+      "iconPath": "/nw-hub/powers/fighter_shieldbash.webp"
+    },
+    {
+      "name": "Guarded Strike",
+      "logId": "Pn.C0p1io1",
+      "type": "At-Will",
+      "icon": "fighter_guardedstrike.webp",
+      "description": "Deal physical damage to target enemy.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 50,
+          "apGain": 4
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_guardedstrike.webp",
+      "iconPath": "/nw-hub/powers/fighter_guardedstrike.webp"
+    },
+    {
+      "name": "Bull Charge",
+      "logId": "Pn.M1xfm8",
+      "type": "Encounter",
+      "icon": "fighter_bullcharge.webp",
+      "description": "Lunge at target enemy dealing physical damage. Added Effect: Knock Back.",
+      "className": "Fighter",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 300,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_bullcharge.webp",
+      "iconPath": "/nw-hub/powers/fighter_bullcharge.webp"
+    },
+    {
+      "name": "Anvil of Doom",
+      "logId": "Pn.G40yi91",
+      "type": "Encounter",
+      "icon": "fighter_anvilofdoom.webp",
+      "description": "Deal physical damage to target enemy. If the Vengeance Gauge is above 15, damage is enhanced, cooldown is reduced by 4s, and 15 vengeance is consumed.",
+      "className": "Fighter",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 800,
+          "apGain": 48
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_anvilofdoom.webp",
+      "iconPath": "/nw-hub/powers/fighter_anvilofdoom.webp"
+    },
+    {
+      "name": "Enforced Threat",
+      "logId": "Pn.O6rfum1",
+      "type": "Encounter",
+      "icon": "fighter_enforcedthreat.webp",
+      "description": "Threaten nearby enemies, placing yourself at the top of their threat list. Reduces the awareness of all targets by 10%. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 250,
+          "apGain": 16
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_enforcedthreat.webp",
+      "iconPath": "/nw-hub/powers/fighter_enforcedthreat.webp"
+    },
+    {
+      "name": "Mighty Leap",
+      "logId": "Pn.2nd9v21",
+      "type": "Encounter",
+      "icon": "fighter_mightyleap.webp",
+      "description": "Leap to target area dealing physical damage to nearby enemies.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_mightyleap.webp",
+      "iconPath": "/nw-hub/powers/fighter_mightyleap.webp"
+    },
+    {
+      "name": "Indomitable Battle Strike",
+      "logId": "Pn.Xflc2u1",
+      "type": "Encounter",
+      "icon": "fighter_ibs.webp",
+      "description": "Deal heavy physical damage to target enemy.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.7,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1100,
+          "apGain": 64
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_ibs.webp",
+      "iconPath": "/nw-hub/powers/fighter_ibs.webp"
+    },
+    {
+      "name": "Not So Fast",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "fighter_notsofast.webp",
+      "description": "Deal physical damage to target enemy. Added Effect: Slow.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.4,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_notsofast.webp",
+      "iconPath": "/nw-hub/powers/fighter_notsofast.webp"
+    },
+    {
+      "name": "Rising Tide",
+      "logId": "Pn.Kuayxg",
+      "type": "Encounter",
+      "icon": "fighter_risingtide.webp",
+      "description": "Deal physical damage to target enemy.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_risingtide.webp",
+      "iconPath": "/nw-hub/powers/fighter_risingtide.webp"
+    },
+    {
+      "name": "Retaliate",
+      "logId": "Pn.Qsj1kw1",
+      "type": "Encounter",
+      "icon": "fighter_retaliate.webp",
+      "description": "Whenever you release Dig In immediately after blocking an attack, deal damage to enemies in a cone before you. Added Effect: Increased Threat. May only be triggered once every 10 seconds.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.4,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_retaliate.webp",
+      "iconPath": "/nw-hub/powers/fighter_retaliate.webp"
+    },
+    {
+      "name": "Shield Throw",
+      "logId": "Pn.82ptuc1",
+      "type": "Encounter",
+      "icon": "fighter_shieldthrow.webp",
+      "description": "Deal projectile damage to target enemy. Added Effect: Stun. Duration: 3s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 250,
+          "apGain": 18
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_shieldthrow.webp",
+      "iconPath": "/nw-hub/powers/fighter_shieldthrow.webp"
+    },
+    {
+      "name": "Knee Breaker",
+      "logId": "Pn.S2lvzv1",
+      "type": "Encounter",
+      "icon": "fighter_kneebreaker.webp",
+      "description": "Deal physical damage to target enemy. Added Effect: Slow. Duration: 8s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 30
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_kneebreaker.webp",
+      "iconPath": "/nw-hub/powers/fighter_kneebreaker.webp"
+    },
+    {
+      "name": "Shield Slam",
+      "logId": "Pn.Xfs8wd",
+      "type": "Encounter",
+      "icon": "fighter_shieldslam.webp",
+      "description": "Deal physical damage to enemies in a line before you. Added Effect: Knock Back.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_shieldslam.webp",
+      "iconPath": "/nw-hub/powers/fighter_shieldslam.webp"
+    },
+    {
+      "name": "Linebreaker",
+      "logId": "Pn.Zdoyjw1",
+      "type": "Encounter",
+      "icon": "fighter_linebreaker.webp",
+      "description": "Lunge at target enemy dealing physical damage to enemies in a cone before you. Added Effect: Increased Threat.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.7,
+      "cd": 15,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_linebreaker.webp",
+      "iconPath": "/nw-hub/powers/fighter_linebreaker.webp"
+    },
+    {
+      "name": "Knight's Valor",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "fighter_knightsvalor.webp",
+      "description": "Cover the nearest party member, intercepting all damage that would be dealt to them. All threat generated by the covered target is transferred to you. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.3,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_knightsvalor.webp",
+      "iconPath": "/nw-hub/powers/fighter_knightsvalor.webp"
+    },
+    {
+      "name": "Knight's Challenge",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "fighter_knightschallenge.webp",
+      "description": "Instantly restore 50% of your stamina. Deal physical damage to attackers whenever you block. Duration: 8s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.4,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 16
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_knightschallenge.webp",
+      "iconPath": "/nw-hub/powers/fighter_knightschallenge.webp"
+    },
+    {
+      "name": "Iron Warrior",
+      "logId": "Pn.1pz3ge",
+      "type": "Encounter",
+      "icon": "fighter_ironwarrior.webp",
+      "description": "Decreases damage taken by 20%. Duration: 8s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 10
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_ironwarrior.webp",
+      "iconPath": "/nw-hub/powers/fighter_ironwarrior.webp"
+    },
+    {
+      "name": "Crescendo",
+      "logId": "Pn.Uac42p1",
+      "type": "Daily",
+      "icon": "fighter_crescendo.webp",
+      "description": "Delivers a threefold attack to target enemy, dealing physical damage each hit.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 1.5,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 0
+        },
+        {
+          "magnitude": 200,
+          "apGain": 0
+        },
+        {
+          "magnitude": 400,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_crescendo.webp",
+      "iconPath": "/nw-hub/powers/fighter_crescendo.webp"
+    },
+    {
+      "name": "Explosive Defense",
+      "logId": "Pn.Cwqhm8",
+      "type": "Daily",
+      "icon": "fighter_explosivedefense.webp",
+      "description": "Deal physical damage to nearby enemies.",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_explosivedefense.webp",
+      "iconPath": "/nw-hub/powers/fighter_explosivedefense.webp"
+    },
+    {
+      "name": "Second Wind",
+      "logId": "Pn.Ce88tz",
+      "type": "Daily",
+      "icon": "fighter_secondwind.webp",
+      "description": "Increases your maximum hit points by 20%, restore the amount increased, and recover a portion of damage dealt by most attacks as hit points. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_secondwind.webp",
+      "iconPath": "/nw-hub/powers/fighter_secondwind.webp"
+    },
+    {
+      "name": "Earthshaker",
+      "logId": "Pn.88qlq4",
+      "type": "Daily",
+      "icon": "fighter_earthshaker.webp",
+      "description": "Deal physical damage to nearby enemies. Added Effect: Stun. Duration: 3s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 800,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_earthshaker.webp",
+      "iconPath": "/nw-hub/powers/fighter_earthshaker.webp"
+    },
+    {
+      "name": "Determination",
+      "logId": null,
+      "type": "Daily",
+      "icon": "fighter_determination.webp",
+      "description": "Dispels and grants immunity to control effects, and increases damage dealt by 10%. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_determination.webp",
+      "iconPath": "/nw-hub/powers/fighter_determination.webp"
+    },
+    {
+      "name": "Bladed Rampart",
+      "logId": "Pn.776pa5",
+      "type": "Daily",
+      "icon": "fighter_bladedrampart.webp",
+      "description": "Adds 30% defense and deal physical damage to attackers whenever you take damage. Duration: 10s.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 250,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_bladedrampart.webp",
+      "iconPath": "/nw-hub/powers/fighter_bladedrampart.webp"
+    },
+    {
+      "name": "Phalanx",
+      "logId": null,
+      "type": "Daily",
+      "icon": "fighter_phalanx.webp",
+      "description": "Gain immunity to most control effects and erect a barrier decreasing the damage taken by allies within by 20%. Duration: 14s. Effect ends early upon guarding.",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "damageType": "Physical",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/fighter_phalanx.webp",
+      "iconPath": "/nw-hub/powers/fighter_phalanx.webp"
+    },
+    {
+      "name": "Wicked Strike",
+      "logId": "Pn.Lesu5o",
+      "type": "At-Will",
+      "icon": "barbarian_wickedstrike.webp",
+      "description": "Lunge at target enemy dealing physical damage to the target and nearby enemies.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.45,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 90,
+          "apGain": 5
+        },
+        {
+          "magnitude": 110,
+          "apGain": 6
+        },
+        {
+          "magnitude": 140,
+          "apGain": 8
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_wickedstrike.webp",
+      "iconPath": "/nw-hub/powers/barbarian_wickedstrike.webp"
+    },
+    {
+      "name": "Sure Strike",
+      "logId": "Pn.P4ekhr",
+      "type": "At-Will",
+      "icon": "barbarian_surestrike.webp",
+      "description": "Delivers a fourfold attack to target enemy, dealing physical damage each hit.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.35,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 70,
+          "apGain": 4
+        },
+        {
+          "magnitude": 90,
+          "apGain": 5
+        },
+        {
+          "magnitude": 120,
+          "apGain": 7
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_surestrike.webp",
+      "iconPath": "/nw-hub/powers/barbarian_surestrike.webp"
+    },
+    {
+      "name": "Frenzy",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "barbarian_frenzy.webp",
+      "description": "Deal physical damage to target enemy in a furious series of strikes.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.2,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 12,
+          "repeat": 4,
+          "tickrate": 3
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_frenzy.webp",
+      "iconPath": "/nw-hub/powers/barbarian_frenzy.webp"
+    },
+    {
+      "name": "Bloodletter",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "barbarian_bloodletter.webp",
+      "description": "Deal physical damage to target enemy. Absorbs damage dealt as hit points.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 42
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_bloodletter.webp",
+      "iconPath": "/nw-hub/powers/barbarian_bloodletter.webp"
+    },
+    {
+      "name": "Punishing Charge",
+      "logId": "Pn.Dpn7x51",
+      "type": "Encounter",
+      "icon": "barbarian_punishingcharge.webp",
+      "description": "Lunge at target enemy dealing physical damage. Stun 3s.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.7,
+      "cd": 10,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_punishingcharge.webp",
+      "iconPath": "/nw-hub/powers/barbarian_punishingcharge.webp"
+    },
+    {
+      "name": "Avalanche of Steel",
+      "logId": null,
+      "type": "Daily",
+      "icon": "barbarian_avalancheofsteel.webp",
+      "description": "Leap into the air avoiding most damage and control effects for 5 seconds before slamming down. Knockdown.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.6,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1200,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_avalancheofsteel.webp",
+      "iconPath": "/nw-hub/powers/barbarian_avalancheofsteel.webp"
+    },
+    {
+      "name": "Spin to Win",
+      "logId": "Pn.Fl9r7m",
+      "type": "Encounter",
+      "icon": "barbarian_spintowin.webp",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.9,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 32
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_spintowin.webp",
+      "iconPath": "/nw-hub/powers/barbarian_spintowin.webp"
+    },
+    {
+      "name": "Steel Blitz",
+      "logId": "Pn.Kh720w1",
+      "type": "Encounter",
+      "icon": "barbarian_steelblitz.webp",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 450,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_steelblitz.webp",
+      "iconPath": "/nw-hub/powers/barbarian_steelblitz.webp"
+    },
+    {
+      "name": "Tidal Force",
+      "logId": "Pn.3sobdv",
+      "type": "Encounter",
+      "icon": "barbarian_tidalforce.png",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_tidalforce.png",
+      "iconPath": "/nw-hub/powers/barbarian_tidalforce.png"
+    },
+    {
+      "name": "Indomitable Battle Strike",
+      "logId": "Pn.Xflc2u1",
+      "type": "Encounter",
+      "icon": "barbarian_ibs.webp",
+      "description": "Deal heavy physical damage to target enemy.",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.7,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1100,
+          "apGain": 64
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_ibs.webp",
+      "iconPath": "/nw-hub/powers/barbarian_ibs.webp"
+    },
+    {
+      "name": "Stone Cleaver",
+      "logId": "Pn.0ll52d",
+      "type": "At-Will",
+      "icon": "barbarian_stonecleaver.png",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 5
+        },
+        {
+          "magnitude": 100,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_stonecleaver.png",
+      "iconPath": "/nw-hub/powers/barbarian_stonecleaver.png"
+    },
+    {
+      "name": "Critical Force",
+      "logId": "Pn.Ao9zse1",
+      "type": "Encounter",
+      "icon": "barbarian_criticalforce.png",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_criticalforce.png",
+      "iconPath": "/nw-hub/powers/barbarian_criticalforce.png"
+    },
+    {
+      "name": "Mightier Leap",
+      "logId": "Pn.Kxogg9",
+      "type": "Encounter",
+      "icon": "barbarian_mightierleap.webp",
+      "description": null,
+      "className": "Barbarian",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/barbarian_mightierleap.webp",
+      "iconPath": "/nw-hub/powers/barbarian_mightierleap.webp"
+    },
+    {
+      "name": "Valorous Strike",
+      "logId": "Pn.Ixwh3v",
+      "type": "At-Will",
+      "icon": "paladin_valorousstrike.webp",
+      "description": "Delivers a threefold attack to target enemy, dealing radiant damage each hit.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 70,
+          "apGain": 4
+        },
+        {
+          "magnitude": 90,
+          "apGain": 5
+        },
+        {
+          "magnitude": 130,
+          "apGain": 7
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_valorousstrike.webp",
+      "iconPath": "/nw-hub/powers/paladin_valorousstrike.webp"
+    },
+    {
+      "name": "Shielding Strike",
+      "logId": "Pn.Uxtb711",
+      "type": "At-Will",
+      "icon": "paladin_shieldingstrike.webp",
+      "description": "Delivers a threefold attack to target enemy, dealing radiant damage each hit. Stamina Restoration.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.55,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 100,
+          "apGain": 5.5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_shieldingstrike.webp",
+      "iconPath": "/nw-hub/powers/paladin_shieldingstrike.webp"
+    },
+    {
+      "name": "Smite",
+      "logId": "Pn.Ms8k7r",
+      "type": "Encounter",
+      "icon": "paladin_smite.webp",
+      "description": "Deal radiant damage to target enemy. Magnitude decreases as remaining divinity decreases.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.7,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 750,
+          "apGain": 52
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_smite.webp",
+      "iconPath": "/nw-hub/powers/paladin_smite.webp"
+    },
+    {
+      "name": "Burning Light",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "paladin_burninglight.webp",
+      "description": "Deal radiant damage to all nearby enemies. Magnitude increases when fully charged. Stun 3s.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.6,
+      "cd": 11,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 550,
+          "apGain": 38
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_burninglight.webp",
+      "iconPath": "/nw-hub/powers/paladin_burninglight.webp"
+    },
+    {
+      "name": "Bane",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "paladin_bane.webp",
+      "description": "Deal radiant damage to enemies at the target location.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.4,
+      "cd": 15,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 300,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_bane.webp",
+      "iconPath": "/nw-hub/powers/paladin_bane.webp"
+    },
+    {
+      "name": "Divine Judgment",
+      "logId": null,
+      "type": "Daily",
+      "icon": "paladin_divinejudgment.webp",
+      "description": "Deal radiant damage to target enemy.",
+      "className": "Paladin",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 1.5,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1100,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/paladin_divinejudgment.webp",
+      "iconPath": "/nw-hub/powers/paladin_divinejudgment.webp"
+    },
+    {
+      "name": "Lance of Faith",
+      "logId": "Pn.Eh3zdg",
+      "type": "At-Will",
+      "icon": "cleric_lanceoffaith.webp",
+      "description": "Delivers a threefold attack dealing radiant damage. Increases Burning Judgement. Radiant Judgement increases magnitude.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.4,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 4
+        },
+        {
+          "magnitude": 80,
+          "apGain": 5
+        },
+        {
+          "magnitude": 100,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_lanceoffaith.webp",
+      "iconPath": "/nw-hub/powers/cleric_lanceoffaith.webp"
+    },
+    {
+      "name": "Sacred Flame",
+      "logId": "Pn.Tegils",
+      "type": "At-Will",
+      "icon": "cleric_sacredflame.webp",
+      "description": "Delivers a threefold attack dealing fire damage. Increases Radiant Judgement. Burning Judgement increases magnitude.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 90,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_sacredflame.webp",
+      "iconPath": "/nw-hub/powers/cleric_sacredflame.webp"
+    },
+    {
+      "name": "Daunting Light",
+      "logId": "Pn.Qjnko6",
+      "type": "Encounter",
+      "icon": "cleric_dauntinglight.webp",
+      "description": "Deal radiant damage to enemies at the target location. Increases Burning Judgement. Radiant Judgement increases magnitude.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.8,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 650,
+          "apGain": 44
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_dauntinglight.webp",
+      "iconPath": "/nw-hub/powers/cleric_dauntinglight.webp"
+    },
+    {
+      "name": "Break the Spirit",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "cleric_breakthespirit.webp",
+      "description": "Deal radiant damage. Increases target's damage taken from magical and projectile attacks by 10% for 10s.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.6,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_breakthespirit.webp",
+      "iconPath": "/nw-hub/powers/cleric_breakthespirit.webp"
+    },
+    {
+      "name": "Chains of Blazing Light",
+      "logId": "Pn.Solpnq",
+      "type": "Encounter",
+      "icon": "cleric_chainsofblazinglight.webp",
+      "description": "Restrain enemies at the target location for 12s.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": 11,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_chainsofblazinglight.webp",
+      "iconPath": "/nw-hub/powers/cleric_chainsofblazinglight.webp"
+    },
+    {
+      "name": "Prophecy of Doom",
+      "logId": "Pn.2ukmw3",
+      "type": "Encounter",
+      "icon": "cleric_prophecyofdoom.webp",
+      "description": "Predict the target's demise. Over 10 seconds, 30% of most damage you deal to the target is stored and dealt at the end.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.2,
+      "cd": 25,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_prophecyofdoom.webp",
+      "iconPath": "/nw-hub/powers/cleric_prophecyofdoom.webp"
+    },
+    {
+      "name": "Forgemaster's Flame",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "cleric_forgemastersflame.webp",
+      "description": "Deal fire damage to target enemy. Increases Radiant Judgement. Burning Judgement increases magnitude.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 0.8,
+      "cd": 0.6,
+      "resourceCost": 300,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 770,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_forgemastersflame.webp",
+      "iconPath": "/nw-hub/powers/cleric_forgemastersflame.webp"
+    },
+    {
+      "name": "Flame Strike",
+      "logId": "Pn.1pwldl",
+      "type": "Daily",
+      "icon": "cleric_flamestrike.webp",
+      "description": "Deal fire damage to enemies at target location. Ignites the ground dealing fire damage to enemies who enter.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 1.4,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1000,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_flamestrike.webp",
+      "iconPath": "/nw-hub/powers/cleric_flamestrike.webp"
+    },
+    {
+      "name": "Thrown Fork",
+      "logId": "Pn.2gfktp",
+      "type": "At-Will",
+      "icon": "cleric_thrownfork.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.4,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 4
+        },
+        {
+          "magnitude": 80,
+          "apGain": 5
+        },
+        {
+          "magnitude": 100,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_thrownfork.png",
+      "iconPath": "/nw-hub/powers/cleric_thrownfork.png"
+    },
+    {
+      "name": "Fork Throw",
+      "logId": "Pn.252rqb1",
+      "type": "At-Will",
+      "icon": "cleric_forkthrow.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 90,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_forkthrow.png",
+      "iconPath": "/nw-hub/powers/cleric_forkthrow.png"
+    },
+    {
+      "name": "Scattering Light",
+      "logId": "Pn.57auqb1",
+      "type": "Encounter",
+      "icon": "cleric_scatteringlight.png",
+      "description": "Deal radiant damage to target and enemies near it. Increases Burning Judgement. Radiant Judgement increases magnitude.",
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.6,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_scatteringlight.png",
+      "iconPath": "/nw-hub/powers/cleric_scatteringlight.png"
+    },
+    {
+      "name": "Blessed Armaments",
+      "logId": "Pn.Obuj8j1",
+      "type": "Encounter",
+      "icon": "cleric_blessedarmaments.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 28
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_blessedarmaments.png",
+      "iconPath": "/nw-hub/powers/cleric_blessedarmaments.png"
+    },
+    {
+      "name": "Impaling Fork",
+      "logId": "Pn.Ywuro81",
+      "type": "Encounter",
+      "icon": "cleric_impalingfork.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.7,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 40
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_impalingfork.png",
+      "iconPath": "/nw-hub/powers/cleric_impalingfork.png"
+    },
+    {
+      "name": "Spine Fling",
+      "logId": "Pn.T92zi41",
+      "type": "Encounter",
+      "icon": "cleric_spinefling.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": 11,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_spinefling.png",
+      "iconPath": "/nw-hub/powers/cleric_spinefling.png"
+    },
+    {
+      "name": "Phantasmic Wake",
+      "logId": "Pn.Ec4u9p",
+      "type": "Encounter",
+      "icon": "cleric_phantasmicwake.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.6,
+      "cd": 15,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 550,
+          "apGain": 38
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_phantasmicwake.png",
+      "iconPath": "/nw-hub/powers/cleric_phantasmicwake.png"
+    },
+    {
+      "name": "Annihilate",
+      "logId": "Pn.3rrmxl",
+      "type": "Daily",
+      "icon": "cleric_annihilate.png",
+      "description": null,
+      "className": "Cleric",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 1.2,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1200,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/cleric_annihilate.png",
+      "iconPath": "/nw-hub/powers/cleric_annihilate.png"
+    },
+    {
+      "name": "Magic Missile",
+      "logId": "Pn.Bzo84b",
+      "type": "At-Will",
+      "icon": "wizard_magicmissile.webp",
+      "description": "Blast your enemy with arcane damage. The third cast strikes 3 times. Adds a stack of Arcane Mastery.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.35,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 4
+        },
+        {
+          "magnitude": 60,
+          "apGain": 4
+        },
+        {
+          "magnitude": 60,
+          "apGain": 4,
+          "repeat": 3
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_magicmissile.webp",
+      "iconPath": "/nw-hub/powers/wizard_magicmissile.webp"
+    },
+    {
+      "name": "Ray of Frost",
+      "logId": "Pn.N8u9bx",
+      "type": "At-Will",
+      "icon": "wizard_rayoffrost.webp",
+      "description": "Channel a powerful beam of frost at your target. Adds a chill stack with each hit. Freezes the target at 6 chill stacks.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Cold",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 55,
+          "apGain": 2,
+          "repeat": 1,
+          "tickrate": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_rayoffrost.webp",
+      "iconPath": "/nw-hub/powers/wizard_rayoffrost.webp"
+    },
+    {
+      "name": "Scorching Burst",
+      "logId": "Pn.M7g3eg",
+      "type": "At-Will",
+      "icon": "wizard_scorchingburst.webp",
+      "description": "Unleash a column of fire at your target. Size and damage increase the longer it is channeled. Adds Smolder to targets.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Fire",
+      "cast": 1.7,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_scorchingburst.webp",
+      "iconPath": "/nw-hub/powers/wizard_scorchingburst.webp"
+    },
+    {
+      "name": "Chilling Cloud",
+      "logId": "Pn.94f4b21",
+      "type": "At-Will",
+      "icon": "wizard_chillingcloud.webp",
+      "description": "Attack your enemy with a swarm of ice crystals. The third hit also damages enemies near your target. Grants chill stacks.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Cold",
+      "cast": 0.4,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 65,
+          "apGain": 3
+        },
+        {
+          "magnitude": 65,
+          "apGain": 3
+        },
+        {
+          "magnitude": 65,
+          "apGain": 4
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_chillingcloud.webp",
+      "iconPath": "/nw-hub/powers/wizard_chillingcloud.webp"
+    },
+    {
+      "name": "Storm Pillar",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "wizard_stormpillar.webp",
+      "description": "Charge up a blast of lightning to strike your enemy and nearby enemies. At max charge, spawns a pillar of lightning attacking nearby targets.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Lightning",
+      "cast": 1.6,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_stormpillar.webp",
+      "iconPath": "/nw-hub/powers/wizard_stormpillar.webp"
+    },
+    {
+      "name": "Arcane Bolt",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "wizard_arcanebolt.webp",
+      "description": "Summon Arcane Bolts from the sky. Grants a stack of Arcane Mastery.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.7,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 3
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_arcanebolt.webp",
+      "iconPath": "/nw-hub/powers/wizard_arcanebolt.webp"
+    },
+    {
+      "name": "Entangling Force",
+      "logId": "Pn.Oonws91",
+      "type": "Encounter",
+      "icon": "wizard_entanglingforce.webp",
+      "description": "Pull your enemy into the air and choke them. Hold 2s. Arcane Mastery increases duration by 0.1s per stack.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.4,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_entanglingforce.webp",
+      "iconPath": "/nw-hub/powers/wizard_entanglingforce.webp"
+    },
+    {
+      "name": "Repel",
+      "logId": "Pn.Mwe3h11",
+      "type": "Encounter",
+      "icon": "wizard_repel.webp",
+      "description": "Send a forceful blast pushing your target away at high speed. Distance increased by Arcane Mastery stacks. Spell Mastery: Affects multiple targets.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.05,
+      "cd": 11,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_repel.webp",
+      "iconPath": "/nw-hub/powers/wizard_repel.webp"
+    },
+    {
+      "name": "Ray of Enfeeblement",
+      "logId": "Pn.Thxevx",
+      "type": "Encounter",
+      "icon": "wizard_rayofenfeeblement.webp",
+      "description": "Deal damage over time. Decreases target's outgoing damage by 10% for 10s. Spell Mastery: Target takes 10% more magical and projectile damage.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.34,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 75,
+          "apGain": 5,
+          "repeat": 6,
+          "tickrate": 1.67
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_rayofenfeeblement.webp",
+      "iconPath": "/nw-hub/powers/wizard_rayofenfeeblement.webp"
+    },
+    {
+      "name": "Icy Terrain",
+      "logId": "Pn.61mswa1",
+      "type": "Encounter",
+      "icon": "wizard_icyterrain.webp",
+      "description": "Freeze the ground around you. Roots targets for 1.5s. Adds Chill to enemies on the ice. Spell Mastery: Can cast at target location.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Cold",
+      "cast": 0.8,
+      "cd": 19,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 58,
+          "apGain": 4,
+          "repeat": 6,
+          "tickrate": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_icyterrain.webp",
+      "iconPath": "/nw-hub/powers/wizard_icyterrain.webp"
+    },
+    {
+      "name": "Shield",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "wizard_shield.webp",
+      "description": "Form a shield equal to 30% of max HP. When depleted or recast, explodes outward with a push. Spell Mastery: Increased damage and push.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 1.6,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 230,
+          "apGain": 16
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_shield.webp",
+      "iconPath": "/nw-hub/powers/wizard_shield.webp"
+    },
+    {
+      "name": "Fanning the Flame",
+      "logId": "Pn.Zsdp2f1",
+      "type": "Encounter",
+      "icon": "wizard_fanningtheflame.webp",
+      "description": "Set your enemy ablaze with a hard to extinguish burn. Adds Smolder. Nearby Smoldered enemies take and deal damage to the burning target.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Fire",
+      "cast": 0.6,
+      "cd": 22,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 17,
+          "apGain": 1,
+          "repeat": 6,
+          "tickrate": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_fanningtheflame.webp",
+      "iconPath": "/nw-hub/powers/wizard_fanningtheflame.webp"
+    },
+    {
+      "name": "Icy Rays",
+      "logId": "Pn.S0ecob",
+      "type": "Encounter",
+      "icon": "wizard_icyrays.webp",
+      "description": "First cast puts a rune mark on target. Second cast fires at both targets. Effectiveness increased if both beams hit one target. Stun 1s. Adds Chill.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Cold",
+      "cast": 0,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 720,
+          "apGain": 50
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_icyrays.webp",
+      "iconPath": "/nw-hub/powers/wizard_icyrays.webp"
+    },
+    {
+      "name": "Chill Strike",
+      "logId": "Pn.Kiwkm3",
+      "type": "Encounter",
+      "icon": "wizard_chillstrike.webp",
+      "description": "Hurl a powerful icicle at your enemy. Stun 0.5s. Adds Chill. Spell Mastery: Reduced damage but also damages nearby enemies.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Cold",
+      "cast": 0.4,
+      "cd": 15,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 575,
+          "apGain": 40
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_chillstrike.webp",
+      "iconPath": "/nw-hub/powers/wizard_chillstrike.webp"
+    },
+    {
+      "name": "Conduit of Ice",
+      "logId": "Pn.Ne2ipt",
+      "type": "Encounter",
+      "icon": "wizard_conduitofice.webp",
+      "description": "Turn an enemy into a conduit for an icy storm, dealing damage to them and nearby enemies. Adds Chill to all targets hit.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Cold",
+      "cast": 0.8,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 230,
+          "apGain": 16
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_conduitofice.webp",
+      "iconPath": "/nw-hub/powers/wizard_conduitofice.webp"
+    },
+    {
+      "name": "Fireball",
+      "logId": "Pn.14wtry1",
+      "type": "Encounter",
+      "icon": "wizard_fireball.webp",
+      "description": "Deal fire damage to target and nearby enemies. Adds Smolder. Spell Mastery: Becomes single target with increased magnitude.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Fire",
+      "cast": 0.6,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 550,
+          "apGain": 38
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_fireball.webp",
+      "iconPath": "/nw-hub/powers/wizard_fireball.webp"
+    },
+    {
+      "name": "Lightning Bolt",
+      "logId": "Pn.72kxtw1",
+      "type": "Encounter",
+      "icon": "wizard_lightningbolt.webp",
+      "description": "Call down the Spell Storm, releasing powerful bolts of lightning in front of you. Refreshes Arcane Mastery and Chill stacks.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Lightning",
+      "cast": 0.72,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 14
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_lightningbolt.webp",
+      "iconPath": "/nw-hub/powers/wizard_lightningbolt.webp"
+    },
+    {
+      "name": "Disintegrate",
+      "logId": "Pn.63sp6b1",
+      "type": "Encounter",
+      "icon": "wizard_disintegrate.webp",
+      "description": "Deal arcane damage to your enemy. If the target is below 20% life, damage is increased by 50%.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.35,
+      "cd": 8,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 42
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_disintegrate.webp",
+      "iconPath": "/nw-hub/powers/wizard_disintegrate.webp"
+    },
+    {
+      "name": "Steal Time",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "wizard_stealtime.webp",
+      "description": "Steal time from enemies around you, then shatter it to stun them. Slow 4s. Stun 1s. Arcane Mastery increases durations.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.6,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 260,
+          "apGain": 18
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_stealtime.webp",
+      "iconPath": "/nw-hub/powers/wizard_stealtime.webp"
+    },
+    {
+      "name": "Arcane Tempest",
+      "logId": "Pn.X0q8so1",
+      "type": "Encounter",
+      "icon": "wizard_arcanetempest.webp",
+      "description": "Summon a fury of arcane energy at your target, damaging all enemies in range. Knockdown. Spell Mastery: Summons around yourself with increased magnitude.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.35,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 300,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_arcanetempest.webp",
+      "iconPath": "/nw-hub/powers/wizard_arcanetempest.webp"
+    },
+    {
+      "name": "Arcane Conduit",
+      "logId": "Pn.F8g2351",
+      "type": "Encounter",
+      "icon": "wizard_arcaneconduit.webp",
+      "description": "Enemy becomes a conduit for arcane energy. Target takes 15% increased arcane damage for 5s. Grants Arcane Mastery. Spell Mastery: Bonus increased to 20%.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.4,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 14
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_arcaneconduit.webp",
+      "iconPath": "/nw-hub/powers/wizard_arcaneconduit.webp"
+    },
+    {
+      "name": "Imprisonment",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "wizard_imprisonment.webp",
+      "description": "Imprison your target in arcane energy. Target takes increased damage from arcane powers. Spell Mastery: Increased arcane damage bonus.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 0.4,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_imprisonment.webp",
+      "iconPath": "/nw-hub/powers/wizard_imprisonment.webp"
+    },
+    {
+      "name": "Shard of the Endless Avalanche",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "wizard_shardeternalavalanche.webp",
+      "description": "Summon a shard of ice at the target location. Spell Mastery: Launches the shard toward a target location.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Cold",
+      "cast": 0.74,
+      "cd": 19.3,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 125,
+          "apGain": 10
+        },
+        {
+          "magnitude": 125,
+          "apGain": 10
+        }
+      ],
+      "hasMasteryVariant": true,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_shardeternalavalanche.webp",
+      "iconPath": "/nw-hub/powers/wizard_shardeternalavalanche.webp"
+    },
+    {
+      "name": "Arcane Singularity",
+      "logId": "Pn.Zlm7uf",
+      "type": "Daily",
+      "icon": "wizard_arcanesingularity.webp",
+      "description": "Create a powerful singularity that sucks in all enemies in a large area. Gain a stack of Arcane Mastery.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 1.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 100,
+          "apGain": 0,
+          "repeat": 8,
+          "tickrate": 2
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_arcanesingularity.webp",
+      "iconPath": "/nw-hub/powers/wizard_arcanesingularity.webp"
+    },
+    {
+      "name": "Ice Knife",
+      "logId": "Pn.5wuvrt1",
+      "type": "Daily",
+      "icon": "wizard_iceknife.webp",
+      "description": "Summon and slam down a huge blade of ice into your enemy. Knockdown 1.5s. Adds 3 stacks of Chill.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Cold",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 1800,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_iceknife.webp",
+      "iconPath": "/nw-hub/powers/wizard_iceknife.webp"
+    },
+    {
+      "name": "Oppressive Force",
+      "logId": "Pn.Tney5j",
+      "type": "Daily",
+      "icon": "wizard_oppressiveforce.webp",
+      "description": "Create an oppressive magnetic force that explodes after brief delay. Daze 1s. Grants Arcane Mastery. Repel on explosion.",
+      "className": "Wizard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.9,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 325,
+          "apGain": 0
+        },
+        {
+          "magnitude": 375,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_oppressiveforce.webp",
+      "iconPath": "/nw-hub/powers/wizard_oppressiveforce.webp"
+    },
+    {
+      "name": "Furious Immolation",
+      "logId": "Pn.9205gv1",
+      "type": "Daily",
+      "icon": "wizard_furiousimmolation.webp",
+      "description": "Summon a titanic column of flame that draws enemies toward its center and blasts them upwards. Pull 1s. Adds Smolder.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Fire",
+      "cast": 2,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_furiousimmolation.webp",
+      "iconPath": "/nw-hub/powers/wizard_furiousimmolation.webp"
+    },
+    {
+      "name": "Ice Storm",
+      "logId": "Pn.Stdphm",
+      "type": "Daily",
+      "icon": "wizard_icestorm.webp",
+      "description": "Unleash a massive wave of ice. Slow 5s. Knockdown. Adds 1 stack of Chill.",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "damageType": "Cold",
+      "cast": 1.9,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_icestorm.webp",
+      "iconPath": "/nw-hub/powers/wizard_icestorm.webp"
+    },
+    {
+      "name": "Maelstrom of Chaos",
+      "logId": null,
+      "type": "Daily",
+      "icon": "wizard_maelstromofchaos.webp",
+      "description": "Unleash a bolt of spell storm chaos. Immune to control while casting. Knockdown 1s. Refreshes Arcane Mastery and Chill stacks.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 2.13,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_maelstromofchaos.webp",
+      "iconPath": "/nw-hub/powers/wizard_maelstromofchaos.webp"
+    },
+    {
+      "name": "Arcane Empowerment",
+      "logId": null,
+      "type": "Daily",
+      "icon": "wizard_arcaneempowerment.webp",
+      "description": "Empower yourself with arcane magic. Encounter powers deal 10% more damage and recharge faster for 10s. Gain 5 stacks of Arcane Mastery.",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "damageType": "Arcane",
+      "cast": 1.3,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/wizard_arcaneempowerment.webp",
+      "iconPath": "/nw-hub/powers/wizard_arcaneempowerment.webp"
+    },
+    {
+      "name": "Eldritch Blast",
+      "logId": "Pn.5gbaam1",
+      "type": "At-Will",
+      "icon": "warlock_eldritchblast.webp",
+      "description": "Delivers a threefold attack to target enemy, dealing necrotic damage each hit. The third attack also damages nearby enemies.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Necrotic",
+      "cast": 0.35,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 55,
+          "apGain": 3
+        },
+        {
+          "magnitude": 55,
+          "apGain": 3
+        },
+        {
+          "magnitude": 90,
+          "apGain": 5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_eldritchblast.webp",
+      "iconPath": "/nw-hub/powers/warlock_eldritchblast.webp"
+    },
+    {
+      "name": "Hellish Rebuke",
+      "logId": "Pn.C328io1",
+      "type": "At-Will",
+      "icon": "warlock_hellishrebuke.webp",
+      "description": "A fiery rebuke that deals damage and ignites your target with hellfire. Generates Soul Sparks over time. Targets that attack you take additional damage.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 0.5,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 4.5
+        },
+        {
+          "magnitude": 30,
+          "apGain": 1.5,
+          "repeat": 3,
+          "tickrate": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_hellishrebuke.webp",
+      "iconPath": "/nw-hub/powers/warlock_hellishrebuke.webp"
+    },
+    {
+      "name": "Arms of Hadar",
+      "logId": "Pn.9zfqgb1",
+      "type": "Encounter",
+      "icon": "warlock_armsofhadar.webp",
+      "description": "Deal necrotic damage to all enemies in a path before you. Cooldown increases with each use, resetting after 15s. Knockdown.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Necrotic",
+      "cast": 0.6,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 550,
+          "apGain": 38
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_armsofhadar.webp",
+      "iconPath": "/nw-hub/powers/warlock_armsofhadar.webp"
+    },
+    {
+      "name": "Blinding Light",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "warlock_blindinglight.png",
+      "description": "Blast your enemies with a burst of blinding radiant light.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 470,
+          "apGain": 32
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_blindinglight.png",
+      "iconPath": "/nw-hub/powers/warlock_blindinglight.png"
+    },
+    {
+      "name": "Fiery Bolt",
+      "logId": "Pn.1pkufv1",
+      "type": "Encounter",
+      "icon": "warlock_fierybolt.webp",
+      "description": "Fling a ball of Eldritch Flame that explodes upon hitting your target, dealing half damage to targets within 15 feet.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 0.7,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 650,
+          "apGain": 44
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_fierybolt.webp",
+      "iconPath": "/nw-hub/powers/warlock_fierybolt.webp"
+    },
+    {
+      "name": "Tyrannical Threat",
+      "logId": null,
+      "type": "Daily",
+      "icon": "warlock_tyrannical.webp",
+      "description": "Place a devastating hex on your target causing necrotic damage. Target is damage linked, passing 15% of damage you deal to nearby targets for 20s.",
+      "className": "Warlock",
+      "paragonPath": null,
+      "damageType": "Necrotic",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/warlock_tyrannical.webp",
+      "iconPath": "/nw-hub/powers/warlock_tyrannical.webp"
+    },
+    {
+      "name": "Sly Flourish",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "rogue_slyflourish.webp",
+      "description": "A distracting flourish of swords that deals more damage with each successive strike.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.26,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 100,
+          "apGain": 4.16
+        },
+        {
+          "magnitude": 110,
+          "apGain": 4.8
+        },
+        {
+          "magnitude": 120,
+          "apGain": 5.28
+        },
+        {
+          "magnitude": 130,
+          "apGain": 8
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_slyflourish.webp",
+      "iconPath": "/nw-hub/powers/rogue_slyflourish.webp"
+    },
+    {
+      "name": "Cloud of Steel",
+      "logId": "Pn.Kr3spo",
+      "type": "At-Will",
+      "icon": "rogue_cloudofsteel.webp",
+      "description": "Toss blades at your target. Each strike increases all damage dealt to the target by 2.5%.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.3,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 60,
+          "apGain": 3.2
+        },
+        {
+          "magnitude": 60,
+          "apGain": 3.2
+        },
+        {
+          "magnitude": 60,
+          "apGain": 3.2
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_cloudofsteel.webp",
+      "iconPath": "/nw-hub/powers/rogue_cloudofsteel.webp"
+    },
+    {
+      "name": "Gloaming Cut",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "rogue_gloamingcut.webp",
+      "description": "Dash forward with a shadowy cross slash. Deals up to 100% more damage based on how much health the target is missing.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.1,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 125,
+          "apGain": 13.6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_gloamingcut.webp",
+      "iconPath": "/nw-hub/powers/rogue_gloamingcut.webp"
+    },
+    {
+      "name": "Dazing Strike",
+      "logId": "Pn.Wz1iu5",
+      "type": "Encounter",
+      "icon": "rogue_dazingstrike.webp",
+      "description": "Snap into the air and deliver a crushing blow. Daze 4s. Stealthed: Attacks in a larger cone.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.45,
+      "cd": 9.25,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 550,
+          "apGain": 40
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_dazingstrike.webp",
+      "iconPath": "/nw-hub/powers/rogue_dazingstrike.webp"
+    },
+    {
+      "name": "Lashing Blade",
+      "logId": "Pn.Gji3ar1",
+      "type": "Encounter",
+      "icon": "rogue_lashingblade.webp",
+      "description": "Focus your strength into one furious attack. Stealthed: +50% Critical Severity.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 50
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_lashingblade.webp",
+      "iconPath": "/nw-hub/powers/rogue_lashingblade.webp"
+    },
+    {
+      "name": "Assassinate",
+      "logId": "Pn.N0vhc3",
+      "type": "Encounter",
+      "icon": "rogue_assassinate.webp",
+      "description": "Quickly strike your target. 25% stronger from behind. Stealthed: 25% stronger from any direction.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.95,
+      "cd": 12.9,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 900,
+          "apGain": 56
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_assassinate.webp",
+      "iconPath": "/nw-hub/powers/rogue_assassinate.webp"
+    },
+    {
+      "name": "Disheartening Strike",
+      "logId": "Pn.Dq358t1",
+      "type": "Encounter",
+      "icon": "rogue_dishearteningstrike.webp",
+      "description": "Fling a dagger with extreme precision. Target takes 5% more damage for 10s.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 11,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 450,
+          "apGain": 32
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_dishearteningstrike.webp",
+      "iconPath": "/nw-hub/powers/rogue_dishearteningstrike.webp"
+    },
+    {
+      "name": "Whirlwind of Blades",
+      "logId": null,
+      "type": "Daily",
+      "icon": "rogue_whirlwindofblades.webp",
+      "description": "Whip daggers around you. Damage increases by 3% per enemy hit, up to 5 enemies.",
+      "className": "Rogue",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.2,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 800,
+          "apGain": 0
+        },
+        {
+          "magnitude": 100,
+          "apGain": 0,
+          "repeat": 5,
+          "tickrate": 2
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/rogue_whirlwindofblades.webp",
+      "iconPath": "/nw-hub/powers/rogue_whirlwindofblades.webp"
+    },
+    {
+      "name": "Rapid Shot",
+      "logId": "Pn.Ywkh2f1",
+      "type": "At-Will",
+      "icon": "ranger_rapidshot.webp",
+      "description": "Quickly fire an arrow at your enemy.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.25,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 40,
+          "apGain": 2.5
+        },
+        {
+          "magnitude": 40,
+          "apGain": 2.5
+        },
+        {
+          "magnitude": 70,
+          "apGain": 4
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_rapidshot.webp",
+      "iconPath": "/nw-hub/powers/ranger_rapidshot.webp"
+    },
+    {
+      "name": "Careful Attack",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "ranger_carefulattack.webp",
+      "description": "Study your target, signaling gaps in their defense to allies. Enemies studied are damaged when hit by At-Will, Encounter, or Daily powers.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.7,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 120,
+          "apGain": 7
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_carefulattack.webp",
+      "iconPath": "/nw-hub/powers/ranger_carefulattack.webp"
+    },
+    {
+      "name": "Longstrider's Shot",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "ranger_longstridersshot.webp",
+      "description": "Launch a swift arrow at your target.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 13,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 480,
+          "apGain": 34
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_longstridersshot.webp",
+      "iconPath": "/nw-hub/powers/ranger_longstridersshot.webp"
+    },
+    {
+      "name": "Cordon of Arrows",
+      "logId": "Pn.Ray5f31",
+      "type": "Encounter",
+      "icon": "ranger_cordonofarrows.webp",
+      "description": "Designate a target location. Enemies stepping within become entangled and take damage. Strong Grasping Roots. Max 3 active.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.6,
+      "cd": 15,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 150,
+          "apGain": 10,
+          "repeat": 5,
+          "tickrate": 1.5
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_cordonofarrows.webp",
+      "iconPath": "/nw-hub/powers/ranger_cordonofarrows.webp"
+    },
+    {
+      "name": "Hindering Shot",
+      "logId": "Pn.3ccg46",
+      "type": "Encounter",
+      "icon": "ranger_hinderingshot.webp",
+      "description": "Fire two arrows into your enemy's shins. 3 charges with 3s between uses. Weak Grasping Roots.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.35,
+      "cd": 10,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_hinderingshot.webp",
+      "iconPath": "/nw-hub/powers/ranger_hinderingshot.webp"
+    },
+    {
+      "name": "Storm of Blades",
+      "logId": null,
+      "type": "Daily",
+      "icon": "ranger_stormofblades.webp",
+      "description": "Unleash a storm of blades around you, damaging nearby enemies.",
+      "className": "Ranger",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 250,
+          "apGain": 0,
+          "repeat": 4,
+          "tickrate": 2
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/ranger_stormofblades.webp",
+      "iconPath": "/nw-hub/powers/ranger_stormofblades.webp"
+    },
+    {
+      "name": "Reprise",
+      "logId": "Pn.5sjfse1",
+      "type": "At-Will",
+      "icon": "bard_reprise.webp",
+      "description": "Delivers a fourfold attack to enemies in a cone before you, dealing physical damage each hit.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.4,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 35,
+          "apGain": 2
+        },
+        {
+          "magnitude": 35,
+          "apGain": 2
+        },
+        {
+          "magnitude": 35,
+          "apGain": 2
+        },
+        {
+          "magnitude": 35,
+          "apGain": 2
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_reprise.webp",
+      "iconPath": "/nw-hub/powers/bard_reprise.webp"
+    },
+    {
+      "name": "Fleche",
+      "logId": "Pn.Xx6f2f1",
+      "type": "At-Will",
+      "icon": "bard_fleche.webp",
+      "description": "Deal psychic damage to target enemy.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 0.6,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 180,
+          "apGain": 8
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_fleche.webp",
+      "iconPath": "/nw-hub/powers/bard_fleche.webp"
+    },
+    {
+      "name": "Lunge",
+      "logId": "Pn.Xktk2a1",
+      "type": "Encounter",
+      "icon": "bard_lunge.webp",
+      "description": "Lunge at target enemy dealing physical damage. Stun 1s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.25,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_lunge.webp",
+      "iconPath": "/nw-hub/powers/bard_lunge.webp"
+    },
+    {
+      "name": "Dancing Lights",
+      "logId": "Pn.1kfkca1",
+      "type": "Encounter",
+      "icon": "bard_dancinglights.webp",
+      "description": "Deal psychic damage to target enemy. Daze 3s. Decreases target damage dealt by 5% for 6s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 0.8,
+      "cd": 21,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_dancinglights.webp",
+      "iconPath": "/nw-hub/powers/bard_dancinglights.webp"
+    },
+    {
+      "name": "Flourish",
+      "logId": "Pn.5j1kma1",
+      "type": "Encounter",
+      "icon": "bard_flourish.webp",
+      "description": "Increases the damage bonus or healing potency of your next encounter power or song by 50% for 9s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.9,
+      "cd": 18,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_flourish.webp",
+      "iconPath": "/nw-hub/powers/bard_flourish.webp"
+    },
+    {
+      "name": "Duet",
+      "logId": "Pn.Tl7ls91",
+      "type": "Encounter",
+      "icon": "bard_duet.webp",
+      "description": "Delivers a twofold attack to nearby enemies, dealing arcane damage each hit. Daze 2s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 0.7,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 230,
+          "apGain": 14
+        },
+        {
+          "magnitude": 230,
+          "apGain": 14
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_duet.webp",
+      "iconPath": "/nw-hub/powers/bard_duet.webp"
+    },
+    {
+      "name": "Delayed Play",
+      "logId": "Pn.Sowjjp",
+      "type": "Encounter",
+      "icon": "bard_delayedplay.webp",
+      "description": "The next song you play will be stored rather than take effect immediately. Activate again to trigger the stored song instantly.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.5,
+      "cd": 12,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_delayedplay.webp",
+      "iconPath": "/nw-hub/powers/bard_delayedplay.webp"
+    },
+    {
+      "name": "Inspiration",
+      "logId": "Pn.Jrieln",
+      "type": "Daily",
+      "icon": "bard_inspiration.webp",
+      "description": "Grants you and the nearest party member immunity to most control effects, reduces damage taken by 15%, and increases damage bonus by 15% for 12s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_inspiration.webp",
+      "iconPath": "/nw-hub/powers/bard_inspiration.webp"
+    },
+    {
+      "name": "Encore",
+      "logId": null,
+      "type": "Daily",
+      "icon": "bard_encore.webp",
+      "description": "Activate the last song you played without depleting your Performance Gauge.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_encore.webp",
+      "iconPath": "/nw-hub/powers/bard_encore.webp"
+    },
+    {
+      "name": "Blaze Flamenco",
+      "logId": "Pn.J7pq891",
+      "type": "Daily",
+      "icon": "bard_blazeflamenco.webp",
+      "description": "Deal fire damage to nearby enemies. Increases at-will and encounter magnitude by 20 and converts their damage type to fire for 36s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_blazeflamenco.webp",
+      "iconPath": "/nw-hub/powers/bard_blazeflamenco.webp"
+    },
+    {
+      "name": "Rejuvenating Carol",
+      "logId": "Pn.M772so1",
+      "type": "Daily",
+      "icon": "bard_rejuvenatingcarol.webp",
+      "description": "Apply a heal over time to self and all nearby allies for 30s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_rejuvenatingcarol.webp",
+      "iconPath": "/nw-hub/powers/bard_rejuvenatingcarol.webp"
+    },
+    {
+      "name": "Con Elemento",
+      "logId": "Pn.R9xdmk1",
+      "type": "At-Will",
+      "icon": "bard_conelemento.webp",
+      "description": "Deal fire damage to enemies in a radius around you. Changes form based on active song: Con Fuoco (Blaze Flamenco), Con Moto (Tailwind Mambo), Con Brio (Steel March).",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 1.2,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 130,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_conelemento.webp",
+      "iconPath": "/nw-hub/powers/bard_conelemento.webp"
+    },
+    {
+      "name": "Con Fuoco",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "bard_confuoco.png",
+      "description": "Con Elemento under Blaze Flamenco. Deal fire damage to enemies in a radius around you at a higher magnitude.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Fire",
+      "cast": 1.2,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 130,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_confuoco.png",
+      "iconPath": "/nw-hub/powers/bard_confuoco.png"
+    },
+    {
+      "name": "Con Moto",
+      "logId": "Pn.Qo2rhy1",
+      "type": "At-Will",
+      "icon": "bard_conmoto.png",
+      "description": "Con Elemento under Tailwind Mambo. Deal projectile damage in a line before you.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.2,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 130,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_conmoto.png",
+      "iconPath": "/nw-hub/powers/bard_conmoto.png"
+    },
+    {
+      "name": "Con Brio",
+      "logId": "Pn.Ze5g5t",
+      "type": "At-Will",
+      "icon": "bard_conbrio.png",
+      "description": "Con Elemento under Steel March. Deal physical damage in a cone before you.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.2,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 130,
+          "apGain": 6
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_conbrio.png",
+      "iconPath": "/nw-hub/powers/bard_conbrio.png"
+    },
+    {
+      "name": "Staccato",
+      "logId": "Pn.Dozuxg",
+      "type": "At-Will",
+      "icon": "bard_staccato.webp",
+      "description": "Delivers a multi-hit attack to target enemy, dealing physical damage each hit.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.35,
+      "cd": null,
+      "resourceCost": null,
+      "combo": true,
+      "hits": [
+        {
+          "magnitude": 80,
+          "apGain": 4
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_staccato.webp",
+      "iconPath": "/nw-hub/powers/bard_staccato.webp"
+    },
+    {
+      "name": "Phantasmal Concerto",
+      "logId": null,
+      "type": "At-Will",
+      "icon": "bard_phantasmalconcerto.webp",
+      "description": "Channel to deal psychic damage to nearby enemies while moving at a reduced speed.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 1.1,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 70,
+          "apGain": 3
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_phantasmalconcerto.webp",
+      "iconPath": "/nw-hub/powers/bard_phantasmalconcerto.webp"
+    },
+    {
+      "name": "Ad Libitum",
+      "logId": "Pn.Kg61yb",
+      "type": "Encounter",
+      "icon": "bard_adlibitum.webp",
+      "description": "Deal physical damage to target enemy. 50% chance to allow immediate reuse, up to three times.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.35,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_adlibitum.webp",
+      "iconPath": "/nw-hub/powers/bard_adlibitum.webp"
+    },
+    {
+      "name": "Volti Subito",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "bard_voltisubito.webp",
+      "description": "Rush forward dealing physical damage to enemies in a path before you. May be executed twice more in rapid succession within 6s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.9,
+      "cd": 16,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 200,
+          "apGain": 12
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_voltisubito.webp",
+      "iconPath": "/nw-hub/powers/bard_voltisubito.webp"
+    },
+    {
+      "name": "Contre",
+      "logId": "Pn.4zi8s7",
+      "type": "Encounter",
+      "icon": "bard_contre.webp",
+      "description": "Raise your blade, absorbing 50% of frontal damage. Upon release, activate different attacks based on hold duration: Seconde, Septime, or Neuvieme.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 5.75,
+      "cd": 20,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_contre.webp",
+      "iconPath": "/nw-hub/powers/bard_contre.webp"
+    },
+    {
+      "name": "Bassline",
+      "logId": "Pn.Eq3sbu1",
+      "type": "Encounter",
+      "icon": "bard_bassline.webp",
+      "description": "Channel to restore up to 200 performance while moving at a reduced speed. Cooldown reduced if cancelled early.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 10,
+      "cd": 24,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_bassline.webp",
+      "iconPath": "/nw-hub/powers/bard_bassline.webp"
+    },
+    {
+      "name": "Tailwind Mambo",
+      "logId": "Pn.Oyglkc1",
+      "type": "Daily",
+      "icon": "bard_tailwindmambo.webp",
+      "description": "Deal projectile damage to enemies in a line before you. Increases at-will and encounter magnitude by 20 and converts damage to projectile for 72s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_tailwindmambo.webp",
+      "iconPath": "/nw-hub/powers/bard_tailwindmambo.webp"
+    },
+    {
+      "name": "Steel March",
+      "logId": "Pn.33wb87",
+      "type": "Daily",
+      "icon": "bard_steelmarch.webp",
+      "description": "Deal physical damage to enemies in a cone. Increases at-will and encounter magnitude by 20 and converts damage to physical for 72s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 350,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_steelmarch.webp",
+      "iconPath": "/nw-hub/powers/bard_steelmarch.webp"
+    },
+    {
+      "name": "Ballad of the Witch",
+      "logId": "Pn.Yvd2zy",
+      "type": "Daily",
+      "icon": "bard_balladwitch.webp",
+      "description": "Your at-wills, encounters, and dailies deal additional arcane damage against all targets for 20s. Perform changes to Witch's Finale.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Arcane",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 40,
+          "apGain": 0,
+          "repeat": 20,
+          "tickrate": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_balladwitch.webp",
+      "iconPath": "/nw-hub/powers/bard_balladwitch.webp"
+    },
+    {
+      "name": "Ballad of the Hero",
+      "logId": "Pn.L3kcm3",
+      "type": "Daily",
+      "icon": "bard_balladhero.webp",
+      "description": "Your at-wills, encounters, and dailies deal additional radiant damage against the primary target for 20s. Perform changes to Hero's Finale.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Radiant",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 100,
+          "apGain": 0,
+          "repeat": 20,
+          "tickrate": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_balladhero.webp",
+      "iconPath": "/nw-hub/powers/bard_balladhero.webp"
+    },
+    {
+      "name": "Lore",
+      "logId": null,
+      "type": "Daily",
+      "icon": "bard_lore.webp",
+      "description": "Identify the target's weakness, increasing critical severity of attacks against it by 10% for 10s. Grants physical, magic, or projectile lore.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_lore.webp",
+      "iconPath": "/nw-hub/powers/bard_lore.webp"
+    },
+    {
+      "name": "Arpeggio",
+      "logId": "Pn.Fg7tg61",
+      "type": "At-Will",
+      "icon": "bard_arpeggio.webp",
+      "description": "Heal target ally or self.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 0,
+      "cd": null,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 100,
+          "apGain": 1
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_arpeggio.webp",
+      "iconPath": "/nw-hub/powers/bard_arpeggio.webp"
+    },
+    {
+      "name": "Serenade",
+      "logId": null,
+      "type": "Encounter",
+      "icon": "bard_serenade.webp",
+      "description": "Tap to increase heal effectiveness on target by 5%. Hold and release to increase by an additional 50% for 10s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 2,
+      "cd": 24,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_serenade.webp",
+      "iconPath": "/nw-hub/powers/bard_serenade.webp"
+    },
+    {
+      "name": "Defender's Minuet",
+      "logId": null,
+      "type": "Daily",
+      "icon": "bard_defendersminuet.webp",
+      "description": "Instantly heal the nearby party member with the least hit points. Heals the Serenade target instead if there is one.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 0.6,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 2000,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_defendersminuet.webp",
+      "iconPath": "/nw-hub/powers/bard_defendersminuet.webp"
+    },
+    {
+      "name": "Warding Carol",
+      "logId": "Pn.5v96so1",
+      "type": "Daily",
+      "icon": "bard_wardingcarol.webp",
+      "description": "Removes one negative condition from all nearby allies. Continually removes negative effects for 10s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_wardingcarol.webp",
+      "iconPath": "/nw-hub/powers/bard_wardingcarol.webp"
+    },
+    {
+      "name": "Aurora Fantasia",
+      "logId": "Pn.S1qalx",
+      "type": "Daily",
+      "icon": "bard_aurorafantasia.webp",
+      "description": "Your attacks deal additional psychic damage to all targets and heal nearby allies. Can be maintained indefinitely; Perform changes to Aurora Finale.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 1.1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 25,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_aurorafantasia.webp",
+      "iconPath": "/nw-hub/powers/bard_aurorafantasia.webp"
+    },
+    {
+      "name": "Sheltering Etude",
+      "logId": "Pn.Y481ur1",
+      "type": "Daily",
+      "icon": "bard_shelteringetude.webp",
+      "description": "Grants allies a shield that restores HP when health falls below 50% or upon expiration. Duration: 60s.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "HitPoints",
+      "cast": 1,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 600,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_shelteringetude.webp",
+      "iconPath": "/nw-hub/powers/bard_shelteringetude.webp"
+    },
+    {
+      "name": "Curtain Call",
+      "logId": "Pn.3soxrc",
+      "type": "Daily",
+      "icon": "bard_curtaincall.png",
+      "description": "Cancels all your song effects on nearby allies and grants added effects based on songs cancelled.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_curtaincall.png",
+      "iconPath": "/nw-hub/powers/bard_curtaincall.png"
+    },
+    {
+      "name": "Improvised Lunge",
+      "logId": "Pn.H3a4301",
+      "type": "Encounter",
+      "icon": "bard_lunge.webp",
+      "description": "Improvised version of Lunge, triggered by the Performer feat. Does not affect the cooldown of the actual power.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.25,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_lunge.webp",
+      "iconPath": "/nw-hub/powers/bard_lunge.webp"
+    },
+    {
+      "name": "Improvised Dancing Lights",
+      "logId": "Pn.Yvi2d01",
+      "type": "Encounter",
+      "icon": "bard_dancinglights.webp",
+      "description": "Improvised version of Dancing Lights, triggered by the Performer feat. Does not affect the cooldown of the actual power.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_dancinglights.webp",
+      "iconPath": "/nw-hub/powers/bard_dancinglights.webp"
+    },
+    {
+      "name": "Improvised Ad Libitum",
+      "logId": "Pn.3m4ky1",
+      "type": "Encounter",
+      "icon": "bard_adlibitum.webp",
+      "description": "Improvised version of Ad Libitum, triggered by the Performer feat. Does not affect the cooldown of the actual power.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.35,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 400,
+          "apGain": 20
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_adlibitum.webp",
+      "iconPath": "/nw-hub/powers/bard_adlibitum.webp"
+    },
+    {
+      "name": "Improvised Contre Seconde",
+      "logId": "Pn.1v65f31",
+      "type": "Encounter",
+      "icon": "bard_contre.webp",
+      "description": "Improvised version of Contre Seconde, triggered by the Performer feat. Does not affect the cooldown of the actual power.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.5,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_contre.webp",
+      "iconPath": "/nw-hub/powers/bard_contre.webp"
+    },
+    {
+      "name": "Contre Seconde",
+      "logId": "Pn.52rmed1",
+      "type": "Encounter",
+      "icon": "bard_contre.webp",
+      "description": "Immediate release variant of Contre. Deal physical damage to all enemies around you and knock them back.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 5.75,
+      "cd": 20,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 700,
+          "apGain": 36
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_contre.webp",
+      "iconPath": "/nw-hub/powers/bard_contre.webp"
+    },
+    {
+      "name": "Hero's Finale",
+      "logId": null,
+      "type": "Daily",
+      "icon": "bard_herosfinale.png",
+      "description": "Finale of Ballad of the Hero. Deals radiant damage to the target and ends the Ballad.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Physical",
+      "cast": 0.8,
+      "cd": 0,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 0,
+          "apGain": 0
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_herosfinale.png",
+      "iconPath": "/nw-hub/powers/bard_herosfinale.png"
+    },
+    {
+      "name": "Mystify",
+      "logId": "Pn.Tt27m8",
+      "type": "Encounter",
+      "icon": "bard_mystify.png",
+      "description": "Apply Mystify to a target, dealing psychic damage over time. When another player strikes the target, the effect ends dealing burst psychic damage and healing the striker.",
+      "className": "Bard",
+      "paragonPath": null,
+      "damageType": "Psychic",
+      "cast": 0.5,
+      "cd": 14,
+      "resourceCost": null,
+      "combo": false,
+      "hits": [
+        {
+          "magnitude": 500,
+          "apGain": 24
+        }
+      ],
+      "hasMasteryVariant": false,
+      "iconUrl": "https://www.nw-hub.com/assets/powers/bard_mystify.png",
+      "iconPath": "/nw-hub/powers/bard_mystify.png"
+    }
+  ],
+  "feats": [
+    {
+      "id": "rogue_skillful_infiltrator",
+      "name": "Skillful Infiltrator",
+      "description": "+3% Crit Severity, +3% Combat Advantage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "icon": "Icons_Feats_RuthlessEfficiency.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_RuthlessEfficiency.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_RuthlessEfficiency.webp"
+    },
+    {
+      "id": "rogue_bloody_brawler",
+      "name": "Bloody Brawler",
+      "description": "+5% melee damage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "icon": "Icons_Feats_PoisonDagger.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_PoisonDagger.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_PoisonDagger.webp"
+    },
+    {
+      "id": "rogue_wilds_medicine",
+      "name": "Wilds Medicine",
+      "description": "+10% At-Will damage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "icon": "Feat_Archer_Wildsmedicine.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Feat_Archer_Wildsmedicine.webp",
+      "iconPath": "/nw-hub/powers/Feat_Archer_Wildsmedicine.webp"
+    },
+    {
+      "id": "rogue_exposed_weakness",
+      "name": "Exposed Weakness",
+      "description": "Encountering foes from Stealth: +10% damage for 6s",
+      "className": "Rogue",
+      "paragonPath": null,
+      "icon": "Icons_Feats_SneakyStabber.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_SneakyStabber.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_SneakyStabber.webp"
+    },
+    {
+      "id": "rogue_shadow_of_demise",
+      "name": "Shadow of Demise",
+      "description": "Encounter powers apply a DoT equal to 50% of the hit over 6s (ticks every 1s)",
+      "className": "Rogue",
+      "paragonPath": "Assassin",
+      "icon": "Icons_Feats_Shadow.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Shadow.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Shadow.webp"
+    },
+    {
+      "id": "rogue_knife_edge",
+      "name": "Knife's Edge",
+      "description": "After 4 At-Will hits, next Encounter deals +15% damage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "icon": "Icons_Feats_SeethingKnives.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_SeethingKnives.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_SeethingKnives.webp"
+    },
+    {
+      "id": "rogue_duelist_flurry_bonus",
+      "name": "Duelist's Flurry Bonus",
+      "description": "Each At-Will hit has 15% chance to proc 80 magnitude bleed",
+      "className": "Rogue",
+      "paragonPath": "Whisperknife",
+      "icon": "Icons_Feats_DistractingKnife.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DistractingKnife.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DistractingKnife.webp"
+    },
+    {
+      "id": "fighter_heavy_slash",
+      "name": "Heavy Slash",
+      "description": "+5% At-Will damage",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "icon": "Icons_Feats_Scythingblades.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Scythingblades.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Scythingblades.webp"
+    },
+    {
+      "id": "fighter_combat_superiority",
+      "name": "Combat Superiority",
+      "description": "+10% damage when you have Combat Advantage",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "icon": "Icons_Feats_MartialMastery.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_MartialMastery.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_MartialMastery.webp"
+    },
+    {
+      "id": "fighter_executioners_style",
+      "name": "Executioner's Style",
+      "description": "+15% damage vs targets below 30% HP",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "icon": "Icons_Feats_Angel_of_Death.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Angel_of_Death.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Angel_of_Death.webp"
+    },
+    {
+      "id": "fighter_steel_blitz",
+      "name": "Steel Blitz",
+      "description": "25% chance on At-Will hit to deal extra 100 magnitude",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "icon": "Icons_Feats_Speed.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Speed.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Speed.webp"
+    },
+    {
+      "id": "fighter_crushing_surge",
+      "name": "Crushing Surge",
+      "description": "Encounter powers give a 6s buff: +8% damage",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "icon": "Icons_Feats_ReinforcedSurge.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ReinforcedSurge.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ReinforcedSurge.webp"
+    },
+    {
+      "id": "fighter_cleaving_bull",
+      "name": "Cleaving Bull",
+      "description": "Cleave and Bull Charge deal +50 magnitude when hitting multiple enemies",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_shieldthrower",
+      "name": "Shieldthrower",
+      "description": "Shield Throw generates 300% more Threat",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_enforced_threat_feat",
+      "name": "Enforced Threat",
+      "description": "Enforced Threat reduces enemy Awareness by 10%",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_staying_power",
+      "name": "Staying Power",
+      "description": "+5% Power, +5% Crit Strike. Enforced Threat generates +500% Threat",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": "Icons_Feats_StayingPower.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_StayingPower.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_StayingPower.webp"
+    },
+    {
+      "id": "fighter_perfect_block",
+      "name": "Perfect Block",
+      "description": "Determination: blocked damage is reduced to 0 for 10s, gains 180s cooldown",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_sharpened_senses",
+      "name": "Sharpened Senses",
+      "description": "Bladed Rampart grants +30% Awareness while active",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_tt_relative_haste",
+      "name": "Relative Haste",
+      "description": "Cooldown speed +1% per chill stack on target (max 10%)",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_ForceofWill.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ForceofWill.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ForceofWill.webp"
+    },
+    {
+      "id": "wizard_tt_smoldering_recovery",
+      "name": "Smoldering Recovery",
+      "description": "Smolder damage grants 0.5% AP (1.5% with Directed Flames)",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_Loremaster.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Loremaster.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Loremaster.webp"
+    },
+    {
+      "id": "wizard_tt_glowing_flames",
+      "name": "Glowing Flames",
+      "description": "Smolder radiates 20% damage to enemies within 15'",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_DestructiveWizardry.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DestructiveWizardry.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DestructiveWizardry.webp"
+    },
+    {
+      "id": "wizard_tt_icy_veins",
+      "name": "Icy Veins",
+      "description": "Encounter activation applies 1 chill stack to enemies within 15'",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_ChillingControl.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ChillingControl.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ChillingControl.webp"
+    },
+    {
+      "id": "wizard_tt_chilling_advantage",
+      "name": "Chilling Advantage",
+      "description": "Cold powers apply Rimefire Smolder (DoT: 200 mag over 18s, ticks every 3s) instead of Chill",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_Target.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Target.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Target.webp"
+    },
+    {
+      "id": "wizard_tt_shatter_strike",
+      "name": "Shatter Strike",
+      "description": "20% chance to shatter frozen targets for 250 mag, +150 mag vs control-immune",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_ShatterStrike.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ShatterStrike.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ShatterStrike.webp"
+    },
+    {
+      "id": "wizard_tt_critical_burn",
+      "name": "Critical Burn",
+      "description": "+10% Crit Severity, Smolder +25% crit damage",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_OverrunCritical.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_OverrunCritical.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_OverrunCritical.webp"
+    },
+    {
+      "id": "wizard_tt_frigid_winds",
+      "name": "Frigid Winds",
+      "description": "+1.25% damage per chill stack on target",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_DeterminedPursuit.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DeterminedPursuit.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DeterminedPursuit.webp"
+    },
+    {
+      "id": "wizard_tt_directed_flames",
+      "name": "Directed Flames",
+      "description": "Smolder deals 80% total upfront (no DoT), 12s cooldown",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_DriftingEmbers.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DriftingEmbers.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DriftingEmbers.webp"
+    },
+    {
+      "id": "wizard_tt_rimefire_weaving",
+      "name": "Rimefire Weaving",
+      "description": "Smolder/Chill = -5% target DR, Rimefire = -10% DR",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "icon": "Icons_Feats_TwistingImmolation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_TwistingImmolation.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_TwistingImmolation.webp"
+    },
+    {
+      "id": "wizard_ac_alacrity",
+      "name": "Alacrity",
+      "description": "Daily vs enemy reduces Encounter cooldowns by 2s",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_Speed.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Speed.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Speed.webp"
+    },
+    {
+      "id": "wizard_ac_spell_twisting",
+      "name": "Spell Twisting",
+      "description": "Encounters build stacks; At-Will consumes 1 stack for +1% AP",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_UnrestrainedChaos.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_UnrestrainedChaos.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_UnrestrainedChaos.webp"
+    },
+    {
+      "id": "wizard_ac_assailing_force",
+      "name": "Assailing Force",
+      "description": "10% chance on Encounter: next Encounter deals double initial damage",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_AssailingForce.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_AssailingForce.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_AssailingForce.webp"
+    },
+    {
+      "id": "wizard_ac_snap_freeze",
+      "name": "Snap Freeze",
+      "description": "Chill deals 40 magnitude per stack applied",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_ChillingControl.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ChillingControl.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ChillingControl.webp"
+    },
+    {
+      "id": "wizard_ac_chaos_magic",
+      "name": "Chaos Magic",
+      "description": "5% chance on Encounter/Daily for random buff (Power Surge/Recovery/AP)",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_ChaosMagic_Blue.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ChaosMagic_Blue.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ChaosMagic_Blue.webp"
+    },
+    {
+      "id": "wizard_ac_iced_lightning",
+      "name": "Iced Lightning",
+      "description": "Lightning powers +10% vs chill targets",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_DevastatingShroud.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DevastatingShroud.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DevastatingShroud.webp"
+    },
+    {
+      "id": "wizard_ac_nightmare_wizardry",
+      "name": "Nightmare Wizardry",
+      "description": "Crits have 10% chance to grant Combat Advantage for 10s",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_SecondSight.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_SecondSight.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_SecondSight.webp"
+    },
+    {
+      "id": "wizard_ac_striking_advantage",
+      "name": "Striking Advantage",
+      "description": "CA damage: 25% chance for 100 mag lightning hit (1s CD)",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_ArcaneBurst.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_ArcaneBurst.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_ArcaneBurst.webp"
+    },
+    {
+      "id": "wizard_ac_a_step_above_mastery",
+      "name": "A Step Above Mastery",
+      "description": "Arcane Mastery: 10 stacks, +0.5% per stack, 10s duration",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_Loremaster.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Loremaster.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Loremaster.webp"
+    },
+    {
+      "id": "wizard_ac_elemental_reinforcement",
+      "name": "Elemental Reinforcement",
+      "description": "Arcane/Cold/Lightning → +5% dmg 10s, doubled if varied elements",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "icon": "Icons_Feats_DestructiveWizardry.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DestructiveWizardry.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DestructiveWizardry.webp"
+    },
+    {
+      "id": "cleric_piercing_light",
+      "name": "Piercing Light",
+      "description": "+8% Radiant damage",
+      "className": "Cleric",
+      "paragonPath": null,
+      "icon": "Icons_Feats_PoweroftheSun.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_PoweroftheSun.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_PoweroftheSun.webp"
+    },
+    {
+      "id": "cleric_righteous_wrath",
+      "name": "Righteous Wrath",
+      "description": "At-Will hits build +2% damage (max 5 stacks, 8s)",
+      "className": "Cleric",
+      "paragonPath": null,
+      "icon": "Icons_Feats_WrathfulStrikes.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_WrathfulStrikes.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_WrathfulStrikes.webp"
+    },
+    {
+      "id": "cleric_fire_of_the_gods",
+      "name": "Fire of the Gods",
+      "description": "Daily powers apply a DoT: 200 magnitude over 8s (Fire)",
+      "className": "Cleric",
+      "paragonPath": null,
+      "icon": "Icons_Feats_Fury.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Fury.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Fury.webp"
+    },
+    {
+      "id": "cleric_astral_fury",
+      "name": "Astral Fury",
+      "description": "+10% damage when AP is above 50%",
+      "className": "Cleric",
+      "paragonPath": null,
+      "icon": "Icons_Feats_DivineAction.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DivineAction.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DivineAction.webp"
+    },
+    {
+      "id": "ranger_twin_blade_storm",
+      "name": "Twin-Blade Storm",
+      "description": "+5% damage for each nearby target (max 3 stacks)",
+      "className": "Ranger",
+      "paragonPath": null,
+      "icon": "Feat_Archer_Bloodthirsty.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Feat_Archer_Bloodthirsty.webp",
+      "iconPath": "/nw-hub/powers/Feat_Archer_Bloodthirsty.webp"
+    },
+    {
+      "id": "ranger_blade_hurricane",
+      "name": "Blade Hurricane",
+      "description": "20% chance on hit to proc 80 magnitude Physical hit",
+      "className": "Ranger",
+      "paragonPath": null,
+      "icon": "Feat_Archer_Serpentsbite.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Feat_Archer_Serpentsbite.webp",
+      "iconPath": "/nw-hub/powers/Feat_Archer_Serpentsbite.webp"
+    },
+    {
+      "id": "ranger_aspect_of_the_serpent",
+      "name": "Aspect of the Serpent",
+      "description": "+3% Power, +3% Crit Strike, +3% Combat Advantage",
+      "className": "Ranger",
+      "paragonPath": null,
+      "icon": "Feat_Archer_CorrectingAim.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Feat_Archer_CorrectingAim.webp",
+      "iconPath": "/nw-hub/powers/Feat_Archer_CorrectingAim.webp"
+    },
+    {
+      "id": "ranger_commanding_shot",
+      "name": "Commanding Shot",
+      "description": "Encounter powers buff +6% damage for 8s",
+      "className": "Ranger",
+      "paragonPath": null,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "barbarian_relentless_rage",
+      "name": "Relentless Rage",
+      "description": "+5% At-Will damage, +5% Encounter damage",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "icon": "Icons_Feats_BattleFervor.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_BattleFervor.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_BattleFervor.webp"
+    },
+    {
+      "id": "barbarian_overpowering_surge",
+      "name": "Overpowering Surge",
+      "description": "Each consecutive At-Will +3% damage (max 5 stacks, resets on Encounter)",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "icon": "Icons_Feats_BattleTrample.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_BattleTrample.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_BattleTrample.webp"
+    },
+    {
+      "id": "barbarian_steel_slam",
+      "name": "Steel Slam",
+      "description": "Encounter powers have 30% chance to proc 150 magnitude",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "icon": "Icons_Feats_BrokenSkull.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_BrokenSkull.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_BrokenSkull.webp"
+    },
+    {
+      "id": "barbarian_battle_awareness",
+      "name": "Battle Awareness",
+      "description": "+5% Power, +5% Accuracy",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "icon": "Icons_Feats_Steadfast.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Steadfast.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Steadfast.webp"
+    },
+    {
+      "id": "paladin_radiant_weapon",
+      "name": "Radiant Weapon",
+      "description": "+8% Radiant damage",
+      "className": "Paladin",
+      "paragonPath": null,
+      "icon": "Icons_Feats_PoweroftheSun.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_PoweroftheSun.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_PoweroftheSun.webp"
+    },
+    {
+      "id": "paladin_divine_action",
+      "name": "Divine Action",
+      "description": "+15% AP Gain",
+      "className": "Paladin",
+      "paragonPath": null,
+      "icon": "Icons_Feats_DivineAction.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_DivineAction.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_DivineAction.webp"
+    },
+    {
+      "id": "paladin_aura_of_courage",
+      "name": "Aura of Courage",
+      "description": "Each hit procs 30 magnitude Radiant (always)",
+      "className": "Paladin",
+      "paragonPath": null,
+      "icon": "Paladin_ClassFeature_AuraofCourage.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Paladin_ClassFeature_AuraofCourage.webp",
+      "iconPath": "/nw-hub/powers/Paladin_ClassFeature_AuraofCourage.webp"
+    },
+    {
+      "id": "paladin_composure",
+      "name": "Composure",
+      "description": "+5% Crit Severity, +5% Accuracy",
+      "className": "Paladin",
+      "paragonPath": null,
+      "icon": "Icons_Feats_Steadfast.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Steadfast.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Steadfast.webp"
+    },
+    {
+      "id": "paladin_dread_warrior",
+      "name": "Dread Warrior",
+      "description": "Encounter powers buff +10% damage for 4s",
+      "className": "Paladin",
+      "paragonPath": null,
+      "icon": "Icons_Feats_InstigatorsVengeance.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_InstigatorsVengeance.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_InstigatorsVengeance.webp"
+    },
+    {
+      "id": "warlock_soul_spark_recovery",
+      "name": "Soul Spark Recovery",
+      "description": "+8% At-Will damage",
+      "className": "Warlock",
+      "paragonPath": null,
+      "icon": "Icons_Feats_Temptation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Temptation.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Temptation.webp"
+    },
+    {
+      "id": "warlock_risky_investment",
+      "name": "Risky Investment",
+      "description": "+15% Encounter damage when AP below 200",
+      "className": "Warlock",
+      "paragonPath": null,
+      "icon": "Icons_Feats_GrimPromise.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_GrimPromise.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_GrimPromise.webp"
+    },
+    {
+      "id": "warlock_dark_revelry",
+      "name": "Dark Revelry",
+      "description": "Killing blows (simulated as Daily use) give +5% Power for 10s",
+      "className": "Warlock",
+      "paragonPath": null,
+      "icon": "Icons_Feats_Damnation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Icons_Feats_Damnation.webp",
+      "iconPath": "/nw-hub/powers/Icons_Feats_Damnation.webp"
+    },
+    {
+      "id": "warlock_soul_desecration",
+      "name": "Soul Desecration",
+      "description": "Necrotic hits apply 100 magnitude DoT over 5s",
+      "className": "Warlock",
+      "paragonPath": null,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "warlock_creeping_death",
+      "name": "Creeping Death",
+      "description": "+5% damage for each DoT active (sim estimates +5% flat)",
+      "className": "Warlock",
+      "paragonPath": null,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    }
+  ],
+  "features": [
+    {
+      "id": "rogue_cf_invisible_infiltrator",
+      "name": "Invisible Infiltrator",
+      "description": "+5% damage while Stealthed",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Rogue_Classfeature_Stealth.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Rogue_Classfeature_Stealth.webp",
+      "iconPath": "/nw-hub/powers/Rogue_Classfeature_Stealth.webp"
+    },
+    {
+      "id": "rogue_cf_tactics",
+      "name": "Tactics",
+      "description": "+10% AP gain from encounters",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "rogue_cf_sly_flourish",
+      "name": "Sly Flourish",
+      "description": "+5% At-Will damage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "rogue_cf_sneak_attack",
+      "name": "Sneak Attack",
+      "description": "+5% damage when behind target (Combat Advantage)",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Rogue_Classfeature_Sneakattack.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Rogue_Classfeature_Sneakattack.webp",
+      "iconPath": "/nw-hub/powers/Rogue_Classfeature_Sneakattack.webp"
+    },
+    {
+      "id": "rogue_cf_blade_and_shadow",
+      "name": "Blade and Shadow",
+      "description": "+3% Encounter damage, +3% At-Will damage",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "rogue_cf_oppressive_darkness",
+      "name": "Oppressive Darkness",
+      "description": "On Encounter use: proc 40 magnitude shadow hit",
+      "className": "Rogue",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Rogue_Classfeature_OppressiveDarkness.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Rogue_Classfeature_OppressiveDarkness.webp",
+      "iconPath": "/nw-hub/powers/Rogue_Classfeature_OppressiveDarkness.webp"
+    },
+    {
+      "id": "fighter_cf_steel_blitz",
+      "name": "Steel Blitz",
+      "description": "10% chance on hit: extra 60 magnitude hit",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_cf_battle_awareness",
+      "name": "Battle Awareness",
+      "description": "+3% damage, +3% Critical Strike",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_cf_prepared_slam",
+      "name": "Prepared Slam",
+      "description": "+8% Encounter damage",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_cf_momentum",
+      "name": "Momentum",
+      "description": "After 3 consecutive At-Will hits: +10% damage for next hit",
+      "className": "Fighter",
+      "paragonPath": "Dreadnought",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_cf_combat_superiority",
+      "name": "Combat Superiority",
+      "description": "+5% At-Will damage",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Fighter_Classfeature_CombatSuperiority.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Fighter_Classfeature_CombatSuperiority.webp",
+      "iconPath": "/nw-hub/powers/Fighter_Classfeature_CombatSuperiority.webp"
+    },
+    {
+      "id": "fighter_cf_steel_defense",
+      "name": "Steel Defense",
+      "description": "+5% Deflect Severity",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "fighter_cf_greater_endurance",
+      "name": "Greater Endurance",
+      "description": "+10% Movement Speed, +5% Stamina Regen",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Fighter_Classfeature_EnduringWarrior.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Fighter_Classfeature_EnduringWarrior.webp",
+      "iconPath": "/nw-hub/powers/Fighter_Classfeature_EnduringWarrior.webp"
+    },
+    {
+      "id": "fighter_cf_vigorous_strikes",
+      "name": "Vigorous Strikes",
+      "description": "At-Will hits restore HP, +3% Incoming Healing",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Fighter_Classfeature_FerociousReaction.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Fighter_Classfeature_FerociousReaction.webp",
+      "iconPath": "/nw-hub/powers/Fighter_Classfeature_FerociousReaction.webp"
+    },
+    {
+      "id": "fighter_cf_steel_recovery",
+      "name": "Steel Recovery",
+      "description": "Blocking restores HP and Stamina over time",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Fighter_Classfeature_ShieldWarriorsWrath.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Fighter_Classfeature_ShieldWarriorsWrath.webp",
+      "iconPath": "/nw-hub/powers/Fighter_Classfeature_ShieldWarriorsWrath.webp"
+    },
+    {
+      "id": "fighter_cf_anvil_of_challenge",
+      "name": "Anvil of Challenge",
+      "description": "Anvil of Doom taunts for 8s, +200% Threat",
+      "className": "Fighter",
+      "paragonPath": "Vanguard",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Fighter_Classfeature_EnhancedMark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Fighter_Classfeature_EnhancedMark.webp",
+      "iconPath": "/nw-hub/powers/Fighter_Classfeature_EnhancedMark.webp"
+    },
+    {
+      "id": "wizard_cf_arcane_presence",
+      "name": "Arcane Presence",
+      "description": "Arcane Mastery also boosts Cold/Fire/Lightning by 0.5% per stack",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_ArcanePresence.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_ArcanePresence.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_ArcanePresence.webp"
+    },
+    {
+      "id": "wizard_cf_evocation",
+      "name": "Evocation",
+      "description": "+10% AoE power damage",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Evocation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Evocation.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Evocation.webp"
+    },
+    {
+      "id": "wizard_cf_chilling_presence",
+      "name": "Chilling Presence",
+      "description": "+0.5% damage per chill stack (doubled on frozen)",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Chillingpresence.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Chillingpresence.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Chillingpresence.webp"
+    },
+    {
+      "id": "wizard_cf_orb_of_imposition",
+      "name": "Orb of Imposition",
+      "description": "+20% control power duration",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Orbofimposition.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Orbofimposition.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Orbofimposition.webp"
+    },
+    {
+      "id": "wizard_cf_critical_conflagration",
+      "name": "Critical Conflagration",
+      "description": "+10% Crit Severity, crits add Smolder",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Criticalconflagration.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Criticalconflagration.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Criticalconflagration.webp"
+    },
+    {
+      "id": "wizard_cf_swath_of_destruction",
+      "name": "Swath of Destruction",
+      "description": "Smolder +5% damage, targets with Smolder take +2%",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Swathofdestruction.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Swathofdestruction.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Swathofdestruction.webp"
+    },
+    {
+      "id": "wizard_cf_combustive_action",
+      "name": "Combustive Action",
+      "description": "Smolder kill grants 1% max AP (1s CD)",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Combustiveaction.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Combustiveaction.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Combustiveaction.webp"
+    },
+    {
+      "id": "wizard_cf_frost_wave",
+      "name": "Frost Wave",
+      "description": "Daily activation: 3 chill stacks + Freeze foes within 30'",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_FrostWave.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_FrostWave.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_FrostWave.webp"
+    },
+    {
+      "id": "wizard_cf_eye_of_the_storm",
+      "name": "Eye of the Storm",
+      "description": "Encounter/Daily use → +10% Crit Strike for 5s (20s cooldown)",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Eyeofthestorm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Eyeofthestorm.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Eyeofthestorm.webp"
+    },
+    {
+      "id": "wizard_cf_storm_spell",
+      "name": "Storm Spell",
+      "description": "20% chance on crit: 100 magnitude lightning",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Stormspell.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Stormspell.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Stormspell.webp"
+    },
+    {
+      "id": "wizard_cf_storm_fury",
+      "name": "Storm Fury",
+      "description": "When attacked: 50 mag lightning (3s per-enemy CD)",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_Stormfury.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_Stormfury.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_Stormfury.webp"
+    },
+    {
+      "id": "wizard_cf_arcane_power_field",
+      "name": "Arcane Power Field",
+      "description": "Daily → 8s: double Arcane Mastery bonus + 50 mag/2s AoE",
+      "className": "Wizard",
+      "paragonPath": "Arcanist",
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Wizard_Classfeature_ArcanePowerField.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Wizard_Classfeature_ArcanePowerField.webp",
+      "iconPath": "/nw-hub/powers/Wizard_Classfeature_ArcanePowerField.webp"
+    },
+    {
+      "id": "wizard_mech_arcane_mastery",
+      "name": "Arcane Mastery",
+      "description": "Arcane spells build stacks (+0.5% Arcane damage each, max 5 stacks, 8s duration)",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_mech_chill",
+      "name": "Chill",
+      "description": "Cold spells add Chill: slow targets, max 6 stacks → Freeze (root 3s)",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_mech_spell_mastery",
+      "name": "Spell Mastery",
+      "description": "Tab slot: one Encounter power with boosted damage/effect",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_mech_control_mastery",
+      "name": "Control Mastery",
+      "description": "Control effects deal 2.5× effectiveness vs NPCs (Stun, Root, Hold, Daze)",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_mech_smolder",
+      "name": "Smolder",
+      "description": "Fire powers apply Smolder DoT; if target has Chill → Rimefire Smolder",
+      "className": "Wizard",
+      "paragonPath": "Thaumaturge",
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "wizard_mech_forte",
+      "name": "Forte: Arcane Intensity",
+      "description": "Forte stat split: Critical Strike & Combat Advantage",
+      "className": "Wizard",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": true,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "cleric_cf_holy_fervor",
+      "name": "Holy Fervor",
+      "description": "+15% AP gain from powers",
+      "className": "Cleric",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Cleric_Classfeature_Holyfervor.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Cleric_Classfeature_Holyfervor.webp",
+      "iconPath": "/nw-hub/powers/Cleric_Classfeature_Holyfervor.webp"
+    },
+    {
+      "id": "cleric_cf_divine_fortune",
+      "name": "Divine Fortune",
+      "description": "+5% damage, +5% healing",
+      "className": "Cleric",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Cleric_Classfeature_DivineFortune.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Cleric_Classfeature_DivineFortune.webp",
+      "iconPath": "/nw-hub/powers/Cleric_Classfeature_DivineFortune.webp"
+    },
+    {
+      "id": "cleric_cf_searing_light",
+      "name": "Searing Light",
+      "description": "+8% Radiant damage",
+      "className": "Cleric",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "cleric_cf_terrifying_insight",
+      "name": "Terrifying Insight",
+      "description": "+4% damage, stacks 3x on Encounter use (12% max)",
+      "className": "Cleric",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Cleric_Classfeature_Terrifyinginsight.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Cleric_Classfeature_Terrifyinginsight.webp",
+      "iconPath": "/nw-hub/powers/Cleric_Classfeature_Terrifyinginsight.webp"
+    },
+    {
+      "id": "ranger_cf_twin_blade_storm",
+      "name": "Twin-Blade Storm",
+      "description": "On hit: 5% chance 50 magnitude melee hit per nearby enemy",
+      "className": "Ranger",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Archer_Classfeature_Twin-BladeStorm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Archer_Classfeature_Twin-BladeStorm.webp",
+      "iconPath": "/nw-hub/powers/Archer_Classfeature_Twin-BladeStorm.webp"
+    },
+    {
+      "id": "ranger_cf_blade_storm",
+      "name": "Blade Storm",
+      "description": "On hit: 5% chance 80 magnitude ranged hit",
+      "className": "Ranger",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Archer_Classfeature_BladeStorm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Archer_Classfeature_BladeStorm.webp",
+      "iconPath": "/nw-hub/powers/Archer_Classfeature_BladeStorm.webp"
+    },
+    {
+      "id": "ranger_cf_aspect_of_the_pack",
+      "name": "Aspect of the Pack",
+      "description": "+5% CA damage, +3% Combat Advantage",
+      "className": "Ranger",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Archer_Classfeature_AspectofthePack.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Archer_Classfeature_AspectofthePack.webp",
+      "iconPath": "/nw-hub/powers/Archer_Classfeature_AspectofthePack.webp"
+    },
+    {
+      "id": "ranger_cf_seekers_vengeance",
+      "name": "Seeker's Vengeance",
+      "description": "+10% Crit Severity when target below 50% HP",
+      "className": "Ranger",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Archer_Classfeature_SeekersVengeance.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Archer_Classfeature_SeekersVengeance.webp",
+      "iconPath": "/nw-hub/powers/Archer_Classfeature_SeekersVengeance.webp"
+    },
+    {
+      "id": "barbarian_cf_steel_slam",
+      "name": "Steel Slam",
+      "description": "+5% At-Will damage, +5% Encounter damage",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "barbarian_cf_wrathful_determination",
+      "name": "Wrathful Determination",
+      "description": "+10% damage when target below 30% HP",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "GreatWeapon_Classfeature_WrathfulDetermination.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/GreatWeapon_Classfeature_WrathfulDetermination.webp",
+      "iconPath": "/nw-hub/powers/GreatWeapon_Classfeature_WrathfulDetermination.webp"
+    },
+    {
+      "id": "barbarian_cf_destroyer",
+      "name": "Destroyer",
+      "description": "+3% damage per consecutive At-Will (up to 5 stacks)",
+      "className": "Barbarian",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "GreatWeapon_Class_Destroyer.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/GreatWeapon_Class_Destroyer.webp",
+      "iconPath": "/nw-hub/powers/GreatWeapon_Class_Destroyer.webp"
+    },
+    {
+      "id": "paladin_cf_aura_of_courage",
+      "name": "Aura of Courage",
+      "description": "On hit: 1% of HP as Radiant damage (~30 mag equivalent)",
+      "className": "Paladin",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Paladin_ClassFeature_AuraofCourage.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Paladin_ClassFeature_AuraofCourage.webp",
+      "iconPath": "/nw-hub/powers/Paladin_ClassFeature_AuraofCourage.webp"
+    },
+    {
+      "id": "paladin_cf_aura_of_vengeance",
+      "name": "Aura of Vengeance",
+      "description": "When hit: reflect 20 magnitude radiant damage (sim: +15% proc chance on-hit)",
+      "className": "Paladin",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Paladin_ClassFeature_AuraofVengeance.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Paladin_ClassFeature_AuraofVengeance.webp",
+      "iconPath": "/nw-hub/powers/Paladin_ClassFeature_AuraofVengeance.webp"
+    },
+    {
+      "id": "paladin_cf_divine_action",
+      "name": "Divine Action",
+      "description": "+15% AP Gain from all sources",
+      "className": "Paladin",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "paladin_cf_composure",
+      "name": "Composure",
+      "description": "+3% damage, +3% defense",
+      "className": "Paladin",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "warlock_cf_dark_ones_blessing",
+      "name": "Dark One's Blessing",
+      "description": "+5% Necrotic damage, lifesteal on kill",
+      "className": "Warlock",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Scourge_Classfeature_DarkOnesBlessing.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Scourge_Classfeature_DarkOnesBlessing.webp",
+      "iconPath": "/nw-hub/powers/Scourge_Classfeature_DarkOnesBlessing.webp"
+    },
+    {
+      "id": "warlock_cf_soul_bonfire",
+      "name": "Soul Bonfire",
+      "description": "On Encounter use: apply 150 magnitude DoT over 5s",
+      "className": "Warlock",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null
+    },
+    {
+      "id": "warlock_cf_all_consuming_curse",
+      "name": "All-Consuming Curse",
+      "description": "+8% damage to cursed (low HP) targets",
+      "className": "Warlock",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Scourge_Classfeature_AllConsumingCurse.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Scourge_Classfeature_AllConsumingCurse.webp",
+      "iconPath": "/nw-hub/powers/Scourge_Classfeature_AllConsumingCurse.webp"
+    },
+    {
+      "id": "warlock_cf_deadly_curse",
+      "name": "Deadly Curse",
+      "description": "+5% damage, +3% Crit Strike",
+      "className": "Warlock",
+      "paragonPath": null,
+      "isClassFeature": true,
+      "isMechanic": false,
+      "icon": "Scourge_Classfeature_DeadlyCurse.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/powers/Scourge_Classfeature_DeadlyCurse.webp",
+      "iconPath": "/nw-hub/powers/Scourge_Classfeature_DeadlyCurse.webp"
+    }
+  ]
+}

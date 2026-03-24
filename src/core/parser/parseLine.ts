@@ -1,4 +1,5 @@
 import type { CombatEvent, ParseIssue } from "../../shared/types.js";
+import { getNwHubArtifact } from "../../shared/nwHubArtifacts.js";
 
 export type ParseResult =
   | { kind: "event"; event: CombatEvent }
@@ -174,6 +175,34 @@ function buildUnknown(line: string, reason: string): ParseResult {
   };
 }
 
+function buildArtifactTags(abilityName: string): Record<string, string | number | boolean> {
+  const artifact = getNwHubArtifact(abilityName);
+  if (!artifact) {
+    return {};
+  }
+
+  return {
+    artifactName: artifact.name,
+    artifactQuality: artifact.quality ?? "Unknown",
+    artifactItemLevel: artifact.itemLevel ?? 0,
+    artifactCombinedRating: artifact.combinedRating ?? 0,
+    artifactIconPath: artifact.iconPath ?? "",
+    artifactHasShield: artifact.effects.grantsShield,
+    artifactSummonsEntity: artifact.effects.summonsEntity,
+    artifactAppliesDot: artifact.effects.appliesDot,
+    artifactHasControlEffect: artifact.effects.hasControlEffect,
+    artifactDamageTakenPct: Math.max(0, ...artifact.effects.damageTakenPct),
+    artifactOutgoingDamagePct: Math.max(0, ...artifact.effects.outgoingDamagePct),
+    artifactOutgoingHealingPct: Math.max(0, ...artifact.effects.outgoingHealingPct),
+    artifactReducedDamagePct: Math.max(0, ...artifact.effects.reducedDamagePct),
+    artifactDamageResistancePct: Math.max(0, ...artifact.effects.damageResistancePct),
+    artifactCooldownReductionSec: Math.max(0, ...artifact.effects.cooldownReductionSec),
+    artifactStunSeconds: Math.max(0, ...artifact.effects.stunSeconds),
+    artifactDurationSeconds: Math.max(0, ...artifact.effects.durationSeconds),
+    artifactKeywords: artifact.effects.keywords.join("|")
+  };
+}
+
 export function parseLine(line: string): ParseResult {
   const trimmed = line.trim();
   if (!trimmed) {
@@ -283,7 +312,8 @@ export function parseLine(line: string): ParseResult {
     school,
     flags,
     tags: {
-      hasExplicitSourceActor
+      hasExplicitSourceActor,
+      ...buildArtifactTags(abilityName)
     }
   };
 

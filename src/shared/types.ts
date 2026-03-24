@@ -54,6 +54,26 @@ export type TimelinePoint = {
   damage: number;
   healing: number;
   hits: number;
+  buffs: number;
+  debuffs: number;
+};
+
+export type ActivationStat = {
+  second: number;
+  abilityName: string;
+  kind: EventType;
+  critical: boolean;
+  targetName?: string;
+  sourceType?: ActorType;
+};
+
+export type EffectStat = {
+  abilityName: string;
+  targetName: string;
+  kind: "buff" | "debuff";
+  applications: number;
+  totalMagnitude: number;
+  timestamps: number[];
 };
 
 export type TargetStat = {
@@ -107,6 +127,8 @@ export type CombatantSnapshot = {
   topSkills: SkillStat[];
   targets: TargetStat[];
   timeline: TimelinePoint[];
+  activations: ActivationStat[];
+  effects: EffectStat[];
   encounters: CombatantEncounterStat[];
   deaths: number;
 };

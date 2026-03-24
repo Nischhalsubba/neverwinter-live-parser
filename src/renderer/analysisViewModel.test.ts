@@ -21,6 +21,8 @@ function createCombatant(partial: Partial<CombatantSnapshot>): CombatantSnapshot
     topSkills: [],
     targets: [],
     timeline: [],
+    activations: [],
+    effects: [],
     encounters: [],
     deaths: 0,
     ...partial

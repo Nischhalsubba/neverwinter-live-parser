@@ -1,7 +1,9 @@
 import type {
+  ActivationStat,
   CombatantEncounterStat,
   CombatantSnapshot,
   EncounterSnapshot,
+  EffectStat,
   SkillStat,
   TargetStat,
   TimelinePoint
@@ -44,6 +46,8 @@ export type PlayerRow = {
   companionCount: number;
   targets: TargetStat[];
   timeline: TimelinePoint[];
+  activations: ActivationStat[];
+  effects: EffectStat[];
   encounters: CombatantEncounterStat[];
   deaths: number;
   className: string | null;
@@ -156,16 +160,54 @@ function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
       second: point.second,
       damage: 0,
       healing: 0,
-      hits: 0
+      hits: 0,
+      buffs: 0,
+      debuffs: 0
     };
 
     current.damage += point.damage;
     current.healing += point.healing;
     current.hits += point.hits;
+    current.buffs += point.buffs;
+    current.debuffs += point.debuffs;
     totals.set(point.second, current);
   }
 
   return Array.from(totals.values()).sort((left, right) => left.second - right.second);
+}
+
+function mergeActivations(activations: ActivationStat[]): ActivationStat[] {
+  return activations
+    .slice()
+    .sort((left, right) => left.second - right.second);
+}
+
+function mergeEffects(effects: EffectStat[]): EffectStat[] {
+  const totals = new Map<string, EffectStat>();
+
+  for (const effect of effects) {
+    const key = `${effect.kind}:${effect.abilityName}:${effect.targetName}`;
+    const current = totals.get(key) ?? {
+      abilityName: effect.abilityName,
+      targetName: effect.targetName,
+      kind: effect.kind,
+      applications: 0,
+      totalMagnitude: 0,
+      timestamps: []
+    };
+
+    current.applications += effect.applications;
+    current.totalMagnitude += effect.totalMagnitude;
+    current.timestamps.push(...effect.timestamps);
+    totals.set(key, current);
+  }
+
+  return Array.from(totals.values())
+    .map((effect) => ({
+      ...effect,
+      timestamps: effect.timestamps.slice().sort((left, right) => left - right)
+    }))
+    .sort((left, right) => right.applications - left.applications);
 }
 
 function mergeEncounters(encounters: CombatantEncounterStat[]): CombatantEncounterStat[] {
@@ -304,6 +346,8 @@ export function buildPlayerRows(
         companionCount: members.filter((member) => member.type === "companion").length,
         targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
         timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
+        activations: mergeActivations(sourceMembers.flatMap((member) => member.activations)),
+        effects: mergeEffects(sourceMembers.flatMap((member) => member.effects)),
         encounters: mergeEncounters(sourceMembers.flatMap((member) => member.encounters)),
         deaths: sourceMembers.reduce((total, member) => total + member.deaths, 0),
         className: inferredBuild.className,

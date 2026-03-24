@@ -1,9 +1,11 @@
 import type {
+  ActivationStat,
   AnalysisSnapshot,
   CombatEvent,
   CombatantEncounterStat,
   CombatantSnapshot,
   EncounterSnapshot,
+  EffectStat,
   SkillStat,
   TargetStat,
   TimelinePoint
@@ -33,6 +35,8 @@ type MutableCombatant = {
   skillTotals: Map<string, SkillStat>;
   targetTotals: Map<string, TargetStat>;
   timeline: Map<number, TimelinePoint>;
+  activations: ActivationStat[];
+  effects: Map<string, EffectStat>;
   encounterTotals: Map<string, MutableEncounterTotals>;
 };
 
@@ -126,17 +130,51 @@ export class CombatantTracker {
     const offsetSeconds = this.startedAt
       ? Math.max(0, Math.floor((event.timestamp - this.startedAt) / 1000))
       : 0;
+
+    if (event.abilityName && event.eventType !== "unknown") {
+      combatant.activations.push({
+        second: offsetSeconds,
+        abilityName: event.abilityName,
+        kind: event.eventType,
+        critical: Boolean(event.critical),
+        targetName: event.targetName,
+        sourceType: event.sourceType
+      });
+    }
+
+    if ((event.eventType === "buff" || event.eventType === "debuff") && event.abilityName && event.targetName) {
+      const effectKey = `${event.eventType}:${event.abilityName}:${event.targetName}`;
+      const effect = combatant.effects.get(effectKey) ?? {
+        abilityName: event.abilityName,
+        targetName: event.targetName,
+        kind: event.eventType,
+        applications: 0,
+        totalMagnitude: 0,
+        timestamps: []
+      };
+      effect.applications += 1;
+      effect.totalMagnitude += Math.abs(event.amount ?? event.magnitude ?? 0);
+      effect.timestamps.push(offsetSeconds);
+      combatant.effects.set(effectKey, effect);
+    }
+
     const bucket = Math.floor(offsetSeconds / TIMELINE_BUCKET_SECONDS) * TIMELINE_BUCKET_SECONDS;
     const point = combatant.timeline.get(bucket) ?? {
       second: bucket,
       damage: 0,
       healing: 0,
-      hits: 0
+      hits: 0,
+      buffs: 0,
+      debuffs: 0
     };
     if (event.eventType === "damage") {
       point.damage += amount;
     } else if (event.eventType === "heal") {
       point.healing += amount;
+    } else if (event.eventType === "buff") {
+      point.buffs += 1;
+    } else if (event.eventType === "debuff") {
+      point.debuffs += 1;
     }
     if (event.eventType === "damage" || event.eventType === "heal") {
       point.hits += 1;
@@ -195,13 +233,22 @@ export class CombatantTracker {
         hps: combatant.totalHealing / durationSeconds,
         topSkills: Array.from(combatant.skillTotals.values())
           .sort((left, right) => right.total - left.total)
-          .slice(0, 12),
+          .slice(0, 20),
         targets: Array.from(combatant.targetTotals.values())
           .sort((left, right) => right.totalDamage - left.totalDamage)
-          .slice(0, 20),
+          .slice(0, 24),
         timeline: Array.from(combatant.timeline.values()).sort(
           (left, right) => left.second - right.second
         ),
+        activations: combatant.activations
+          .slice()
+          .sort((left, right) => left.second - right.second),
+        effects: Array.from(combatant.effects.values())
+          .map((effect) => ({
+            ...effect,
+            timestamps: effect.timestamps.slice().sort((left, right) => left - right)
+          }))
+          .sort((left, right) => right.applications - left.applications),
         encounters: Array.from(combatant.encounterTotals.values())
           .map<CombatantEncounterStat>((encounter) => ({
             encounterId: encounter.encounterId,
@@ -254,6 +301,8 @@ export class CombatantTracker {
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
       timeline: new Map<number, TimelinePoint>(),
+      activations: [],
+      effects: new Map<string, EffectStat>(),
       encounterTotals: new Map<string, MutableEncounterTotals>()
     };
     this.combatants.set(id, created);
@@ -283,6 +332,8 @@ export class CombatantTracker {
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
       timeline: new Map<number, TimelinePoint>(),
+      activations: [],
+      effects: new Map<string, EffectStat>(),
       encounterTotals: new Map<string, MutableEncounterTotals>()
     };
     this.combatants.set(id, created);
