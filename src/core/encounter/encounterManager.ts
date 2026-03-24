@@ -12,10 +12,12 @@ type EncounterManagerState = {
 
 export class EncounterManager {
   private readonly inactivityTimeoutMs: number;
+  private readonly targetSwitchWindowMs: number;
   private state: EncounterManagerState;
 
   constructor(inactivityTimeoutMs: number) {
     this.inactivityTimeoutMs = inactivityTimeoutMs;
+    this.targetSwitchWindowMs = Math.max(3_000, Math.floor(inactivityTimeoutMs / 2));
     this.state = {
       current: null,
       completed: []
@@ -28,6 +30,7 @@ export class EncounterManager {
     }
 
     this.maybeExpire(event.timestamp);
+    this.maybeRotateEncounter(event);
 
     if (!this.state.current) {
       this.state.current = createEncounter(this.createEncounterId(), event.timestamp);
@@ -36,8 +39,8 @@ export class EncounterManager {
     applyEventToEncounter(this.state.current, event);
   }
 
-  flush(now = Date.now()): void {
-    this.maybeExpire(now);
+  flush(now = Date.now()): boolean {
+    return this.maybeExpire(now);
   }
 
   getCurrentSnapshot(now = Date.now()): EncounterSnapshot | null {
@@ -56,19 +59,46 @@ export class EncounterManager {
     return this.state.current?.id ?? null;
   }
 
-  private maybeExpire(now: number): void {
+  private maybeExpire(now: number): boolean {
     const current = this.state.current;
     if (!current) {
-      return;
+      return false;
     }
 
     const idleFor = now - current.lastActivityAt;
     if (idleFor < this.inactivityTimeoutMs) {
-      return;
+      return false;
     }
 
     this.state.completed = [
       finalizeEncounter(current, current.lastActivityAt + this.inactivityTimeoutMs),
+      ...this.state.completed
+    ].slice(0, 20);
+    this.state.current = null;
+    return true;
+  }
+
+  private maybeRotateEncounter(event: CombatEvent): void {
+    const current = this.state.current;
+    if (!current || event.eventType !== "damage") {
+      return;
+    }
+
+    if (!current.labelHint || !event.targetName) {
+      return;
+    }
+
+    const idleFor = event.timestamp - current.lastActivityAt;
+    if (idleFor < this.targetSwitchWindowMs) {
+      return;
+    }
+
+    if (current.labelHint === event.targetName) {
+      return;
+    }
+
+    this.state.completed = [
+      finalizeEncounter(current, current.lastActivityAt + this.targetSwitchWindowMs),
       ...this.state.completed
     ].slice(0, 20);
     this.state.current = null;

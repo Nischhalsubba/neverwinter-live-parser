@@ -1,6 +1,6 @@
 import chokidar, { type FSWatcher } from "chokidar";
 import { EventEmitter } from "node:events";
-import { readFile } from "node:fs/promises";
+import { open } from "node:fs/promises";
 import path from "node:path";
 import type {
   AppState,
@@ -151,9 +151,10 @@ export class LogMonitorService extends EventEmitter {
 
     this.flushTimer = setInterval(() => {
       void refresh();
-      this.encounterManager.flush();
-      this.syncEncounterState();
-      this.scheduleEmitState();
+      if (this.encounterManager.flush()) {
+        this.syncEncounterState();
+        this.scheduleEmitState();
+      }
     }, this.pollIntervalMs);
 
     await refresh();
@@ -176,11 +177,7 @@ export class LogMonitorService extends EventEmitter {
     this.combatantTracker = new CombatantTracker();
     this.liveTrackingFilePath = null;
 
-    const contents = await readFile(filePath, "utf8");
-    const { lines, leftover } = splitBufferedLines("", contents);
-    const normalizedLines = leftover ? [...lines, leftover] : lines;
-
-    this.consumeLines(normalizedLines);
+    await this.consumeImportedFile(filePath);
     this.encounterManager.flush(
       this.state.analysis.endedAt
         ? this.state.analysis.endedAt + 10_000
@@ -209,8 +206,9 @@ export class LogMonitorService extends EventEmitter {
       this.watcher = null;
     }
 
-    this.encounterManager.flush();
-    this.syncEncounterState();
+    if (this.encounterManager.flush()) {
+      this.syncEncounterState();
+    }
     this.state.watcherStatus = "idle";
     this.liveTrackingFilePath = null;
     this.scheduleEmitState(true);
@@ -274,6 +272,44 @@ export class LogMonitorService extends EventEmitter {
     ].slice(0, MAX_DEBUG_ITEMS);
 
     this.consumeLines(result.lines);
+  }
+
+  private async consumeImportedFile(filePath: string): Promise<void> {
+    const chunkSize = 512 * 1024;
+    const fileHandle = await open(filePath, "r");
+    const buffer = Buffer.allocUnsafe(chunkSize);
+    let leftover = "";
+
+    try {
+      while (true) {
+        const { bytesRead } = await fileHandle.read(buffer, 0, chunkSize, null);
+        if (bytesRead <= 0) {
+          break;
+        }
+
+        const chunk = buffer.toString("utf8", 0, bytesRead);
+        const result = splitBufferedLines(leftover, chunk);
+        leftover = result.leftover;
+
+        if (result.lines.length > 0) {
+          this.state.debug.latestRawLines = [
+            ...result.lines.slice(-MAX_DEBUG_ITEMS),
+            ...this.state.debug.latestRawLines
+          ].slice(0, MAX_DEBUG_ITEMS);
+          this.consumeLines(result.lines);
+        }
+      }
+
+      if (leftover) {
+        this.state.debug.latestRawLines = [
+          leftover,
+          ...this.state.debug.latestRawLines
+        ].slice(0, MAX_DEBUG_ITEMS);
+        this.consumeLines([leftover]);
+      }
+    } finally {
+      await fileHandle.close();
+    }
   }
 
   private consumeEvent(event: CombatEvent): void {

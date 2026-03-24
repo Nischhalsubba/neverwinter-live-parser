@@ -46,6 +46,24 @@ type MutableCombatant = {
 };
 
 const TIMELINE_BUCKET_SECONDS = 5;
+const MAX_SKILLS_PER_COMBATANT = 20;
+const MAX_TARGETS_PER_COMBATANT = 24;
+const MAX_HIGHEST_HITS_PER_COMBATANT = 24;
+const MAX_TRACKED_COMBATANTS = 256;
+const MAX_DAMAGE_MOMENTS_PER_COMBATANT = 4_000;
+const MAX_ACTIVATIONS_PER_COMBATANT = 4_000;
+const MAX_EFFECT_TIMESTAMPS = 512;
+
+function pushBounded<T>(items: T[], item: T, maxSize: number): void {
+  items.push(item);
+  if (items.length > maxSize) {
+    items.splice(0, items.length - maxSize);
+  }
+}
+
+function isPlayerOwnedCombatant(combatant: MutableCombatant): boolean {
+  return combatant.type === "player" || combatant.ownerId.startsWith("P[");
+}
 
 export class CombatantTracker {
   private readonly combatants = new Map<string, MutableCombatant>();
@@ -82,14 +100,14 @@ export class CombatantTracker {
     if (event.eventType === "damage") {
       combatant.totalDamage += amount;
       combatant.hits += 1;
-      combatant.damageMoments.push({
+      pushBounded(combatant.damageMoments, {
         second: offsetSeconds,
         abilityName: event.abilityName ?? "Unknown source",
         amount,
         targetName: event.targetName,
         critical: Boolean(event.critical),
         sourceType: event.sourceType
-      });
+      }, MAX_DAMAGE_MOMENTS_PER_COMBATANT);
       if (event.targetName) {
         const targetKey = normalizeEntityName(event.targetName) || event.targetName;
         const target = combatant.targetTotals.get(targetKey) ?? {
@@ -159,14 +177,14 @@ export class CombatantTracker {
     }
 
     if (event.abilityName && event.eventType !== "unknown") {
-      combatant.activations.push({
+      pushBounded(combatant.activations, {
         second: offsetSeconds,
         abilityName: event.abilityName,
         kind: event.eventType,
         critical: Boolean(event.critical),
         targetName: event.targetName,
         sourceType: event.sourceType
-      });
+      }, MAX_ACTIVATIONS_PER_COMBATANT);
     }
 
     if ((event.eventType === "buff" || event.eventType === "debuff") && event.abilityName && event.targetName) {
@@ -181,7 +199,7 @@ export class CombatantTracker {
       };
       effect.applications += 1;
       effect.totalMagnitude += Math.abs(event.amount ?? event.magnitude ?? 0);
-      effect.timestamps.push(offsetSeconds);
+      pushBounded(effect.timestamps, offsetSeconds, MAX_EFFECT_TIMESTAMPS);
       combatant.effects.set(effectKey, effect);
     }
 
@@ -243,6 +261,7 @@ export class CombatantTracker {
     const encounterMap = new Map(encounterSnapshots.map((encounter) => [encounter.id, encounter]));
 
     const combatants = Array.from(this.combatants.values())
+      .filter((combatant) => isPlayerOwnedCombatant(combatant))
       .map<CombatantSnapshot>((combatant) => ({
         id: combatant.id,
         ownerId: combatant.ownerId,
@@ -260,13 +279,13 @@ export class CombatantTracker {
         hps: combatant.totalHealing / durationSeconds,
         topSkills: Array.from(combatant.skillTotals.values())
           .sort((left, right) => right.total - left.total)
-          .slice(0, 20),
+          .slice(0, MAX_SKILLS_PER_COMBATANT),
         targets: Array.from(combatant.targetTotals.values())
           .sort((left, right) => right.totalDamage - left.totalDamage)
-          .slice(0, 24),
+          .slice(0, MAX_TARGETS_PER_COMBATANT),
         highestHits: Array.from(combatant.highestHits.values())
           .sort((left, right) => right.amount - left.amount)
-          .slice(0, 24),
+          .slice(0, MAX_HIGHEST_HITS_PER_COMBATANT),
         damageMoments: combatant.damageMoments
           .slice()
           .sort((left, right) => left.second - right.second),
@@ -297,7 +316,8 @@ export class CombatantTracker {
           }),
         deaths: combatant.deaths
       }))
-      .sort((left, right) => right.totalDamage - left.totalDamage);
+      .sort((left, right) => right.totalDamage - left.totalDamage)
+      .slice(0, MAX_TRACKED_COMBATANTS);
 
     return {
       mode,

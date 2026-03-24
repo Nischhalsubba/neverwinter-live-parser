@@ -8,6 +8,7 @@ type MutableEncounter = {
   id: string;
   startedAt: number;
   endedAt?: number;
+  labelHint: string | null;
   totalDamage: number;
   totalHealing: number;
   damageTaken: number;
@@ -23,6 +24,7 @@ export function createEncounter(id: string, startedAt: number): MutableEncounter
   return {
     id,
     startedAt,
+    labelHint: null,
     totalDamage: 0,
     totalHealing: 0,
     damageTaken: 0,
@@ -46,6 +48,9 @@ export function applyEventToEncounter(
   if (event.eventType === "damage") {
     encounter.totalDamage += amount;
     encounter.hitCount += 1;
+    if (!encounter.labelHint && event.targetName) {
+      encounter.labelHint = event.targetName;
+    }
     if (event.targetName) {
       encounter.targetTotals.set(
         event.targetName,
@@ -100,7 +105,7 @@ export function finalizeEncounter(
   const primaryTargetName =
     Array.from(encounter.targetTotals.entries()).sort(
       (left, right) => right[1] - left[1]
-    )[0]?.[0] ?? "Encounter";
+    )[0]?.[0] ?? encounter.labelHint ?? "Encounter";
 
   return {
     id: encounter.id,
