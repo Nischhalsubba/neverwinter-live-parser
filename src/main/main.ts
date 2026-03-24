@@ -4,9 +4,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import Store from "electron-store";
 import { LogMonitorService } from "../core/monitoring/logMonitorService.js";
-import { writeErrorLog } from "./errorLogger.js";
+import { clearErrorLogs, getLogDirectory, writeErrorLog, writeRendererLog } from "./errorLogger.js";
 import type {
   AppState,
   DiscoveredLogCandidate,
@@ -16,17 +15,54 @@ import type {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
+app.setName("neverwinter-live-parser");
 const monitor = new LogMonitorService();
-const settingsStore = new Store<{ selectedLogFolder: string | null }>({
-  defaults: {
-    selectedLogFolder: null
-  }
-});
 
-let mainWindow: BrowserWindow | null = null;
+type StoredSettings = {
+  selectedLogFolder: string | null;
+};
+
+const DEFAULT_SETTINGS: StoredSettings = {
+  selectedLogFolder: null
+};
+
+let mainWindow: InstanceType<typeof BrowserWindow> | null = null;
 let telemetryTimer: NodeJS.Timeout | null = null;
 let lastCpuUsage = process.cpuUsage();
 let lastCpuSampleAt = process.hrtime.bigint();
+
+function getSettingsPath(): string {
+  return path.join(app.getPath("userData"), "settings.json");
+}
+
+async function readSettings(): Promise<StoredSettings> {
+  try {
+    const raw = await fs.readFile(getSettingsPath(), "utf8");
+    return {
+      ...DEFAULT_SETTINGS,
+      ...JSON.parse(raw)
+    };
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
+async function writeSettings(next: StoredSettings): Promise<void> {
+  try {
+    await fs.mkdir(path.dirname(getSettingsPath()), { recursive: true });
+    await fs.writeFile(getSettingsPath(), JSON.stringify(next, null, 2), "utf8");
+  } catch (error) {
+    void writeErrorLog(error, "Failed to write settings.json");
+  }
+}
+
+async function clearStoredAppData(): Promise<void> {
+  try {
+    await fs.rm(getSettingsPath(), { force: true });
+  } catch (error) {
+    void writeErrorLog(error, "Failed to remove settings.json during clear data");
+  }
+}
 
 function toMegabytes(value: number): number {
   return Number((value / (1024 * 1024)).toFixed(1));
@@ -253,7 +289,7 @@ function createWindow(): void {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on("render-process-gone", (_event, details) => {
+  mainWindow.webContents.on("render-process-gone", (_event: unknown, details: { reason: string; exitCode: number }) => {
     void writeErrorLog(
       new Error(`Renderer process exited: ${details.reason} (exitCode=${details.exitCode})`),
       "Renderer process gone"
@@ -285,10 +321,10 @@ function emitState(state: AppState): void {
 monitor.on("state", (state) => emitState(state));
 
 ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
-  settingsStore.set(
-    "selectedLogFolder",
-    config.folderPath ?? (config.filePath ? path.dirname(config.filePath) : null)
-  );
+  await writeSettings({
+    selectedLogFolder:
+      config.folderPath ?? (config.filePath ? path.dirname(config.filePath) : null)
+  });
   return withTelemetry(await monitor.start(config));
 });
 
@@ -298,7 +334,7 @@ ipcMain.handle("monitoring:importFile", async (_event, filePath: string) =>
 ipcMain.handle("monitoring:stop", async () => withTelemetry(await monitor.stop()));
 ipcMain.handle("monitoring:getState", async () => {
   const state = monitor.getState();
-  const savedFolder = settingsStore.get("selectedLogFolder");
+  const savedFolder = (await readSettings()).selectedLogFolder;
   return withTelemetry({
     ...state,
     selectedLogFolder: state.selectedLogFolder ?? savedFolder
@@ -344,6 +380,33 @@ ipcMain.handle("dialog:selectLogFile", async () => {
 });
 
 ipcMain.handle("monitoring:discoverLogs", async () => discoverCombatLogCandidates());
+ipcMain.handle("maintenance:clearData", async () => {
+  await monitor.stop();
+  await clearStoredAppData();
+  const state = monitor.getState();
+  return withTelemetry({
+    ...state,
+    selectedLogFolder: null,
+    activeLogFile: null,
+    importedLogFile: null,
+    analysis: {
+      ...state.analysis,
+      sourcePath: null
+    },
+    debug: {
+      ...state.debug,
+      activeFilePath: null
+    }
+  });
+});
+ipcMain.handle("maintenance:clearLogs", async () => {
+  await clearErrorLogs();
+  return getLogDirectory();
+});
+ipcMain.handle("maintenance:getLogDirectory", async () => getLogDirectory());
+ipcMain.handle("maintenance:logRendererError", async (_event, payload: { context?: string; message: string }) => {
+  await writeRendererLog(payload.message, payload.context ?? "Renderer error");
+});
 
 app.whenReady().then(() => {
   createWindow();

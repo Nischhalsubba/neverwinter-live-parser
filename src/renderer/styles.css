@@ -543,7 +543,8 @@ input {
 .oa-session-meta,
 .oa-toolbar,
 .oa-button-pair,
-.oa-action-row {
+.oa-action-row,
+.oa-maintenance-actions {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -697,7 +698,7 @@ button {
 }
 
 .oa-main-scroll {
-  padding: 24px;
+  padding: clamp(16px, 2vw, 24px);
   min-width: 0;
   width: 100%;
   max-width: 100%;
@@ -819,6 +820,7 @@ button {
   min-width: 0;
   width: 100%;
   max-width: 100%;
+  align-content: start;
 }
 
 .oa-screen-hero,
@@ -826,8 +828,9 @@ button {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  align-items: end;
+  align-items: flex-start;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 .oa-screen-hero {
@@ -879,6 +882,7 @@ button {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   min-width: 0;
   max-width: 100%;
+  overflow: hidden;
 }
 
 .oa-panel,
@@ -1050,7 +1054,8 @@ button {
 }
 
 .oa-setup-grid {
-  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.9fr);
+  align-items: start;
 }
 
 .oa-split-grid {
@@ -2226,6 +2231,13 @@ button {
   }
 
   .oa-setup-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1600px) {
+  .oa-setup-grid,
+  .oa-settings-grid {
     grid-template-columns: 1fr;
   }
 }

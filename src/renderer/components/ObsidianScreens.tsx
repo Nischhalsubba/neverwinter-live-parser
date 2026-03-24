@@ -87,6 +87,10 @@ type ShellProps = {
   onBackToPlayers: () => void;
   rendererSettings: ProfileSettings;
   onRendererSettingsChange: (next: ProfileSettings) => void;
+  errorLogDirectory: string;
+  onClearRendererCache: () => void;
+  onClearAppData: () => void;
+  onClearLogs: () => void;
 };
 
 type ThemeMode = "obsidian-dark" | "obsidian-flux";
@@ -619,6 +623,7 @@ function TimelineChart({
             stroke={color}
             strokeWidth={2}
             fill={`url(#oa-area-${mode}-${accent})`}
+            isAnimationActive={false}
             activeDot={{ r: 4, fill: color, stroke: "#171B22", strokeWidth: 2 }}
           />
         </AreaChart>
@@ -740,7 +745,7 @@ function PowerContributionChart({ skills }: { skills: SkillStat[] }) {
             }}
             formatter={(value: number) => formatShort(value)}
           />
-          <Bar dataKey="total" fill="#cdbdff" radius={[6, 6, 6, 6]} />
+          <Bar dataKey="total" fill="#cdbdff" radius={[6, 6, 6, 6]} isAnimationActive={false} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -778,8 +783,8 @@ function CombatTimelineChart({ points }: { points: TimelinePoint[] }) {
             formatter={(value: number) => formatShort(value)}
             labelFormatter={(value) => `${value}s`}
           />
-          <Area type="monotone" dataKey="damage" stroke="#cdbdff" fill="url(#oaDamageGradient)" strokeWidth={2} />
-          <Area type="monotone" dataKey="healing" stroke="#7cf5c5" fill="url(#oaHealingGradient)" strokeWidth={2} />
+          <Area type="monotone" dataKey="damage" stroke="#cdbdff" fill="url(#oaDamageGradient)" strokeWidth={2} isAnimationActive={false} />
+          <Area type="monotone" dataKey="healing" stroke="#7cf5c5" fill="url(#oaHealingGradient)" strokeWidth={2} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -808,8 +813,8 @@ function EffectTimelineChart({ points }: { points: TimelinePoint[] }) {
               color: "#e5e1e4"
             }}
           />
-          <Area type="monotone" dataKey="buffs" stroke="#9af1bb" fill="rgba(154, 241, 187, 0.14)" strokeWidth={2} />
-          <Area type="monotone" dataKey="debuffs" stroke="#ffd36e" fill="rgba(255, 211, 110, 0.18)" strokeWidth={2} />
+          <Area type="monotone" dataKey="buffs" stroke="#9af1bb" fill="rgba(154, 241, 187, 0.14)" strokeWidth={2} isAnimationActive={false} />
+          <Area type="monotone" dataKey="debuffs" stroke="#ffd36e" fill="rgba(255, 211, 110, 0.18)" strokeWidth={2} isAnimationActive={false} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -918,6 +923,7 @@ function ContributionPieChart({
             innerRadius={70}
             outerRadius={110}
             paddingAngle={3}
+            isAnimationActive={false}
             stroke="rgba(19, 19, 21, 0.85)"
             strokeWidth={2}
           >
@@ -3592,6 +3598,24 @@ function SettingsView({
               <div><span>App Uptime</span><strong>{formatUptime(props.state.system.uptimeSec)}</strong></div>
               <div><span>Target Render Rate</span><strong>{settings.targetFps} Hz</strong></div>
               <div><span>Motion Profile</span><strong>{settings.reducedMotion ? "Reduced" : "Full"}</strong></div>
+              <div><span>Error Log Folder</span><strong>{props.errorLogDirectory || "Unavailable"}</strong></div>
+            </div>
+            <div className="oa-maintenance-actions">
+              <button className="oa-button secondary" onClick={props.onClearRendererCache}>
+                <Icon name="cleaning_services" />
+                Clear Cache
+              </button>
+              <button className="oa-button secondary" onClick={props.onClearAppData}>
+                <Icon name="delete_sweep" />
+                Clear Data
+              </button>
+              <button className="oa-button tertiary" onClick={props.onClearLogs}>
+                <Icon name="article" />
+                Clear Error Logs
+              </button>
+            </div>
+            <div className="oa-tip">
+              Clear Cache resets saved UI preferences and onboarding state. Clear Data stops monitoring and removes saved app setup so the next launch starts clean.
             </div>
           </div>
         </section>
@@ -3967,7 +3991,7 @@ export function ObsidianScreens(props: ShellProps) {
             </div>
           </div>
 
-          {navItems.slice(1).map((item) => (
+          {navItems.map((item) => (
             <button
               key={item.id}
               className={`oa-nav-item ${props.view === item.id ? "active" : ""}`}

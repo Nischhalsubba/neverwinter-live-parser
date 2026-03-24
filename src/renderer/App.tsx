@@ -1,4 +1,4 @@
-import { startTransition, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { startTransition, useEffect, useMemo, useState } from "react";
 import type { AppState, DiscoveredLogCandidate } from "../shared/types";
 import {
   buildPlayerRows,
@@ -49,6 +49,7 @@ const INITIAL_STATE: AppState = {
 };
 
 const SETTINGS_STORAGE_KEY = "obsidian-renderer-settings";
+const SETUP_HELP_STORAGE_KEY = "oa-setup-helper-dismissed";
 
 function loadRendererSettings(): ProfileSettings {
   try {
@@ -85,11 +86,10 @@ export function App() {
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [isDesktopRuntime, setIsDesktopRuntime] = useState(Boolean(window.neverwinterApi));
   const [rendererSettings, setRendererSettings] = useState<ProfileSettings>(loadRendererSettings);
-  const [pendingSnapshot, setPendingSnapshot] = useState<AppState | null>(null);
-  const lastFrameAppliedAt = useRef(0);
   const [logCandidates, setLogCandidates] = useState<DiscoveredLogCandidate[]>([]);
   const [discoveringLogs, setDiscoveringLogs] = useState(false);
   const [hasScannedLogs, setHasScannedLogs] = useState(false);
+  const [errorLogDirectory, setErrorLogDirectory] = useState("");
 
   useEffect(() => {
     const api = window.neverwinterApi;
@@ -105,9 +105,24 @@ export function App() {
         setImportFilePath(snapshot.importedLogFile ?? snapshot.activeLogFile ?? "");
       });
     });
+    void api.getLogDirectory().then(setErrorLogDirectory).catch(() => {
+      setErrorLogDirectory("");
+    });
 
     return api.onState((snapshot) => {
-      setPendingSnapshot(snapshot);
+      // Apply the latest monitoring snapshot immediately so live combat rows
+      // never lag behind a previously buffered renderer frame.
+      startTransition(() => {
+        setState(snapshot);
+        setImportFilePath((current) =>
+          current.trim()
+            ? current
+            : snapshot.importedLogFile ?? snapshot.activeLogFile ?? ""
+        );
+        if (snapshot.watcherStatus === "watching" && snapshot.selectedLogFolder) {
+          setFolderInput(snapshot.selectedLogFolder);
+        }
+      });
     });
   }, []);
 
@@ -116,62 +131,42 @@ export function App() {
   }, [rendererSettings]);
 
   useEffect(() => {
-    if (!pendingSnapshot) {
+    const api = window.neverwinterApi;
+    if (!api) {
       return;
     }
 
-    const minFrameMs = rendererSettings.targetFps === 120 ? 8 : 16;
-    const now = performance.now();
-    const elapsed = now - lastFrameAppliedAt.current;
+    // Persist renderer-side faults next to the main-process logs so future
+    // debugging does not depend on an open DevTools session.
+    const handleError = (event: ErrorEvent) => {
+      void api.logRendererError(
+        `${event.message}\n${event.filename}:${event.lineno}:${event.colno}\n${event.error?.stack ?? ""}`,
+        "Renderer window error"
+      );
+    };
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      void api.logRendererError(String(event.reason), "Renderer unhandled rejection");
+    };
 
-    if (elapsed >= minFrameMs) {
-      // Keep renderer updates coalesced to the chosen cadence instead of re-rendering
-      // on every main-process state emission.
-      startTransition(() => {
-        setState(pendingSnapshot);
-        setImportFilePath((current) =>
-          current.trim()
-            ? current
-            : pendingSnapshot.importedLogFile ?? pendingSnapshot.activeLogFile ?? ""
-        );
-      });
-      setPendingSnapshot(null);
-      lastFrameAppliedAt.current = now;
-      return;
-    }
-
-    const timeout = window.setTimeout(() => {
-      const appliedAt = performance.now();
-      startTransition(() => {
-        setState(pendingSnapshot);
-        setImportFilePath((current) =>
-          current.trim()
-            ? current
-            : pendingSnapshot.importedLogFile ?? pendingSnapshot.activeLogFile ?? ""
-        );
-      });
-      setPendingSnapshot(null);
-      lastFrameAppliedAt.current = appliedAt;
-    }, minFrameMs - elapsed);
-
-    return () => window.clearTimeout(timeout);
-  }, [pendingSnapshot, rendererSettings.targetFps]);
-
-  const deferredCombatants = useDeferredValue(state.analysis.combatants);
-  const deferredCurrentEncounter = useDeferredValue(state.currentEncounter);
-  const deferredRecentEncounters = useDeferredValue(state.recentEncounters);
+    window.addEventListener("error", handleError);
+    window.addEventListener("unhandledrejection", handleRejection);
+    return () => {
+      window.removeEventListener("error", handleError);
+      window.removeEventListener("unhandledrejection", handleRejection);
+    };
+  }, []);
 
   const playerRows = useMemo(
-    () => buildPlayerRows(deferredCombatants, includeCompanions),
-    [deferredCombatants, includeCompanions]
+    () => buildPlayerRows(state.analysis.combatants, includeCompanions),
+    [includeCompanions, state.analysis.combatants]
   );
   const encounterScopedLiveRows = useMemo(
     () =>
-      buildPlayerRows(deferredCombatants, includeCompanions, {
-        encounterId: deferredCurrentEncounter?.id ?? null,
-        encounterDurationMs: deferredCurrentEncounter?.durationMs ?? 0
+      buildPlayerRows(state.analysis.combatants, includeCompanions, {
+        encounterId: state.currentEncounter?.id ?? null,
+        encounterDurationMs: state.currentEncounter?.durationMs ?? 0
       }),
-    [deferredCombatants, includeCompanions, deferredCurrentEncounter]
+    [includeCompanions, state.analysis.combatants, state.currentEncounter]
   );
   const hasEncounterScopedRows = useMemo(
     () =>
@@ -185,7 +180,7 @@ export function App() {
     [encounterScopedLiveRows]
   );
   const liveScope: LiveScopeMode =
-    hasMeaningfulEncounter(deferredCurrentEncounter) && hasEncounterScopedRows
+    hasMeaningfulEncounter(state.currentEncounter) && hasEncounterScopedRows
       ? "encounter"
       : "session";
   const livePlayerRows = liveScope === "encounter" ? encounterScopedLiveRows : playerRows;
@@ -209,8 +204,8 @@ export function App() {
   }, [livePlayerRows.length, liveScope, state.analysis.mode, state.analysis.totalLines]);
 
   const availableEncounters = useMemo(
-    () => getEncounterSnapshots(deferredRecentEncounters, deferredCurrentEncounter),
-    [deferredCurrentEncounter, deferredRecentEncounters]
+    () => getEncounterSnapshots(state.recentEncounters, state.currentEncounter),
+    [state.currentEncounter, state.recentEncounters]
   );
 
   useEffect(() => {
@@ -347,8 +342,48 @@ export function App() {
     setState(snapshot);
     setFolderInput("");
     setImportFilePath("");
-    setPendingSnapshot(null);
     setView("setup");
+  }
+
+  async function clearRendererCache() {
+    window.localStorage.removeItem(SETTINGS_STORAGE_KEY);
+    window.localStorage.removeItem(SETUP_HELP_STORAGE_KEY);
+    setRendererSettings(DEFAULT_SETTINGS);
+    setSearchParamsToDefault();
+  }
+
+  function setSearchParamsToDefault() {
+    setSelectedEncounterId("all");
+    setSelectedPlayerId(null);
+    setNotificationsOpen(false);
+    setDiagnosticsOpen(false);
+    setIncludeCompanions(true);
+    setHasScannedLogs(false);
+    setLogCandidates([]);
+  }
+
+  async function clearAppData() {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const snapshot = await api.clearData();
+    setState(snapshot);
+    setFolderInput("");
+    setImportFilePath("");
+    setView("setup");
+    setSearchParamsToDefault();
+  }
+
+  async function clearLogs() {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const logDirectory = await api.clearLogs();
+    setErrorLogDirectory(logDirectory);
   }
 
   return (
@@ -401,6 +436,10 @@ export function App() {
       onBackToPlayers={() => setView("live")}
       rendererSettings={rendererSettings}
       onRendererSettingsChange={setRendererSettings}
+      errorLogDirectory={errorLogDirectory}
+      onClearRendererCache={() => void clearRendererCache()}
+      onClearAppData={() => void clearAppData()}
+      onClearLogs={() => void clearLogs()}
     />
   );
 }

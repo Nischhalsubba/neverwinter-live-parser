@@ -12,6 +12,10 @@ type NeverwinterApi = {
   discoverLogs: () => Promise<DiscoveredLogCandidate[]>;
   selectFolder: () => Promise<string | null>;
   selectLogFile: () => Promise<string | null>;
+  clearData: () => Promise<AppState>;
+  clearLogs: () => Promise<string>;
+  getLogDirectory: () => Promise<string>;
+  logRendererError: (message: string, context?: string) => Promise<void>;
   onState: (listener: (state: AppState) => void) => () => void;
 };
 

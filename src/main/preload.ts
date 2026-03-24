@@ -21,6 +21,14 @@ const api = {
     ipcRenderer.invoke("dialog:selectFolder") as Promise<string | null>,
   selectLogFile: () =>
     ipcRenderer.invoke("dialog:selectLogFile") as Promise<string | null>,
+  clearData: () =>
+    ipcRenderer.invoke("maintenance:clearData") as Promise<AppState>,
+  clearLogs: () =>
+    ipcRenderer.invoke("maintenance:clearLogs") as Promise<string>,
+  getLogDirectory: () =>
+    ipcRenderer.invoke("maintenance:getLogDirectory") as Promise<string>,
+  logRendererError: (message: string, context?: string) =>
+    ipcRenderer.invoke("maintenance:logRendererError", { message, context }) as Promise<void>,
   onState: (listener: StateListener) => {
     const wrapped = (_event: Electron.IpcRendererEvent, state: AppState) => {
       listener(state);
