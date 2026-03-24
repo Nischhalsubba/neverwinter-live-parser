@@ -949,6 +949,208 @@ function LibraryView() {
   );
 }
 
+function LibraryReferenceView() {
+  const cards = [
+    { label: "NW Hub classes", value: formatNumber(nwHubClasses.classes.length), icon: "shield_person" },
+    { label: "NW Hub powers", value: formatNumber(nwHubClasses.powers.length), icon: "deployed_code" },
+    { label: "NW Hub feats", value: formatNumber(nwHubClasses.feats.length), icon: "social_leaderboard" },
+    { label: "NW Hub features", value: formatNumber(nwHubClasses.features.length), icon: "diamond" },
+    { label: "Artifacts", value: formatNumber(artifactData.artifacts.length), icon: "diamond" },
+    { label: "Companions", value: formatNumber(metadata.companions.length), icon: "pets" },
+    { label: "Mount powers", value: formatNumber(metadata.mounts.length), icon: "directions_car" },
+    { label: "Player powers", value: formatNumber(metadata.playerPowers.length), icon: "local_fire_department" }
+  ];
+
+  const categorizeLibraryText = (description: string) => {
+    const lowered = description.toLowerCase();
+    if (
+      lowered.includes("damage taken") ||
+      lowered.includes("damage resistance") ||
+      lowered.includes("less damage") ||
+      lowered.includes("stun") ||
+      lowered.includes("slow") ||
+      lowered.includes("slowed") ||
+      lowered.includes("immobil") ||
+      lowered.includes("weaken") ||
+      lowered.includes("vulnerability") ||
+      lowered.includes("reduce")
+    ) {
+      return "debuff";
+    }
+    if (
+      lowered.includes("heal") ||
+      lowered.includes("allies") ||
+      lowered.includes("outgoing healing") ||
+      lowered.includes("incoming healing") ||
+      lowered.includes("power for") ||
+      lowered.includes("grant")
+    ) {
+      return "support";
+    }
+    if (
+      lowered.includes("shield") ||
+      lowered.includes("temporary hit points") ||
+      lowered.includes("defense")
+    ) {
+      return "survivability";
+    }
+    if (lowered.includes("damage") || lowered.includes("deal ")) {
+      return "damage";
+    }
+    return "utility";
+  };
+
+  const categoryLabel = (category: string) => {
+    switch (category) {
+      case "damage":
+        return "Pure Damage";
+      case "support":
+        return "Team Support";
+      case "debuff":
+        return "Debuff / Control";
+      case "survivability":
+        return "Defense / Sustain";
+      default:
+        return "Utility";
+    }
+  };
+
+  const formatStatKey = (key: string) =>
+    key
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+  const classReference = nwHubClasses.classes.map((entry) => {
+    const powers = nwHubClasses.powers
+      .filter((power) => power.className === entry.className)
+      .map((power) => ({ ...power, category: categorizeLibraryText(power.description ?? "") }));
+    const feats = nwHubClasses.feats
+      .filter((feat) => feat.className === entry.className)
+      .map((feat) => ({ ...feat, category: categorizeLibraryText(feat.description ?? "") }));
+    const features = nwHubClasses.features
+      .filter((feature) => feature.className === entry.className)
+      .map((feature) => ({ ...feature, category: categorizeLibraryText(feature.description ?? "") }));
+
+    return {
+      ...entry,
+      groupedPowers: {
+        damage: powers.filter((power) => power.category === "damage").slice(0, 8),
+        support: [...powers, ...feats, ...features].filter((item) => item.category === "support").slice(0, 8),
+        debuff: [...powers, ...feats, ...features].filter((item) => item.category === "debuff").slice(0, 8),
+        survivability: [...powers, ...feats, ...features].filter((item) => item.category === "survivability").slice(0, 6),
+        utility: [...powers, ...feats, ...features].filter((item) => item.category === "utility").slice(0, 6)
+      }
+    };
+  });
+
+  const artifactBreakdown = artifactData.artifacts
+    .map((artifact) => ({ ...artifact, category: categorizeLibraryText(artifact.powerText ?? "") }))
+    .sort((left, right) => {
+      if (left.category !== right.category) {
+        return left.category.localeCompare(right.category);
+      }
+      return left.name.localeCompare(right.name);
+    });
+
+  return (
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Parser Library</p>
+        <h1>Neverwinter reference library</h1>
+        <p>Class kits, support tools, debuffs, and artifact powers organized so the parser UI can explain what each thing does instead of only showing a raw name.</p>
+      </header>
+      <div className="oa-card-grid four">
+        {cards.map((card) => (
+          <StatCard key={card.label} label={card.label} value={card.value} icon={card.icon} tone="secondary" />
+        ))}
+      </div>
+
+      {classReference.map((entry) => (
+        <section className="oa-panel" key={`library-${entry.className}`}>
+          <SectionHeading
+            icon="deployed_code"
+            eyebrow={`${entry.className} Toolkit`}
+            title={`${entry.className} powers, support tools, and debuffs`}
+          />
+          <div className="oa-library-group-grid">
+            {Object.entries(entry.groupedPowers).map(([category, items]) => (
+              <article className="oa-library-category-card" key={`${entry.className}-${category}`}>
+                <div className="oa-library-category-head">
+                  <strong>{categoryLabel(category)}</strong>
+                  <span className="oa-badge subtle">{items.length}</span>
+                </div>
+                {items.length ? (
+                  <div className="oa-library-entry-list">
+                    {items.map((item) => (
+                      <div className="oa-library-entry" key={`${entry.className}-${category}-${item.name}`}>
+                        <div className="oa-power-icon">
+                          {"iconPath" in item && item.iconPath ? (
+                            <img className="oa-power-image" src={item.iconPath} alt={item.name} loading="lazy" />
+                          ) : (
+                            item.name.slice(0, 2).toUpperCase()
+                          )}
+                        </div>
+                        <div>
+                          <strong>{item.name}</strong>
+                          <small>
+                            {"paragonPath" in item && item.paragonPath ? `${item.paragonPath} • ` : ""}
+                            {"type" in item && item.type ? item.type : "Class kit"}
+                          </small>
+                          <p className="oa-library-copy">{item.description || "No extracted description."}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="oa-empty-state">No extracted entries for this category.</div>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <section className="oa-panel">
+        <SectionHeading icon="diamond" eyebrow="Artifact Intelligence" title="Artifact breakdown by role, debuff value, and raw effect text" />
+        <div className="oa-library-artifact-grid">
+          {artifactBreakdown.map((artifact) => (
+            <article className="oa-library-artifact-card" key={artifact.name}>
+              <div className="oa-library-artifact-head">
+                <div className="oa-power-icon large">
+                  {artifact.iconPath ? (
+                    <img className="oa-power-image" src={artifact.iconPath} alt={artifact.name} loading="lazy" />
+                  ) : (
+                    artifact.name.slice(0, 2).toUpperCase()
+                  )}
+                </div>
+                <div>
+                  <strong>{artifact.name}</strong>
+                  <small>
+                    {artifact.quality} • IL {formatNumber(artifact.itemLevel ?? 0)} • {categoryLabel(artifact.category)}
+                  </small>
+                </div>
+              </div>
+              <div className="oa-library-pill-row">
+                {artifact.effects.keywords.length ? artifact.effects.keywords.map((keyword) => (
+                  <span className="oa-badge subtle" key={`${artifact.name}-${keyword}`}>{keyword}</span>
+                )) : <span className="oa-badge subtle">direct-damage</span>}
+              </div>
+              <div className="oa-kv-list compact">
+                <div><span>Combined Rating</span><strong>{formatNumber(artifact.combinedRating ?? 0)}</strong></div>
+                <div><span>Stats</span><strong>{Object.entries(artifact.stats ?? {}).slice(0, 3).map(([key, value]) => `${formatStatKey(key)} ${formatNumber(Number(value))}`).join(" • ") || "No extracted stats"}</strong></div>
+                <div><span>Damage Taken Debuff</span><strong>{artifact.effects.damageTakenPct.length ? `+${Math.max(...artifact.effects.damageTakenPct)}%` : "None detected"}</strong></div>
+                <div><span>Control</span><strong>{artifact.effects.hasControlEffect ? "Yes" : "No"}</strong></div>
+              </div>
+              <p className="oa-library-copy">{artifact.powerText || "No extracted artifact text."}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </section>
+  );
+}
+
 function SetupView(props: ShellProps) {
   const { state } = props;
   const isLiveRunning = state.watcherStatus === "watching" && state.analysis.mode === "live";
@@ -2891,7 +3093,7 @@ export function ObsidianScreens(props: ShellProps) {
           {props.view === "players" ? <PlayerView props={props} searchQuery={searchQuery} /> : null}
           {props.view === "recent" ? <RecentView state={props.state} /> : null}
           {props.view === "debug" ? <DebugView state={props.state} /> : null}
-          {props.view === "library" ? <LibraryView /> : null}
+          {props.view === "library" ? <LibraryReferenceView /> : null}
           {props.view === "settings" ? (
             <SettingsView props={props} settings={settings} onSettingsChange={props.onRendererSettingsChange} />
           ) : null}

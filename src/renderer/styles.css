@@ -929,6 +929,20 @@ input {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.oa-library-group-grid,
+.oa-library-artifact-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.oa-library-group-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.oa-library-artifact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .oa-stat-card {
   padding: 20px;
   display: grid;
@@ -1333,7 +1347,9 @@ input {
 }
 
 .oa-library-class-card,
-.oa-power-gallery-card {
+.oa-power-gallery-card,
+.oa-library-category-card,
+.oa-library-artifact-card {
   display: grid;
   gap: 12px;
   padding: 16px;
@@ -1343,7 +1359,8 @@ input {
 }
 
 .oa-library-class-head,
-.oa-power-gallery-card {
+.oa-power-gallery-card,
+.oa-library-artifact-head {
   align-items: center;
 }
 
@@ -1367,6 +1384,34 @@ input {
 
 .oa-power-gallery-card {
   grid-template-columns: auto minmax(0, 1fr);
+}
+
+.oa-library-category-head,
+.oa-library-artifact-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.oa-library-artifact-head {
+  justify-content: flex-start;
+}
+
+.oa-library-entry-list {
+  display: grid;
+  gap: 12px;
+}
+
+.oa-library-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.oa-kv-list.compact {
+  gap: 10px;
 }
 
 .oa-list-row {
