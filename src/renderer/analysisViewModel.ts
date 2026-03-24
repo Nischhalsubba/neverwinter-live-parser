@@ -4,11 +4,13 @@ import type {
   CombatantSnapshot,
   EncounterSnapshot,
   EffectStat,
+  HighestHitStat,
   SkillStat,
   TargetStat,
   TimelinePoint
 } from "../shared/types";
 import { inferBuildFromSkills } from "./nwMetadata";
+import { normalizeEntityName } from "../shared/mechanicsModel";
 
 const INTEGER_FORMATTER = new Intl.NumberFormat();
 
@@ -30,6 +32,7 @@ export type DetailTab =
   | "timing"
   | "positioning"
   | "other"
+  | "highestHit"
   | "debuffs"
   | "deaths";
 
@@ -48,6 +51,7 @@ export type PlayerRow = {
   topSkills: SkillStat[];
   companionCount: number;
   targets: TargetStat[];
+  highestHits: HighestHitStat[];
   timeline: TimelinePoint[];
   activations: ActivationStat[];
   effects: EffectStat[];
@@ -72,6 +76,7 @@ export const DETAIL_TABS: Array<{ id: DetailTab; label: string }> = [
   { id: "timing", label: "Timing" },
   { id: "positioning", label: "Positioning" },
   { id: "other", label: "Other" },
+  { id: "highestHit", label: "Highest Hit" },
   { id: "debuffs", label: "Debuffs" },
   { id: "deaths", label: "Deaths" }
 ];
@@ -138,8 +143,9 @@ function mergeTargets(targets: TargetStat[]): TargetStat[] {
   const totals = new Map<string, TargetStat>();
 
   for (const target of targets) {
-    const current = totals.get(target.targetName) ?? {
-      targetName: target.targetName,
+    const normalized = normalizeEntityName(target.targetName) || target.targetName;
+    const current = totals.get(normalized) ?? {
+      targetName: target.targetName.trim(),
       totalDamage: 0,
       hits: 0,
       critCount: 0
@@ -148,12 +154,28 @@ function mergeTargets(targets: TargetStat[]): TargetStat[] {
     current.totalDamage += target.totalDamage;
     current.hits += target.hits;
     current.critCount += target.critCount;
-    totals.set(target.targetName, current);
+    totals.set(normalized, current);
   }
 
   return Array.from(totals.values()).sort(
     (left, right) => right.totalDamage - left.totalDamage
   );
+}
+
+function mergeHighestHits(highestHits: HighestHitStat[]): HighestHitStat[] {
+  const totals = new Map<string, HighestHitStat>();
+
+  for (const hit of highestHits) {
+    const key = `${hit.abilityName}:${hit.targetName ?? ""}`;
+    const current = totals.get(key);
+    if (!current || hit.amount > current.amount) {
+      totals.set(key, hit);
+    }
+  }
+
+  return Array.from(totals.values())
+    .sort((left, right) => right.amount - left.amount)
+    .slice(0, 24);
 }
 
 function mergeTimeline(points: TimelinePoint[]): TimelinePoint[] {
@@ -349,6 +371,7 @@ export function buildPlayerRows(
         topSkills,
         companionCount: members.filter((member) => member.type === "companion").length,
         targets: mergeTargets(sourceMembers.flatMap((member) => member.targets)),
+        highestHits: mergeHighestHits(sourceMembers.flatMap((member) => member.highestHits)),
         timeline: mergeTimeline(sourceMembers.flatMap((member) => member.timeline)),
         activations: mergeActivations(sourceMembers.flatMap((member) => member.activations)),
         effects: mergeEffects(sourceMembers.flatMap((member) => member.effects)),

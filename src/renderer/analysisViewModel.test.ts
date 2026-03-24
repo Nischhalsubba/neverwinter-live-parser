@@ -20,6 +20,7 @@ function createCombatant(partial: Partial<CombatantSnapshot>): CombatantSnapshot
     hps: 0,
     topSkills: [],
     targets: [],
+    highestHits: [],
     timeline: [],
     activations: [],
     effects: [],
@@ -100,5 +101,47 @@ describe("buildPlayerRows", () => {
     expect(rows[0].displayName).toBe("Ar-chew");
     expect(rows[0].totalDamage).toBe(120);
     expect(rows[0].dps).toBe(12);
+  });
+
+  it("merges repeated target names and keeps the largest highest hits", () => {
+    const rows = buildPlayerRows(
+      [
+        createCombatant({
+          id: "P[1]",
+          ownerId: "P[1]",
+          ownerName: "Ar-chew",
+          displayName: "Ar-chew",
+          type: "player",
+          targets: [
+            { targetName: "Target Dummy", totalDamage: 100, hits: 2, critCount: 1 },
+            { targetName: "Target Dummy.", totalDamage: 40, hits: 1, critCount: 0 }
+          ],
+          highestHits: [
+            {
+              abilityName: "Rapid Shot",
+              amount: 1000,
+              targetName: "Target Dummy",
+              critical: false,
+              second: 1,
+              sourceType: "player"
+            },
+            {
+              abilityName: "Rapid Shot",
+              amount: 1500,
+              targetName: "Target Dummy.",
+              critical: true,
+              second: 3,
+              sourceType: "player"
+            }
+          ]
+        })
+      ],
+      true
+    );
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0].targets).toHaveLength(1);
+    expect(rows[0].targets[0].totalDamage).toBe(140);
+    expect(rows[0].highestHits[0].amount).toBe(1500);
   });
 });

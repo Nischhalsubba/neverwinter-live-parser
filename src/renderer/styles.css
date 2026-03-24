@@ -935,6 +935,29 @@ input {
   gap: 16px;
 }
 
+.oa-library-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.oa-library-filter-label {
+  color: var(--oa-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.oa-library-select {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(205, 189, 255, 0.14);
+  background: var(--oa-surface-highest);
+  color: var(--oa-text);
+}
+
 .oa-library-group-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }

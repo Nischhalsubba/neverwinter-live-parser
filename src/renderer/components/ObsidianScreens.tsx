@@ -16,6 +16,19 @@ import {
 import metadata from "../../shared/data/nw-metadata.json";
 import nwHubClasses from "../../shared/data/nw-hub-classes.json";
 import artifactData from "../../shared/data/nw-hub-artifacts.json";
+import {
+  artifactCategoryScores,
+  baseDamageFromItemLevel,
+  baseHitPointsFromItemLevel,
+  categoryStrength,
+  categorizeArtifact,
+  categorizePower,
+  cooldownAfterRecovery,
+  normalizeEntityName,
+  powerCategoryScores,
+  ratingContribution,
+  type LibraryCategory
+} from "../../shared/mechanicsModel";
 import type {
   AppState,
   EncounterSnapshot,
@@ -111,6 +124,7 @@ const DETAIL_TAB_COPY: Record<DetailTab, string> = {
   timing: "Timing-derived metrics from parsed events, including burst windows, encounter participation, and event cadence.",
   positioning: "Combat-log-supported positioning heuristics such as flank rate, target spread, and hostile target distribution.",
   other: "Supplemental parser facts from the combat log, including skill inventory, targets tracked, companions, and build inference.",
+  highestHit: "The hardest single-hit damage events found in the combat log, grouped across class powers, mounts, artifacts, companions, and other damage sources.",
   debuffs: "Known Neverwinter debuff sources for class kits and combat-log overlap between your damage activations and debuffs seen on the target.",
   deaths: "Death lines and closely related parser issues matched to this player from the current combat log."
 };
@@ -327,7 +341,8 @@ function buildLiveTargetFocus(players: PlayerRow[]): Array<{ name: string; total
 
   for (const player of players) {
     for (const target of player.targets) {
-      const current = totals.get(target.targetName) ?? {
+      const normalized = normalizeEntityName(target.targetName) || target.targetName;
+      const current = totals.get(normalized) ?? {
         name: target.targetName,
         totalDamage: 0,
         hits: 0
@@ -335,7 +350,7 @@ function buildLiveTargetFocus(players: PlayerRow[]): Array<{ name: string; total
 
       current.totalDamage += target.totalDamage;
       current.hits += target.hits;
-      totals.set(target.targetName, current);
+      totals.set(normalized, current);
     }
   }
 
@@ -351,9 +366,12 @@ function buildFocusedTargetSummary(
   critCount: number;
   contributors: Array<{ name: string; totalDamage: number; hits: number; critCount: number }>;
 } {
+  const normalizedFocus = normalizeEntityName(focusTarget);
   const contributors = players
     .map((player) => {
-      const target = player.targets.find((entry) => entry.targetName === focusTarget);
+      const target = player.targets.find(
+        (entry) => normalizeEntityName(entry.targetName) === normalizedFocus
+      );
       return target
         ? {
             name: player.displayName,
@@ -950,6 +968,8 @@ function LibraryView() {
 }
 
 function LibraryReferenceView() {
+  const [selectedClassName, setSelectedClassName] = useState(nwHubClasses.classes[0]?.className ?? "Fighter");
+  const [artifactCategoryTab, setArtifactCategoryTab] = useState<string>("all");
   const cards = [
     { label: "NW Hub classes", value: formatNumber(nwHubClasses.classes.length), icon: "shield_person" },
     { label: "NW Hub powers", value: formatNumber(nwHubClasses.powers.length), icon: "deployed_code" },
@@ -1052,6 +1072,13 @@ function LibraryReferenceView() {
       }
       return left.name.localeCompare(right.name);
     });
+  const selectedClassReference =
+    classReference.find((entry) => entry.className === selectedClassName) ?? classReference[0];
+  const artifactTabs = ["all", "damage", "support", "debuff", "survivability", "utility"];
+  const filteredArtifacts =
+    artifactCategoryTab === "all"
+      ? artifactBreakdown
+      : artifactBreakdown.filter((artifact) => artifact.category === artifactCategoryTab);
 
   return (
     <section className="oa-screen">
@@ -1066,16 +1093,33 @@ function LibraryReferenceView() {
         ))}
       </div>
 
-      {classReference.map((entry) => (
-        <section className="oa-panel" key={`library-${entry.className}`}>
+      {selectedClassReference ? (
+        <section className="oa-panel" key={`library-${selectedClassReference.className}`}>
           <SectionHeading
             icon="deployed_code"
-            eyebrow={`${entry.className} Toolkit`}
-            title={`${entry.className} powers, support tools, and debuffs`}
+            eyebrow="Class Toolkit"
+            title={`${selectedClassReference.className} powers, support tools, and debuffs`}
+            actions={
+              <div className="oa-library-filter">
+                <label className="oa-library-filter-label" htmlFor="library-class-picker">Class</label>
+                <select
+                  id="library-class-picker"
+                  className="oa-library-select"
+                  value={selectedClassName}
+                  onChange={(event) => setSelectedClassName(event.target.value)}
+                >
+                  {classReference.map((entry) => (
+                    <option key={entry.className} value={entry.className}>
+                      {entry.className}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            }
           />
           <div className="oa-library-group-grid">
-            {Object.entries(entry.groupedPowers).map(([category, items]) => (
-              <article className="oa-library-category-card" key={`${entry.className}-${category}`}>
+            {Object.entries(selectedClassReference.groupedPowers).map(([category, items]) => (
+              <article className="oa-library-category-card" key={`${selectedClassReference.className}-${category}`}>
                 <div className="oa-library-category-head">
                   <strong>{categoryLabel(category)}</strong>
                   <span className="oa-badge subtle">{items.length}</span>
@@ -1083,7 +1127,7 @@ function LibraryReferenceView() {
                 {items.length ? (
                   <div className="oa-library-entry-list">
                     {items.map((item) => (
-                      <div className="oa-library-entry" key={`${entry.className}-${category}-${item.name}`}>
+                      <div className="oa-library-entry" key={`${selectedClassReference.className}-${category}-${item.name}`}>
                         <div className="oa-power-icon">
                           {"iconPath" in item && item.iconPath ? (
                             <img className="oa-power-image" src={item.iconPath} alt={item.name} loading="lazy" />
@@ -1109,12 +1153,23 @@ function LibraryReferenceView() {
             ))}
           </div>
         </section>
-      ))}
+      ) : null}
 
       <section className="oa-panel">
         <SectionHeading icon="diamond" eyebrow="Artifact Intelligence" title="Artifact breakdown by role, debuff value, and raw effect text" />
+        <div className="oa-subtab-shell">
+          {artifactTabs.map((tab) => (
+            <button
+              key={tab}
+              className={`oa-subtab ${artifactCategoryTab === tab ? "active" : ""}`}
+              onClick={() => setArtifactCategoryTab(tab)}
+            >
+              {tab === "all" ? "All Artifacts" : categoryLabel(tab)}
+            </button>
+          ))}
+        </div>
         <div className="oa-library-artifact-grid">
-          {artifactBreakdown.map((artifact) => (
+          {filteredArtifacts.map((artifact) => (
             <article className="oa-library-artifact-card" key={artifact.name}>
               <div className="oa-library-artifact-head">
                 <div className="oa-power-icon large">
@@ -1143,6 +1198,426 @@ function LibraryReferenceView() {
                 <div><span>Control</span><strong>{artifact.effects.hasControlEffect ? "Yes" : "No"}</strong></div>
               </div>
               <p className="oa-library-copy">{artifact.powerText || "No extracted artifact text."}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </section>
+  );
+}
+
+function categoryLabel(category: LibraryCategory): string {
+  switch (category) {
+    case "damage":
+      return "Pure Damage";
+    case "support":
+      return "Team Support";
+    case "debuff":
+      return "Debuff / Control";
+    case "survivability":
+      return "Defense / Sustain";
+    default:
+      return "Utility";
+  }
+}
+
+function formatStatKey(key: string) {
+  return key
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function buildCategoryScoreSummary(category: LibraryCategory, score: number): string {
+  if (category === "damage") {
+    return `${score.toFixed(1)} pressure score`;
+  }
+  if (category === "debuff") {
+    return `${score.toFixed(1)} debuff score`;
+  }
+  if (category === "support") {
+    return `${score.toFixed(1)} support score`;
+  }
+  if (category === "survivability") {
+    return `${score.toFixed(1)} defense score`;
+  }
+  return `${score.toFixed(1)} utility score`;
+}
+
+function LibraryReferenceWorkbench() {
+  const [selectedClassName, setSelectedClassName] = useState(
+    nwHubClasses.classes[0]?.className ?? "Fighter"
+  );
+  const [artifactCategoryTab, setArtifactCategoryTab] = useState<LibraryCategory | "all">("all");
+  const cards = [
+    { label: "NW Hub classes", value: formatNumber(nwHubClasses.classes.length), icon: "shield_person" },
+    { label: "NW Hub powers", value: formatNumber(nwHubClasses.powers.length), icon: "deployed_code" },
+    { label: "NW Hub feats", value: formatNumber(nwHubClasses.feats.length), icon: "social_leaderboard" },
+    { label: "NW Hub features", value: formatNumber(nwHubClasses.features.length), icon: "diamond" },
+    { label: "Artifacts", value: formatNumber(artifactData.artifacts.length), icon: "diamond" },
+    { label: "Companions", value: formatNumber(metadata.companions.length), icon: "pets" },
+    { label: "Mount powers", value: formatNumber(metadata.mounts.length), icon: "directions_car" },
+    { label: "Player powers", value: formatNumber(metadata.playerPowers.length), icon: "local_fire_department" }
+  ];
+
+  const classReference = nwHubClasses.classes.map((entry) => {
+    const classItems = [
+      ...nwHubClasses.powers.filter((power) => power.className === entry.className).map((power) => {
+        const scores = powerCategoryScores(power);
+        const category = categorizePower(power);
+        return { ...power, sourceKind: "Power", category, scores };
+      }),
+      ...nwHubClasses.feats
+        .filter((feat) => feat.className === entry.className)
+        .map((feat) => {
+          const scores = powerCategoryScores(feat);
+          const category = categorizePower(feat);
+          return { ...feat, sourceKind: "Feat", category, scores };
+        }),
+      ...nwHubClasses.features
+        .filter((feature) => feature.className === entry.className)
+        .map((feature) => {
+          const scores = powerCategoryScores(feature);
+          const category = categorizePower(feature);
+          return { ...feature, sourceKind: "Feature", category, scores };
+        })
+    ];
+
+    return {
+      ...entry,
+      groupedPowers: {
+        damage: classItems
+          .filter((item) => item.category === "damage")
+          .sort(
+            (left, right) =>
+              categoryStrength(right.scores, "damage") -
+              categoryStrength(left.scores, "damage")
+          )
+          .slice(0, 10),
+        support: classItems
+          .filter((item) => item.category === "support")
+          .sort(
+            (left, right) =>
+              categoryStrength(right.scores, "support") -
+              categoryStrength(left.scores, "support")
+          )
+          .slice(0, 10),
+        debuff: classItems
+          .filter((item) => item.category === "debuff")
+          .sort(
+            (left, right) =>
+              categoryStrength(right.scores, "debuff") -
+              categoryStrength(left.scores, "debuff")
+          )
+          .slice(0, 10),
+        survivability: classItems
+          .filter((item) => item.category === "survivability")
+          .sort(
+            (left, right) =>
+              categoryStrength(right.scores, "survivability") -
+              categoryStrength(left.scores, "survivability")
+          )
+          .slice(0, 8),
+        utility: classItems
+          .filter((item) => item.category === "utility")
+          .sort(
+            (left, right) =>
+              categoryStrength(right.scores, "utility") -
+              categoryStrength(left.scores, "utility")
+          )
+          .slice(0, 8)
+      }
+    };
+  });
+
+  const selectedClassReference =
+    classReference.find((entry) => entry.className === selectedClassName) ?? classReference[0];
+
+  const artifactBreakdown = artifactData.artifacts
+    .map((artifact) => {
+      const scores = artifactCategoryScores(artifact);
+      const category = categorizeArtifact(artifact);
+      return { ...artifact, category, scores };
+    })
+    .sort((left, right) => {
+      const activeCategory = (artifactCategoryTab === "all"
+        ? left.category
+        : artifactCategoryTab) as LibraryCategory;
+      return (
+        categoryStrength(right.scores, activeCategory) -
+          categoryStrength(left.scores, activeCategory) ||
+        left.name.localeCompare(right.name)
+      );
+    });
+
+  const artifactTabs: Array<LibraryCategory | "all"> = [
+    "all",
+    "damage",
+    "support",
+    "debuff",
+    "survivability",
+    "utility"
+  ];
+
+  const filteredArtifacts =
+    artifactCategoryTab === "all"
+      ? artifactBreakdown
+      : artifactBreakdown.filter((artifact) => artifact.category === artifactCategoryTab);
+
+  const formulaCards = [
+    {
+      label: "Base Damage @ 90k IL",
+      value: formatShort(baseDamageFromItemLevel(90_000, "dps")),
+      hint: "NW Hub damage math: IL / 10 with 20% DPS role bonus"
+    },
+    {
+      label: "Base HP @ 90k IL",
+      value: formatShort(baseHitPointsFromItemLevel(90_000, "dps")),
+      hint: "NW Hub EHP math: IL * 10 for DPS baseline"
+    },
+    {
+      label: "Power From Rating",
+      value: `${ratingContribution(100_000, 90_000, 60).toFixed(1)}%`,
+      hint: "Rating contribution example using the NW Hub rating formula"
+    },
+    {
+      label: "Recovery / 18s CD",
+      value: `${cooldownAfterRecovery(18, 20).toFixed(1)}s`,
+      hint: "Cooldown example after 20% recovery-style recharge speed"
+    }
+  ];
+
+  return (
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">Parser Library</p>
+        <h1>Neverwinter reference library</h1>
+        <p>
+          Class kits, support tools, debuffs, and artifact powers organized so the
+          parser UI can explain what each thing does instead of only showing a raw
+          name.
+        </p>
+      </header>
+      <div className="oa-card-grid four">
+        {cards.map((card) => (
+          <StatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            icon={card.icon}
+            tone="secondary"
+          />
+        ))}
+      </div>
+
+      <section className="oa-panel">
+        <SectionHeading
+          icon="calculate"
+          eyebrow="Mechanics Model"
+          title="NW Hub formulas applied to ranking and explanation"
+        />
+        <div className="oa-card-grid four">
+          {formulaCards.map((card) => (
+            <StatCard
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              icon="functions"
+              hint={card.hint}
+            />
+          ))}
+        </div>
+      </section>
+
+      {selectedClassReference ? (
+        <section
+          className="oa-panel"
+          key={`library-${selectedClassReference.className}`}
+        >
+          <SectionHeading
+            icon="deployed_code"
+            eyebrow="Class Toolkit"
+            title={`${selectedClassReference.className} powers, support tools, and debuffs`}
+            actions={
+              <div className="oa-library-filter">
+                <label
+                  className="oa-library-filter-label"
+                  htmlFor="library-class-picker"
+                >
+                  Class
+                </label>
+                <select
+                  id="library-class-picker"
+                  className="oa-library-select"
+                  value={selectedClassName}
+                  onChange={(event) => setSelectedClassName(event.target.value)}
+                >
+                  {classReference.map((entry) => (
+                    <option key={entry.className} value={entry.className}>
+                      {entry.className}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            }
+          />
+          <div className="oa-library-group-grid">
+            {(
+              Object.entries(selectedClassReference.groupedPowers) as Array<
+                [LibraryCategory, typeof selectedClassReference.groupedPowers.damage]
+              >
+            ).map(([category, items]) => (
+              <article
+                className="oa-library-category-card"
+                key={`${selectedClassReference.className}-${category}`}
+              >
+                <div className="oa-library-category-head">
+                  <strong>{categoryLabel(category)}</strong>
+                  <span className="oa-badge subtle">{items.length}</span>
+                </div>
+                {items.length ? (
+                  <div className="oa-library-entry-list">
+                    {items.map((item) => (
+                      <div
+                        className="oa-library-entry"
+                        key={`${selectedClassReference.className}-${category}-${item.name}`}
+                      >
+                        <div className="oa-power-icon">
+                          {"iconPath" in item && item.iconPath ? (
+                            <img
+                              className="oa-power-image"
+                              src={item.iconPath}
+                              alt={item.name}
+                              loading="lazy"
+                            />
+                          ) : (
+                            item.name.slice(0, 2).toUpperCase()
+                          )}
+                        </div>
+                        <div>
+                          <strong>{item.name}</strong>
+                          <small>
+                            {"paragonPath" in item && item.paragonPath
+                              ? `${item.paragonPath} • `
+                              : ""}
+                            {item.sourceKind} • {"type" in item && item.type ? item.type : "Class kit"} •{" "}
+                            {buildCategoryScoreSummary(
+                              item.category,
+                              categoryStrength(item.scores, item.category)
+                            )}
+                          </small>
+                          <p className="oa-library-copy">
+                            {item.description || "No extracted description."}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="oa-empty-state">
+                    No extracted entries for this category.
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section className="oa-panel">
+        <SectionHeading
+          icon="diamond"
+          eyebrow="Artifact Intelligence"
+          title="Artifact breakdown by strongest debuff, damage, support, and defense value"
+        />
+        <div className="oa-subtab-shell">
+          {artifactTabs.map((tab) => (
+            <button
+              key={tab}
+              className={`oa-subtab ${artifactCategoryTab === tab ? "active" : ""}`}
+              onClick={() => setArtifactCategoryTab(tab)}
+            >
+              {tab === "all" ? "All Artifacts" : categoryLabel(tab)}
+            </button>
+          ))}
+        </div>
+        <div className="oa-library-artifact-grid">
+          {filteredArtifacts.map((artifact) => (
+            <article className="oa-library-artifact-card" key={artifact.name}>
+              <div className="oa-library-artifact-head">
+                <div className="oa-power-icon large">
+                  {artifact.iconPath ? (
+                    <img
+                      className="oa-power-image"
+                      src={artifact.iconPath}
+                      alt={artifact.name}
+                      loading="lazy"
+                    />
+                  ) : (
+                    artifact.name.slice(0, 2).toUpperCase()
+                  )}
+                </div>
+                <div>
+                  <strong>{artifact.name}</strong>
+                  <small>
+                    {artifact.quality} • IL {formatNumber(artifact.itemLevel ?? 0)} •{" "}
+                    {categoryLabel(artifact.category)}
+                  </small>
+                </div>
+              </div>
+              <div className="oa-library-pill-row">
+                {artifact.effects.keywords.length ? (
+                  artifact.effects.keywords.map((keyword) => (
+                    <span className="oa-badge subtle" key={`${artifact.name}-${keyword}`}>
+                      {keyword}
+                    </span>
+                  ))
+                ) : (
+                  <span className="oa-badge subtle">direct-damage</span>
+                )}
+              </div>
+              <div className="oa-kv-list compact">
+                <div>
+                  <span>Combined Rating</span>
+                  <strong>{formatNumber(artifact.combinedRating ?? 0)}</strong>
+                </div>
+                <div>
+                  <span>Stats</span>
+                  <strong>
+                    {Object.entries(artifact.stats ?? {})
+                      .slice(0, 3)
+                      .map(
+                        ([key, value]) =>
+                          `${formatStatKey(key)} ${formatNumber(Number(value))}`
+                      )
+                      .join(" • ") || "No extracted stats"}
+                  </strong>
+                </div>
+                <div>
+                  <span>Primary Score</span>
+                  <strong>
+                    {buildCategoryScoreSummary(
+                      artifact.category,
+                      categoryStrength(artifact.scores, artifact.category)
+                    )}
+                  </strong>
+                </div>
+                <div>
+                  <span>Damage Taken Debuff</span>
+                  <strong>
+                    {artifact.effects.damageTakenPct.length
+                      ? `+${Math.max(...artifact.effects.damageTakenPct)}%`
+                      : "None detected"}
+                  </strong>
+                </div>
+                <div>
+                  <span>Control</span>
+                  <strong>{artifact.effects.hasControlEffect ? "Yes" : "No"}</strong>
+                </div>
+              </div>
+              <p className="oa-library-copy">
+                {artifact.powerText || "No extracted artifact text."}
+              </p>
             </article>
           ))}
         </div>
@@ -2134,6 +2609,103 @@ function PlayerOtherTab({ player }: { player: PlayerRow }) {
   );
 }
 
+function buildHighestHitRows(player: PlayerRow) {
+  return player.highestHits.map((hit) => {
+    const meta = getPowerMeta(hit.abilityName);
+    const family = classifyPowerFamily(hit.abilityName, hit.sourceType);
+    const totalMagnitude = meta ? Number(meta.magnitude ?? 0) : 0;
+
+    return {
+      ...hit,
+      family,
+      powerType: meta?.powertype ?? "Combat Power",
+      estimatedMagnitude: Number.isFinite(totalMagnitude) ? totalMagnitude : 0,
+      observedPerMagnitude:
+        totalMagnitude && totalMagnitude > 0 ? hit.amount / totalMagnitude : null
+    };
+  });
+}
+
+function PlayerHighestHitTab({ player }: { player: PlayerRow }) {
+  const rows = buildHighestHitRows(player);
+  const maxHit = Math.max(1, ...rows.map((row) => row.amount));
+
+  return (
+    <div className="oa-tab-layout">
+      <div className="oa-card-grid four">
+        <StatCard
+          label="Largest Hit"
+          value={rows.length ? formatShort(rows[0].amount) : "0"}
+          tone="primary"
+          icon="north_east"
+          hint={rows[0]?.abilityName ?? "No damage hits parsed"}
+        />
+        <StatCard
+          label="Tracked Hit Sources"
+          value={formatNumber(rows.length)}
+          icon="deployed_code"
+          hint="Distinct damage powers with a recorded peak hit"
+        />
+        <StatCard
+          label="Critical Peaks"
+          value={formatNumber(rows.filter((row) => row.critical).length)}
+          tone="secondary"
+          icon="flare"
+        />
+        <StatCard
+          label="Mount / Artifact / Proc"
+          value={formatNumber(rows.filter((row) => row.family !== "class").length)}
+          icon="diamond"
+          hint="Highest hits from non-class damage sources"
+        />
+      </div>
+
+      <section className="oa-panel">
+        <SectionHeading icon="north_east" eyebrow="Highest Hit" title="Largest single damage hits from the combat log" />
+        <div className="oa-data-table">
+          <div className="oa-data-head damage">
+            <span>Power</span>
+            <span>Family</span>
+            <span>Target</span>
+            <span>Peak Hit</span>
+          </div>
+          {rows.map((row) => (
+            <div className="oa-data-row damage" key={`${row.abilityName}-${row.targetName ?? "no-target"}-${row.second}`}>
+              <div className="oa-power-cell">
+                <div className="oa-power-icon">
+                  <PowerVisual powerName={row.abilityName} fallback={row.abilityName.slice(0, 2).toUpperCase()} />
+                </div>
+                <div>
+                  <strong>{row.abilityName}</strong>
+                  <small>
+                    {row.powerType} • {row.critical ? "Critical peak" : "Normal peak"} • {row.second}s
+                  </small>
+                  <ProgressBar value={row.amount} max={maxHit} />
+                </div>
+              </div>
+              <span>{row.family}</span>
+              <span>{row.targetName ?? "Unknown target"}</span>
+              <span className="oa-right-stat">
+                <strong>{formatShort(row.amount)}</strong>
+                <small>
+                  {row.observedPerMagnitude
+                    ? `${row.observedPerMagnitude.toFixed(1)} dmg / mag`
+                    : "No magnitude match"}
+                </small>
+              </span>
+            </div>
+          ))}
+          {!rows.length ? (
+            <div className="oa-empty-state">
+              No outgoing damage hits were parsed yet, so there is no highest-hit breakdown to show.
+            </div>
+          ) : null}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function buildDebuffOverlapRows(player: PlayerRow) {
   const damageSkills = new Map(
     player.topSkills
@@ -2427,6 +2999,7 @@ function PlayerView({
       {props.detailTab === "timing" ? <PlayerTimingTab player={player} encounter={encounter} /> : null}
       {props.detailTab === "positioning" ? <PlayerPositioningTab player={player} /> : null}
       {props.detailTab === "other" ? <PlayerOtherTab player={player} /> : null}
+      {props.detailTab === "highestHit" ? <PlayerHighestHitTab player={player} /> : null}
       {props.detailTab === "debuffs" ? <PlayerDebuffsTab player={player} /> : null}
       {props.detailTab === "deaths" ? <PlayerDeathsTab player={player} state={props.state} /> : null}
     </section>
@@ -2904,8 +3477,9 @@ export function ObsidianScreens(props: ShellProps) {
       return props.livePlayerRows;
     }
 
+    const normalizedFocus = normalizeEntityName(liveFocusTarget);
     return props.livePlayerRows.filter((player) =>
-      player.targets.some((target) => target.targetName === liveFocusTarget)
+      player.targets.some((target) => normalizeEntityName(target.targetName) === normalizedFocus)
     );
   }, [liveFocusTarget, props.livePlayerRows]);
   const filteredLivePlayers = useMemo(
@@ -3093,7 +3667,7 @@ export function ObsidianScreens(props: ShellProps) {
           {props.view === "players" ? <PlayerView props={props} searchQuery={searchQuery} /> : null}
           {props.view === "recent" ? <RecentView state={props.state} /> : null}
           {props.view === "debug" ? <DebugView state={props.state} /> : null}
-          {props.view === "library" ? <LibraryReferenceView /> : null}
+          {props.view === "library" ? <LibraryReferenceWorkbench /> : null}
           {props.view === "settings" ? (
             <SettingsView props={props} settings={settings} onSettingsChange={props.onRendererSettingsChange} />
           ) : null}

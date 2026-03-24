@@ -6,10 +6,12 @@ import type {
   CombatantSnapshot,
   EncounterSnapshot,
   EffectStat,
+  HighestHitStat,
   SkillStat,
   TargetStat,
   TimelinePoint
 } from "../../shared/types.js";
+import { normalizeEntityName } from "../../shared/mechanicsModel.js";
 
 type MutableEncounterTotals = {
   encounterId: string;
@@ -34,6 +36,7 @@ type MutableCombatant = {
   deaths: number;
   skillTotals: Map<string, SkillStat>;
   targetTotals: Map<string, TargetStat>;
+  highestHits: Map<string, HighestHitStat>;
   timeline: Map<number, TimelinePoint>;
   activations: ActivationStat[];
   effects: Map<string, EffectStat>;
@@ -70,12 +73,16 @@ export class CombatantTracker {
 
     const combatant = this.getOrCreateCombatant(event);
     const amount = event.amount ?? 0;
+    const offsetSeconds = this.startedAt
+      ? Math.max(0, Math.floor((event.timestamp - this.startedAt) / 1000))
+      : 0;
 
     if (event.eventType === "damage") {
       combatant.totalDamage += amount;
       combatant.hits += 1;
       if (event.targetName) {
-        const target = combatant.targetTotals.get(event.targetName) ?? {
+        const targetKey = normalizeEntityName(event.targetName) || event.targetName;
+        const target = combatant.targetTotals.get(targetKey) ?? {
           targetName: event.targetName,
           totalDamage: 0,
           hits: 0,
@@ -86,7 +93,21 @@ export class CombatantTracker {
         if (event.critical) {
           target.critCount += 1;
         }
-        combatant.targetTotals.set(event.targetName, target);
+        combatant.targetTotals.set(targetKey, target);
+      }
+
+      if (event.abilityName) {
+        const currentHighest = combatant.highestHits.get(event.abilityName);
+        if (!currentHighest || amount > currentHighest.amount) {
+          combatant.highestHits.set(event.abilityName, {
+            abilityName: event.abilityName,
+            amount,
+            targetName: event.targetName,
+            critical: Boolean(event.critical),
+            second: offsetSeconds,
+            sourceType: event.sourceType
+          });
+        }
       }
     } else if (event.eventType === "heal") {
       combatant.totalHealing += amount;
@@ -126,10 +147,6 @@ export class CombatantTracker {
       }
       combatant.skillTotals.set(skillKey, current);
     }
-
-    const offsetSeconds = this.startedAt
-      ? Math.max(0, Math.floor((event.timestamp - this.startedAt) / 1000))
-      : 0;
 
     if (event.abilityName && event.eventType !== "unknown") {
       combatant.activations.push({
@@ -237,6 +254,9 @@ export class CombatantTracker {
         targets: Array.from(combatant.targetTotals.values())
           .sort((left, right) => right.totalDamage - left.totalDamage)
           .slice(0, 24),
+        highestHits: Array.from(combatant.highestHits.values())
+          .sort((left, right) => right.amount - left.amount)
+          .slice(0, 24),
         timeline: Array.from(combatant.timeline.values()).sort(
           (left, right) => left.second - right.second
         ),
@@ -300,6 +320,7 @@ export class CombatantTracker {
       deaths: 0,
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
+      highestHits: new Map<string, HighestHitStat>(),
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
       effects: new Map<string, EffectStat>(),
@@ -331,6 +352,7 @@ export class CombatantTracker {
       deaths: 0,
       skillTotals: new Map<string, SkillStat>(),
       targetTotals: new Map<string, TargetStat>(),
+      highestHits: new Map<string, HighestHitStat>(),
       timeline: new Map<number, TimelinePoint>(),
       activations: [],
       effects: new Map<string, EffectStat>(),
