@@ -321,7 +321,11 @@ export class LogMonitorService extends EventEmitter {
 
   private emitState(): void {
     this.lastEmittedAt = Date.now();
-    this.emit("state", this.getState());
+    // Emit the internal state object directly to the main process so live
+    // updates do not pay for a full structured clone on every parser tick.
+    // The main process treats this as read-only and Electron will still clone
+    // when the snapshot is sent across IPC to the renderer.
+    this.emit("state", this.state);
   }
 
   private scheduleEmitState(force = false): void {

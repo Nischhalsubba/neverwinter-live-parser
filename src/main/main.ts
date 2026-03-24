@@ -1,4 +1,5 @@
 import type { Dirent } from "node:fs";
+import { mkdirSync } from "node:fs";
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import os from "node:os";
@@ -18,6 +19,26 @@ const require = createRequire(import.meta.url);
 const electron = require("electron") as typeof import("electron");
 const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
 const { app, BrowserWindow, dialog, ipcMain } = electron;
+
+function configureRuntimePaths(): void {
+  const runtimeRoot = path.join(os.tmpdir(), "neverwinter-live-parser");
+  const sessionDataPath = path.join(runtimeRoot, "session-data");
+  const gpuCachePath = path.join(runtimeRoot, "gpu-cache");
+
+  try {
+    mkdirSync(sessionDataPath, { recursive: true });
+    mkdirSync(gpuCachePath, { recursive: true });
+    app.setPath("sessionData", sessionDataPath);
+
+    // Keep Chromium's shader and GPU cache files out of the default profile
+    // path so startup does not fail on locked or synced Windows folders.
+    app.commandLine.appendSwitch("disk-cache-dir", gpuCachePath);
+  } catch {
+    // Fall back to Electron defaults if the temp directory is unavailable.
+  }
+}
+
+configureRuntimePaths();
 app.setName("neverwinter-live-parser");
 const monitor = new LogMonitorService();
 
@@ -301,11 +322,25 @@ function createWindow(): void {
 }
 
 function canEmitToWindow(): boolean {
+  const webContents = mainWindow?.webContents;
+  const mainFrame = webContents?.mainFrame;
+
   return Boolean(
     mainWindow &&
       !mainWindow.isDestroyed() &&
-      mainWindow.webContents &&
-      !mainWindow.webContents.isDestroyed()
+      webContents &&
+      !webContents.isDestroyed() &&
+      !webContents.isCrashed() &&
+      mainFrame &&
+      !mainFrame.isDestroyed() &&
+      !webContents.isLoadingMainFrame()
+  );
+}
+
+function isDisposedRendererError(error: unknown): boolean {
+  return (
+    error instanceof Error &&
+    /Render frame was disposed before WebFrameMain could be accessed/i.test(error.message)
   );
 }
 
@@ -317,6 +352,9 @@ function emitState(state: AppState): void {
     // Renderer disposal can race with the telemetry timer during reloads or window close.
     mainWindow!.webContents.send("monitoring:state", withTelemetry(state));
   } catch (error) {
+    if (isDisposedRendererError(error)) {
+      return;
+    }
     void writeErrorLog(error, "Failed to send monitoring state to renderer");
   }
 }

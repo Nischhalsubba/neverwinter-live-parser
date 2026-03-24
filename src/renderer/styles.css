@@ -120,6 +120,8 @@ input {
   border-right: 1px solid #2c3442;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: 20;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .oa-brand {
@@ -707,6 +709,7 @@ button {
   min-height: 0;
   overflow-x: auto;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .oa-page-description,

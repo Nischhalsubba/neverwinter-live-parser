@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useMemo, useState } from "react";
+import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
 import type { AppState, DiscoveredLogCandidate } from "../shared/types";
 import {
   buildPlayerRows,
@@ -70,6 +70,10 @@ function getParentDirectory(filePath: string): string {
   const parts = filePath.split(/[\\/]/);
   parts.pop();
   return parts.join("\\");
+}
+
+function isPlayerOwnedCombatant(combatant: AppState["analysis"]["combatants"][number]): boolean {
+  return combatant.type === "player" || combatant.ownerId.startsWith("P[");
 }
 
 export function App() {
@@ -156,17 +160,23 @@ export function App() {
     };
   }, []);
 
+  const playerOwnedCombatants = useMemo(
+    () => state.analysis.combatants.filter(isPlayerOwnedCombatant),
+    [state.analysis.combatants]
+  );
+  const deferredCombatants = useDeferredValue(playerOwnedCombatants);
+
   const playerRows = useMemo(
-    () => buildPlayerRows(state.analysis.combatants, includeCompanions),
-    [includeCompanions, state.analysis.combatants]
+    () => buildPlayerRows(deferredCombatants, includeCompanions),
+    [deferredCombatants, includeCompanions]
   );
   const encounterScopedLiveRows = useMemo(
     () =>
-      buildPlayerRows(state.analysis.combatants, includeCompanions, {
+      buildPlayerRows(deferredCombatants, includeCompanions, {
         encounterId: state.currentEncounter?.id ?? null,
         encounterDurationMs: state.currentEncounter?.durationMs ?? 0
       }),
-    [includeCompanions, state.analysis.combatants, state.currentEncounter]
+    [deferredCombatants, includeCompanions, state.currentEncounter]
   );
   const hasEncounterScopedRows = useMemo(
     () =>
