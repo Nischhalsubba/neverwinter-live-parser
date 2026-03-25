@@ -88,6 +88,7 @@ type ShellProps = {
   onToggleNotifications: () => void;
   onToggleDiagnostics: () => void;
   onBackToPlayers: () => void;
+  onSelectPlayerRow?: (player: PlayerRow) => void;
   rendererSettings: ProfileSettings;
   onRendererSettingsChange: (next: ProfileSettings) => void;
   errorLogDirectory: string;
@@ -2051,6 +2052,7 @@ function LiveOverviewView({
   onExitCompare: () => void;
 }) {
   const { state } = props;
+  const [roleFilter, setRoleFilter] = useState<"all" | "damage" | "healing" | "tank" | "support">("all");
   const [sortKey, setSortKey] = useState<"damage" | "healing" | "taken" | "dps" | "hits" | "name">("damage");
   const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc");
   const current = props.liveScope === "encounter" ? state.currentEncounter : null;
@@ -2061,10 +2063,31 @@ function LiveOverviewView({
   const liveDurationSeconds = Math.max(1, liveDurationMs / 1000);
   const liveScopeLabel =
     props.liveScope === "encounter" ? "Live Scope: Current Encounter" : "Live Scope: Tracked Session";
+  const roleFilteredPlayers = useMemo(() => {
+    if (roleFilter === "all") {
+      return filteredPlayers;
+    }
+
+    return filteredPlayers.filter((player) => {
+      if (roleFilter === "damage") {
+        return player.totalDamage > 0;
+      }
+      if (roleFilter === "healing") {
+        return player.totalHealing > 0;
+      }
+      if (roleFilter === "tank") {
+        return player.damageTaken > 0;
+      }
+      if (roleFilter === "support") {
+        return player.totalHealing > 0 || player.effects.length > 0 || player.artifactActivations.length > 0;
+      }
+      return true;
+    });
+  }, [filteredPlayers, roleFilter]);
   const baseRows =
     compareMode === "active"
-      ? filteredPlayers.filter((player) => compareSelection.includes(player.id))
-      : filteredPlayers;
+      ? roleFilteredPlayers.filter((player) => compareSelection.includes(player.id))
+      : roleFilteredPlayers;
   const comparePool = useMemo(() => {
     const rows = [...baseRows];
     rows.sort((left, right) => {
@@ -2093,7 +2116,7 @@ function LiveOverviewView({
   const totalHealing = comparePool.reduce((sum, player) => sum + player.totalHealing, 0);
   const totalTaken = comparePool.reduce((sum, player) => sum + player.damageTaken, 0);
   const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
-  const selectedForCompare = filteredPlayers.filter((player) => compareSelection.includes(player.id));
+  const selectedForCompare = roleFilteredPlayers.filter((player) => compareSelection.includes(player.id));
   const computedDps = totalDamage / liveDurationSeconds;
   const focusedTargetSummary =
     liveFocusTarget === "all"
@@ -2326,6 +2349,23 @@ function LiveOverviewView({
           }
         />
         <div className="oa-table-shell">
+          <div className="oa-chip-row" style={{ marginBottom: 16 }}>
+            {[
+              { id: "all", label: "All Players" },
+              { id: "damage", label: "Damage" },
+              { id: "healing", label: "Healing" },
+              { id: "tank", label: "Damage Taken" },
+              { id: "support", label: "Support" }
+            ].map((option) => (
+              <button
+                key={option.id}
+                className={`oa-chip ${roleFilter === option.id ? "active" : ""}`}
+                onClick={() => setRoleFilter(option.id as typeof roleFilter)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
           <div className="oa-table-head party">
             <span>#</span>
             <button className="oa-sort-button" onClick={() => toggleSort("name")}>Player <Icon name={sortMarker("name")} className="oa-sort-icon" /></button>
@@ -2344,7 +2384,7 @@ function LiveOverviewView({
               onClick={() =>
                 compareMode === "selecting"
                   ? onToggleComparePlayer(player.id)
-                  : props.onSelectPlayer(player.id)
+                  : (props.onSelectPlayerRow?.(player), props.onSelectPlayer(player.id))
               }
             >
               <span className="oa-rank">{String(index + 1).padStart(2, "0")}</span>

@@ -100,6 +100,7 @@ export function App() {
   const [starting, setStarting] = useState(false);
   const [includeCompanions, setIncludeCompanions] = useState(true);
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
+  const [selectedPlayerSnapshot, setSelectedPlayerSnapshot] = useState<ReturnType<typeof buildPlayerRows>[number] | null>(null);
   const [selectedEncounterId, setSelectedEncounterId] = useState("all");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
@@ -267,16 +268,29 @@ export function App() {
     [shouldBuildHeavyAnalysis, state.currentEncounter, state.recentEncounters]
   );
 
+  const selectablePlayers = useMemo(() => {
+    const byId = new Map<string, (typeof playerRows)[number]>();
+    for (const row of livePlayerRows) {
+      byId.set(row.id, row);
+    }
+    for (const row of playerRows) {
+      byId.set(row.id, row);
+    }
+    return Array.from(byId.values());
+  }, [livePlayerRows, playerRows]);
+
   useEffect(() => {
-    if (!playerRows.length) {
+    if (!selectablePlayers.length) {
       setSelectedPlayerId(null);
+      setSelectedPlayerSnapshot(null);
       return;
     }
 
-    if (!selectedPlayerId || !playerRows.some((row) => row.id === selectedPlayerId)) {
-      setSelectedPlayerId(playerRows[0].id);
+    if (!selectedPlayerId || !selectablePlayers.some((row) => row.id === selectedPlayerId)) {
+      setSelectedPlayerId(selectablePlayers[0].id);
+      setSelectedPlayerSnapshot(selectablePlayers[0]);
     }
-  }, [playerRows, selectedPlayerId]);
+  }, [selectablePlayers, selectedPlayerId]);
 
   useEffect(() => {
     if (
@@ -288,7 +302,14 @@ export function App() {
   }, [availableEncounters, selectedEncounterId]);
 
   const selectedPlayer =
-    playerRows.find((player) => player.id === selectedPlayerId) ?? null;
+    selectablePlayers.find((player) => player.id === selectedPlayerId) ??
+    (selectedPlayerSnapshot?.id === selectedPlayerId ? selectedPlayerSnapshot : null);
+
+  useEffect(() => {
+    if (selectedPlayer) {
+      setSelectedPlayerSnapshot(selectedPlayer);
+    }
+  }, [selectedPlayer]);
   const selectedEncounter =
     selectedEncounterId === "all"
       ? null
@@ -488,6 +509,10 @@ export function App() {
       onSelectPlayer={(playerId) => {
         setSelectedPlayerId(playerId);
         setView("players");
+      }}
+      onSelectPlayerRow={(player) => {
+        setSelectedPlayerId(player.id);
+        setSelectedPlayerSnapshot(player);
       }}
       onSelectEncounter={setSelectedEncounterId}
       onToggleNotifications={() => setNotificationsOpen((value) => !value)}

@@ -675,3 +675,24 @@ For every future task, add a new section in this format:
 
 Do not replace a future entry with a git summary line.
 Write what changed in the files and why it was done.
+
+### 2026-03-25 - Live player selection fix and live table role filters
+- Files touched:
+  - `src/renderer/App.tsx`
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added a selected-player snapshot fallback in `App.tsx` so player detail can stay locked to the exact row the user clicked, even when the detail view and live table are built from slightly different row sets.
+  - Changed player selection to resolve from a combined live-plus-player row pool instead of only the generic `playerRows` list.
+  - Added a direct `onSelectPlayerRow` path so the live table can pass the exact clicked row into the detail flow before switching views.
+  - Added live-table role filter tabs in `ObsidianScreens.tsx` for:
+    - all players
+    - damage
+    - healing
+    - damage taken
+    - support
+- Why:
+  - Clicking a team member in the live table was opening the detail page for the wrong player, usually the top damage player, because the detail selection was resolving against the wrong backing row source.
+  - The live combat table needed clearer filtering so users can understand and compare party roles more easily.
+- Verification:
+  - pending at time of entry creation, then completed after test/build pass in the same turn
