@@ -917,3 +917,35 @@ Write what changed in the files and why it was done.
   - `npm test`
   - `npm run build`
   - `npm run dist:win-portable`
+
+### 2026-03-25 - Faster packaged startup bootstrap and Windows release format rework
+- Files touched:
+  - `src/main/main.ts`
+  - `src/renderer/App.tsx`
+  - `package.json`
+  - `README.md`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Trimmed the startup/bootstrap app state in both the main process and the renderer so initial app launch no longer carries heavyweight history and debug payloads into non-analysis screens.
+  - Removed these heavy datasets from bootstrap payloads until the user actually opens analysis-heavy views:
+    - current encounter details
+    - recent encounter collections
+    - archived session history
+    - archived recording history
+    - raw debug line buffers
+    - parse issue arrays
+    - unknown event arrays
+    - auxiliary event lists
+  - Added a dedicated `dist:win-unpacked` script so the repo can produce the fastest practical Windows release format in addition to the existing single-file portable output.
+  - Reworked the Windows release recommendation so the unpacked app bundle is the default for performance-sensitive use, while the portable `.exe` remains available when a single distributable file is more important than startup speed.
+  - Updated the README to explain the difference between the unpacked Windows build and the portable single-file build, including which executable path should be used for each.
+  - Set Electron Builder compression to `store` to reduce packaging overhead and avoid unnecessary compression work for the packaged Windows outputs.
+- Why:
+  - The user reported that the final release `.exe` could take more than a minute before becoming usable.
+  - The existing portable build path was the wrong default recommendation for startup-sensitive use because it trades convenience for slower launch behavior.
+  - Startup needed to become responsive before the user opens any heavy history or analysis views.
+- Verification:
+  - `npm test`
+  - `npm run build`
+  - `npm run dist:win-unpacked`
+  - smoke launch of `release/win-unpacked/Neverwinter Live Parser.exe`

@@ -87,9 +87,20 @@ function isPlayerOwnedCombatant(combatant: AppState["analysis"]["combatants"][nu
 function toBootstrapState(snapshot: AppState): AppState {
   return {
     ...snapshot,
+    currentEncounter: null,
+    recentEncounters: [],
+    sessionArchives: [],
+    recordingArchives: [],
     analysis: {
       ...snapshot.analysis,
       combatants: []
+    },
+    debug: {
+      ...snapshot.debug,
+      latestRawLines: [],
+      unknownEvents: [],
+      parseIssues: [],
+      auxiliaryEvents: []
     }
   };
 }

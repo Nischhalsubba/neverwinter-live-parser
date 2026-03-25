@@ -23,7 +23,21 @@ npm run dev
 npm run build
 ```
 
-## Portable Windows build
+## Recommended Windows build
+
+For the fastest startup and best day-to-day usability on Windows, build the unpacked app bundle:
+
+```powershell
+npm run dist:win-unpacked
+```
+
+Launch the app with one click from:
+
+`release/win-unpacked/Neverwinter Live Parser.exe`
+
+## Single-file portable Windows build
+
+If you specifically need a single-file executable, build the portable target:
 
 ```powershell
 npm run dist:win-portable
@@ -32,6 +46,8 @@ npm run dist:win-portable
 The portable executable is written to:
 
 `release/Neverwinter-Live-Parser-Portable-0.1.0.exe`
+
+The portable target is convenient for sharing, but it can start more slowly than the unpacked build because it has to prepare its runtime before the app window becomes usable.
 
 ## Privacy model
 

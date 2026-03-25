@@ -175,9 +175,20 @@ function withTelemetry(state: AppState): AppState {
 function toBootstrapState(state: AppState): AppState {
   return {
     ...state,
+    currentEncounter: null,
+    recentEncounters: [],
+    sessionArchives: [],
+    recordingArchives: [],
     analysis: {
       ...state.analysis,
       combatants: []
+    },
+    debug: {
+      ...state.debug,
+      latestRawLines: [],
+      unknownEvents: [],
+      parseIssues: [],
+      auxiliaryEvents: []
     }
   };
 }

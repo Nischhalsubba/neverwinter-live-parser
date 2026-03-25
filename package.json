@@ -13,6 +13,7 @@
     "dev:main": "tsc -p tsconfig.electron.json --watch --preserveWatchOutput",
     "dev:electron": "wait-on tcp:5173 file:dist-electron/main/main.js && node scripts/dev-electron.mjs",
     "build": "vite build && tsc -p tsconfig.electron.json",
+    "dist:win-unpacked": "npm run build && electron-builder --win dir",
     "dist:win-portable": "npm run build && electron-builder --win portable",
     "test": "vitest run",
     "preview": "vite preview",
@@ -47,6 +48,7 @@
     "appId": "com.archew.neverwinter-live-parser",
     "productName": "Neverwinter Live Parser",
     "asar": true,
+    "compression": "store",
     "directories": {
       "output": "release"
     },
