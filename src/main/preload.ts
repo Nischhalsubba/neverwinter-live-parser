@@ -4,6 +4,7 @@ import type {
   DiscoveredLogCandidate,
   MonitoringConfig
 } from "../shared/types.js";
+import type { ErrorLogEntry } from "./errorLogger.js";
 
 type StateListener = (state: AppState) => void;
 const require = createRequire(import.meta.url);
@@ -32,6 +33,10 @@ const api = {
     ipcRenderer.invoke("maintenance:clearLogs") as Promise<string>,
   getLogDirectory: () =>
     ipcRenderer.invoke("maintenance:getLogDirectory") as Promise<string>,
+  listLogs: () =>
+    ipcRenderer.invoke("maintenance:listLogs") as Promise<ErrorLogEntry[]>,
+  readLog: (fileName: string) =>
+    ipcRenderer.invoke("maintenance:readLog", fileName) as Promise<string>,
   logRendererError: (message: string, context?: string) =>
     ipcRenderer.invoke("maintenance:logRendererError", { message, context }) as Promise<void>,
   onState: (listener: StateListener) => {

@@ -1,7 +1,9 @@
 import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 import chokidar from "chokidar";
 
+const require = createRequire(import.meta.url);
 const env = { ...process.env };
 
 // Some Windows environments export this globally, which makes Electron boot as
@@ -10,7 +12,7 @@ delete env.ELECTRON_RUN_AS_NODE;
 env.VITE_DEV_SERVER_URL = "http://127.0.0.1:5173";
 
 const repoRoot = process.cwd();
-const electronCli = path.resolve(repoRoot, "node_modules", "electron", "cli.js");
+const electronBinary = require("electron");
 const electronEntry = path.resolve(repoRoot, "dist-electron", "main", "main.js");
 
 let child = null;
@@ -33,7 +35,7 @@ function stopChild() {
 }
 
 function startChild() {
-  child = spawn(process.execPath, [electronCli, electronEntry], {
+  child = spawn(electronBinary, [electronEntry], {
     stdio: "inherit",
     env
   });

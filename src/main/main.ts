@@ -6,7 +6,14 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LogMonitorService } from "../core/monitoring/logMonitorService.js";
-import { clearErrorLogs, getLogDirectory, writeErrorLog, writeRendererLog } from "./errorLogger.js";
+import {
+  clearErrorLogs,
+  getLogDirectory,
+  listErrorLogs,
+  readErrorLog,
+  writeErrorLog,
+  writeRendererLog
+} from "./errorLogger.js";
 import type {
   AppState,
   DiscoveredLogCandidate,
@@ -471,6 +478,8 @@ ipcMain.handle("maintenance:clearLogs", async () => {
   return getLogDirectory();
 });
 ipcMain.handle("maintenance:getLogDirectory", async () => getLogDirectory());
+ipcMain.handle("maintenance:listLogs", async () => listErrorLogs());
+ipcMain.handle("maintenance:readLog", async (_event, fileName: string) => readErrorLog(fileName));
 ipcMain.handle("maintenance:logRendererError", async (_event, payload: { context?: string; message: string }) => {
   await writeRendererLog(payload.message, payload.context ?? "Renderer error");
 });

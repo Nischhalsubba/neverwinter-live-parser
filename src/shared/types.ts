@@ -40,6 +40,36 @@ export type ParseIssue = {
   seenAt: number;
 };
 
+export type AuxiliaryLogKind =
+  | "voicechat"
+  | "clientservercomm"
+  | "crash"
+  | "shutdown"
+  | "shader"
+  | "pcl"
+  | "other";
+
+export type AuxiliaryLogEvent = {
+  fileName: string;
+  filePath: string;
+  kind: AuxiliaryLogKind;
+  category: "system" | "warning" | "error" | "chat" | "voice" | "shader" | "lifecycle" | "other";
+  seenAt: number;
+  title: string;
+  text: string;
+  details?: Record<string, string | number | boolean>;
+};
+
+export type AuxiliaryLogSummary = {
+  totalEvents: number;
+  countsByKind: Record<AuxiliaryLogKind, number>;
+  countsByCategory: Record<AuxiliaryLogEvent["category"], number>;
+  activeChannels: string[];
+  lastLifecycleEvent: AuxiliaryLogEvent | null;
+  lastCrashEvent: AuxiliaryLogEvent | null;
+  recentSystemNotifications: AuxiliaryLogEvent[];
+};
+
 export type SkillStat = {
   abilityName: string;
   total: number;
@@ -177,6 +207,8 @@ export type DebugState = {
   latestRawLines: string[];
   unknownEvents: CombatEvent[];
   parseIssues: ParseIssue[];
+  auxiliaryEvents: AuxiliaryLogEvent[];
+  auxiliarySummary: AuxiliaryLogSummary;
   activeFilePath: string | null;
   currentOffset: number;
 };

@@ -134,6 +134,13 @@ type DebuffCatalogEntry = {
   keywords: string[];
 };
 
+type ErrorLogEntry = {
+  name: string;
+  path: string;
+  sizeBytes: number;
+  updatedAt: number;
+};
+
 type DrilldownDetail =
   | {
       kind: "power";
@@ -3670,7 +3677,100 @@ function RecentView({ state }: { state: AppState }) {
   );
 }
 
-function DebugView({ state }: { state: AppState }) {
+function ErrorDumpPanel({ logDirectory }: { logDirectory: string }) {
+  const [logs, setLogs] = useState<ErrorLogEntry[]>([]);
+  const [selectedLogName, setSelectedLogName] = useState<string>("");
+  const [selectedLogContent, setSelectedLogContent] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    void api.listLogs().then((entries) => {
+      if (cancelled) {
+        return;
+      }
+      setLogs(entries);
+      const nextSelected = entries[0]?.name ?? "";
+      setSelectedLogName((current) =>
+        current && entries.some((entry) => entry.name === current)
+          ? current
+          : nextSelected
+      );
+    }).finally(() => {
+      if (!cancelled) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [logDirectory]);
+
+  useEffect(() => {
+    const api = window.neverwinterApi;
+    if (!api || !selectedLogName) {
+      setSelectedLogContent("");
+      return;
+    }
+
+    let cancelled = false;
+    void api.readLog(selectedLogName).then((content) => {
+      if (!cancelled) {
+        setSelectedLogContent(content);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedLogName]);
+
+  return (
+    <section className="oa-panel">
+      <SectionHeading
+        icon="inventory_2"
+        eyebrow="Error Dump Collector"
+        title="Saved runtime logs"
+        actions={<span className="oa-pill">{formatNumber(logs.length)} files</span>}
+      />
+      <div className="oa-kv-list">
+        <div><span>Directory</span><strong>{logDirectory || "Unavailable"}</strong></div>
+        <div><span>Status</span><strong>{loading ? "Refreshing" : "Ready"}</strong></div>
+      </div>
+      <div className="oa-split-grid">
+        <div className="oa-event-list compact">
+          {logs.map((entry) => (
+            <button
+              key={entry.name}
+              className={`oa-search-result ${selectedLogName === entry.name ? "active" : ""}`}
+              onClick={() => setSelectedLogName(entry.name)}
+            >
+              <span>
+                <strong>{entry.name}</strong>
+                <small>{formatNumber(entry.sizeBytes)} bytes • {new Date(entry.updatedAt).toLocaleString()}</small>
+              </span>
+            </button>
+          ))}
+          {!logs.length ? (
+            <div className="oa-empty-state">No saved error logs yet.</div>
+          ) : null}
+        </div>
+        <pre className="oa-terminal">{selectedLogContent || "[idle] Select a log file to inspect its contents."}</pre>
+      </div>
+    </section>
+  );
+}
+
+function DebugView({ state, errorLogDirectory }: { state: AppState; errorLogDirectory: string }) {
+  const auxiliarySummary = state.debug.auxiliarySummary;
+
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
@@ -3699,6 +3799,73 @@ function DebugView({ state }: { state: AppState }) {
           </div>
         </section>
       </div>
+      <section className="oa-panel">
+        <SectionHeading
+          icon="notifications_active"
+          eyebrow="Auxiliary GameClient Logs"
+          title={`${state.debug.auxiliaryEvents.length} non-combat events`}
+        />
+        <div className="oa-card-grid four">
+          <StatCard
+            label="Tracked Events"
+            value={formatNumber(auxiliarySummary.totalEvents)}
+            tone="secondary"
+            icon="network_node"
+            caption="All parsed non-combat GameClient signals"
+          />
+          <StatCard
+            label="System Notices"
+            value={formatNumber(auxiliarySummary.countsByCategory.system)}
+            tone="primary"
+            icon="campaign"
+            caption="Joined, left, and system notify events"
+          />
+          <StatCard
+            label="Errors"
+            value={formatNumber(auxiliarySummary.countsByCategory.error)}
+            tone="danger"
+            icon="error"
+            caption="Crash, failure, and error lines"
+          />
+          <StatCard
+            label="Active Channels"
+            value={formatNumber(auxiliarySummary.activeChannels.length)}
+            tone="tertiary"
+            icon="forum"
+            caption={
+              auxiliarySummary.activeChannels.length
+                ? auxiliarySummary.activeChannels.join(", ")
+                : "No joined channels detected"
+            }
+          />
+        </div>
+        <div className="oa-chip-row" style={{ marginBottom: 16 }}>
+          {auxiliarySummary.activeChannels.map((channel) => (
+            <span className="oa-chip" key={channel}>
+              {channel}
+            </span>
+          ))}
+          {!auxiliarySummary.activeChannels.length ? (
+            <span className="oa-chip muted">No channel state detected yet</span>
+          ) : null}
+        </div>
+        <div className="oa-event-list">
+          {state.debug.auxiliaryEvents.slice(0, 24).map((event, index) => (
+            <article className="oa-event-card" key={`${event.filePath}-${event.seenAt}-${index}`}>
+              <div className={`oa-event-accent ${event.category === "error" ? "tone-error" : "tone-secondary"}`} />
+              <div>
+                <strong>{event.title}</strong>
+                <small>{new Date(event.seenAt).toLocaleTimeString()} | {event.fileName} | {event.kind}</small>
+                <p>{event.text}</p>
+              </div>
+            </article>
+          ))}
+          {!state.debug.auxiliaryEvents.length ? (
+            <div className="oa-empty-state">No auxiliary GameClient events have been captured yet.</div>
+          ) : null}
+        </div>
+      </section>
+      <ErrorDumpPanel logDirectory={errorLogDirectory} />
     </section>
   );
 }
@@ -3919,6 +4086,12 @@ function NotificationsPanel({ state }: { state: AppState }) {
       detail: issue.line || "No raw line attached.",
       time: new Date(issue.seenAt).toLocaleTimeString(),
       tone: "error" as const
+    })),
+    ...state.debug.auxiliaryEvents.slice(0, 4).map((event) => ({
+      title: event.title,
+      detail: event.text,
+      time: new Date(event.seenAt).toLocaleTimeString(),
+      tone: event.category === "error" ? "error" as const : "secondary" as const
     }))
   ];
 
@@ -4382,7 +4555,9 @@ export function ObsidianScreens(props: ShellProps) {
           ) : null}
           {props.view === "players" ? <PlayerView props={props} searchQuery={searchQuery} /> : null}
           {props.view === "recent" ? <RecentView state={props.state} /> : null}
-          {props.view === "debug" ? <DebugView state={props.state} /> : null}
+          {props.view === "debug" ? (
+            <DebugView state={props.state} errorLogDirectory={props.errorLogDirectory} />
+          ) : null}
           {props.view === "library" ? <LibraryReferenceWorkbench /> : null}
           {props.view === "settings" ? (
             <SettingsView props={props} settings={settings} onSettingsChange={props.onRendererSettingsChange} />

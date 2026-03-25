@@ -6,6 +6,13 @@ const require = createRequire(import.meta.url);
 const electron = require("electron") as typeof import("electron");
 const { app } = electron;
 
+export type ErrorLogEntry = {
+  name: string;
+  path: string;
+  sizeBytes: number;
+  updatedAt: number;
+};
+
 export function getLogDirectory(): string {
   try {
     return path.join(process.cwd(), ".logs");
@@ -61,5 +68,44 @@ export async function clearErrorLogs(): Promise<void> {
     );
   } catch {
     // Nothing to clear or log directory unavailable.
+  }
+}
+
+export async function listErrorLogs(): Promise<ErrorLogEntry[]> {
+  const logDirectory = getLogDirectory();
+
+  try {
+    await fs.mkdir(logDirectory, { recursive: true });
+    const entries = await fs.readdir(logDirectory, { withFileTypes: true });
+    const logs = await Promise.all(
+      entries
+        .filter((entry) => entry.isFile() && entry.name.endsWith(".log"))
+        .map(async (entry) => {
+          const filePath = path.join(logDirectory, entry.name);
+          const stats = await fs.stat(filePath);
+          return {
+            name: entry.name,
+            path: filePath,
+            sizeBytes: stats.size,
+            updatedAt: stats.mtimeMs
+          };
+        })
+    );
+
+    return logs.sort((left, right) => right.updatedAt - left.updatedAt);
+  } catch {
+    return [];
+  }
+}
+
+export async function readErrorLog(fileName: string): Promise<string> {
+  const logDirectory = getLogDirectory();
+  const safeName = path.basename(fileName);
+  const filePath = path.join(logDirectory, safeName);
+
+  try {
+    return await fs.readFile(filePath, "utf8");
+  } catch {
+    return "";
   }
 }

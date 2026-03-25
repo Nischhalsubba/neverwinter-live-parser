@@ -3,6 +3,7 @@ import type {
   DiscoveredLogCandidate,
   MonitoringConfig
 } from "../shared/types";
+import type { ErrorLogEntry } from "../main/errorLogger";
 
 type NeverwinterApi = {
   startMonitoring: (config: MonitoringConfig) => Promise<AppState>;
@@ -16,6 +17,8 @@ type NeverwinterApi = {
   clearData: () => Promise<AppState>;
   clearLogs: () => Promise<string>;
   getLogDirectory: () => Promise<string>;
+  listLogs: () => Promise<ErrorLogEntry[]>;
+  readLog: (fileName: string) => Promise<string>;
   logRendererError: (message: string, context?: string) => Promise<void>;
   onState: (listener: (state: AppState) => void) => () => void;
 };

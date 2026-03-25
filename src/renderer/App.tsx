@@ -12,6 +12,8 @@ import {
   ObsidianScreens
 } from "./components/ObsidianScreens";
 import { DEFAULT_SETTINGS, type ProfileSettings } from "./rendererSettings";
+import { DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS } from "../shared/constants";
+import { createInitialAuxiliarySummary } from "../shared/auxiliaryLogs";
 
 const INITIAL_STATE: AppState = {
   watcherStatus: "idle",
@@ -33,6 +35,8 @@ const INITIAL_STATE: AppState = {
     latestRawLines: [],
     unknownEvents: [],
     parseIssues: [],
+    auxiliaryEvents: [],
+    auxiliarySummary: createInitialAuxiliarySummary(),
     activeFilePath: null,
     currentOffset: 0
   },
@@ -342,7 +346,7 @@ export function App() {
     try {
       const snapshot = await api.startMonitoring({
         folderPath: folderInput.trim(),
-        inactivityTimeoutMs: 10_000
+        inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
       });
       setState(snapshot);
       setView("live");
@@ -361,7 +365,7 @@ export function App() {
     try {
       const snapshot = await api.startMonitoring({
         filePath: importFilePath.trim(),
-        inactivityTimeoutMs: 10_000
+        inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
       });
       setState(snapshot);
       setFolderInput(snapshot.selectedLogFolder ?? "");

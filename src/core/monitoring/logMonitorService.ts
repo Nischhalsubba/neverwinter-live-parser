@@ -1,15 +1,19 @@
 import chokidar, { type FSWatcher } from "chokidar";
 import { EventEmitter } from "node:events";
-import { open } from "node:fs/promises";
+import type { Dirent } from "node:fs";
+import { open, readdir } from "node:fs/promises";
 import path from "node:path";
 import { Worker } from "node:worker_threads";
 import { fileURLToPath } from "node:url";
 import type {
   AppState,
+  AuxiliaryLogEvent,
   CombatEvent,
   MonitoringConfig,
   ParseIssue
 } from "../../shared/types.js";
+import { createInitialAuxiliarySummary } from "../../shared/auxiliaryLogs.js";
+import { DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS } from "../../shared/constants.js";
 import { CombatantTracker } from "../aggregation/combatantTracker.js";
 import { detectActiveLogFile } from "../watcher/detectActiveLog.js";
 import {
@@ -19,9 +23,15 @@ import {
 } from "../reader/incrementalReader.js";
 import { splitBufferedLines } from "../reader/lineBuffer.js";
 import { parseLine } from "../parser/parseLine.js";
+import {
+  applyAuxiliaryEventToSummary,
+  classifyAuxiliaryLogKind,
+  parseAuxiliaryLogLine
+} from "../parser/parseAuxiliaryLogLine.js";
 import { EncounterManager } from "../encounter/encounterManager.js";
 
 const MAX_DEBUG_ITEMS = 50;
+const MAX_AUXILIARY_EVENTS = 120;
 const MIN_EMIT_INTERVAL_MS = 100;
 const IMPORT_WORKER_MIN_BYTES = 8 * 1024 * 1024;
 const IMPORT_WORKER_URL = new URL(
@@ -52,6 +62,8 @@ function createInitialAppState(): AppState {
       latestRawLines: [],
       unknownEvents: [],
       parseIssues: [],
+      auxiliaryEvents: [],
+      auxiliarySummary: createInitialAuxiliarySummary(),
       activeFilePath: null,
       currentOffset: 0
     },
@@ -72,7 +84,8 @@ export class LogMonitorService extends EventEmitter {
   private watcher: FSWatcher | null = null;
   private readonly pollIntervalMs = 250;
   private readerState: ReaderState = createInitialReaderState();
-  private encounterManager = new EncounterManager(10_000);
+  private auxiliaryReaderStates = new Map<string, ReaderState>();
+  private encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
   private combatantTracker = new CombatantTracker();
   private flushTimer: NodeJS.Timeout | null = null;
   private liveTrackingFilePath: string | null = null;
@@ -107,6 +120,7 @@ export class LogMonitorService extends EventEmitter {
       }
     };
     this.readerState = createInitialReaderState();
+    this.auxiliaryReaderStates = new Map();
     this.encounterManager = new EncounterManager(config.inactivityTimeoutMs);
     this.combatantTracker = new CombatantTracker();
     this.liveTrackingFilePath = targetFilePath;
@@ -138,6 +152,7 @@ export class LogMonitorService extends EventEmitter {
       try {
         await this.refreshActiveFile(resolvedFolderPath);
         await this.readNewLines();
+        await this.readAuxiliaryLogs(resolvedFolderPath);
         if (
           this.state.activeLogFile !== previousActiveFile ||
           this.state.debug.currentOffset !== previousOffset
@@ -196,14 +211,15 @@ export class LogMonitorService extends EventEmitter {
         sourcePath: filePath
       }
     };
-    this.encounterManager = new EncounterManager(10_000);
+    this.encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
     this.combatantTracker = new CombatantTracker();
+    this.auxiliaryReaderStates = new Map();
     this.liveTrackingFilePath = null;
 
     await this.consumeImportedFile(filePath);
     this.encounterManager.flush(
       this.state.analysis.endedAt
-        ? this.state.analysis.endedAt + 10_000
+        ? this.state.analysis.endedAt + DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
         : Date.now()
     );
     this.syncEncounterState();
@@ -241,7 +257,8 @@ export class LogMonitorService extends EventEmitter {
   private resetLiveSession(activeFile: string | null): void {
     const preservedFolder = this.state.selectedLogFolder;
     this.readerState = createInitialReaderState();
-    this.encounterManager = new EncounterManager(10_000);
+    this.auxiliaryReaderStates = new Map();
+    this.encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
     this.combatantTracker = new CombatantTracker();
     this.state = {
       ...createInitialAppState(),
@@ -297,6 +314,50 @@ export class LogMonitorService extends EventEmitter {
     this.consumeLines(result.lines);
   }
 
+  private async readAuxiliaryLogs(folderPath: string): Promise<void> {
+    let entries: Dirent[];
+    try {
+      entries = await readdir(folderPath, {
+        withFileTypes: true,
+        encoding: "utf8"
+      }) as Dirent[];
+    } catch {
+      return;
+    }
+
+    const latestByKind = new Map<string, string>();
+    for (const entry of entries) {
+      if (!entry.isFile()) {
+        continue;
+      }
+      const filePath = path.join(folderPath, entry.name);
+      const kind = classifyAuxiliaryLogKind(filePath);
+      if (kind === "other") {
+        continue;
+      }
+
+      const current = latestByKind.get(kind);
+      if (!current || filePath.localeCompare(current) > 0) {
+        latestByKind.set(kind, filePath);
+      }
+    }
+
+    for (const filePath of latestByKind.values()) {
+      const previousState =
+        this.auxiliaryReaderStates.get(filePath) ?? createInitialReaderState();
+      const result = await readAppendedLines(filePath, previousState);
+      this.auxiliaryReaderStates.set(filePath, result.state);
+
+      for (const line of result.lines) {
+        const parsed = parseAuxiliaryLogLine(filePath, line);
+        if (!parsed) {
+          continue;
+        }
+        this.pushAuxiliaryEvent(parsed);
+      }
+    }
+  }
+
   private async consumeImportedFile(filePath: string): Promise<void> {
     const chunkSize = 512 * 1024;
     const fileHandle = await open(filePath, "r");
@@ -340,7 +401,7 @@ export class LogMonitorService extends EventEmitter {
       const worker = new Worker(fileURLToPath(IMPORT_WORKER_URL), {
         workerData: {
           filePath,
-          inactivityTimeoutMs: 10_000
+          inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
         }
       });
 
@@ -406,6 +467,17 @@ export class LogMonitorService extends EventEmitter {
       issue,
       ...this.state.debug.parseIssues
     ].slice(0, MAX_DEBUG_ITEMS);
+  }
+
+  private pushAuxiliaryEvent(event: AuxiliaryLogEvent): void {
+    this.state.debug.auxiliaryEvents = [
+      event,
+      ...this.state.debug.auxiliaryEvents
+    ].slice(0, MAX_AUXILIARY_EVENTS);
+    this.state.debug.auxiliarySummary = applyAuxiliaryEventToSummary(
+      this.state.debug.auxiliarySummary,
+      event
+    );
   }
 
   private pushIssue(reason: string): void {

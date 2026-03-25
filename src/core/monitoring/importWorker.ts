@@ -5,12 +5,14 @@ import { parseLine } from "../parser/parseLine.js";
 import { EncounterManager } from "../encounter/encounterManager.js";
 import { CombatantTracker } from "../aggregation/combatantTracker.js";
 import type { AppState, CombatEvent, ParseIssue } from "../../shared/types.js";
+import { createInitialAuxiliarySummary } from "../../shared/auxiliaryLogs.js";
+import { DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS } from "../../shared/constants.js";
 
 const MAX_DEBUG_ITEMS = 50;
 
 type WorkerInput = {
   filePath: string;
-  inactivityTimeoutMs: number;
+  inactivityTimeoutMs?: number;
 };
 
 function createInitialAppState(filePath: string): AppState {
@@ -34,6 +36,8 @@ function createInitialAppState(filePath: string): AppState {
       latestRawLines: [],
       unknownEvents: [],
       parseIssues: [],
+      auxiliaryEvents: [],
+      auxiliarySummary: createInitialAuxiliarySummary(),
       activeFilePath: filePath,
       currentOffset: 0
     },
@@ -64,8 +68,10 @@ function pushParseIssue(state: AppState, issue: ParseIssue): void {
 }
 
 async function runImport({ filePath, inactivityTimeoutMs }: WorkerInput): Promise<AppState> {
+  const effectiveInactivityTimeoutMs =
+    inactivityTimeoutMs ?? DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS;
   const state = createInitialAppState(filePath);
-  const encounterManager = new EncounterManager(inactivityTimeoutMs);
+  const encounterManager = new EncounterManager(effectiveInactivityTimeoutMs);
   const combatantTracker = new CombatantTracker();
   const chunkSize = 512 * 1024;
   const fileHandle = await open(filePath, "r");
@@ -126,7 +132,9 @@ async function runImport({ filePath, inactivityTimeoutMs }: WorkerInput): Promis
 
   const snapshotSeed = combatantTracker.snapshot("imported", filePath, []);
   encounterManager.flush(
-    snapshotSeed.endedAt ? snapshotSeed.endedAt + inactivityTimeoutMs : Date.now()
+    snapshotSeed.endedAt
+      ? snapshotSeed.endedAt + effectiveInactivityTimeoutMs
+      : Date.now()
   );
   const currentEncounter = encounterManager.getCurrentSnapshot();
   const recentEncounters = encounterManager.getCompleted();
