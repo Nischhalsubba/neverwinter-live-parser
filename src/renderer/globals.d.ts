@@ -8,6 +8,7 @@ type NeverwinterApi = {
   startMonitoring: (config: MonitoringConfig) => Promise<AppState>;
   importLogFile: (filePath: string) => Promise<AppState>;
   stopMonitoring: () => Promise<AppState>;
+  getBootstrapState: () => Promise<AppState>;
   getState: () => Promise<AppState>;
   discoverLogs: () => Promise<DiscoveredLogCandidate[]>;
   selectFolder: () => Promise<string | null>;

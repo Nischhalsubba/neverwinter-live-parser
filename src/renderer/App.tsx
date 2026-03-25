@@ -77,6 +77,16 @@ function isPlayerOwnedCombatant(combatant: AppState["analysis"]["combatants"][nu
   return combatant.type === "player" || combatant.ownerId.startsWith("P[");
 }
 
+function toBootstrapState(snapshot: AppState): AppState {
+  return {
+    ...snapshot,
+    analysis: {
+      ...snapshot.analysis,
+      combatants: []
+    }
+  };
+}
+
 export function App() {
   const [state, setState] = useState(INITIAL_STATE);
   const [view, setView] = useState<View>("setup");
@@ -103,7 +113,7 @@ export function App() {
       return;
     }
 
-    void api.getState().then((snapshot) => {
+    void api.getBootstrapState().then((snapshot) => {
       startTransition(() => {
         setState(snapshot);
         setFolderInput(snapshot.watcherStatus === "watching" ? snapshot.selectedLogFolder ?? "" : "");
@@ -118,7 +128,9 @@ export function App() {
       // Apply the latest monitoring snapshot immediately so live combat rows
       // never lag behind a previously buffered renderer frame.
       startTransition(() => {
-        setState(snapshot);
+        setState((current) =>
+          ANALYSIS_HEAVY_VIEWS.has(view) ? snapshot : toBootstrapState(snapshot)
+        );
         setImportFilePath((current) =>
           current.trim()
             ? current
@@ -129,7 +141,7 @@ export function App() {
         }
       });
     });
-  }, []);
+  }, [view]);
 
   useEffect(() => {
     window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(rendererSettings));
@@ -162,6 +174,19 @@ export function App() {
   }, []);
 
   const shouldBuildHeavyAnalysis = ANALYSIS_HEAVY_VIEWS.has(view);
+
+  useEffect(() => {
+    const api = window.neverwinterApi;
+    if (!api || !shouldBuildHeavyAnalysis) {
+      return;
+    }
+
+    void api.getState().then((snapshot) => {
+      startTransition(() => {
+        setState(snapshot);
+      });
+    });
+  }, [shouldBuildHeavyAnalysis]);
   const playerOwnedCombatants = useMemo(
     () =>
       shouldBuildHeavyAnalysis

@@ -17,6 +17,8 @@ const api = {
     ipcRenderer.invoke("monitoring:importFile", filePath) as Promise<AppState>,
   stopMonitoring: () =>
     ipcRenderer.invoke("monitoring:stop") as Promise<AppState>,
+  getBootstrapState: () =>
+    ipcRenderer.invoke("monitoring:getBootstrapState") as Promise<AppState>,
   getState: () => ipcRenderer.invoke("monitoring:getState") as Promise<AppState>,
   discoverLogs: () =>
     ipcRenderer.invoke("monitoring:discoverLogs") as Promise<DiscoveredLogCandidate[]>,

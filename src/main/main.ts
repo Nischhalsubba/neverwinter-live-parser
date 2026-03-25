@@ -145,6 +145,16 @@ function withTelemetry(state: AppState): AppState {
   };
 }
 
+function toBootstrapState(state: AppState): AppState {
+  return {
+    ...state,
+    analysis: {
+      ...state.analysis,
+      combatants: []
+    }
+  };
+}
+
 function getDriveRoots(): string[] {
   const drives: string[] = [];
   for (let charCode = 65; charCode <= 90; charCode += 1) {
@@ -386,6 +396,16 @@ ipcMain.handle("monitoring:getState", async () => {
     ...state,
     selectedLogFolder: state.selectedLogFolder ?? savedFolder
   });
+});
+ipcMain.handle("monitoring:getBootstrapState", async () => {
+  const state = monitor.getState();
+  const savedFolder = (await readSettings()).selectedLogFolder;
+  return withTelemetry(
+    toBootstrapState({
+      ...state,
+      selectedLogFolder: state.selectedLogFolder ?? savedFolder
+    })
+  );
 });
 
 ipcMain.handle("dialog:selectFolder", async () => {
