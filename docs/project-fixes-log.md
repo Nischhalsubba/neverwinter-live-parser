@@ -889,3 +889,31 @@ Write what changed in the files and why it was done.
   - `npm run build`
   - `npm run dist:win-portable`
   - duplicate-launch smoke check against the built Electron main process confirmed the first instance stayed alive and the second instance exited cleanly
+
+### 2026-03-25 - Open-source repo setup, distribution docs, and security documentation
+- Files touched:
+  - `LICENSE`
+  - `README.md`
+  - `SECURITY.md`
+  - `package.json`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added an MIT license file so the repository has an explicit free and open-source usage license instead of relying on an implicit or missing license state.
+  - Added a top-level README that explains:
+    - what the app does
+    - how to run it in development
+    - how to build it for production
+    - how to produce the portable Windows executable
+    - where the portable executable is emitted
+    - the app's local-only privacy model and the practical note about Windows trust prompts for unsigned local builds
+  - Added a SECURITY document that explains the current Electron hardening posture, the local data handling model, and the limits of unsigned local Windows builds.
+  - Added the `license` metadata field to `package.json` and aligned the author metadata with the public-facing repo setup.
+  - Logged this documentation and licensing pass in the project ledger so future repo changes do not forget to keep legal and distribution docs current.
+- Why:
+  - The user asked for the repository to be fully set up with a free and open-source license and whatever supporting documents were needed.
+  - A repo that is near distribution needs clear licensing, usage instructions, and a security posture document instead of only working code.
+  - Without these documents, future packaging, handoff, and distribution work would stay ambiguous and easy to regress.
+- Verification:
+  - `npm test`
+  - `npm run build`
+  - `npm run dist:win-portable`

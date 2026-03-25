@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "author": "Archew",
+  "license": "MIT",
   "description": "Windows-only local Neverwinter combat log parser with a minimal Electron dashboard.",
   "main": "dist-electron/main/main.js",
   "scripts": {
