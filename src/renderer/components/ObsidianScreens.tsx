@@ -4432,6 +4432,59 @@ function SettingsView({
   );
 }
 
+function AboutView() {
+  return (
+    <section className="oa-screen">
+      <header className="oa-screen-hero">
+        <p className="oa-page-kicker">About</p>
+        <h1>About Neverwinter Live Parser</h1>
+        <p>
+          A local Windows parser for Neverwinter combat logs, built to track live combat, preserve run history, and
+          break down dungeon, trial, and arena performance in a readable way.
+        </p>
+      </header>
+
+      <section className="oa-panel">
+        <SectionHeading icon="info" eyebrow="Application" title="What this app is for" />
+        <div className="oa-card-grid two">
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Core purpose</strong>
+            <p>Track Neverwinter combat logs locally, segment fights, preserve session history, and explain player output clearly.</p>
+          </article>
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Privacy model</strong>
+            <p>This app is designed as a local desktop utility. It reads local log files, stores local archives, and blocks automatic outbound web requests in the packaged runtime.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="draw" eyebrow="Credits" title="Design and development" />
+        <div className="oa-card-grid two">
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Designed by</strong>
+            <p>Archew</p>
+          </article>
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Developed by</strong>
+            <p>Archew</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="oa-panel">
+        <SectionHeading icon="verified_user" eyebrow="Safety" title="Runtime hardening" />
+        <div className="oa-card-grid four">
+          <StatCard label="Single Instance" value="Enabled" icon="filter_1" hint="A second launch focuses the running window instead of opening a duplicate app." />
+          <StatCard label="Node Integration" value="Disabled" icon="power_off" hint="Renderer code cannot call Node APIs directly." />
+          <StatCard label="Context Isolation" value="Enabled" icon="shield_lock" hint="Renderer access is limited to the explicit preload bridge." />
+          <StatCard label="Outbound Requests" value="Blocked" icon="wifi_off" hint="Automatic external web requests are denied in the packaged runtime." />
+        </div>
+      </section>
+    </section>
+  );
+}
+
 function NotificationsPanel({ state }: { state: AppState }) {
   const items = [
     ...state.debug.latestRawLines.slice(-2).reverse().map((line) => ({
@@ -4719,7 +4772,8 @@ export function ObsidianScreens(props: ShellProps) {
     { id: "recent", label: "History", icon: "history_edu" },
     { id: "library", label: "Library", icon: "menu_book" },
     { id: "debug", label: "Debug", icon: "bug_report" },
-    { id: "settings", label: "Settings", icon: "settings" }
+    { id: "settings", label: "Settings", icon: "settings" },
+    { id: "about", label: "About", icon: "info" }
   ];
 
   function dismissSetupHelper() {
@@ -4922,6 +4976,7 @@ export function ObsidianScreens(props: ShellProps) {
           {props.view === "settings" ? (
             <SettingsView props={props} settings={settings} onSettingsChange={props.onRendererSettingsChange} />
           ) : null}
+          {props.view === "about" ? <AboutView /> : null}
         </main>
 
         {!props.isDesktopRuntime ? (

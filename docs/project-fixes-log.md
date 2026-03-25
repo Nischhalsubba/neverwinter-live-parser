@@ -855,3 +855,37 @@ Write what changed in the files and why it was done.
 - Verification:
   - `npm test`
   - `npm run build`
+
+### 2026-03-25 - Electron runtime hardening, single-instance enforcement, About page, and portable Windows build setup
+- Files touched:
+  - `src/main/main.ts`
+  - `src/renderer/analysisViewModel.ts`
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `package.json`
+  - `package-lock.json`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added Electron single-instance locking so launching the app again focuses the running window instead of opening duplicate app instances.
+  - Added second-instance handling to restore, show, and focus the existing window when a duplicate launch is attempted.
+  - Hardened the BrowserWindow runtime by:
+    - keeping `nodeIntegration` disabled
+    - keeping `contextIsolation` enabled
+    - explicitly enabling `webSecurity`
+    - denying permission requests
+    - blocking webviews
+    - blocking automatic outbound web requests except the local dev server during development
+    - blocking arbitrary navigation away from the app window
+    - denying popup windows and only allowing explicit external browser opens for normal http or https links
+  - Added a dedicated `About` sidebar page that explains the app, its local privacy model, its runtime hardening, and credits Archew for both design and development.
+  - Added a portable Windows packaging script with `electron-builder` so the app can be built into a one-click portable executable instead of only being run from source.
+  - Added package metadata and disabled executable signing or editing in the local Windows portable build path so packaging is less likely to fail on machines without the required Windows symlink or signing privileges.
+- Why:
+  - The user wanted the final app to avoid obvious security holes and reduce the risk of accidental data leakage from automatic network behavior.
+  - Running `npm run dev` was leading to multiple app instances, which is unacceptable for a desktop utility and risky for the final build.
+  - The app needed an in-product About destination and explicit authorship credit for Archew.
+  - The repo needed a direct path to a portable Windows executable that can be opened with one click without a normal installer.
+- Verification:
+  - `npm test`
+  - `npm run build`
+  - `npm run dist:win-portable`
+  - duplicate-launch smoke check against the built Electron main process confirmed the first instance stayed alive and the second instance exited cleanly

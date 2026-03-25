@@ -25,7 +25,7 @@ const __dirname = path.dirname(__filename);
 const require = createRequire(import.meta.url);
 const electron = require("electron") as typeof import("electron");
 const isDev = Boolean(process.env.VITE_DEV_SERVER_URL);
-const { app, BrowserWindow, dialog, ipcMain } = electron;
+const { app, BrowserWindow, dialog, ipcMain, shell } = electron;
 
 function configureRuntimePaths(): void {
   const runtimeRoot = isDev
@@ -53,6 +53,11 @@ function configureRuntimePaths(): void {
 
 configureRuntimePaths();
 app.setName("neverwinter-live-parser");
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+  app.quit();
+  process.exit(0);
+}
 const monitor = new LogMonitorService();
 
 type StoredSettings = {
@@ -67,6 +72,21 @@ let mainWindow: InstanceType<typeof BrowserWindow> | null = null;
 let telemetryTimer: NodeJS.Timeout | null = null;
 let lastCpuUsage = process.cpuUsage();
 let lastCpuSampleAt = process.hrtime.bigint();
+
+function isAllowedAppRequest(url: string): boolean {
+  if (/^(file|data|blob|devtools):/i.test(url)) {
+    return true;
+  }
+
+  if (isDev) {
+    return (
+      /^https?:\/\/127\.0\.0\.1:5173\//i.test(url) ||
+      /^wss?:\/\/127\.0\.0\.1:5173\//i.test(url)
+    );
+  }
+
+  return false;
+}
 
 function getSettingsPath(): string {
   return path.join(app.getPath("userData"), "settings.json");
@@ -316,8 +336,38 @@ function createWindow(): void {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: false,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      devTools: isDev
     }
+  });
+
+  const windowSession = mainWindow.webContents.session;
+  windowSession.setPermissionRequestHandler((_webContents, _permission, callback) => {
+    callback(false);
+  });
+  windowSession.setPermissionCheckHandler(() => false);
+  windowSession.webRequest.onBeforeRequest((details, callback) => {
+    callback({ cancel: !isAllowedAppRequest(details.url) });
+  });
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (/^https?:/i.test(url)) {
+      void shell.openExternal(url);
+    }
+    return { action: "deny" };
+  });
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    if (!isAllowedAppRequest(url)) {
+      event.preventDefault();
+      if (/^https?:/i.test(url)) {
+        void shell.openExternal(url);
+      }
+    }
+  });
+  mainWindow.webContents.on("will-attach-webview", (event) => {
+    event.preventDefault();
   });
 
   if (isDev) {
@@ -504,6 +554,19 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+});
+
+app.on("second-instance", () => {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore();
+  }
+  mainWindow.show();
+  mainWindow.focus();
 });
 
 process.on("uncaughtException", (error) => {

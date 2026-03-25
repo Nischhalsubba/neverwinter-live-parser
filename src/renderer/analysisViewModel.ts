@@ -23,7 +23,8 @@ export type View =
   | "recent"
   | "debug"
   | "library"
-  | "settings";
+  | "settings"
+  | "about";
 
 export type DetailTab =
   | "overview"
