@@ -406,6 +406,32 @@ function getSourceLabel(state: AppState): string {
   return state.importedLogFile ?? state.activeLogFile ?? state.analysis.sourcePath ?? "No source linked";
 }
 
+function getSourceFileName(state: AppState): string {
+  const source = getSourceLabel(state);
+  return source.split(/[\\/]/).pop() ?? source;
+}
+
+function getSidebarIdentitySubtitle(
+  state: AppState,
+  selectedPlayer: PlayerRow | null
+): string {
+  if (selectedPlayer?.className) {
+    return `${selectedPlayer.className}${selectedPlayer.paragon ? ` / ${selectedPlayer.paragon}` : ""}`;
+  }
+
+  if (selectedPlayer?.paragon) {
+    return `${selectedPlayer.paragon} build`;
+  }
+
+  if (selectedPlayer) {
+    return state.analysis.mode === "live" ? "Tracked player from current session" : "Tracked player from imported session";
+  }
+
+  return state.analysis.mode === "live"
+    ? `Tracking ${getSourceFileName(state)}`
+    : `Reviewing ${getSourceFileName(state)}`;
+}
+
 function getCombatLogTimestampLabel(filePath: string | null): string {
   if (!filePath) {
     return "Awaiting combatlog_YYYY-MM-DD_HH-MM-SS.log";
@@ -2118,6 +2144,14 @@ function LiveOverviewView({
   const totalHealing = comparePool.reduce((sum, player) => sum + player.totalHealing, 0);
   const totalTaken = comparePool.reduce((sum, player) => sum + player.damageTaken, 0);
   const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
+  const encounterCount = props.availableEncounters.length;
+  const topDamagePlayer = comparePool[0] ?? null;
+  const sessionFileName = getSourceFileName(state);
+  const selectedEncounterIndex = props.availableEncounters.findIndex((entry) => entry.id === props.selectedLiveEncounterId);
+  const scopeDescription =
+    props.liveScope === "encounter"
+      ? `Viewing encounter ${selectedEncounterIndex >= 0 ? selectedEncounterIndex + 1 : 1} of ${Math.max(encounterCount, 1)}`
+      : "Viewing the full tracked combat log session";
   const selectedForCompare = roleFilteredPlayers.filter((player) => compareSelection.includes(player.id));
   const computedDps = totalDamage / liveDurationSeconds;
   const focusedTargetSummary =
@@ -2166,7 +2200,7 @@ function LiveOverviewView({
                   : "Waiting for combat events")}
           </p>
           <p className="oa-page-description">
-            Real-time combat-log summary of the currently tracked fight, with player output, target focus, and live target distribution.
+            A readable summary of the current tracked session, including damage, healing, incoming pressure, target focus, and player contribution.
           </p>
           <p className="oa-page-kicker">{liveScopeLabel}</p>
         </div>
@@ -2209,8 +2243,33 @@ function LiveOverviewView({
         </div>
       </header>
 
+      <section className="oa-panel oa-live-summary-panel">
+        <div className="oa-summary-strip">
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">What You Are Viewing</span>
+            <strong>{props.liveScope === "encounter" ? current?.label ?? "Selected encounter" : "Entire tracked session"}</strong>
+            <small>{scopeDescription}</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Current Source</span>
+            <strong>{sessionFileName}</strong>
+            <small>{state.analysis.mode === "live" ? "Live combat log" : "Imported combat log"}</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Top Damage Player</span>
+            <strong>{topDamagePlayer?.displayName ?? "Awaiting combat activity"}</strong>
+            <small>{topDamagePlayer ? `${formatShort(topDamagePlayer.totalDamage)} total damage` : "No player rows in the current view"}</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Encounter Count</span>
+            <strong>{formatNumber(encounterCount)}</strong>
+            <small>{encounterCount ? "Completed or active fights in this session" : "No segmented encounters yet"}</small>
+          </article>
+        </div>
+      </section>
+
       <div className="oa-focus-bar">
-        <span className="oa-focus-label"><Icon name="adjust" className="oa-inline-icon" /> Live Focus:</span>
+        <span className="oa-focus-label"><Icon name="pageview" className="oa-inline-icon" /> Viewing:</span>
         <button
           className={`oa-encounter-chip ${props.selectedLiveEncounterId === "all" ? "active" : ""}`}
           onClick={() => props.onSelectLiveEncounter("all")}
@@ -2227,6 +2286,10 @@ function LiveOverviewView({
             {index + 1}. {entry.label}
           </button>
         ))}
+      </div>
+
+      <div className="oa-focus-bar">
+        <span className="oa-focus-label"><Icon name="adjust" className="oa-inline-icon" /> Target Focus:</span>
         <button
           className={`oa-encounter-chip ${liveFocusTarget === "all" ? "active" : ""}`}
           onClick={() => onLiveFocusChange("all")}
@@ -2251,11 +2314,11 @@ function LiveOverviewView({
           value={formatShort(props.liveScope === "encounter" ? current?.dps ?? computedDps : computedDps)}
           tone="secondary"
           icon="bolt"
-          hint={props.liveScope === "encounter" ? "current encounter" : "tracked combat log session"}
+          hint={props.liveScope === "encounter" ? "damage per second for the selected encounter" : "damage per second across the full tracked session"}
         />
-        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} live player rows from combat log`} />
-        <StatCard label="Total Healing" value={formatShort(totalHealing)} icon="healing" hint="healing parsed from the current combat-log slice" />
-        <StatCard label="Damage Taken" value={formatShort(totalTaken)} tone="tertiary" icon="shield" hint={`${formatNumber(totalDeaths)} live deaths detected`} />
+        <StatCard label="Total Damage" value={formatShort(totalDamage)} tone="primary" icon="query_stats" hint={`${formatNumber(filteredPlayers.length)} visible player rows in this view`} />
+        <StatCard label="Total Healing" value={formatShort(totalHealing)} icon="healing" hint="healing parsed for the selected session or encounter view" />
+        <StatCard label="Damage Taken" value={formatShort(totalTaken)} tone="tertiary" icon="shield" hint={`${formatNumber(totalDeaths)} deaths detected in this view`} />
       </div>
 
       <div className="oa-split-grid">
@@ -3705,18 +3768,46 @@ function PlayerView({
 }
 
 function RecentView({ state }: { state: AppState }) {
+  const activeSource = getSourceFileName(state);
+  const sessionDuration = formatDuration(state.analysis.durationMs);
+  const topEncounter = [...state.recentEncounters].sort((left, right) => right.totalDamage - left.totalDamage)[0] ?? null;
+
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Encounter Archive</p>
-        <h1>Completed engagements</h1>
-        <p>Encounter summaries parsed from the current session plus archived live sessions kept after combat log rollover.</p>
+        <h1>Encounters and session history</h1>
+        <p>Review the current tracked session, older archived sessions, and every segmented fight in a simpler timeline-first layout.</p>
       </header>
+      <section className="oa-panel oa-encounters-overview">
+        <div className="oa-summary-strip">
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Current Session</span>
+            <strong>{activeSource}</strong>
+            <small>{state.analysis.mode === "live" ? "Active live source" : "Imported analysis source"}</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Session Duration</span>
+            <strong>{sessionDuration}</strong>
+            <small>{formatNumber(state.analysis.totalLines)} lines processed</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Encounter Count</span>
+            <strong>{formatNumber(state.recentEncounters.length)}</strong>
+            <small>{state.recentEncounters.length ? "Bosses and mob pulls in this session" : "No encounters segmented yet"}</small>
+          </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Largest Encounter</span>
+            <strong>{topEncounter?.label ?? "Waiting for combat"}</strong>
+            <small>{topEncounter ? `${formatShort(topEncounter.totalDamage)} total damage` : "No encounter totals yet"}</small>
+          </article>
+        </div>
+      </section>
       <section className="oa-panel">
         <SectionHeading icon="folder_copy" eyebrow="Session History" title="Archived live sessions" />
         <div className="oa-card-grid">
           {state.sessionArchives.map((session) => (
-            <article className="oa-mini-panel" key={session.id}>
+            <article className="oa-mini-panel oa-session-archive-card" key={session.id}>
               <strong>{session.activeLogFile?.split(/[\\/]/).pop() ?? session.sourcePath ?? "Unknown session"}</strong>
               <p>{session.recentEncounters.length} encounters • {formatDuration(session.durationMs)}</p>
               <div className="oa-mini-metrics">
@@ -3732,22 +3823,48 @@ function RecentView({ state }: { state: AppState }) {
         </div>
       </section>
       <section className="oa-panel">
-        <SectionHeading icon="history_edu" eyebrow="Archive" title="Recent encounters" />
-        <div className="oa-table-shell">
-          <div className="oa-table-head archive">
-            <span>Encounter</span>
-            <span>Duration</span>
-            <span>DPS</span>
-            <span>Damage</span>
-          </div>
-          {state.recentEncounters.map((encounter) => (
-            <div className="oa-table-row archive static" key={encounter.id}>
-              <span>{encounter.label}</span>
-              <span>{formatDuration(encounter.durationMs)}</span>
-              <span>{formatShort(encounter.dps)}</span>
-              <span>{formatShort(encounter.totalDamage)}</span>
-            </div>
+        <SectionHeading icon="history_edu" eyebrow="Current Session" title="Encounter timeline" />
+        <div className="oa-encounter-timeline">
+          {state.recentEncounters.map((encounter, index) => (
+            <article className="oa-encounter-card" key={encounter.id}>
+              <div className="oa-encounter-card-header">
+                <div>
+                  <span className="oa-summary-label">Encounter {index + 1}</span>
+                  <strong>{encounter.label}</strong>
+                </div>
+                <span className="oa-session-pill">{formatDuration(encounter.durationMs)}</span>
+              </div>
+              <div className="oa-encounter-card-grid">
+                <div>
+                  <span className="oa-summary-label">Damage</span>
+                  <strong>{formatShort(encounter.totalDamage)}</strong>
+                </div>
+                <div>
+                  <span className="oa-summary-label">DPS</span>
+                  <strong>{formatShort(encounter.dps)}</strong>
+                </div>
+                <div>
+                  <span className="oa-summary-label">Healing</span>
+                  <strong>{formatShort(encounter.totalHealing)}</strong>
+                </div>
+                <div>
+                  <span className="oa-summary-label">Damage Taken</span>
+                  <strong>{formatShort(encounter.damageTaken)}</strong>
+                </div>
+                <div>
+                  <span className="oa-summary-label">Hits</span>
+                  <strong>{formatNumber(encounter.hitCount)}</strong>
+                </div>
+                <div>
+                  <span className="oa-summary-label">Crit Rate</span>
+                  <strong>{formatPercent(encounter.critRate)}</strong>
+                </div>
+              </div>
+            </article>
           ))}
+          {!state.recentEncounters.length ? (
+            <div className="oa-empty-state">No encounter history has been segmented from the current session yet.</div>
+          ) : null}
         </div>
       </section>
     </section>
@@ -4365,6 +4482,7 @@ export function ObsidianScreens(props: ShellProps) {
   const runtimeLabel = getRuntimeLabel(props.state);
   const sessionIndicator = getSessionIndicator(props.state);
   const sourceLabel = getSourceLabel(props.state);
+  const sidebarIdentitySubtitle = getSidebarIdentitySubtitle(props.state, props.selectedPlayer);
   const activeEncounterLabel =
     props.state.currentEncounter?.label ??
     (props.state.watcherStatus === "watching" ? "Watching combat log" : "Idle");
@@ -4519,7 +4637,7 @@ export function ObsidianScreens(props: ShellProps) {
           </div>
           <div>
             <strong>{activePlayerName}</strong>
-            <span>{props.selectedPlayer?.className ? `${props.selectedPlayer.className}${props.selectedPlayer.paragon ? ` / ${props.selectedPlayer.paragon}` : ""}` : sourceLabel}</span>
+            <span>{sidebarIdentitySubtitle}</span>
           </div>
         </div>
           <button className="oa-button session" onClick={() => props.onViewChange("setup")}>

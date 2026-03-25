@@ -731,3 +731,37 @@ Write what changed in the files and why it was done.
   - When Neverwinter rolled over to a new combat log, the old session state disappeared instead of being retained as historical reference.
 - Verification:
   - pending at time of entry creation, then completed after test/build pass in the same turn
+
+### 2026-03-25 - Sidebar footer cleanup and clearer Party Overview and Encounters UX
+- Files touched:
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `src/renderer/styles.css`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added `getSourceFileName()` so UI surfaces can show the active log file name without exposing the full source path.
+  - Added `getSidebarIdentitySubtitle()` so the sidebar footer uses a friendly player or session summary instead of falling back to the raw combat-log source label.
+  - Changed the sidebar footer profile card to show:
+    - class and paragon when known
+    - a tracked-player summary when class data is missing
+    - a session-tracking summary when no player is selected
+  - Reworked `Party Overview` to add a summary strip above the dense tables showing:
+    - what session or encounter is being viewed
+    - which source file is active
+    - who the current top damage player is
+    - how many encounters are in the session
+  - Split the live filter controls into two clearer rows:
+    - view scope
+    - target focus
+  - Updated live stat card helper text so the numbers explain the selected scope more clearly.
+  - Reworked `Encounters` into a timeline-oriented view with:
+    - current-session summary cards
+    - archived session cards
+    - encounter cards with damage, DPS, healing, damage taken, hits, and crit rate
+  - Added new layout and card styles to support the summary strip and encounter timeline design.
+- Why:
+  - The sidebar was showing path-like source text in the footer, which looked like an error message even though it was only a fallback UI string.
+  - `Party Overview` and `Encounters` were too dense and did not explain the current scope clearly enough for fast reading.
+  - The archived session and encounter history needed a more human-readable structure instead of relying on compact table rows alone.
+- Verification:
+  - `npm test`
+  - `npm run build`
