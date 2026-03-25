@@ -49,6 +49,8 @@ const INITIAL_STATE: AppState = {
 
 const SETTINGS_STORAGE_KEY = "obsidian-renderer-settings";
 const SETUP_HELP_STORAGE_KEY = "oa-setup-helper-dismissed";
+const EMPTY_PLAYER_ROWS: ReturnType<typeof buildPlayerRows> = [];
+const ANALYSIS_HEAVY_VIEWS: ReadonlySet<View> = new Set(["live", "players", "recent"]);
 
 function loadRendererSettings(): ProfileSettings {
   try {
@@ -159,23 +161,39 @@ export function App() {
     };
   }, []);
 
+  const shouldBuildHeavyAnalysis = ANALYSIS_HEAVY_VIEWS.has(view);
   const playerOwnedCombatants = useMemo(
-    () => state.analysis.combatants.filter(isPlayerOwnedCombatant),
-    [state.analysis.combatants]
+    () =>
+      shouldBuildHeavyAnalysis
+        ? state.analysis.combatants.filter(isPlayerOwnedCombatant)
+        : [],
+    [shouldBuildHeavyAnalysis, state.analysis.combatants]
   );
   const deferredCombatants = useDeferredValue(playerOwnedCombatants);
 
+  // Building player rows is the most expensive renderer-side operation.
+  // Skip it entirely on non-analysis screens so startup remains lightweight.
   const playerRows = useMemo(
-    () => buildPlayerRows(deferredCombatants, includeCompanions),
-    [deferredCombatants, includeCompanions]
+    () =>
+      shouldBuildHeavyAnalysis
+        ? buildPlayerRows(deferredCombatants, includeCompanions)
+        : EMPTY_PLAYER_ROWS,
+    [deferredCombatants, includeCompanions, shouldBuildHeavyAnalysis]
   );
   const encounterScopedLiveRows = useMemo(
     () =>
-      buildPlayerRows(deferredCombatants, includeCompanions, {
-        encounterId: state.currentEncounter?.id ?? null,
-        encounterDurationMs: state.currentEncounter?.durationMs ?? 0
-      }),
-    [deferredCombatants, includeCompanions, state.currentEncounter]
+      shouldBuildHeavyAnalysis
+        ? buildPlayerRows(deferredCombatants, includeCompanions, {
+            encounterId: state.currentEncounter?.id ?? null,
+            encounterDurationMs: state.currentEncounter?.durationMs ?? 0
+          })
+        : EMPTY_PLAYER_ROWS,
+    [
+      deferredCombatants,
+      includeCompanions,
+      shouldBuildHeavyAnalysis,
+      state.currentEncounter
+    ]
   );
   const hasEncounterScopedRows = useMemo(
     () =>
@@ -213,8 +231,11 @@ export function App() {
   }, [livePlayerRows.length, liveScope, state.analysis.mode, state.analysis.totalLines]);
 
   const availableEncounters = useMemo(
-    () => getEncounterSnapshots(state.recentEncounters, state.currentEncounter),
-    [state.currentEncounter, state.recentEncounters]
+    () =>
+      shouldBuildHeavyAnalysis
+        ? getEncounterSnapshots(state.recentEncounters, state.currentEncounter)
+        : [],
+    [shouldBuildHeavyAnalysis, state.currentEncounter, state.recentEncounters]
   );
 
   useEffect(() => {
