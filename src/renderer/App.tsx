@@ -1,4 +1,13 @@
-import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
+import {
+  Component,
+  startTransition,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useState,
+  type ErrorInfo,
+  type ReactNode
+} from "react";
 import type { AppState, DiscoveredLogCandidate } from "../shared/types";
 import {
   buildPlayerRows,
@@ -105,7 +114,54 @@ function toBootstrapState(snapshot: AppState): AppState {
   };
 }
 
-export function App() {
+type AppErrorBoundaryState = {
+  hasError: boolean;
+  message: string;
+};
+
+class AppErrorBoundary extends Component<{ children: ReactNode }, AppErrorBoundaryState> {
+  state: AppErrorBoundaryState = {
+    hasError: false,
+    message: ""
+  };
+
+  static getDerivedStateFromError(error: Error): AppErrorBoundaryState {
+    return {
+      hasError: true,
+      message: error.message
+    };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    void window.neverwinterApi?.logRendererError(
+      `${error.stack ?? error.message}\n${errorInfo.componentStack}`,
+      "Renderer error boundary"
+    );
+  }
+
+  render(): ReactNode {
+    if (this.state.hasError) {
+      return (
+        <div className="app-shell">
+          <main className="app-content">
+            <section className="panel panel--danger app-error-fallback">
+              <p className="eyebrow">Application Error</p>
+              <h1 className="panel-title">The app hit a renderer error.</h1>
+              <p className="panel-copy">
+                Restart the app. If the problem keeps happening, open the Debug or log folder and send the latest renderer log.
+              </p>
+              <p className="panel-copy panel-copy--mono">{this.state.message || "Unknown renderer error"}</p>
+            </section>
+          </main>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+function AppContent() {
   const [state, setState] = useState(INITIAL_STATE);
   const [view, setView] = useState<View>("setup");
   const [detailTab, setDetailTab] = useState<DetailTab>("overview");
@@ -594,5 +650,13 @@ export function App() {
       onClearAppData={() => void clearAppData()}
       onClearLogs={() => void clearLogs()}
     />
+  );
+}
+
+export function App() {
+  return (
+    <AppErrorBoundary>
+      <AppContent />
+    </AppErrorBoundary>
   );
 }

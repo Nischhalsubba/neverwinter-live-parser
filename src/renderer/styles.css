@@ -46,6 +46,58 @@ body {
   overflow: hidden;
 }
 
+.app-shell {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--oa-bg);
+}
+
+.app-content {
+  width: min(720px, calc(100vw - 48px));
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.app-error-fallback {
+  margin-top: 48px;
+  border: 1px solid rgba(212, 92, 92, 0.35);
+  background: linear-gradient(180deg, rgba(212, 92, 92, 0.08), rgba(32, 42, 56, 0.92));
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+
+.panel--danger .eyebrow,
+.app-error-fallback .eyebrow {
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f09b9b;
+}
+
+.panel-title {
+  margin: 0 0 12px;
+  font-family: "Cinzel", serif;
+  font-size: clamp(28px, 4vw, 42px);
+  line-height: 1.05;
+}
+
+.panel-copy {
+  margin: 0 0 12px;
+  color: var(--oa-text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.panel-copy--mono {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  color: var(--oa-text);
+  word-break: break-word;
+}
+
 button,
 input {
   font: inherit;

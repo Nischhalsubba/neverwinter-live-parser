@@ -949,3 +949,26 @@ Write what changed in the files and why it was done.
   - `npm run build`
   - `npm run dist:win-unpacked`
   - smoke launch of `release/win-unpacked/Neverwinter Live Parser.exe`
+
+### 2026-03-25 - Packaged runtime hardening for blank-window failures and release republish
+- Files touched:
+  - `src/main/errorLogger.ts`
+  - `src/renderer/App.tsx`
+  - `src/renderer/styles.css`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Moved packaged-app error logs away from the repo working directory and into the packaged runtime's `userData/logs` location so release builds have a stable writable place to persist renderer and main-process faults.
+  - Added a renderer error boundary around the app shell so a runtime render failure no longer degrades into a fully blank black window.
+  - Added a visible fallback panel for renderer crashes that explains the app hit a renderer error and points the user toward the collected logs instead of leaving the UI empty.
+  - Added supporting fallback styles for the packaged error panel so the recovery state remains readable and intentional in production builds.
+  - Deleted the previous `release` folder after stopping the locked packaged processes and regenerated a clean `win-unpacked` release from the fixed codebase.
+- Why:
+  - The user reported that the packaged app could open quickly but never become functional, which is an app-breaking release behavior.
+  - Packaged builds need their own reliable logging path; otherwise production-only failures are much harder to diagnose than dev failures.
+  - A black window with no explanation is an unacceptable end-user failure mode near release.
+  - The existing release artifacts needed to be discarded and rebuilt after the packaged-runtime fixes.
+- Verification:
+  - `npm test`
+  - `npm run build`
+  - deleted the previous `release` directory after stopping packaged app processes that were locking it
+  - `npm run dist:win-unpacked`

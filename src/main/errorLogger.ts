@@ -15,7 +15,9 @@ export type ErrorLogEntry = {
 
 export function getLogDirectory(): string {
   try {
-    return path.join(process.cwd(), ".logs");
+    return app.isPackaged
+      ? path.join(app.getPath("userData"), "logs")
+      : path.join(process.cwd(), ".logs");
   } catch {
     return path.join(process.cwd(), ".logs");
   }
