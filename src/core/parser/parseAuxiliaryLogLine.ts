@@ -173,6 +173,17 @@ export function applyAuxiliaryEventToSummary(
       nextActiveChannels.delete(event.details.channel);
     }
   }
+  if (
+    typeof event.details?.teamChannelType === "string" &&
+    typeof event.details?.action === "string"
+  ) {
+    const label = `${event.details.teamChannelType} team voice`;
+    if (event.details.action === "joined" || event.details.action === "connecting") {
+      nextActiveChannels.add(label);
+    } else if (event.details.action === "left" || event.details.action === "disconnecting") {
+      nextActiveChannels.delete(label);
+    }
+  }
 
   return {
     totalEvents: summary.totalEvents + 1,

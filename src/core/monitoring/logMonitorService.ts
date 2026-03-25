@@ -62,6 +62,7 @@ type RecordingRuntime = {
   totalLines: number;
   parsedEvents: number;
   lastActivityAt: number;
+  auxiliarySummary: ReturnType<typeof createInitialAuxiliarySummary>;
   encounterManager: EncounterManager;
   combatantTracker: CombatantTracker;
 };
@@ -640,6 +641,7 @@ export class LogMonitorService extends EventEmitter {
       totalLines: 0,
       parsedEvents: 0,
       lastActivityAt: now,
+      auxiliarySummary: createInitialAuxiliarySummary(),
       encounterManager: new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS),
       combatantTracker: new CombatantTracker()
     };
@@ -678,6 +680,7 @@ export class LogMonitorService extends EventEmitter {
       durationMs: Math.max(0, Date.now() - this.recordingRuntime.startedAt),
       totalLines: this.recordingRuntime.totalLines,
       parsedEvents: this.recordingRuntime.parsedEvents,
+      auxiliarySummary: structuredClone(this.recordingRuntime.auxiliarySummary),
       recentEncounters,
       topCombatants: analysis.combatants
         .filter((combatant) => combatant.type === "player" || combatant.ownerId.startsWith("P["))
@@ -787,6 +790,7 @@ export class LogMonitorService extends EventEmitter {
       durationMs: this.state.analysis.durationMs,
       totalLines: this.state.analysis.totalLines,
       parsedEvents: this.state.analysis.parsedEvents,
+      auxiliarySummary: structuredClone(this.state.debug.auxiliarySummary),
       recentEncounters: [...this.state.recentEncounters],
       topCombatants: this.state.analysis.combatants
         .filter((combatant) => combatant.type === "player" || combatant.ownerId.startsWith("P["))
@@ -840,6 +844,10 @@ export class LogMonitorService extends EventEmitter {
     );
     if (this.recordingRuntime) {
       this.recordingRuntime.lastActivityAt = event.seenAt;
+      this.recordingRuntime.auxiliarySummary = applyAuxiliaryEventToSummary(
+        this.recordingRuntime.auxiliarySummary,
+        event
+      );
       this.syncActiveRecordingState();
     }
     this.maybeStopAutomaticRecording(event);

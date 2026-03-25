@@ -827,3 +827,31 @@ Write what changed in the files and why it was done.
 - Verification:
   - `npm test`
   - `npm run build`
+
+### 2026-03-25 - Dedicated history view and readable recording archives
+- Files touched:
+  - `src/shared/types.ts`
+  - `src/core/parser/parseAuxiliaryLogLine.ts`
+  - `src/core/monitoring/logMonitorService.ts`
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added auxiliary-log summaries to saved session archives and saved recording archives so older runs retain more context than only damage numbers and file names.
+  - Updated the auxiliary summary reducer so team voice join and leave events contribute to the active-channel model, which makes dungeon-run context easier to understand later.
+  - Extended the recording runtime to track its own auxiliary summary while a run is active, then persist that summary into the finished recording archive.
+  - Extended archived live sessions to store a snapshot of the auxiliary summary that was active during that combat-log session.
+  - Reworked the old `Encounters` sidebar entry into a `History` entry, while keeping the underlying view architecture intact.
+  - Rebuilt the history page to surface:
+    - current run context
+    - active recording status
+    - saved manual and automatic recordings
+    - archived combat-log sessions
+    - summarized auxiliary signals such as channel activity and system notifications
+  - Added more readable copy so the user can understand what was recorded and why a run was captured.
+- Why:
+  - Manual recording felt like it was doing nothing because the saved output was buried and not organized as a first-class destination.
+  - The user wanted all saved combat logs and recordings in a dedicated `History` area that uses all the logs Neverwinter provides to make the archive easier to read and understand.
+  - Auxiliary context such as voice channels and system-notify events is important for explaining what was happening around a dungeon run, especially when reviewing older sessions later.
+- Verification:
+  - `npm test`
+  - `npm run build`

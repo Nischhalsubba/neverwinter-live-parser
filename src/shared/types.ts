@@ -257,6 +257,7 @@ export type SessionArchiveSnapshot = {
   durationMs: number;
   totalLines: number;
   parsedEvents: number;
+  auxiliarySummary: AuxiliaryLogSummary;
   recentEncounters: EncounterSnapshot[];
   topCombatants: SessionArchiveCombatant[];
 };

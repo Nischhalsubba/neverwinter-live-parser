@@ -3861,39 +3861,79 @@ function PlayerView({
   );
 }
 
+function summarizeAuxiliaryKinds(summary: AppState["debug"]["auxiliarySummary"]): string {
+  const parts = Object.entries(summary.countsByKind)
+    .filter(([, count]) => count > 0)
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 3)
+    .map(([kind, count]) => `${kind}: ${formatNumber(count)}`);
+
+  return parts.length ? parts.join(" | ") : "No auxiliary activity captured";
+}
+
+function summarizeSystemNotifications(summary: AppState["debug"]["auxiliarySummary"]): string {
+  return summary.recentSystemNotifications[0]?.text ?? "No recent system notifications";
+}
+
 function RecentView({ state }: { state: AppState }) {
   const activeSource = getSourceFileName(state);
   const sessionDuration = formatDuration(state.analysis.durationMs);
   const topEncounter = [...state.recentEncounters].sort((left, right) => right.totalDamage - left.totalDamage)[0] ?? null;
+  const activeChannelsLabel = state.debug.auxiliarySummary.activeChannels.length
+    ? state.debug.auxiliarySummary.activeChannels.join(", ")
+    : "No active channels";
 
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
-        <p className="oa-page-kicker">Encounter Archive</p>
-        <h1>Encounters and session history</h1>
-        <p>Review the current tracked session, older archived sessions, and every segmented fight in a simpler timeline-first layout.</p>
+        <p className="oa-page-kicker">History</p>
+        <h1>Run history and combat log archive</h1>
+        <p>Review manual recordings, automatic dungeon captures, archived combat logs, and the auxiliary signals Neverwinter emitted around those runs.</p>
       </header>
       <section className="oa-panel oa-encounters-overview">
         <div className="oa-summary-strip">
           <article className="oa-summary-pill-card">
-            <span className="oa-summary-label">Current Session</span>
+            <span className="oa-summary-label">Active Source</span>
             <strong>{activeSource}</strong>
-            <small>{state.analysis.mode === "live" ? "Active live source" : "Imported analysis source"}</small>
+            <small>{state.analysis.mode === "live" ? "Current live combat log" : "Imported analysis source"}</small>
           </article>
           <article className="oa-summary-pill-card">
-            <span className="oa-summary-label">Session Duration</span>
-            <strong>{sessionDuration}</strong>
-            <small>{formatNumber(state.analysis.totalLines)} lines processed</small>
+            <span className="oa-summary-label">Active Recording</span>
+            <strong>{state.activeRecording?.title ?? "No active recording"}</strong>
+            <small>
+              {state.activeRecording
+                ? `${formatDuration(state.activeRecording.durationMs)} | ${formatNumber(state.activeRecording.parsedEvents)} parsed`
+                : "Start one manually or let automatic instance detection begin it"}
+            </small>
           </article>
           <article className="oa-summary-pill-card">
-            <span className="oa-summary-label">Encounter Count</span>
-            <strong>{formatNumber(state.recentEncounters.length)}</strong>
-            <small>{state.recentEncounters.length ? "Bosses and mob pulls in this session" : "No encounters segmented yet"}</small>
+            <span className="oa-summary-label">Saved Recordings</span>
+            <strong>{formatNumber(state.recordingArchives.length)}</strong>
+            <small>{state.recordingArchives.length ? "Manual and automatic run captures" : "No saved recordings yet"}</small>
           </article>
           <article className="oa-summary-pill-card">
-            <span className="oa-summary-label">Largest Encounter</span>
-            <strong>{topEncounter?.label ?? "Waiting for combat"}</strong>
-            <small>{topEncounter ? `${formatShort(topEncounter.totalDamage)} total damage` : "No encounter totals yet"}</small>
+            <span className="oa-summary-label">Archived Combat Logs</span>
+            <strong>{formatNumber(state.sessionArchives.length)}</strong>
+            <small>{state.sessionArchives.length ? "Older live sessions kept for review" : "No archived sessions yet"}</small>
+          </article>
+        </div>
+      </section>
+      <section className="oa-panel">
+        <SectionHeading icon="sensors" eyebrow="Current Run Context" title="What Neverwinter is signaling right now" />
+        <div className="oa-card-grid four">
+          <StatCard label="Session Duration" value={sessionDuration} icon="schedule" hint={`${formatNumber(state.analysis.totalLines)} lines processed in the active source`} />
+          <StatCard label="Encounter Count" value={formatNumber(state.recentEncounters.length)} icon="history_edu" hint={state.recentEncounters.length ? "Bosses and mob pulls segmented from the current session" : "No encounters segmented yet"} />
+          <StatCard label="Active Channels" value={formatNumber(state.debug.auxiliarySummary.activeChannels.length)} icon="forum" hint={activeChannelsLabel} />
+          <StatCard label="Largest Encounter" value={topEncounter?.label ?? "Waiting for combat"} icon="swords" hint={topEncounter ? `${formatShort(topEncounter.totalDamage)} total damage` : "No encounter totals yet"} />
+        </div>
+        <div className="oa-card-grid two">
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Auxiliary Signal Mix</strong>
+            <p>{summarizeAuxiliaryKinds(state.debug.auxiliarySummary)}</p>
+          </article>
+          <article className="oa-mini-panel oa-session-archive-card">
+            <strong>Latest System Notification</strong>
+            <p>{summarizeSystemNotifications(state.debug.auxiliarySummary)}</p>
           </article>
         </div>
       </section>
@@ -3911,6 +3951,7 @@ function RecentView({ state }: { state: AppState }) {
                 <span>{formatDuration(recording.durationMs)}</span>
                 <span>{formatNumber(recording.parsedEvents)} parsed</span>
                 <span>{formatNumber(recording.recentEncounters.length)} encounters</span>
+                <span>{summarizeAuxiliaryKinds(recording.auxiliarySummary)}</span>
                 <span>
                   {recording.topCombatants[0]
                     ? `${recording.topCombatants[0].displayName}: ${formatShort(recording.topCombatants[0].totalDamage)}`
@@ -3936,6 +3977,7 @@ function RecentView({ state }: { state: AppState }) {
               <div className="oa-mini-metrics">
                 <span>{formatNumber(session.totalLines)} lines</span>
                 <span>{formatNumber(session.parsedEvents)} parsed</span>
+                <span>{summarizeAuxiliaryKinds(session.auxiliarySummary)}</span>
                 <span>{session.topCombatants[0] ? `${session.topCombatants[0].displayName}: ${formatShort(session.topCombatants[0].totalDamage)}` : "No combatants"}</span>
               </div>
             </article>
@@ -4674,7 +4716,7 @@ export function ObsidianScreens(props: ShellProps) {
   } as CSSProperties;
 
   const navItems: Array<{ id: View; label: string; icon: string }> = [
-    { id: "recent", label: "Encounters", icon: "history_edu" },
+    { id: "recent", label: "History", icon: "history_edu" },
     { id: "library", label: "Library", icon: "menu_book" },
     { id: "debug", label: "Debug", icon: "bug_report" },
     { id: "settings", label: "Settings", icon: "settings" }
