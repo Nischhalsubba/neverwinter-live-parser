@@ -18,6 +18,10 @@ const api = {
     ipcRenderer.invoke("monitoring:importFile", filePath) as Promise<AppState>,
   stopMonitoring: () =>
     ipcRenderer.invoke("monitoring:stop") as Promise<AppState>,
+  startManualRecording: () =>
+    ipcRenderer.invoke("monitoring:startManualRecording") as Promise<AppState>,
+  stopActiveRecording: () =>
+    ipcRenderer.invoke("monitoring:stopActiveRecording") as Promise<AppState>,
   getBootstrapState: () =>
     ipcRenderer.invoke("monitoring:getBootstrapState") as Promise<AppState>,
   getState: () => ipcRenderer.invoke("monitoring:getState") as Promise<AppState>,

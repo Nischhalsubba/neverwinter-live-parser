@@ -11,6 +11,8 @@ import type {
   CombatEvent,
   MonitoringConfig,
   ParseIssue,
+  RecordingArchiveSnapshot,
+  RecordingMode,
   SessionArchiveSnapshot
 } from "../../shared/types.js";
 import { createInitialAuxiliarySummary } from "../../shared/auxiliaryLogs.js";
@@ -35,12 +37,104 @@ const MAX_DEBUG_ITEMS = 50;
 const MAX_AUXILIARY_EVENTS = 120;
 const MIN_EMIT_INTERVAL_MS = 100;
 const IMPORT_WORKER_MIN_BYTES = 8 * 1024 * 1024;
+const AUTO_RECORDING_IDLE_TIMEOUT_MS = 3 * 60 * 1000;
 const IMPORT_WORKER_URL = new URL(
   path.extname(fileURLToPath(import.meta.url)) === ".ts"
     ? "./importWorker.ts"
     : "./importWorker.js",
   import.meta.url
 );
+
+const INSTANCE_NAME_BY_PREFIX: Record<string, string> = {
+  M31_Trial: "The Crown of Keldegonn"
+};
+
+type RecordingRuntime = {
+  id: string;
+  mode: RecordingMode;
+  title: string;
+  instanceKind: string | null;
+  instanceName: string | null;
+  bossName: string | null;
+  startedAt: number;
+  sourcePath: string | null;
+  activeLogFile: string | null;
+  totalLines: number;
+  parsedEvents: number;
+  lastActivityAt: number;
+  encounterManager: EncounterManager;
+  combatantTracker: CombatantTracker;
+};
+
+function humanizeIdentifier(value: string): string {
+  return value
+    .replace(/^M\d+_/, "")
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (match) => match.toUpperCase());
+}
+
+function extractInstancePrefix(code: string): string {
+  const parts = code.split("_");
+  return parts.length >= 2 ? `${parts[0]}_${parts[1]}` : code;
+}
+
+function inferInstanceContextFromEvent(event: CombatEvent): {
+  instanceKind: string | null;
+  instanceName: string | null;
+  bossName: string | null;
+} | null {
+  const refs = [
+    { ref: event.sourceId, name: event.sourceName },
+    { ref: event.targetId, name: event.targetName }
+  ];
+
+  for (const entry of refs) {
+    const ref = entry.ref ?? "";
+    const match = ref.match(/\b(M\d+_(?:Trial|Instance|Dungeon|Skirmish|Arena)(?:_[A-Za-z]+)*)\b/i);
+    if (!match) {
+      continue;
+    }
+
+    const code = match[1];
+    const prefix = extractInstancePrefix(code);
+    const instanceName = INSTANCE_NAME_BY_PREFIX[prefix] ?? humanizeIdentifier(prefix);
+    const lowerCode = code.toLowerCase();
+    const instanceKind =
+      lowerCode.includes("_trial") ? "trial" :
+      lowerCode.includes("_dungeon") ? "dungeon" :
+      lowerCode.includes("_skirmish") ? "skirmish" :
+      lowerCode.includes("_arena") ? "arena" :
+      lowerCode.includes("_instance") ? "instance" :
+      "instance";
+    const bossName =
+      lowerCode.includes("_boss") && entry.name
+        ? entry.name
+        : null;
+
+    return {
+      instanceKind,
+      instanceName,
+      bossName
+    };
+  }
+
+  return null;
+}
+
+function buildRecordingTitle(runtime: RecordingRuntime): string {
+  if (runtime.instanceName && runtime.bossName) {
+    return `${runtime.instanceName} • ${runtime.bossName}`;
+  }
+  if (runtime.instanceName) {
+    return runtime.instanceName;
+  }
+  if (runtime.bossName) {
+    return runtime.bossName;
+  }
+  return runtime.mode === "manual" ? "Manual live recording" : "Automatic dungeon recording";
+}
 
 function createInitialAppState(): AppState {
   return {
@@ -52,6 +146,8 @@ function createInitialAppState(): AppState {
     currentEncounter: null,
     recentEncounters: [],
     sessionArchives: [],
+    activeRecording: null,
+    recordingArchives: [],
     analysis: {
       mode: "idle",
       sourcePath: null,
@@ -89,6 +185,7 @@ export class LogMonitorService extends EventEmitter {
   private auxiliaryReaderStates = new Map<string, ReaderState>();
   private encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
   private combatantTracker = new CombatantTracker();
+  private recordingRuntime: RecordingRuntime | null = null;
   private flushTimer: NodeJS.Timeout | null = null;
   private liveTrackingFilePath: string | null = null;
   private lastEmittedAt = 0;
@@ -97,6 +194,27 @@ export class LogMonitorService extends EventEmitter {
 
   getState(): AppState {
     return structuredClone(this.state);
+  }
+
+  async startManualRecording(): Promise<AppState> {
+    if (this.state.watcherStatus !== "watching" || this.state.analysis.mode !== "live") {
+      throw new Error("Manual recording requires an active live combat-log session.");
+    }
+    if (this.recordingRuntime) {
+      throw new Error("A recording is already active.");
+    }
+
+    this.startRecordingRuntime("manual", {
+      title: "Manual live recording"
+    });
+    this.scheduleEmitState(true);
+    return this.getState();
+  }
+
+  async stopActiveRecording(): Promise<AppState> {
+    this.finishRecordingRuntime();
+    this.scheduleEmitState(true);
+    return this.getState();
   }
 
   async start(config: MonitoringConfig): Promise<AppState> {
@@ -125,6 +243,7 @@ export class LogMonitorService extends EventEmitter {
     this.auxiliaryReaderStates = new Map();
     this.encounterManager = new EncounterManager(config.inactivityTimeoutMs);
     this.combatantTracker = new CombatantTracker();
+    this.recordingRuntime = null;
     this.liveTrackingFilePath = targetFilePath;
 
     const activeFile = targetFilePath
@@ -181,6 +300,20 @@ export class LogMonitorService extends EventEmitter {
         this.syncEncounterState();
         this.scheduleEmitState();
       }
+      if (this.recordingRuntime) {
+        if (this.recordingRuntime.encounterManager.flush()) {
+          this.syncActiveRecordingState();
+          this.scheduleEmitState();
+        }
+        if (
+          this.recordingRuntime.mode === "automatic" &&
+          Date.now() - this.recordingRuntime.lastActivityAt >= AUTO_RECORDING_IDLE_TIMEOUT_MS &&
+          !this.recordingRuntime.encounterManager.getCurrentSnapshot()
+        ) {
+          this.finishRecordingRuntime();
+          this.scheduleEmitState(true);
+        }
+      }
     }, this.pollIntervalMs);
 
     await refresh();
@@ -216,6 +349,7 @@ export class LogMonitorService extends EventEmitter {
     this.encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
     this.combatantTracker = new CombatantTracker();
     this.auxiliaryReaderStates = new Map();
+    this.recordingRuntime = null;
     this.liveTrackingFilePath = null;
 
     await this.consumeImportedFile(filePath);
@@ -250,6 +384,7 @@ export class LogMonitorService extends EventEmitter {
     if (this.encounterManager.flush()) {
       this.syncEncounterState();
     }
+    this.finishRecordingRuntime();
     this.state.sessionArchives = this.archiveCurrentSession(this.state.sessionArchives);
     this.state.watcherStatus = "idle";
     this.liveTrackingFilePath = null;
@@ -264,6 +399,7 @@ export class LogMonitorService extends EventEmitter {
     this.auxiliaryReaderStates = new Map();
     this.encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
     this.combatantTracker = new CombatantTracker();
+    this.finishRecordingRuntime();
     this.state = {
       ...createInitialAppState(),
       watcherStatus: "watching",
@@ -443,6 +579,27 @@ export class LogMonitorService extends EventEmitter {
   private consumeEvent(event: CombatEvent): void {
     this.encounterManager.consume(event);
     this.combatantTracker.consume(event, this.encounterManager.getCurrentEncounterId());
+    if (this.recordingRuntime) {
+      this.recordingRuntime.parsedEvents += 1;
+      this.recordingRuntime.encounterManager.consume(event);
+      this.recordingRuntime.combatantTracker.consume(
+        event,
+        this.recordingRuntime.encounterManager.getCurrentEncounterId()
+      );
+      this.updateRecordingContextFromEvent(event);
+    } else {
+      const inferred = inferInstanceContextFromEvent(event);
+      if (inferred && this.state.watcherStatus === "watching") {
+        const recording = this.startRecordingRuntime("automatic", inferred);
+        recording.parsedEvents += 1;
+        recording.encounterManager.consume(event);
+        recording.combatantTracker.consume(
+          event,
+          recording.encounterManager.getCurrentEncounterId()
+        );
+        this.updateRecordingContextFromEvent(event);
+      }
+    }
   }
 
   private syncEncounterState(): void {
@@ -458,6 +615,157 @@ export class LogMonitorService extends EventEmitter {
       this.state.analysis.sourcePath,
       encounterSnapshots
     );
+  }
+
+  private startRecordingRuntime(
+    mode: RecordingMode,
+    options?: {
+      title?: string;
+      instanceKind?: string | null;
+      instanceName?: string | null;
+      bossName?: string | null;
+    }
+  ): RecordingRuntime {
+    const now = Date.now();
+    this.recordingRuntime = {
+      id: `recording-${now}-${Math.random().toString(36).slice(2, 8)}`,
+      mode,
+      title: options?.title ?? (mode === "manual" ? "Manual live recording" : "Automatic dungeon recording"),
+      instanceKind: options?.instanceKind ?? null,
+      instanceName: options?.instanceName ?? null,
+      bossName: options?.bossName ?? null,
+      startedAt: now,
+      sourcePath: this.state.analysis.sourcePath,
+      activeLogFile: this.state.activeLogFile,
+      totalLines: 0,
+      parsedEvents: 0,
+      lastActivityAt: now,
+      encounterManager: new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS),
+      combatantTracker: new CombatantTracker()
+    };
+    this.syncActiveRecordingState();
+    return this.recordingRuntime;
+  }
+
+  private syncActiveRecordingState(): void {
+    if (!this.recordingRuntime) {
+      this.state.activeRecording = null;
+      return;
+    }
+
+    const currentEncounter = this.recordingRuntime.encounterManager.getCurrentSnapshot();
+    const recentEncounters = this.recordingRuntime.encounterManager.getCompleted();
+    const encounterSnapshots = currentEncounter
+      ? [...recentEncounters, currentEncounter]
+      : recentEncounters;
+    const analysis = this.recordingRuntime.combatantTracker.snapshot(
+      "live",
+      this.recordingRuntime.sourcePath,
+      encounterSnapshots
+    );
+
+    const snapshot: RecordingArchiveSnapshot = {
+      id: this.recordingRuntime.id,
+      mode: this.recordingRuntime.mode,
+      title: buildRecordingTitle(this.recordingRuntime),
+      instanceKind: this.recordingRuntime.instanceKind,
+      instanceName: this.recordingRuntime.instanceName,
+      bossName: this.recordingRuntime.bossName,
+      sourcePath: this.recordingRuntime.sourcePath,
+      activeLogFile: this.recordingRuntime.activeLogFile,
+      startedAt: this.recordingRuntime.startedAt,
+      endedAt: undefined,
+      durationMs: Math.max(0, Date.now() - this.recordingRuntime.startedAt),
+      totalLines: this.recordingRuntime.totalLines,
+      parsedEvents: this.recordingRuntime.parsedEvents,
+      recentEncounters,
+      topCombatants: analysis.combatants
+        .filter((combatant) => combatant.type === "player" || combatant.ownerId.startsWith("P["))
+        .sort((left, right) => right.totalDamage - left.totalDamage)
+        .slice(0, 12)
+        .map((combatant) => ({
+          id: combatant.id,
+          displayName: combatant.displayName,
+          totalDamage: combatant.totalDamage,
+          totalHealing: combatant.totalHealing,
+          damageTaken: combatant.damageTaken,
+          hits: combatant.hits
+        }))
+    };
+
+    this.state.activeRecording = snapshot;
+  }
+
+  private finishRecordingRuntime(): void {
+    if (!this.recordingRuntime) {
+      this.state.activeRecording = null;
+      return;
+    }
+
+    this.syncActiveRecordingState();
+    if (this.state.activeRecording) {
+      const finished: RecordingArchiveSnapshot = {
+        ...this.state.activeRecording,
+        endedAt: Date.now(),
+        durationMs: Math.max(0, Date.now() - (this.state.activeRecording.startedAt ?? Date.now()))
+      };
+      this.state.recordingArchives = [finished, ...this.state.recordingArchives].slice(0, 30);
+    }
+
+    this.recordingRuntime = null;
+    this.state.activeRecording = null;
+  }
+
+  private maybeStartAutomaticRecording(event: AuxiliaryLogEvent): void {
+    if (this.recordingRuntime || this.state.watcherStatus !== "watching") {
+      return;
+    }
+
+    if (
+      event.kind === "voicechat" &&
+      event.details?.action === "joined" &&
+      typeof event.details.teamChannelType === "string"
+    ) {
+      const instanceName = `${event.details.teamChannelType} team run`;
+      this.startRecordingRuntime("automatic", {
+        instanceKind: String(event.details.teamChannelType).toLowerCase(),
+        instanceName,
+        title: instanceName
+      });
+    }
+  }
+
+  private maybeStopAutomaticRecording(event: AuxiliaryLogEvent): void {
+    if (!this.recordingRuntime || this.recordingRuntime.mode !== "automatic") {
+      return;
+    }
+
+    if (event.kind === "voicechat" && event.details?.action === "left") {
+      this.finishRecordingRuntime();
+    }
+  }
+
+  private updateRecordingContextFromEvent(event: CombatEvent): void {
+    if (!this.recordingRuntime) {
+      return;
+    }
+
+    this.recordingRuntime.lastActivityAt = event.timestamp;
+    const inferred = inferInstanceContextFromEvent(event);
+    if (inferred) {
+      this.recordingRuntime.instanceKind ??= inferred.instanceKind;
+      this.recordingRuntime.instanceName ??= inferred.instanceName;
+      this.recordingRuntime.bossName ??= inferred.bossName;
+      this.recordingRuntime.title = buildRecordingTitle(this.recordingRuntime);
+      if (
+        this.recordingRuntime.mode === "automatic" &&
+        !this.recordingRuntime.instanceName &&
+        (inferred.instanceName || inferred.bossName)
+      ) {
+        this.recordingRuntime.instanceName = inferred.instanceName;
+        this.recordingRuntime.bossName = inferred.bossName;
+      }
+    }
   }
 
   private archiveCurrentSession(existing: SessionArchiveSnapshot[]): SessionArchiveSnapshot[] {
@@ -521,6 +829,7 @@ export class LogMonitorService extends EventEmitter {
   }
 
   private pushAuxiliaryEvent(event: AuxiliaryLogEvent): void {
+    this.maybeStartAutomaticRecording(event);
     this.state.debug.auxiliaryEvents = [
       event,
       ...this.state.debug.auxiliaryEvents
@@ -529,6 +838,12 @@ export class LogMonitorService extends EventEmitter {
       this.state.debug.auxiliarySummary,
       event
     );
+    if (this.recordingRuntime) {
+      this.recordingRuntime.lastActivityAt = event.seenAt;
+      this.syncActiveRecordingState();
+    }
+    this.maybeStopAutomaticRecording(event);
+    this.scheduleEmitState();
   }
 
   private pushIssue(reason: string): void {
@@ -574,6 +889,9 @@ export class LogMonitorService extends EventEmitter {
   private consumeLines(lines: string[], syncAnalysis = true): void {
     for (const line of lines) {
       this.combatantTracker.registerLine();
+      if (this.recordingRuntime) {
+        this.recordingRuntime.totalLines += 1;
+      }
       const parsed = parseLine(line);
       if (parsed.kind === "event") {
         this.consumeEvent(parsed.event);
@@ -586,6 +904,9 @@ export class LogMonitorService extends EventEmitter {
 
     if (syncAnalysis) {
       this.syncEncounterState();
+      if (this.recordingRuntime) {
+        this.syncActiveRecordingState();
+      }
     }
   }
 }

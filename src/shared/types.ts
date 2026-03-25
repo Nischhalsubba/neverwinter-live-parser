@@ -232,6 +232,8 @@ export type AppState = {
   currentEncounter: EncounterSnapshot | null;
   recentEncounters: EncounterSnapshot[];
   sessionArchives: SessionArchiveSnapshot[];
+  activeRecording: RecordingArchiveSnapshot | null;
+  recordingArchives: RecordingArchiveSnapshot[];
   analysis: AnalysisSnapshot;
   debug: DebugState;
   system: SystemUsageSnapshot;
@@ -257,6 +259,16 @@ export type SessionArchiveSnapshot = {
   parsedEvents: number;
   recentEncounters: EncounterSnapshot[];
   topCombatants: SessionArchiveCombatant[];
+};
+
+export type RecordingMode = "manual" | "automatic";
+
+export type RecordingArchiveSnapshot = SessionArchiveSnapshot & {
+  mode: RecordingMode;
+  title: string;
+  instanceKind: string | null;
+  instanceName: string | null;
+  bossName: string | null;
 };
 
 export type MonitoringConfig = {

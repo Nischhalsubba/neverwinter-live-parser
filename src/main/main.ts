@@ -396,6 +396,12 @@ ipcMain.handle("monitoring:importFile", async (_event, filePath: string) =>
   withTelemetry(await monitor.importLogFile(filePath))
 );
 ipcMain.handle("monitoring:stop", async () => withTelemetry(await monitor.stop()));
+ipcMain.handle("monitoring:startManualRecording", async () =>
+  withTelemetry(await monitor.startManualRecording())
+);
+ipcMain.handle("monitoring:stopActiveRecording", async () =>
+  withTelemetry(await monitor.stopActiveRecording())
+);
 ipcMain.handle("monitoring:getState", async () => {
   const state = monitor.getState();
   const savedFolder = (await readSettings()).selectedLogFolder;

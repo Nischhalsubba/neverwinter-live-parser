@@ -25,6 +25,8 @@ function createInitialAppState(filePath: string): AppState {
     currentEncounter: null,
     recentEncounters: [],
     sessionArchives: [],
+    activeRecording: null,
+    recordingArchives: [],
     analysis: {
       mode: "imported",
       sourcePath: filePath,

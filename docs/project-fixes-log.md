@@ -765,3 +765,65 @@ Write what changed in the files and why it was done.
 - Verification:
   - `npm test`
   - `npm run build`
+
+### 2026-03-25 - Live combat table refresh action and segmented role filters
+- Files touched:
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `src/renderer/styles.css`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added a dedicated `Refresh Table` button to the `Live combat table` toolbar.
+  - Wired the refresh action to reset the live table back to its default view by clearing:
+    - search query
+    - role filter
+    - custom sort state
+  - Added a visible refresh status note so the user can tell whether the table is showing a reset/default view or when it was last reset.
+  - Replaced the loose role-filter chip row with a segmented control for:
+    - all players
+    - damage
+    - healing
+    - damage taken
+    - support
+  - Added responsive styles for the new toolbar and segmented control so the controls stack cleanly on narrower widths.
+- Why:
+  - The live table needed an explicit recovery action so the user can quickly get back to a clean default state without manually clearing search and filters.
+  - The old role buttons looked like generic chips and did not communicate that they were primary table-view controls.
+- Verification:
+  - `npm test`
+  - `npm run build`
+
+### 2026-03-25 - Manual run recording and automatic dungeon recording foundations
+- Files touched:
+  - `src/shared/types.ts`
+  - `src/core/parser/parseAuxiliaryLogLine.ts`
+  - `src/core/monitoring/logMonitorService.ts`
+  - `src/core/monitoring/importWorker.ts`
+  - `src/main/main.ts`
+  - `src/main/preload.ts`
+  - `src/renderer/globals.d.ts`
+  - `src/renderer/App.tsx`
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added recording-specific state to the shared app model so the app can preserve manual and automatic run captures separately from the broader live session history.
+  - Added a recording shape that stores the mode, inferred instance metadata, boss focus, segmented encounters, and top combatants for each saved run.
+  - Added structured team voice join and leave details in the auxiliary-log parser so automatic recording can react to stronger dungeon-run signals than combat alone.
+  - Added monitor-service recording runtime support for:
+    - manual recording start and stop
+    - automatic recording start from detected instance or team-run signals
+    - automatic recording stop after leave signals or enough post-run idle time
+    - live recording snapshots while the run is active
+    - archived recording history after the run ends
+  - Added IPC and preload bridge methods for starting and stopping manual recordings from the renderer.
+  - Added live-view controls for:
+    - `Record New Live Data`
+    - `Stop Recording`
+  - Added live-view recording status cards so the user can see whether a run is being recorded, which instance it belongs to, how many parsed events it contains, and how many segmented encounters were captured.
+  - Added a recordings section to the encounters/history page so saved manual and automatic runs can be reviewed after the active live session moves on.
+- Why:
+  - The user needed a clean manual feature that records only after they explicitly press a button, instead of mixing earlier combat into the saved run.
+  - The user also needed an automatic mode that follows dungeon or trial boundaries better than simple in-combat vs out-of-combat timing.
+  - Recording history needed to persist so valuable runs do not disappear when the active combat log rolls over.
+- Verification:
+  - `npm test`
+  - `npm run build`

@@ -83,6 +83,8 @@ type ShellProps = {
   onStartMonitoringFromFile: () => void;
   onImportLogFile: () => void;
   onStopMonitoring: () => void;
+  onStartManualRecording: () => void;
+  onStopActiveRecording: () => void;
   onToggleCompanions: () => void;
   onSelectPlayer: (playerId: string) => void;
   onSelectEncounter: (encounterId: string) => void;
@@ -2083,6 +2085,7 @@ function LiveOverviewView({
   const [roleFilter, setRoleFilter] = useState<"all" | "damage" | "healing" | "tank" | "support">("all");
   const [sortKey, setSortKey] = useState<"damage" | "healing" | "taken" | "dps" | "hits" | "name">("damage");
   const [sortDirection, setSortDirection] = useState<"desc" | "asc">("desc");
+  const [tableRefreshStamp, setTableRefreshStamp] = useState<number | null>(null);
   const current = props.liveScope === "encounter" ? state.currentEncounter : null;
   const liveDurationMs =
     props.liveScope === "encounter"
@@ -2146,6 +2149,7 @@ function LiveOverviewView({
   const totalDeaths = comparePool.reduce((sum, player) => sum + player.deaths, 0);
   const encounterCount = props.availableEncounters.length;
   const topDamagePlayer = comparePool[0] ?? null;
+  const recordingStatus = state.activeRecording;
   const sessionFileName = getSourceFileName(state);
   const selectedEncounterIndex = props.availableEncounters.findIndex((entry) => entry.id === props.selectedLiveEncounterId);
   const scopeDescription =
@@ -2185,6 +2189,14 @@ function LiveOverviewView({
     return sortDirection === "desc" ? "south" : "north";
   }
 
+  function refreshLiveTableView() {
+    setRoleFilter("all");
+    setSortKey("damage");
+    setSortDirection("desc");
+    onSearchChange("");
+    setTableRefreshStamp(Date.now());
+  }
+
   return (
     <section className="oa-screen">
       <header className="oa-screen-topline">
@@ -2205,6 +2217,26 @@ function LiveOverviewView({
           <p className="oa-page-kicker">{liveScopeLabel}</p>
         </div>
         <div className="oa-toolbar">
+          {recordingStatus ? (
+            <button
+              className="oa-button secondary"
+              onClick={props.onStopActiveRecording}
+              title="Stop the active recording and save it into recording history."
+            >
+              <Icon name="stop_circle" />
+              Stop Recording
+            </button>
+          ) : (
+            <button
+              className="oa-button tertiary"
+              onClick={props.onStartManualRecording}
+              disabled={state.watcherStatus !== "watching" || state.analysis.mode !== "live"}
+              title="Start a new manual recording. Only combat after pressing this button will be stored in that recording."
+            >
+              <Icon name="fiber_manual_record" />
+              Record New Live Data
+            </button>
+          )}
           <button className="oa-switch-card" onClick={props.onToggleCompanions} title="Turn companion damage on or off in the player totals.">
             <span>Split Pets <InlineHelp text="Turn companion damage on or off in the player totals." /></span>
             <div className={`oa-switch ${props.includeCompanions ? "is-on" : ""}`}>
@@ -2265,8 +2297,53 @@ function LiveOverviewView({
             <strong>{formatNumber(encounterCount)}</strong>
             <small>{encounterCount ? "Completed or active fights in this session" : "No segmented encounters yet"}</small>
           </article>
+          <article className="oa-summary-pill-card">
+            <span className="oa-summary-label">Recording State</span>
+            <strong>{recordingStatus ? recordingStatus.title : "Ready to record"}</strong>
+            <small>
+              {recordingStatus
+                ? `${recordingStatus.mode === "manual" ? "Manual" : "Automatic"} | ${formatDuration(recordingStatus.durationMs)} | ${formatNumber(recordingStatus.parsedEvents)} parsed events`
+                : "Manual recordings begin only after you press Record New Live Data. Automatic recordings begin when the parser detects an instance run."}
+            </small>
+          </article>
         </div>
       </section>
+      {recordingStatus ? (
+        <section className="oa-panel">
+          <SectionHeading
+            icon="radio_button_checked"
+            eyebrow={recordingStatus.mode === "manual" ? "Manual Recording" : "Automatic Recording"}
+            title={recordingStatus.title}
+            actions={<span className="oa-pill">{formatDuration(recordingStatus.durationMs)}</span>}
+          />
+          <div className="oa-card-grid four">
+            <StatCard
+              label="Instance"
+              value={recordingStatus.instanceName ?? "Detecting instance"}
+              icon="map"
+              hint="resolved from auxiliary and combat logs"
+            />
+            <StatCard
+              label="Boss Focus"
+              value={recordingStatus.bossName ?? "Tracking targets"}
+              icon="swords"
+              hint="latest boss-like hostile detected in this run"
+            />
+            <StatCard
+              label="Parsed Events"
+              value={formatNumber(recordingStatus.parsedEvents)}
+              icon="monitoring"
+              hint={`${formatNumber(recordingStatus.totalLines)} raw lines captured since this recording started`}
+            />
+            <StatCard
+              label="Run Encounters"
+              value={formatNumber(recordingStatus.recentEncounters.length)}
+              icon="history_edu"
+              hint="segmented pulls or bosses inside this recording"
+            />
+          </div>
+        </section>
+      ) : null}
 
       <div className="oa-focus-bar">
         <span className="oa-focus-label"><Icon name="pageview" className="oa-inline-icon" /> Viewing:</span>
@@ -2370,7 +2447,7 @@ function LiveOverviewView({
                 }))
               : focusedTargetSummary?.contributors.slice(0, 10).map((row) => ({
                   label: row.name,
-                  supporting: `${formatNumber(row.hits)} hits • ${formatPercent(row.critCount / Math.max(1, row.hits))} crit`,
+                  supporting: `${formatNumber(row.hits)} hits | ${formatPercent(row.critCount / Math.max(1, row.hits))} crit`,
                   metric: formatShort(row.totalDamage)
                 })) ?? []
             ).map((row) => (
@@ -2423,14 +2500,25 @@ function LiveOverviewView({
           eyebrow="Party Contribution"
           title={compareMode === "active" ? "Compared players only" : "Live combat table"}
           actions={
-            <div className="oa-search">
-              <Icon name="search" className="oa-inline-icon" />
-              <input value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search players, powers, targets, logs..." />
+            <div className="oa-table-toolbar">
+              <button
+                className="oa-button secondary oa-refresh-table-button"
+                onClick={refreshLiveTableView}
+                title="Reset the live table filters, sorting, and search to the default view."
+              >
+                <Icon name="refresh" />
+                Refresh Table
+              </button>
+              <div className="oa-search">
+                <Icon name="search" className="oa-inline-icon" />
+                <input value={searchQuery} onChange={(event) => onSearchChange(event.target.value)} placeholder="Search players, powers, targets, logs..." />
+              </div>
             </div>
           }
         />
         <div className="oa-table-shell">
-          <div className="oa-chip-row" style={{ marginBottom: 16 }}>
+          <div className="oa-table-filter-row">
+            <div className="oa-segmented-control" role="tablist" aria-label="Live combat table role filters">
             {[
               { id: "all", label: "All Players" },
               { id: "damage", label: "Damage" },
@@ -2440,12 +2528,18 @@ function LiveOverviewView({
             ].map((option) => (
               <button
                 key={option.id}
-                className={`oa-chip ${roleFilter === option.id ? "active" : ""}`}
+                className={`oa-segmented-option ${roleFilter === option.id ? "active" : ""}`}
                 onClick={() => setRoleFilter(option.id as typeof roleFilter)}
+                role="tab"
+                aria-selected={roleFilter === option.id}
               >
                 {option.label}
               </button>
             ))}
+            </div>
+            <span className="oa-table-refresh-note">
+              {tableRefreshStamp ? `Reset ${new Date(tableRefreshStamp).toLocaleTimeString()}` : "Showing the current live table view"}
+            </span>
           </div>
           <div className="oa-table-head party">
             <span>#</span>
@@ -3801,6 +3895,35 @@ function RecentView({ state }: { state: AppState }) {
             <strong>{topEncounter?.label ?? "Waiting for combat"}</strong>
             <small>{topEncounter ? `${formatShort(topEncounter.totalDamage)} total damage` : "No encounter totals yet"}</small>
           </article>
+        </div>
+      </section>
+      <section className="oa-panel">
+        <SectionHeading icon="video_library" eyebrow="Run Recordings" title="Saved manual and automatic recordings" />
+        <div className="oa-card-grid">
+          {state.recordingArchives.map((recording) => (
+            <article className="oa-mini-panel oa-session-archive-card" key={recording.id}>
+              <strong>{recording.title}</strong>
+              <p>
+                {recording.mode === "manual" ? "Manual recording" : "Automatic recording"} |{" "}
+                {recording.instanceName ?? "Unresolved instance"}
+              </p>
+              <div className="oa-mini-metrics">
+                <span>{formatDuration(recording.durationMs)}</span>
+                <span>{formatNumber(recording.parsedEvents)} parsed</span>
+                <span>{formatNumber(recording.recentEncounters.length)} encounters</span>
+                <span>
+                  {recording.topCombatants[0]
+                    ? `${recording.topCombatants[0].displayName}: ${formatShort(recording.topCombatants[0].totalDamage)}`
+                    : "No combatants"}
+                </span>
+              </div>
+            </article>
+          ))}
+          {!state.recordingArchives.length ? (
+            <div className="oa-empty-state">
+              No saved recordings yet. Manual recordings begin only after you press <strong>Record New Live Data</strong>. Automatic recordings begin when the parser detects an instance run from the auxiliary and combat logs.
+            </div>
+          ) : null}
         </div>
       </section>
       <section className="oa-panel">

@@ -19,6 +19,7 @@ const FILE_KIND_PATTERNS: Array<{ pattern: RegExp; kind: AuxiliaryLogKind }> = [
 
 const CHANNEL_STATE_PATTERN =
   /^\[System Notify\]\s+(Joined|Left)\s+channel\s+"([^"]+)"\./i;
+const TEAM_CHANNEL_PATTERN = /TEAMID_([A-Za-z]+)(\d+)/i;
 
 function categorizeLine(kind: AuxiliaryLogKind, line: string): AuxiliaryLogEvent["category"] {
   const lowered = line.toLowerCase();
@@ -55,6 +56,13 @@ function buildEventTitle(
   if (channelMatch) {
     return `${channelMatch[1]} channel`;
   }
+  const teamChannelMatch = line.match(TEAM_CHANNEL_PATTERN);
+  if (teamChannelMatch && /Channel Join Request/i.test(line)) {
+    return `Joined ${teamChannelMatch[1]} team voice`;
+  }
+  if (teamChannelMatch && /Channel Leave Request/i.test(line)) {
+    return `Left ${teamChannelMatch[1]} team voice`;
+  }
   if (category === "error") {
     return "System error";
   }
@@ -88,6 +96,27 @@ function buildEventDetails(
     return {
       action: channelMatch[1].toLowerCase(),
       channel: channelMatch[2]
+    };
+  }
+
+  const teamChannelMatch = line.match(TEAM_CHANNEL_PATTERN);
+  if (teamChannelMatch) {
+    let action = "observed";
+    if (/Channel Join Request/i.test(line)) {
+      action = "joined";
+    } else if (/Channel Leave Request/i.test(line)) {
+      action = "left";
+    } else if (/Session requesting connect/i.test(line)) {
+      action = "connecting";
+    } else if (/Session requesting disconnect/i.test(line)) {
+      action = "disconnecting";
+    }
+
+    return {
+      action,
+      teamChannelType: teamChannelMatch[1],
+      teamChannelId: teamChannelMatch[2],
+      source: kind
     };
   }
 

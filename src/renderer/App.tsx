@@ -24,6 +24,8 @@ const INITIAL_STATE: AppState = {
   currentEncounter: null,
   recentEncounters: [],
   sessionArchives: [],
+  activeRecording: null,
+  recordingArchives: [],
   analysis: {
     mode: "idle",
     sourcePath: null,
@@ -457,6 +459,26 @@ export function App() {
     setView("setup");
   }
 
+  async function startManualRecording() {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const snapshot = await api.startManualRecording();
+    setState(snapshot);
+  }
+
+  async function stopActiveRecording() {
+    const api = window.neverwinterApi;
+    if (!api) {
+      return;
+    }
+
+    const snapshot = await api.stopActiveRecording();
+    setState(snapshot);
+  }
+
   async function clearRendererCache() {
     window.localStorage.removeItem(SETTINGS_STORAGE_KEY);
     window.localStorage.removeItem(SETUP_HELP_STORAGE_KEY);
@@ -538,6 +560,8 @@ export function App() {
       onStartMonitoringFromFile={() => void startMonitoringFromFile()}
       onImportLogFile={() => void importLogFile()}
       onStopMonitoring={() => void stopMonitoring()}
+      onStartManualRecording={() => void startManualRecording()}
+      onStopActiveRecording={() => void stopActiveRecording()}
       onToggleCompanions={() => setIncludeCompanions((value) => !value)}
       onSelectPlayer={(playerId) => {
         setSelectedPlayerId(playerId);
