@@ -163,3 +163,37 @@ ReferenceError: Cannot access 'availableEncounters' before initialization
     at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
     at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
 
+[2026-03-25T06:23:06.838Z] Renderer window error
+Uncaught DataCloneError: Failed to execute 'measure' on 'Performance': Data cannot be cloned, out of memory.
+http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:3180:623
+DataCloneError: Failed to execute 'measure' on 'Performance': Data cannot be cloned, out of memory.
+    at logComponentRender (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:3180:623)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11024:131)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11008:13)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11031:13)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11008:13)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11199:13)
+    at recursivelyTraversePassiveMountEffects (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11008:13)
+    at commitPassiveMountOnFiber (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11064:13)
+    at flushPassiveEffects (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13148:11)
+    at http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12774:13
+
+[2026-03-25T06:23:06.843Z] Renderer window error
+Uncaught Error: Should not already be working.
+http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11706:11
+Error: Should not already be working.
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11706:17)
+    at performSyncWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13515:9)
+    at flushSyncWorkAcrossRoots_impl (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13412:122)
+    at processRootScheduleInMicrotask (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13435:106)
+    at processRootScheduleInImmediateTask (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13421:9)
+    at MessagePort.performWorkUntilDeadline (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:34:50)
+
+[2026-03-25T06:23:06.942Z] Renderer window error
+Uncaught Error: Should not already be working.
+http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11706:11
+Error: Should not already be working.
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11706:17)
+    at performWorkOnRootViaSchedulerTask (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:13503:9)
+    at MessagePort.performWorkUntilDeadline (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:34:50)
+

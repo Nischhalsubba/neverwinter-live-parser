@@ -8,3 +8,8 @@ Error: Renderer process exited: oom (exitCode=-536870904)
     at WebContents.<anonymous> (file:///C:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/dist-electron/main/main.js:276:28)
     at WebContents.emit (node:events:530:35)
 
+[2026-03-25T06:23:37.074Z] Renderer process gone
+Error: Renderer process exited: oom (exitCode=-536870904)
+    at WebContents.<anonymous> (file:///C:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/dist-electron/main/main.js:276:28)
+    at WebContents.emit (node:events:530:35)
+
