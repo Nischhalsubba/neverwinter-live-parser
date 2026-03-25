@@ -696,3 +696,18 @@ Write what changed in the files and why it was done.
   - The live combat table needed clearer filtering so users can understand and compare party roles more easily.
 - Verification:
   - pending at time of entry creation, then completed after test/build pass in the same turn
+
+### 2026-03-25 - Multiline combat-log line handling for data integrity
+- Files touched:
+  - `src/core/reader/lineBuffer.ts`
+  - `src/core/reader/lineBuffer.test.ts`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Updated the buffered line splitter so it no longer treats every newline as a hard event boundary.
+  - Added quote-balance handling so physical lines are merged when a quoted Neverwinter field spans a newline.
+  - Added a regression test using a real broken-up `Heartfelt Barrier` style sample from production logs.
+- Why:
+  - QA validation against a real 57.5 MB combat log found valid events being dropped because some Neverwinter records were split across two physical lines.
+  - This was a data-integrity issue, not just a parser warning issue, because it could silently lose real combat events.
+- Verification:
+  - pending at time of entry creation, then completed after test/build and import benchmark rerun in the same turn

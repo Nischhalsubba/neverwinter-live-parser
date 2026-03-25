@@ -3,6 +3,16 @@ export type LineBufferResult = {
   leftover: string;
 };
 
+function hasBalancedQuotes(input: string): boolean {
+  let quoteCount = 0;
+  for (const char of input) {
+    if (char === "\"") {
+      quoteCount += 1;
+    }
+  }
+  return quoteCount % 2 === 0;
+}
+
 export function splitBufferedLines(
   previousLeftover: string,
   chunk: string
@@ -10,8 +20,27 @@ export function splitBufferedLines(
   const merged = `${previousLeftover}${chunk}`;
   const normalized = merged.replace(/\r\n/g, "\n");
   const parts = normalized.split("\n");
-  const leftover = parts.pop() ?? "";
-  const lines = parts.filter((line) => line.length > 0);
+  const trailingPartial = parts.pop() ?? "";
+  const lines: string[] = [];
+  let pending = "";
+
+  for (const part of parts) {
+    pending = pending ? `${pending}\n${part}` : part;
+    if (!hasBalancedQuotes(pending)) {
+      continue;
+    }
+
+    if (pending.length > 0) {
+      lines.push(pending);
+    }
+    pending = "";
+  }
+
+  const leftover = pending
+    ? trailingPartial
+      ? `${pending}\n${trailingPartial}`
+      : pending
+    : trailingPartial;
 
   return { lines, leftover };
 }
