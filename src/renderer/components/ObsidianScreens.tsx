@@ -57,6 +57,7 @@ type ShellProps = {
   livePlayerRows: PlayerRow[];
   liveScope: LiveScopeMode;
   liveDiagnostics: string[];
+  selectedLiveEncounterId: string;
   selectedPlayer: PlayerRow | null;
   selectedEncounter: EncounterSnapshot | null;
   availableEncounters: EncounterSnapshot[];
@@ -85,6 +86,7 @@ type ShellProps = {
   onToggleCompanions: () => void;
   onSelectPlayer: (playerId: string) => void;
   onSelectEncounter: (encounterId: string) => void;
+  onSelectLiveEncounter: (encounterId: string) => void;
   onToggleNotifications: () => void;
   onToggleDiagnostics: () => void;
   onBackToPlayers: () => void;
@@ -2210,6 +2212,22 @@ function LiveOverviewView({
       <div className="oa-focus-bar">
         <span className="oa-focus-label"><Icon name="adjust" className="oa-inline-icon" /> Live Focus:</span>
         <button
+          className={`oa-encounter-chip ${props.selectedLiveEncounterId === "all" ? "active" : ""}`}
+          onClick={() => props.onSelectLiveEncounter("all")}
+        >
+          Entire Session
+        </button>
+        {props.availableEncounters.map((entry, index) => (
+          <button
+            className={`oa-encounter-chip ${props.selectedLiveEncounterId === entry.id ? "active" : ""}`}
+            key={`scope-${entry.id}`}
+            onClick={() => props.onSelectLiveEncounter(entry.id)}
+          >
+            <Icon name="swords" className="oa-chip-icon" />
+            {index + 1}. {entry.label}
+          </button>
+        ))}
+        <button
           className={`oa-encounter-chip ${liveFocusTarget === "all" ? "active" : ""}`}
           onClick={() => onLiveFocusChange("all")}
         >
@@ -3692,8 +3710,27 @@ function RecentView({ state }: { state: AppState }) {
       <header className="oa-screen-hero">
         <p className="oa-page-kicker">Encounter Archive</p>
         <h1>Completed engagements</h1>
-        <p>Encounter summaries parsed from the current combat log session for post-run review.</p>
+        <p>Encounter summaries parsed from the current session plus archived live sessions kept after combat log rollover.</p>
       </header>
+      <section className="oa-panel">
+        <SectionHeading icon="folder_copy" eyebrow="Session History" title="Archived live sessions" />
+        <div className="oa-card-grid">
+          {state.sessionArchives.map((session) => (
+            <article className="oa-mini-panel" key={session.id}>
+              <strong>{session.activeLogFile?.split(/[\\/]/).pop() ?? session.sourcePath ?? "Unknown session"}</strong>
+              <p>{session.recentEncounters.length} encounters • {formatDuration(session.durationMs)}</p>
+              <div className="oa-mini-metrics">
+                <span>{formatNumber(session.totalLines)} lines</span>
+                <span>{formatNumber(session.parsedEvents)} parsed</span>
+                <span>{session.topCombatants[0] ? `${session.topCombatants[0].displayName}: ${formatShort(session.topCombatants[0].totalDamage)}` : "No combatants"}</span>
+              </div>
+            </article>
+          ))}
+          {!state.sessionArchives.length ? (
+            <div className="oa-empty-state">No archived live sessions yet. A session is archived when the game rolls over to a new combat log.</div>
+          ) : null}
+        </div>
+      </section>
       <section className="oa-panel">
         <SectionHeading icon="history_edu" eyebrow="Archive" title="Recent encounters" />
         <div className="oa-table-shell">

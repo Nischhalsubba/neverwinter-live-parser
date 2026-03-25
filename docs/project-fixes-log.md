@@ -711,3 +711,23 @@ Write what changed in the files and why it was done.
   - This was a data-integrity issue, not just a parser warning issue, because it could silently lose real combat events.
 - Verification:
   - pending at time of entry creation, then completed after test/build and import benchmark rerun in the same turn
+
+### 2026-03-25 - Live encounter scope control and archived session history
+- Files touched:
+  - `src/shared/types.ts`
+  - `src/core/monitoring/logMonitorService.ts`
+  - `src/core/monitoring/importWorker.ts`
+  - `src/renderer/App.tsx`
+  - `src/renderer/components/ObsidianScreens.tsx`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Added `sessionArchives` to shared app state so completed live sessions can be preserved instead of disappearing when the active combat log rolls over.
+  - Added session archive creation in `logMonitorService.ts` when a live session rolls over to a new combat log and when tracking is stopped manually.
+  - Stored lightweight archive summaries with log file path, line counts, parsed event counts, encounter summaries, and top combatants instead of keeping unlimited heavy session payloads.
+  - Added a dedicated live encounter scope selector in the live view so the user can switch the live combat table between the whole session and any specific completed encounter such as first boss, second boss, last boss, or trash pulls in between.
+  - Added an archived session section in the encounter archive view so older combat-log sessions remain visible after new logs appear.
+- Why:
+  - Users could not isolate first boss, second boss, last boss, or in-between mob pulls from the live combat table with enough control.
+  - When Neverwinter rolled over to a new combat log, the old session state disappeared instead of being retained as historical reference.
+- Verification:
+  - pending at time of entry creation, then completed after test/build pass in the same turn

@@ -10,7 +10,8 @@ import type {
   AuxiliaryLogEvent,
   CombatEvent,
   MonitoringConfig,
-  ParseIssue
+  ParseIssue,
+  SessionArchiveSnapshot
 } from "../../shared/types.js";
 import { createInitialAuxiliarySummary } from "../../shared/auxiliaryLogs.js";
 import { DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS } from "../../shared/constants.js";
@@ -50,6 +51,7 @@ function createInitialAppState(): AppState {
     encounterStatus: "idle",
     currentEncounter: null,
     recentEncounters: [],
+    sessionArchives: [],
     analysis: {
       mode: "idle",
       sourcePath: null,
@@ -248,6 +250,7 @@ export class LogMonitorService extends EventEmitter {
     if (this.encounterManager.flush()) {
       this.syncEncounterState();
     }
+    this.state.sessionArchives = this.archiveCurrentSession(this.state.sessionArchives);
     this.state.watcherStatus = "idle";
     this.liveTrackingFilePath = null;
     this.scheduleEmitState(true);
@@ -256,6 +259,7 @@ export class LogMonitorService extends EventEmitter {
 
   private resetLiveSession(activeFile: string | null): void {
     const preservedFolder = this.state.selectedLogFolder;
+    const preservedArchives = this.archiveCurrentSession(this.state.sessionArchives);
     this.readerState = createInitialReaderState();
     this.auxiliaryReaderStates = new Map();
     this.encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
@@ -265,6 +269,7 @@ export class LogMonitorService extends EventEmitter {
       watcherStatus: "watching",
       selectedLogFolder: preservedFolder,
       activeLogFile: activeFile,
+      sessionArchives: preservedArchives,
       analysis: {
         ...createInitialAppState().analysis,
         mode: "live",
@@ -453,6 +458,52 @@ export class LogMonitorService extends EventEmitter {
       this.state.analysis.sourcePath,
       encounterSnapshots
     );
+  }
+
+  private archiveCurrentSession(existing: SessionArchiveSnapshot[]): SessionArchiveSnapshot[] {
+    const hasMeaningfulData =
+      this.state.analysis.totalLines > 0 ||
+      this.state.analysis.parsedEvents > 0 ||
+      this.state.recentEncounters.length > 0;
+
+    if (!hasMeaningfulData) {
+      return existing;
+    }
+
+    const archive: SessionArchiveSnapshot = {
+      id: `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      sourcePath: this.state.analysis.sourcePath,
+      activeLogFile: this.state.activeLogFile,
+      startedAt: this.state.analysis.startedAt,
+      endedAt: this.state.analysis.endedAt ?? Date.now(),
+      durationMs: this.state.analysis.durationMs,
+      totalLines: this.state.analysis.totalLines,
+      parsedEvents: this.state.analysis.parsedEvents,
+      recentEncounters: [...this.state.recentEncounters],
+      topCombatants: this.state.analysis.combatants
+        .filter((combatant) => combatant.type === "player" || combatant.ownerId.startsWith("P["))
+        .sort((left, right) => right.totalDamage - left.totalDamage)
+        .slice(0, 12)
+        .map((combatant) => ({
+          id: combatant.id,
+          displayName: combatant.displayName,
+          totalDamage: combatant.totalDamage,
+          totalHealing: combatant.totalHealing,
+          damageTaken: combatant.damageTaken,
+          hits: combatant.hits
+        }))
+    };
+
+    const deduped = existing.filter(
+      (entry) =>
+        !(
+          entry.activeLogFile === archive.activeLogFile &&
+          entry.totalLines === archive.totalLines &&
+          entry.parsedEvents === archive.parsedEvents
+        )
+    );
+
+    return [archive, ...deduped].slice(0, 30);
   }
 
   private pushUnknown(event: CombatEvent): void {

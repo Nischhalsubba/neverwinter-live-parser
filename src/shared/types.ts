@@ -231,9 +231,32 @@ export type AppState = {
   encounterStatus: EncounterStatus;
   currentEncounter: EncounterSnapshot | null;
   recentEncounters: EncounterSnapshot[];
+  sessionArchives: SessionArchiveSnapshot[];
   analysis: AnalysisSnapshot;
   debug: DebugState;
   system: SystemUsageSnapshot;
+};
+
+export type SessionArchiveCombatant = {
+  id: string;
+  displayName: string;
+  totalDamage: number;
+  totalHealing: number;
+  damageTaken: number;
+  hits: number;
+};
+
+export type SessionArchiveSnapshot = {
+  id: string;
+  sourcePath: string | null;
+  activeLogFile: string | null;
+  startedAt?: number;
+  endedAt?: number;
+  durationMs: number;
+  totalLines: number;
+  parsedEvents: number;
+  recentEncounters: EncounterSnapshot[];
+  topCombatants: SessionArchiveCombatant[];
 };
 
 export type MonitoringConfig = {

@@ -1,0 +1,165 @@
+[2026-03-25T05:02:41.466Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.466Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.467Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.470Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.473Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.474Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.474Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.474Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.474Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.474Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+
+[2026-03-25T05:02:41.953Z] Renderer window error
+Uncaught ReferenceError: Cannot access 'availableEncounters' before initialization
+http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7
+ReferenceError: Cannot access 'availableEncounters' before initialization
+    at App (http://127.0.0.1:5173/src/renderer/App.tsx?t=1774414961113:209:7)
+    at Object.react_stack_bottom_frame (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:18507:20)
+    at renderWithHooks (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:5652:24)
+    at updateFunctionComponent (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:7473:21)
+    at beginWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:8523:20)
+    at runWithFiberInDEV (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:995:72)
+    at performUnitOfWork (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12559:98)
+    at workLoopSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12422:43)
+    at renderRootSync (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:12406:13)
+    at performWorkOnRoot (http://127.0.0.1:5173/node_modules/.vite/deps/react-dom_client.js?v=00a0b2b0:11825:37)
+

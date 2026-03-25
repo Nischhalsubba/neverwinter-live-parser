@@ -24,6 +24,7 @@ function createInitialAppState(filePath: string): AppState {
     encounterStatus: "idle",
     currentEncounter: null,
     recentEncounters: [],
+    sessionArchives: [],
     analysis: {
       mode: "imported",
       sourcePath: filePath,

@@ -23,6 +23,7 @@ const INITIAL_STATE: AppState = {
   encounterStatus: "idle",
   currentEncounter: null,
   recentEncounters: [],
+  sessionArchives: [],
   analysis: {
     mode: "idle",
     sourcePath: null,
@@ -102,6 +103,7 @@ export function App() {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
   const [selectedPlayerSnapshot, setSelectedPlayerSnapshot] = useState<ReturnType<typeof buildPlayerRows>[number] | null>(null);
   const [selectedEncounterId, setSelectedEncounterId] = useState("all");
+  const [selectedLiveEncounterId, setSelectedLiveEncounterId] = useState("all");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const [isDesktopRuntime, setIsDesktopRuntime] = useState(Boolean(window.neverwinterApi));
@@ -240,7 +242,36 @@ export function App() {
     hasMeaningfulEncounter(state.currentEncounter) && hasEncounterScopedRows
       ? "encounter"
       : "session";
-  const livePlayerRows = liveScope === "encounter" ? encounterScopedLiveRows : playerRows;
+  const availableEncounters = useMemo(
+    () =>
+      shouldBuildHeavyAnalysis
+        ? getEncounterSnapshots(state.recentEncounters, state.currentEncounter)
+        : [],
+    [shouldBuildHeavyAnalysis, state.currentEncounter, state.recentEncounters]
+  );
+  const selectedLiveEncounterRows = useMemo(
+    () =>
+      shouldBuildHeavyAnalysis && selectedLiveEncounterId !== "all"
+        ? buildPlayerRows(deferredCombatants, includeCompanions, {
+            encounterId: selectedLiveEncounterId,
+            encounterDurationMs:
+              availableEncounters.find((encounter) => encounter.id === selectedLiveEncounterId)?.durationMs ?? 0
+          })
+        : EMPTY_PLAYER_ROWS,
+    [
+      availableEncounters,
+      deferredCombatants,
+      includeCompanions,
+      selectedLiveEncounterId,
+      shouldBuildHeavyAnalysis
+    ]
+  );
+  const livePlayerRows =
+    selectedLiveEncounterId !== "all"
+      ? selectedLiveEncounterRows
+      : liveScope === "encounter"
+        ? encounterScopedLiveRows
+        : playerRows;
   const liveDiagnostics = useMemo(() => {
     const diagnostics: string[] = [];
     if (
@@ -259,14 +290,6 @@ export function App() {
     );
     return diagnostics;
   }, [livePlayerRows.length, liveScope, state.analysis.mode, state.analysis.totalLines]);
-
-  const availableEncounters = useMemo(
-    () =>
-      shouldBuildHeavyAnalysis
-        ? getEncounterSnapshots(state.recentEncounters, state.currentEncounter)
-        : [],
-    [shouldBuildHeavyAnalysis, state.currentEncounter, state.recentEncounters]
-  );
 
   const selectablePlayers = useMemo(() => {
     const byId = new Map<string, (typeof playerRows)[number]>();
@@ -300,6 +323,15 @@ export function App() {
       setSelectedEncounterId("all");
     }
   }, [availableEncounters, selectedEncounterId]);
+
+  useEffect(() => {
+    if (
+      selectedLiveEncounterId !== "all" &&
+      !availableEncounters.some((encounter) => encounter.id === selectedLiveEncounterId)
+    ) {
+      setSelectedLiveEncounterId("all");
+    }
+  }, [availableEncounters, selectedLiveEncounterId]);
 
   const selectedPlayer =
     selectablePlayers.find((player) => player.id === selectedPlayerId) ??
@@ -475,6 +507,7 @@ export function App() {
       livePlayerRows={livePlayerRows}
       liveScope={liveScope}
       liveDiagnostics={liveDiagnostics}
+      selectedLiveEncounterId={selectedLiveEncounterId}
       selectedPlayer={selectedPlayer}
       selectedEncounter={selectedEncounter}
       availableEncounters={availableEncounters}
@@ -515,6 +548,7 @@ export function App() {
         setSelectedPlayerSnapshot(player);
       }}
       onSelectEncounter={setSelectedEncounterId}
+      onSelectLiveEncounter={setSelectedLiveEncounterId}
       onToggleNotifications={() => setNotificationsOpen((value) => !value)}
       onToggleDiagnostics={() => setDiagnosticsOpen((value) => !value)}
       onBackToPlayers={() => setView("live")}
