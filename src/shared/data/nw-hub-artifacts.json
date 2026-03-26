@@ -1,0 +1,4706 @@
+{
+  "source": "https://www.nw-hub.com/artifacts/list",
+  "extractedAt": "2026-03-24T02:42:29.295Z",
+  "artifacts": [
+    {
+      "name": "Alaric's Artillery Beacon",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Deal 33,072 damage to enemies in the targeted area.\n**Added Effect:** Stun. **Duration:** 4 seconds (halved vs players).\n**Added Effect:** 5% increased damage taken. **Duration:** 10 seconds.\n_Debuff does not stack with other Artillery artifacts._",
+      "stats": {
+        "combatadvantage": 7500,
+        "accuracy": 7500
+      },
+      "icon": "alarics_artillery_beacon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/alarics_artillery_beacon.webp",
+      "iconPath": "/nw-hub/artifacts/alarics_artillery_beacon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-taken",
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Apocalypse Dagger",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Target an area within 60' and deal 4013 damage to enemies within 25' of the targeted area. Damage values not guaranteed-no refunds!",
+      "stats": {
+        "power": 5000,
+        "deflect": 5000,
+        "forte": 5000
+      },
+      "icon": "apocalypse_dagger.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/apocalypse_dagger.webp",
+      "iconPath": "/nw-hub/artifacts/apocalypse_dagger.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Arcturia's Music Box",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Summons two mimics that rush forward, damaging all enemies that stand in the way for 15527. If a mimic hits a minion, the minion will be consumed by the mimic.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 10000
+      },
+      "icon": "arcturias_music_box.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/arcturias_music_box.webp",
+      "iconPath": "/nw-hub/artifacts/arcturias_music_box.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Arcturia's Resonating Music Box",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 80000,
+      "powerText": "Summons two mimics that rush forward, damaging all enemies that stand in the way for 15527. If a mimic hits a minion, the minion will be consumed by the mimic.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 10000
+      },
+      "icon": "arcturias_resonating_music_box.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/arcturias_resonating_music_box.webp",
+      "iconPath": "/nw-hub/artifacts/arcturias_resonating_music_box.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Arma-Egg-On",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 80000,
+      "powerText": "The Arma-Egg-On deals 20,832 damage to enemies in the area, but its true power is only in full during the most Fowl time of the year. Through its true power, the weak fall, and the Golden Fowl rises in their place.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "arma_egg_on.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/arma_egg_on.webp",
+      "iconPath": "/nw-hub/artifacts/arma_egg_on.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Assassin's Dice",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Throw dice at your enemy, damaging it for 96,618. A target damaged by this way is marked with Loaded Dice for 15 seconds. A target marked by Loaded Dice loses -5% Critical Chance, Critical Avoidance, Deflect Severity.",
+      "stats": {
+        "power": 10000,
+        "accuracy": 5000
+      },
+      "icon": "assassins_dice.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/assassins_dice.webp",
+      "iconPath": "/nw-hub/artifacts/assassins_dice.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Assassin's Knife",
+      "quality": "Mythic",
+      "itemLevel": 2000,
+      "combinedRating": 100000,
+      "powerText": "Throw the Knife at a distant enemy dealing 10,513 damage, inflicting deadly poison that deals 14,719 DoT damage every second for 10 seconds.\n**Added Effect:** Increases critical strike by 9%. **Duration:** 10 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "assassins_knife.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/assassins_knife.webp",
+      "iconPath": "/nw-hub/artifacts/assassins_knife.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [
+          9
+        ],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Astral Seed Tendril",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Deals 89,363 arcane damage to nearby enemies, healing you for 89,766 for each target hit. Deals an additional 119,151 over 12 seconds, healing you for 119,688 for each target affected.\n**In Wildspace:** Bonesus are currently doubled.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "deflect": 5000
+      },
+      "icon": "astral_seed_tendril.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/astral_seed_tendril.webp",
+      "iconPath": "/nw-hub/artifacts/astral_seed_tendril.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Aurora's Whole Realms Catalogue",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Creates a portal for an adventurous Shopkeeper that buys and sells items. If in combat, he throws a fiery concoction at an enemy, dealing 11631 damage over 2 seconds, while also stunning them for 2 seconds before fleeing. The shopkeeper will leave after 30 seconds if no one is interacting with him.",
+      "stats": {
+        "criticalavoidance": 5000,
+        "deflect": 5000,
+        "goldbonus": 5000
+      },
+      "icon": "auroras_whole_realms_catalogue.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/auroras_whole_realms_catalogue.webp",
+      "iconPath": "/nw-hub/artifacts/auroras_whole_realms_catalogue.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          2
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Beacon of Meteor Swarm",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Strikes your target with a storm of 6 meteors, dealing damage in an area and afflicting affected targets with a stun, DoT, and damage vulnerability.\nDamage per meteor: 10,806\nRadius: 25'\n**Apply Effect:** Damage Taken: +10%\n**Duration:** 10 seconds\n**Added Effect:** Stun\n**Duration:** 4 seconds (2 seconds vs players)\n**Added Effect:** Damage Over Time: 5,725 damage per 2 sec.\n**Duration:** 10 seconds\n_Does not stack with other Storm effects._",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "beacon_of_meteor_swarm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/beacon_of_meteor_swarm.webp",
+      "iconPath": "/nw-hub/artifacts/beacon_of_meteor_swarm.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-taken",
+          "stun"
+        ],
+        "damageTakenPct": [
+          10
+        ],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Beacon of Simril",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Over the next 15 seconds, 6 lanterns will fall from the sky near you. Any ally that catches a lantern before it fades away will be:\n- Healed for 2432\n- Receive a stack of Lantern Catcher.\nAn ally that receives 6 stacks of Lantern Catcher will gain 2432 Power for 30 seconds.",
+      "stats": {
+        "power": 5000,
+        "awareness": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "beacon_of_simril.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/beacon_of_simril.webp",
+      "iconPath": "/nw-hub/artifacts/beacon_of_simril.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Beacon of the Astral Sea",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Avatar of Light: Briefly turns the user into an avatar of light, increasing Outgoing Healing by 20% and Damage Resistance by 10% for 10s. Allies healed during this time also gain 5% Damage for 10 seconds.",
+      "stats": {
+        "defense": 5000,
+        "forte": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "beacon_of_the_astral_sea.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/beacon_of_the_astral_sea.webp",
+      "iconPath": "/nw-hub/artifacts/beacon_of_the_astral_sea.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-resistance",
+          "outgoing-healing"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          5
+        ],
+        "outgoingHealingPct": [
+          20
+        ],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [
+          10
+        ],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Belial's Portal Stone",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons a Portal Stone that will generate threat on nearby enemies and explode for 17761 damage after 20 seconds or if it is destroyed. This damage will be reduced as the Portal Stone takes damage down to 5920 if it is destroyed.",
+      "stats": {
+        "power": 5000,
+        "criticalavoidance": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "belials_portal_stone.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/belials_portal_stone.webp",
+      "iconPath": "/nw-hub/artifacts/belials_portal_stone.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Black Dragon's Mark",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemies with a acid ball from a Black Dragon, damaging them for 5,225 and decreasing their damage resistance by 10%.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalavoidance": 10000,
+        "awareness": 5000
+      },
+      "icon": "black_dragons_mark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/black_dragons_mark.webp",
+      "iconPath": "/nw-hub/artifacts/black_dragons_mark.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-resistance"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [
+          10
+        ],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Black Ice Beholder",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon an illusory Beholder that moves forward in the direction you are looking. This Beholder will attack any enemies in range for 2873 damage every second. After 10 seconds or when it collides with an object the Beholder will explode for 7900 damage.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "black_ice_beholder.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/black_ice_beholder.webp",
+      "iconPath": "/nw-hub/artifacts/black_ice_beholder.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Bloodbrass Pistol",
+      "quality": "Mythic",
+      "itemLevel": 2000,
+      "combinedRating": 100000,
+      "powerText": "Fires the Blunderbuss, dealing 157,309 damage to the targeted enemy and causing them to take 6% more damage (increased while in the Pirates' Skyhold). **Duration:** 10 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "bloodbrass_pistol.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/bloodbrass_pistol.webp",
+      "iconPath": "/nw-hub/artifacts/bloodbrass_pistol.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [
+          6
+        ],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Bloodcrystal Raven Skull",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Grants 10% of your max Hit Points plus 110% of your missing Hit Points as a Shield, but this Shield will drain away.",
+      "stats": {
+        "accuracy": 5000,
+        "awareness": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "bloodcrystal_raven_skull.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/bloodcrystal_raven_skull.webp",
+      "iconPath": "/nw-hub/artifacts/bloodcrystal_raven_skull.webp",
+      "effects": {
+        "grantsShield": true,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "shield"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Blue Dragon's Mark",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemies with a lightning ball from a Blue Dragon, damaging them for 8,708 and stunning them for 2 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 10000,
+        "deflect": 5000
+      },
+      "icon": "blue_dragons_mark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/blue_dragons_mark.webp",
+      "iconPath": "/nw-hub/artifacts/blue_dragons_mark.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          2
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Book of Vile Darkness",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Invoke the Mark of Darkness to reduce your active cooldowns by 2 seconds and slow nearby enemies. Your at-will powers gain a random effect for 6 seconds:\n\nDisorder - Increase your damage resistance by 2.5% for 6 seconds, stacking 6 times\n\nAnguish - Decrease the damage your targets deal by 2.5% for 6 seconds, stacking 6 times.\n\nSavagery - Decrease the damage resistance of your targets by 2.5% for 6 seconds, stacking 6 times.",
+      "stats": {
+        "power": 10000,
+        "criticalseverity": 5000,
+        "deflect": 5000
+      },
+      "icon": "book_of_vile_darkness.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/book_of_vile_darkness.webp",
+      "iconPath": "/nw-hub/artifacts/book_of_vile_darkness.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-resistance",
+          "cooldown",
+          "slow"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          2.5
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [
+          2.5,
+          2.5
+        ],
+        "cooldownReductionSec": [
+          2
+        ],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Broken Halo",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 85000,
+      "powerText": "Emits a short burst of light that deals 37,914 AoE damage.\n**Added Effect:** Stuns lesser enemies. **Duration:** 1.3s.\n**Added Effect:** Targets take 9% more damage from all sources. **Duration:** 10 seconds.",
+      "stats": {
+        "criticalavoidance": 5000,
+        "deflect": 5000,
+        "deflectseverity": 5000
+      },
+      "icon": "broken_halo.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/broken_halo.webp",
+      "iconPath": "/nw-hub/artifacts/broken_halo.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [
+          9
+        ],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Bruenor's Helm",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon the Throne of the Dwarven Gods that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 378 Defense and 378 Critical Avoidance. Foes will move 25% slower. Demons will be slowed by 50%. **Duration:** 30 seconds.",
+      "stats": {
+        "defense": 5000,
+        "criticalavoidance": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "bruenors_helm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/bruenors_helm.webp",
+      "iconPath": "/nw-hub/artifacts/bruenors_helm.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "critical",
+          "slow",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Champion's Banner",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon a Champion's Banner that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 5% Incoming Healing and 2500 Accuracy. Foes will deal 5% less Damage. **Duration:** 30 seconds",
+      "stats": {
+        "hitpoints": 5000,
+        "defense": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "champions_banner.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/champions_banner.webp",
+      "iconPath": "/nw-hub/artifacts/champions_banner.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [
+          5
+        ],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Charm of the Serpent",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Releases a devestating attack dealing 4736 to all enemies in a cone and increases their damage taken by 16%.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "charm_of_the_serpent.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/charm_of_the_serpent.webp",
+      "iconPath": "/nw-hub/artifacts/charm_of_the_serpent.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken"
+        ],
+        "damageTakenPct": [
+          16
+        ],
+        "outgoingDamagePct": [
+          16
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Crimson Calamity",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 100000,
+      "powerText": "Poisons the player for 377,615 of their health to gain 430,637 shield for 20s and deal 325,118 physical damage to enemies. Self damage is lower and shield gain is higher for each stack of Crimson Retaliation on you.\n**Added Effect:** Targets deal 10% less damage. **Duration:** 10 seconds",
+      "stats": {
+        "combatadvantage": 5000,
+        "defense": 5000,
+        "deflectseverity": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "crimson_calamity.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/crimson_calamity.webp",
+      "iconPath": "/nw-hub/artifacts/crimson_calamity.webp",
+      "effects": {
+        "grantsShield": true,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "shield"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [
+          10
+        ],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Crystal of Soul's Flight",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "**Apply Effect:** Target takes +10% damage from all sources.\n**Duration:** 10 seconds\n**Added Effect:** Target takes +15% damage from your attacks.\n**Duration:** 10 seconds",
+      "stats": {
+        "power": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "crystal_of_souls_flight.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/crystal_of_souls_flight.webp",
+      "iconPath": "/nw-hub/artifacts/crystal_of_souls_flight.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Darkened Storyteller's Journal",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact summons forth an enchanted tome filled with the records of your exploits within the throne of idris. When empty it will do 8,233 necrotic damage to all targets in a 25ft radius of the targeted area.\n\n**Tales Acquired**\nA Tale of Thrones (1/1)\n* Adds a stackable effect that increases every time you do damage. After 15 seconds your next attack will do additional 5% necrotic weapon damage times the number of stacks and reduce their Critical Severity by 5000.\nA Tale of Awe (1/1)\n* Stuns enemies within a 25ft radius around the targeted area for 3.2 seconds.\nA Tale of Shadows (1/1)\n* Summons a shadow of Idris to fight by your side for 20 seconds.\nA Tale of Tactics (1/1)\n* Increases your Combat Advantage Damage by 5% for 15 seconds.\nIdris' Demise (1/1)\n* Increases your Stamina Regeneration by 5% for 15 seconds.",
+      "stats": {
+        "power": 5000,
+        "awareness": 5000,
+        "deflect": 5000,
+        "forte": 5000
+      },
+      "icon": "darkened_storytellers_journal.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/darkened_storytellers_journal.webp",
+      "iconPath": "/nw-hub/artifacts/darkened_storytellers_journal.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "critical",
+          "stun",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          5,
+          5
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          3.2
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Decanter of Atropal Essence",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Grants you the Boon of the Atropal buff for 20 seconds. This causes your powers to deal an additional 1216 damage on each hit.\nEach time damage is dealt this way, the duration of Boon of the Atropal is increased by 1 second and your Damage is increased by 1%, up to a total of 10 times.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalavoidance": 5000,
+        "deflectseverity": 5000
+      },
+      "icon": "decanter_of_atropal_essence.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/decanter_of_atropal_essence.webp",
+      "iconPath": "/nw-hub/artifacts/decanter_of_atropal_essence.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          1
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Deck of a Few Things",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will draw a random card….. Etc",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "deck_of_a_few_things.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/deck_of_a_few_things.webp",
+      "iconPath": "/nw-hub/artifacts/deck_of_a_few_things.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Defender's Banner",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon a Defender's Banner that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 5000 Power and 5000 Awareness. Foes will deal 5% less Damage. **Duration:** 30 seconds.",
+      "stats": {
+        "defense": 5000,
+        "awareness": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "defenders_banner.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/defenders_banner.webp",
+      "iconPath": "/nw-hub/artifacts/defenders_banner.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [
+          5
+        ],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Demon Skull",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 100000,
+      "powerText": "Summons Three Imps that swarm nearby enemies for several seconds. When they perish, they erupt in flames, each dealing 30,717 AoE damage to enemies, making them take 3% more damage from all sources and reducing their Accuracy by 3% for 10 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "demon_skull.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/demon_skull.webp",
+      "iconPath": "/nw-hub/artifacts/demon_skull.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Demogorgon's Reach",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "You summon forth 6 tentacles from the Abyss around target enemy's location over the next 6 seconds, each dealing 8068 damage. In addition, any foe struck by a tentacle becomes Rotting for the next 6 seconds. Rotting enemies take 3% more damage, and have their incoming healing reduced by 5% per stack. Rotting stacks up to 6 times.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "forte": 5000
+      },
+      "icon": "demogorgons_reach.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/demogorgons_reach.webp",
+      "iconPath": "/nw-hub/artifacts/demogorgons_reach.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Draconic Essence",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Deal 51,389 Fire damage and 51,389 Lightning damage to enemies in front of you. Enemies hit take 10,777 Poison damage every 1 sec for 6 seconds, and an additional 51,389 Acid damage upon expiration.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "controlresist": 5000
+      },
+      "icon": "draconic_essence.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/draconic_essence.webp",
+      "iconPath": "/nw-hub/artifacts/draconic_essence.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Dragonbone Blades",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will throw an array of Dragonbone Blades, which deals 34,308 Necrotic damage to nearby enemies and festers those targets, dealing 17,154 Necrotic damage every 1 sec for 10 seconds. Enemies also take 12% more damage and are weakened, causing them to deal 12% less damage.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "accuracy": 5000
+      },
+      "icon": "dragonbone_blades.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/dragonbone_blades.webp",
+      "iconPath": "/nw-hub/artifacts/dragonbone_blades.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [
+          12
+        ],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Dragonbone Wand",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Deals 8,156 Force damage and stuns enemies for 3 seconds. Enemies hit will take 4% more damage from you for 6 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "accuracy": 5000,
+        "defense": 5000
+      },
+      "icon": "dragonbone_wand.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/dragonbone_wand.webp",
+      "iconPath": "/nw-hub/artifacts/dragonbone_wand.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          3
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Emblem of the Seldarine",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Buff yourself and nearby allies with Seldarine's Blessing for 15 seconds, during which time they will be Healed for 1216 every time they are hit. Seldarine's Blessing can only be activated once per second.",
+      "stats": {
+        "defense": 5000,
+        "criticalavoidance": 5000,
+        "forte": 5000
+      },
+      "icon": "emblem_of_the_seldarine.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/emblem_of_the_seldarine.webp",
+      "iconPath": "/nw-hub/artifacts/emblem_of_the_seldarine.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Empowered Illusionist's Mask",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Donning the visage of an Illusionist, your gaze deals 4013 to your enemies causing them to take on the form of a lesser creature increasing your damage against them while transformed by 15% for 15 seconds.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "awareness": 5000
+      },
+      "icon": "empowered_illusionists_mask.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/empowered_illusionists_mask.webp",
+      "iconPath": "/nw-hub/artifacts/empowered_illusionists_mask.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Envenomed Storyteller's Journal",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact summons forth an enchanted time filled with the records of your exploits within the lair of the mad dragon. When empty it will do 9,327 damage to all targets in a 25ft radius of the targeted area.\n\n**Tales Acquired**\nA Tale of Poison (1/1)\n* Adds a stackable effect that increases every time you do damage. After 15 seconds your next attack will do additional 5% weapon damage times the number of stacks.\nA Tale of Awe (1/1)\n* Stuns enemies within a 25ft radius around the targeted area for 3,4 seconds.\nA Tale of Madness (1/1)\n* Summons a small projection of Chartilifax that will seek out your enemies dealing 2,432 poison damage every second. After dealing damage 5 times to any number of foes or after 15 seconds, the projection explodes dealing 9,120\nTales of Power (1/1)\n* Increases your damage by 5%.\nThe Final Chapter (1/1)\n* Generates 20 AP every second for 15 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "combatadvantage": 5000,
+        "defense": 5000
+      },
+      "icon": "envenomed_storytellers_journal.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/envenomed_storytellers_journal.webp",
+      "iconPath": "/nw-hub/artifacts/envenomed_storytellers_journal.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": true,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          5
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          4
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Erratic Drift Globe",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact summons forth an erratic Drift Globe which orbits the caster rapidly for 15 seconds, blinding nearby foes.\nAllies nearby will gain 10000 Deflection.\nFoes nearby suffer -10000 Critical Strike, and -10000 Deflection while the Drift Globe is active.",
+      "stats": {
+        "hitpoints": 5000,
+        "defense": 10000,
+        "deflect": 5000
+      },
+      "icon": "erratic_drift_globe.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/erratic_drift_globe.webp",
+      "iconPath": "/nw-hub/artifacts/erratic_drift_globe.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Eye of Lathandar",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Resurrects an ally or your companion from afar and restores 80% of their Hit Points. Range: 80'",
+      "stats": {
+        "defense": 5000,
+        "criticalavoidance": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "eye_of_lathandar.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/eye_of_lathandar.webp",
+      "iconPath": "/nw-hub/artifacts/eye_of_lathandar.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Eye of Odran",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Tap into the Illithid Hivemind to receive Illithid Sight, reducing Maximum Hit Points by 20% for the duration of the mind link. Gain 7.5% Action Point Gain, Stamina Regeneration, and Movement Speed for 10 seconds.",
+      "stats": {
+        "combatadvantage": 5000,
+        "accuracy": 5000,
+        "controlresist": 5000
+      },
+      "icon": "eye_of_odran.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/eye_of_odran.webp",
+      "iconPath": "/nw-hub/artifacts/eye_of_odran.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Eye of the Giant",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 75000,
+      "powerText": "For 12 seconds, Increase your Power and Defense by 5000, and your size and speed increases 25%.\nFor each enemy that you have in combat, you gain an additional 1000 Power and Defense, and 10% size, up to 5 enemies.\nWith 5 enemies or more, release an icy blast the Slows them by 25%, and deals 7815 damage each sec for 12 sec.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "defense": 5000
+      },
+      "icon": "eye_of_the_giant.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/eye_of_the_giant.webp",
+      "iconPath": "/nw-hub/artifacts/eye_of_the_giant.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "slow"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Flask of Brewing",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Throws a burning brew that targets an area within 60' and spreads an puddle on the ground 15 seconds, dealing 7105 damage.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalseverity": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "flask_of_brewing.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/flask_of_brewing.webp",
+      "iconPath": "/nw-hub/artifacts/flask_of_brewing.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Flayed Storyteller's Journal",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact summons forth an enchanted tome filled with the records of your exploits within the dread vault. When empty it will do 1,724 psychic damage to all targets in a 25ft radius of the targeted area.\n\n**Tales Acquired**\nA Tale of Dread (1/1)\n* Adds a stackable effect that increases every time you do damage. After 15 seconds your next attack will do additional 5% psychic weapon damage and reduce your targets critical strike by 400 times the number of stacks.\nA Tale of Awe (1/1)\n* Stuns enemies within a 25ft radius around the targeted area for 3,3 seconds.\nA Tale of Deep Thoughts (1/1)\n* Summons an intellect devourer to fight by your side for 20 seconds.\nA Tale of Avoidance (1/1)\n* Increases your deflect by 1% for 20 seconds.\nYshiggol's Demise (1/1)\n* Increases you and your allies' Recovery Speed by 1% for 20 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "accuracy": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "flayed_storytellers_journal.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/flayed_storytellers_journal.webp",
+      "iconPath": "/nw-hub/artifacts/flayed_storytellers_journal.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "critical",
+          "stun",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          3
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Forgehammer of Gond",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will summon a Mythic tool usable in all crafting Professions. It will also give you the Insight of Gond, reducing the damage you take from all attacks by 20% for 10 seconds.\nDiscard the currently summoned Forgehammer to summon a new one.",
+      "stats": {
+        "power": 5000,
+        "deflect": 5000,
+        "controlresist": 5000
+      },
+      "icon": "forgehammer_of_gond.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/forgehammer_of_gond.webp",
+      "iconPath": "/nw-hub/artifacts/forgehammer_of_gond.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Fragmented Key of Stars",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons a Far Realm Horror that deals 10803 damage to enemies around it and knocks them back.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalstrike": 5000
+      },
+      "icon": "fragmented_key_of_stars.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/fragmented_key_of_stars.webp",
+      "iconPath": "/nw-hub/artifacts/fragmented_key_of_stars.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Frozen Storyteller's Journal",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact summons forth an enchanted tome filled with the records of your exploits within frozen heart. When empty it will do 7,613 cold damage to all targets in a 25ft radius of the targeted area.\n\n**Tales Acquired**\nA Tale of Ice (1/1)\n* Adds a stackable effect that increases every time you do damage. After 15 seconds your next attack will do additional 5% cold weapon damage times the number of stacks and snare the target.\nA Tale of Awe (1/1)\n* Stuns enemies within a 25ft radius around the targeted area for 3,4 seconds.\nA Tale of Resilience (1/1)\n* Summons three ice dwarves to fight by your side for 20 seconds\nA Tale of Demise (1/1)\n* Increases your defense by 5%.\nHrimnir's Demise (1/1)\n* Increases you and your allies' damage by 5% for 15 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "frozen_storytellers_journal.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/frozen_storytellers_journal.webp",
+      "iconPath": "/nw-hub/artifacts/frozen_storytellers_journal.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          5
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          4
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Globe of the Third Eye",
+      "quality": "Epic",
+      "itemLevel": 310,
+      "combinedRating": 85000,
+      "powerText": "None",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalstrike": 5000,
+        "controlresist": 5000
+      },
+      "icon": "globe_of_the_third_eye.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/globe_of_the_third_eye.webp",
+      "iconPath": "/nw-hub/artifacts/globe_of_the_third_eye.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Golden Memories",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "After a short delay deal 6,080 radiant damage to all enemies in a 20' radius. Your damage is increased by 3% for each enemy hit for 6 sec. This effect may stack up to 5 times.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 10000,
+        "criticalstrike": 5000
+      },
+      "icon": "golden_memories.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/golden_memories.webp",
+      "iconPath": "/nw-hub/artifacts/golden_memories.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Gond's Anvil of Creation",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Activation this artifact summons forth a swarm of doohickeys that will surround the user with a regenerating shield absorbing up to 15% of the user's maximum HP in damage once every 3 seconds, and dealing 1824 damage to any enemies who get too close for 15 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalavoidance": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "gonds_anvil_of_creation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/gonds_anvil_of_creation.webp",
+      "iconPath": "/nw-hub/artifacts/gonds_anvil_of_creation.webp",
+      "effects": {
+        "grantsShield": true,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "shield",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Grace of Pelor",
+      "quality": "Mythic",
+      "itemLevel": 2000,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact will enshroud yourself and nearby allies in a barrier of divine power, increasing Defense by 10%, Base Damage Boost by 8%, and granting a Shield of up to 300,000 Hit Points (max 15% of the target's total health). Lasts 15s.",
+      "stats": {
+        "power": 8000,
+        "defense": 8000,
+        "forte": 10000
+      },
+      "icon": "grace_of_pelor.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/grace_of_pelor.webp",
+      "iconPath": "/nw-hub/artifacts/grace_of_pelor.webp",
+      "effects": {
+        "grantsShield": true,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "shield"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Green Dragon's Mark",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemies with a poison ball from a Green Dragon, damaging them for 6,967. Your targets continue taking 1,045 damage every two seconds for 12 seconds.",
+      "stats": {
+        "defense": 10000,
+        "deflect": 5000,
+        "forte": 5000
+      },
+      "icon": "green_dragons_mark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/green_dragons_mark.webp",
+      "iconPath": "/nw-hub/artifacts/green_dragons_mark.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Halaster's Blast Scepter",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemy with an arcane blast, stunning and damaging it for 20557. Your target's damage resistance is lowered by 15%.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 10000,
+        "criticalstrike": 5000
+      },
+      "icon": "halasters_blast_scepter.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/halasters_blast_scepter.webp",
+      "iconPath": "/nw-hub/artifacts/halasters_blast_scepter.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-resistance",
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the Black Dragon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 8943 Acid damage (+20% if you are Dragonborn) to up to 7 enemies in a line in front of the user and causes acid to splash off of them to damage nearby enemies. Splashed enemies take 226 Acid damage every second for 6 seconds and take 6% additional damage for the duration.\nAlso grants you 2550 Defense for 8 seconds.\nThis artifact has its cooldown reduced by 50% if no targets are hit.",
+      "stats": {
+        "criticalseverity": 5000,
+        "accuracy": 5000,
+        "awareness": 5000
+      },
+      "icon": "heart_of_the_black_dragon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_black_dragon.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_black_dragon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "cooldown"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the Blue Dragon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 9212 Lightning damage (+20% if you are Dragonborn) to up to 7 enemies in a line in front of the user and causes lightning to chain off of each target up to 2 times, dealing slightly less damage with each chain.\nAlso grants you 2550 Defense for 8 seconds.\nThis artifact has its cooldown reduced by 50% if no targets are hit.",
+      "stats": {
+        "criticalstrike": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "heart_of_the_blue_dragon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_blue_dragon.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_blue_dragon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "cooldown"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the Green Dragon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 8943 Poison damage (+20% if you are Dragonborn) to a target and up to 6 nearby enemies and creates a poison cloud at the primary target's location. The poison cloud deals 452 Poison damage to foes inside it every 0.5 seconds for 13 seconds.\nAlso grants you 2550 Defense for 8 seconds.",
+      "stats": {
+        "awareness": 5000,
+        "deflect": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "heart_of_the_green_dragon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_green_dragon.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_green_dragon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the Red Dragon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 9212 Fire damage (+20% if you are Dragonborn) to up to 7 nearby enemies and sets those targets on fire, dealing 1163 Fire damage every 0.5 seconds for 4 seconds.\nAlso grants you 2550 Defense for 8 seconds.\nThis artifact has its cooldown reduced by 50% if no targets are hit.",
+      "stats": {
+        "power": 5000,
+        "defense": 5000,
+        "awareness": 5000
+      },
+      "icon": "heart_of_the_red_dragon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_red_dragon.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_red_dragon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "cooldown"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the Volcano",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 85000,
+      "powerText": "Deals 33,072 Fire damage to enemies in a line. Damage not affected by class powers.\n**Added Effect:** Armor Melt - Targets take +10% damage from all sources. **Duration:** 10 seconds.\n**Added Effect:** You receive 10% less damage. **Duration:** 10 seconds.",
+      "stats": {
+        "criticalavoidance": 5000,
+        "awareness": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "heart_of_the_volcano.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_volcano.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_volcano.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Heart of the White Dragon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 13957 Cold damage (+20% if you are Dragonborn) to up to 7 enemies in a cone in front of the user and slows those targets for 5.3 seconds.\nIt also grants you 2550 Defense for 8 seconds.\nThis artifact has its cooldown reduced by 50% if no targets are hit.",
+      "stats": {
+        "hitpoints": 5000,
+        "accuracy": 5000,
+        "defense": 5000
+      },
+      "icon": "heart_of_the_white_dragon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/heart_of_the_white_dragon.webp",
+      "iconPath": "/nw-hub/artifacts/heart_of_the_white_dragon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "cooldown",
+          "slow"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Horn of Valhalla",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons a single ghostly Barbarian that will protect you for 30 seconds. The Barbarian will threaten nearby enemies, placing himself at the top of their threat list and strike targets in front of him for 11841 damage every few seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalstrike": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "horn_of_valhalla.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/horn_of_valhalla.webp",
+      "iconPath": "/nw-hub/artifacts/horn_of_valhalla.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Illusionist's Mask",
+      "quality": "Legendary",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Become an illusion of a random spooky monster for 5 seconds, reducing your threat from nearby enemies significantly.",
+      "stats": {
+        "accuracy": 5000,
+        "deflect": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "illusionists_mask.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/illusionists_mask.webp",
+      "iconPath": "/nw-hub/artifacts/illusionists_mask.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Imbued Staff of Flowers",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 80000,
+      "powerText": "An explosive bloom bursts from the ground, poinsoning nearby enemies and leaving a wreath of flowers behind. Enemies in the wreath are slowed and allies in the wreath are invigorated.\n**Apply Effect:** 10,378 total Poison Damage over time.\nWreath of Flowers\n**Added Effect:** Enemies have -25% Movement Speed\n**Added Effect:** Allies gain 6% Power and Critical Strike\n**Duration:** 10s",
+      "stats": {
+        "power": 10000,
+        "criticalstrike": 5000,
+        "awareness": 5000
+      },
+      "icon": "imbued_staff_of_flowers.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/imbued_staff_of_flowers.webp",
+      "iconPath": "/nw-hub/artifacts/imbued_staff_of_flowers.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": true,
+        "keywords": [
+          "critical",
+          "slow"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Jewel of the Caldera",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 85000,
+      "powerText": "Lunge forward and deal damage to enemies in a line, dealing 79,092 damage and increasing each target's damage taken by 10% for 10 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "defense": 5000
+      },
+      "icon": "jewel_of_the_caldera.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/jewel_of_the_caldera.webp",
+      "iconPath": "/nw-hub/artifacts/jewel_of_the_caldera.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Jewel of the North",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Lunge forward and deal damage to enemies in a line, dealing 72,438 damage and increasing each target's damage taken by 10% for 10 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "defense": 5000
+      },
+      "icon": "jewel_of_the_north.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/jewel_of_the_north.webp",
+      "iconPath": "/nw-hub/artifacts/jewel_of_the_north.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Kessell's Spheres of Annihilation",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons 8 spheres of annihilation that damage any enemy they touch, dealing 6093 damage every second. Damage is reduced for each subsequent hit by the same sphere.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "kessells_spheres_of_annihilation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/kessells_spheres_of_annihilation.webp",
+      "iconPath": "/nw-hub/artifacts/kessells_spheres_of_annihilation.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Lantern of Revelation",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 7676 damage to nearby enemies, and increases the damage they take by 10% for 10 seconds. In addition, for the next 10 seconds, you can see hidden targets an additional 10 feet away.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "lantern_of_revelation.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/lantern_of_revelation.webp",
+      "iconPath": "/nw-hub/artifacts/lantern_of_revelation.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          10
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Lostmauth's Horn of Blasting",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 11969 damage to enemies in a cone in front of you and knocks them back 20 feet (10 feet if target is a player).",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "lostmauths_horn_of_blasting.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/lostmauths_horn_of_blasting.webp",
+      "iconPath": "/nw-hub/artifacts/lostmauths_horn_of_blasting.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Manticore Talon",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Leap to target location, then summon forth a mighty avalanche that deals 6093 damage each second to enemies in its path and pushes them back over 4 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalstrike": 5000,
+        "controlresist": 5000
+      },
+      "icon": "manticore_talon.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/manticore_talon.webp",
+      "iconPath": "/nw-hub/artifacts/manticore_talon.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Marco's Mystic Marker",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Target takes 132,288 Arcane damage over multiple rapid attacks. This is not influenced by class powers.\n**Added Effect:** Target takes +10% damage from all sources. **Duration:** 10 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "accuracy": 10000
+      },
+      "icon": "marcos_mystic_marker.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/marcos_mystic_marker.webp",
+      "iconPath": "/nw-hub/artifacts/marcos_mystic_marker.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Marilith Mask",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Unleashes laser beams that deal 55,120 damage to a single enemy or 36,379 damage to multiple enemies. Enemies struck by a beam take 7.5% more damage for 10 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 5000,
+        "accuracy": 5000
+      },
+      "icon": "marilith_mask.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/marilith_mask.webp",
+      "iconPath": "/nw-hub/artifacts/marilith_mask.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Mystic Bolt",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Fire a barrage of bolts, dealing 38,584 damage to the targeted area. Creates a magical pool that lowers enemy Awareness by ??%.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "deflect": 5000
+      },
+      "icon": "mystic_bolt.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/mystic_bolt.webp",
+      "iconPath": "/nw-hub/artifacts/mystic_bolt.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Mythallar Fragment",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemy with an arcane blast, stunning and damaging it for 20557. Your target's damage resistance is lowered by 15%.",
+      "stats": {
+        "combatadvantage": 10000,
+        "accuracy": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "mythallar_fragment.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/mythallar_fragment.webp",
+      "iconPath": "/nw-hub/artifacts/mythallar_fragment.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-resistance",
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Neverwinter's Standard",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Plant Neverwinter's Standard onto the ground with your conviction, creating a field that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 5% Recharge Speed. Foes will take 5% more damage. **Duration:** 15 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "awareness": 5000
+      },
+      "icon": "neverwinters_standard.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/neverwinters_standard.webp",
+      "iconPath": "/nw-hub/artifacts/neverwinters_standard.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Nightflame Censer",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact will scorch enemies using black flames dealing 38,688 AoE damage. Any foe hit by the flames will Burn for an additional 5,158 damage every 1s. For 10s.\n**Added Effect:** Target deals 12% less damage. **Duration:** 10 seconds.\n**Added Effect:** Targets takes 12% more damage from all sources. **Duration:** 10 seconds.",
+      "stats": {
+        "power": 8000,
+        "combatadvantage": 8000,
+        "forte": 10000
+      },
+      "icon": "nightflame_censer.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/nightflame_censer.webp",
+      "iconPath": "/nw-hub/artifacts/nightflame_censer.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Oghma's Token of Free Movement",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Removes control effects other than knock or prone, deals 4652 damage to nearby enemies, and makes you immune to those control effects for 6 seconds.",
+      "stats": {
+        "defense": 5000,
+        "deflect": 5000,
+        "controlresist": 5000
+      },
+      "icon": "oghmas_token_of_free_movement.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/oghmas_token_of_free_movement.webp",
+      "iconPath": "/nw-hub/artifacts/oghmas_token_of_free_movement.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Portable Spelljammer Detector",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Disrupts the flow of spelljamming magic in a 25' radius around your target, dealing 99,292 arcane damage and increasing damage taken by 12% for 10s. Additionally, this effect grants the user 7.5% Critical Severity for 10s.\n**In Wildspace:** Damage and stat buff currently doubled, and resistance debuff effect increased by 2%.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "deflect": 5000
+      },
+      "icon": "portable_spelljammer_detector.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/portable_spelljammer_detector.webp",
+      "iconPath": "/nw-hub/artifacts/portable_spelljammer_detector.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken",
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Realm Engine Core",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Unleashes power from the Realm Engine Core, dealing 101,561 damage to the targeted enemy and causing them to take 7.5% more damage for 10 seconds. The discharged energy forms a protective barrier around you for 15% of your HP for 30 seconds.",
+      "stats": {
+        "criticalavoidance": 7500,
+        "awareness": 7500
+      },
+      "icon": "realm_engine_core.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/realm_engine_core.webp",
+      "iconPath": "/nw-hub/artifacts/realm_engine_core.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [
+          7.5
+        ],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Red Dragon's Mark",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemies with a fireball from a Red Dragon, knocking them down and damaging them for 10,450.",
+      "stats": {
+        "power": 10000,
+        "defense": 5000,
+        "forte": 5000
+      },
+      "icon": "red_dragons_mark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/red_dragons_mark.webp",
+      "iconPath": "/nw-hub/artifacts/red_dragons_mark.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Refulgent Diamond Pin",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "A gust of force bursts from the pin as it deals 8,234 damage to nearby enemies, and decreases the damage they deal by 10% for 10 seconds. Allies in 25' gain 5,000 Combat Advantage for 10 seconds.",
+      "stats": {
+        "power": 5000,
+        "combatadvantage": 10000,
+        "criticalavoidance": 5000
+      },
+      "icon": "refulgent_diamond_pin.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/refulgent_diamond_pin.webp",
+      "iconPath": "/nw-hub/artifacts/refulgent_diamond_pin.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Repurposed Phylactory",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Deals 51,392 Necrotic damage to nearby enemies. Heals you for 108,265 over 6 seconds per enemy hit.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "repurposed_phylactory.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/repurposed_phylactory.webp",
+      "iconPath": "/nw-hub/artifacts/repurposed_phylactory.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Ring of Fowl Weather",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Summon a tornado of chickens on your target, causing a vortex which pulls nearby enemies towards the center and deals 8,685 damage.",
+      "stats": {
+        "combatadvantage": 5000,
+        "defense": 10000,
+        "awareness": 5000
+      },
+      "icon": "ring_of_fowl_weather.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/ring_of_fowl_weather.webp",
+      "iconPath": "/nw-hub/artifacts/ring_of_fowl_weather.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Rod of Imperial Restraint",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 5646 damage per second to the target while also holding it for 4 seconds (2 if target is a player). It also creates three areas that will hold any foe that enters for 4 seconds.",
+      "stats": {
+        "accuracy": 5000,
+        "criticalavoidance": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "rod_of_imperial_restraint.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/rod_of_imperial_restraint.webp",
+      "iconPath": "/nw-hub/artifacts/rod_of_imperial_restraint.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Rod of Pain",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Deals 64,052 psychic damage to nearby foes and an additional 85,400 over 8 seconds, and you gain 7.5% Critical Strike and Awareness for 10 seconds.\n\nIn Underdark: Bonuses are currently doubled.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "rod_of_pain.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/rod_of_pain.webp",
+      "iconPath": "/nw-hub/artifacts/rod_of_pain.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Scintillating Symbol of Air",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Leap forward 40', unleashing a burst of wind and cold. Foes within 20' of your landing location take 12160 damage. If you do not strike any foes, you instead gain 30% movement speed boost for 5 seconds.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "scintillating_symbol_of_air.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/scintillating_symbol_of_air.webp",
+      "iconPath": "/nw-hub/artifacts/scintillating_symbol_of_air.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Scintillating Symbol of Earth",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Drops an earthmote on the target, dealing 12003 damage and knocking them back, followed by 7922 damage and an upward knock to enemies in a larger ring.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalseverity": 5000,
+        "controlresist": 5000
+      },
+      "icon": "scintillating_symbol_of_earth.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/scintillating_symbol_of_earth.webp",
+      "iconPath": "/nw-hub/artifacts/scintillating_symbol_of_earth.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Scintillating Symbol of Fire",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Applies a spreading fire to a single enemy when activated. Activating again deals 18662 fire damage to all enemies to which the fire spead. Failing to activate within 6 seconds will cause a fizzle dealing only 4665 fire damage.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "defense": 5000
+      },
+      "icon": "scintillating_symbol_of_fire.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/scintillating_symbol_of_fire.webp",
+      "iconPath": "/nw-hub/artifacts/scintillating_symbol_of_fire.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Scintillating Symbol of Water",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "Summons a maelstrom which drags enemies into it, dealing 4664 damage each second, up to 23320 damage over the duration. After 5 sec the maelstrom whelms, dealing 7698 damage.",
+      "stats": {
+        "criticalstrike": 5000,
+        "deflect": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "scintillating_symbol_of_water.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/scintillating_symbol_of_water.webp",
+      "iconPath": "/nw-hub/artifacts/scintillating_symbol_of_water.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sealing Parchment",
+      "quality": "Mythic",
+      "itemLevel": 2600,
+      "combinedRating": 100000,
+      "powerText": "Activating this artifact envelops you in malevolent strands for 10s, increasing your Deflect and Deflect Severity by 7.5%. Enemies caught in the initial cast are inflicted with Strands of Malevolence for 10s, dealing 6,129 damage every 2s and increasing damage taken by 7.5% for 10s.",
+      "stats": {
+        "combatadvantage": 5000,
+        "defense": 5000,
+        "awareness": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "sealing_parchment.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sealing_parchment.webp",
+      "iconPath": "/nw-hub/artifacts/sealing_parchment.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Searing Conduit of Magma",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 85000,
+      "powerText": "Imbues you with volcanic heat, increasing your Base Damage Boost by 22% for 10s. Enemies that strike you during this time will burn themselves for 18,392 damage. Return damage can only trigger once per 2s on a given enemy.",
+      "stats": {
+        "power": 5000,
+        "combatadvantage": 5000,
+        "defense": 5000
+      },
+      "icon": "searing_conduit_of_magma.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/searing_conduit_of_magma.webp",
+      "iconPath": "/nw-hub/artifacts/searing_conduit_of_magma.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Shard of Orcus' Wand",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Conjures an orb that pursues nearby foes at random, dealing 3388 damage to nearby foes every second. After dealing damage 5 times to any number of foes or after 15 seconds, the sphere explodes dealing 7182 damage to nearby foes. Damage dealt by the orb increases as it remains active, up to 250%.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "shard_of_orcus_wand.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/shard_of_orcus_wand.webp",
+      "iconPath": "/nw-hub/artifacts/shard_of_orcus_wand.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Shard of Valindra's Crown",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "The hand of Valindra swipes twice for 7182 damage each, and knocks targets back on the second hit.\nWhile casting, you are immune to damage and can not be controlled.",
+      "stats": {
+        "power": 5000,
+        "criticalavoidance": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "shard_of_valindras_crown.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/shard_of_valindras_crown.webp",
+      "iconPath": "/nw-hub/artifacts/shard_of_valindras_crown.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Siege Master's War Horn",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Signals your Stronghold Seige Master to bombard an area with catapult fire dealing 23261 damage. The longer this is charged the less the strike will deviate from the target. Each members in your team with a Seige Master's War Horn equipped increases the number of catapults included in the strike by 1 up to 5.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "siege_masters_war_horn.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/siege_masters_war_horn.webp",
+      "iconPath": "/nw-hub/artifacts/siege_masters_war_horn.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Siegebreaker's Banner",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon a Seigebreaker's Banner that buffs allies who stand nearby.\nAllies gain 5000 Critical Avoidance, 5000 Critical Severity and 5% Recharge Speed. **Duration:** 30 seconds",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "siegebreakers_banner.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/siegebreakers_banner.webp",
+      "iconPath": "/nw-hub/artifacts/siegebreakers_banner.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Barbarian",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Barbarian spirit lashes out at nearby enemies dealing 10773 damage. It also increases your damage and reduces incoming damage by 6% to 14% for 16 seconds, based on the number of targets hit.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "criticalseverity": 5000
+      },
+      "icon": "sigil_of_the_barbarian.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_barbarian.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_barbarian.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          6
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Bard",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Bard spirit fills you with the power of song dealing 9,473 damage to up to 5 nearby enemies and granting you the effect of Grandstander's Ballad.\nGrandstander's Ballad effect: Causes your attacks to deal additional radiant damage against the primary target and grants a buff based on your role.\nMagnitude: 150\nDPS: Increases damage bonus by 5%.\nTank: Decreases damage taken by 5%.\nHealer: Increases outgoing healing by 5%.\n**Duration:** 10s",
+      "stats": {
+        "combatadvantage": 5000,
+        "forte": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "sigil_of_the_bard.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_bard.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_bard.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken",
+          "outgoing-healing"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          5
+        ],
+        "outgoingHealingPct": [
+          5
+        ],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Cleric",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Cleric spirit fills you with divine power, granting you 25% of your total Action Points over 15 seconds. In addition, while this buff is active you Heal yourself for 1216 whenever you use an Encounter power.",
+      "stats": {
+        "power": 5000,
+        "defense": 5000,
+        "incominghealing": 5000
+      },
+      "icon": "sigil_of_the_cleric.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_cleric.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_cleric.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Fighter",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Fighter's spirit will block 90% of an incoming attack's damage once a second for 10 seconds.",
+      "stats": {
+        "accuracy": 5000,
+        "defense": 5000,
+        "deflect": 5000
+      },
+      "icon": "sigil_of_the_fighter.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_fighter.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_fighter.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Nine",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "The spirits of the Neverwinter Nine come forth and release a vicious all-out attack, dealing 4665 damage every hit and rooting the target for 4.5 seconds. This attack inspires you and your allies, increasing your and your allies' damage by 3% for 9 seconds.",
+      "stats": {
+        "defense": 5000,
+        "criticalavoidance": 5000,
+        "deflect": 5000
+      },
+      "icon": "sigil_of_the_nine.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_nine.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_nine.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Paladin",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Paladin spirit wil erect a temporary zone of safety where you, and your allies, gain 15% increased damage resistance and are healed over time.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "accuracy": 5000
+      },
+      "icon": "sigil_of_the_paladin.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_paladin.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_paladin.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-resistance"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Ranger",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Ranger spirit allows you to call down a rain of arrows at target enemy's location, dealing 2394 damage every 0.5 seconds for 6 seconds. In addition, you also unleash a bramble of thorns around you, interrupting nearby enemies and dealing 7182 damage to them.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "sigil_of_the_ranger.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_ranger.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_ranger.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Rogue",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Rogue spirit teleports you to your targeted enemy within 40 feet and then releases a spray of knives dealing 10773 damage in a cone in front of you.",
+      "stats": {
+        "criticalstrike": 5000,
+        "combatadvantage": 5000,
+        "deflect": 5000
+      },
+      "icon": "sigil_of_the_rogue.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_rogue.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_rogue.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Warlock",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Deals 7676 damage to up to 5 nearby enemies, healing you for 7489 for each target hit.",
+      "stats": {
+        "power": 5000,
+        "deflect": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "sigil_of_the_warlock.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_warlock.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_warlock.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sigil of the Wizard",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Your Wizard spirit pushes away surrounding enemies with arcane force for 6978 damage, and then creates ice to root them in place for 1.5 seconds dealing an additional 4652 damage.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "controlresist": 5000
+      },
+      "icon": "sigil_of_the_wizard.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sigil_of_the_wizard.webp",
+      "iconPath": "/nw-hub/artifacts/sigil_of_the_wizard.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Skull Lord Staff",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "A tri-point attack that does 7815 damage to enemies in its way, is an enemy dies in this attack, there is a chance a skeleton will rise to fight for you for 15 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "defense": 5000,
+        "goldbonus": 5000
+      },
+      "icon": "skull_lord_staff.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/skull_lord_staff.webp",
+      "iconPath": "/nw-hub/artifacts/skull_lord_staff.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Soul Sight Crystal",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "The target takes 25% additional damage from your attacks for 10 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalavoidance": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "soul_sight_crystal.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/soul_sight_crystal.webp",
+      "iconPath": "/nw-hub/artifacts/soul_sight_crystal.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sovereign's Sporestaff",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Deals 57,891 Poison damage to nearby foes and reduces their movement speed by 30% for 10 seconds. Grants you 10% movement speed for 10 seconds. Values are doubled in the Underdark.",
+      "stats": {
+        "power": 5000,
+        "combatadvantage": 5000,
+        "awareness": 5000
+      },
+      "icon": "sovereigns_sporestaff.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sovereigns_sporestaff.webp",
+      "iconPath": "/nw-hub/artifacts/sovereigns_sporestaff.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sparkling Fey Emblem",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Call forth spirits to aid you and your allies, creating a field that buffs allies and debuffs enemies who stand nearby it. Allies gain 5% Defense and 5% Critical Avoidance. Foes will take 5% more damage. **Duration:** 15 seconds.",
+      "stats": {
+        "hitpoints": 10000,
+        "criticalavoidance": 5000,
+        "forte": 5000
+      },
+      "icon": "sparkling_fey_emblem.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sparkling_fey_emblem.webp",
+      "iconPath": "/nw-hub/artifacts/sparkling_fey_emblem.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sphere of Black Ice",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "The corrupting influence of Black Ice roots the target for 3 seconds and also does 4652 damage every second for 3 seconds. After 3 seconds the Black Ice will reach critical mass and explode, damaging all nearby enemies for 11631 damage.",
+      "stats": {
+        "accuracy": 5000,
+        "criticalavoidance": 5000,
+        "controlbonus": 5000
+      },
+      "icon": "sphere_of_black_ice.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sphere_of_black_ice.webp",
+      "iconPath": "/nw-hub/artifacts/sphere_of_black_ice.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Staff of Flowers",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Create a ring of flowers that fills the air with an aroma that buffs allies and debilitates foes with a crippling poison while inside the ring.\nAllies gain 10000 Power and 10000 Critical Strike.\nFoes will move 25% slower and are dealt 15075 Poison damage every second.\n**Duration:** 15 seconds.",
+      "stats": {
+        "power": 10000,
+        "criticalstrike": 5000,
+        "awareness": 5000
+      },
+      "icon": "staff_of_flowers.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/staff_of_flowers.webp",
+      "iconPath": "/nw-hub/artifacts/staff_of_flowers.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": true,
+        "hasControlEffect": true,
+        "keywords": [
+          "critical",
+          "slow"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Sword of Zariel",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact calls forth a hail of Celestial Swords on a target location after a short delay, dealing 23,121 Celestial damage to all targets in a 25ft radius of the targeted area. Any foe struck by the swords will Bleed for an additional 7,707 damage every 1 sec for 12 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 10000,
+        "criticalstrike": 5000
+      },
+      "icon": "sword_of_zariel.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/sword_of_zariel.webp",
+      "iconPath": "/nw-hub/artifacts/sword_of_zariel.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Symbol of Air",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Leap forward 40', unleashing a burst of wind and cold. Foes within 20' of your landing location take 12160 damage. If you do not strike any foes, you instead gain 30% movement speed boost for 5 seconds.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "symbol_of_air.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/symbol_of_air.webp",
+      "iconPath": "/nw-hub/artifacts/symbol_of_air.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Symbol of Earth",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Drops an earthmote on the target, dealing 12003 damage and knocking them back, followed by 7922 damage and an upward knock to enemies in a larger ring.",
+      "stats": {
+        "hitpoints": 5000,
+        "criticalseverity": 5000,
+        "controlresist": 5000
+      },
+      "icon": "symbol_of_earth.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/symbol_of_earth.webp",
+      "iconPath": "/nw-hub/artifacts/symbol_of_earth.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Symbol of Fire",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Applies a spreading fire to a single enemy when activated. Activating again deals 18662 fire damage to all enemies to which the fire spead. Failing to activate within 6 seconds will cause a fizzle dealing only 4665 fire damage.",
+      "stats": {
+        "power": 5000,
+        "accuracy": 5000,
+        "defense": 5000
+      },
+      "icon": "symbol_of_fire.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/symbol_of_fire.webp",
+      "iconPath": "/nw-hub/artifacts/symbol_of_fire.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Symbol of Water",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons a maelstrom which drags enemies into it, dealing 4664 damage each second, up to 23320 damage over the duration. After 5 sec the maelstrom whelms, dealing 7698 damage.",
+      "stats": {
+        "criticalstrike": 5000,
+        "deflect": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "symbol_of_water.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/symbol_of_water.webp",
+      "iconPath": "/nw-hub/artifacts/symbol_of_water.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tactician's Banner",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon a Tactician's banner that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 25% Movement Speed and will gain Action Points 5% faster. Foes will gain Action Points 5% slower. **Duration:** 30 seconds.",
+      "stats": {
+        "criticalstrike": 5000,
+        "criticalavoidance": 5000,
+        "awareness": 5000
+      },
+      "icon": "tacticians_banner.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tacticians_banner.webp",
+      "iconPath": "/nw-hub/artifacts/tacticians_banner.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "slow",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tarokka Deck",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Pulls three high cards from the Tarokka Deck to select. Selecting a card will cast its power on nearby allies or enemies within 60 ft for 15 seconds.\nYou can learn more about the high cards' powers in your Tarokka Deck Box.\nIf you do not select a card in 10 seconds, the deck will be reshuffled, reducing its cooldown time to 30 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalavoidance": 5000,
+        "deflectseverity": 5000
+      },
+      "icon": "tarokka_deck.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tarokka_deck.webp",
+      "iconPath": "/nw-hub/artifacts/tarokka_deck.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "cooldown"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tentacle Rod",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 85000,
+      "powerText": "Deals 18,573 damage four times to nearby enemies, dazing them for 4 seconds. Enemies struck this way lose -5% Movement Speed, Awareness, and takes 5% more damage from you and your party for 10 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "combatadvantage": 10000
+      },
+      "icon": "tentacle_rod.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tentacle_rod.webp",
+      "iconPath": "/nw-hub/artifacts/tentacle_rod.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Thayan Book of the Dead",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons three deadly undead that will each charge the target and strike for 7105 damage. It will also Root the target for 2 seconds and do 4736 necrotic damage every 0.5 seconds for 1.5 seconds.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "awareness": 5000
+      },
+      "icon": "thayan_book_of_the_dead.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/thayan_book_of_the_dead.webp",
+      "iconPath": "/nw-hub/artifacts/thayan_book_of_the_dead.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Thirst",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Lunge forward and deal damage to enemies in a line, dealing 8043 damage and increasing each target's damage taken by 10% for 10 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "defense": 5000
+      },
+      "icon": "thirst.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/thirst.webp",
+      "iconPath": "/nw-hub/artifacts/thirst.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tiamat's Arcane Globe",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Unleash a fearsome roar that ignites your fighting spirit, restoring 75 stamina.",
+      "stats": {
+        "hitpoints": 5000,
+        "awareness": 5000,
+        "forte": 10000
+      },
+      "icon": "tiamats_arcane_globe.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tiamats_arcane_globe.webp",
+      "iconPath": "/nw-hub/artifacts/tiamats_arcane_globe.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tiamat's Orb of Majesty",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 75000,
+      "powerText": "Tiamat's frightening roar Stuns nearby enemies for 4 seconds (enemy players for 2 seconds) and reduces their damage by 15% for 6 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "accuracy": 5000,
+        "awareness": 5000
+      },
+      "icon": "tiamats_orb_of_majesty.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tiamats_orb_of_majesty.webp",
+      "iconPath": "/nw-hub/artifacts/tiamats_orb_of_majesty.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          4
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Token of Chromatic Storm",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 75000,
+      "powerText": "Summons 9 chromatic meteors that will strike near your target's location after a brief delay. Each meteor deals 5815 Damage to nearby enemies and has a special effect depending on its damage type.\nFire: Deals an additional 3489 Fire Damage over 6 seconds.\nIce: Freezes the target for 2.6 seconds.\nAcid: Target takes 10% more damage for 10 seconds.\nPoison: Deals an additional 3388 Poison Damage over 6 seconds.\nLightning: Stuns the target for 2.6 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "accuracy": 5000,
+        "defense": 5000,
+        "awareness": 5000
+      },
+      "icon": "token_of_chromatic_storm.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/token_of_chromatic_storm.webp",
+      "iconPath": "/nw-hub/artifacts/token_of_chromatic_storm.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [
+          2.6
+        ],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tome of Ascendance",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Casts four spells from the Tome on the ground; when an ally passes through a spell, it is consumed and its power is granted to the ally for 10 seconds.\nAboleth: Your attacks cause the Plague. For every enemy that has the Plague, your Damage increases 1%. Enemies hit multiple times will spread the Plague when killed\nFey: Your Damage Resistance is increased by 10%. Your Healing and Movement Speed are increased by 10%.\nFireforged: All nearby enemies get chained and pulled towards you. Every enemy chained increases your Damage and Damage Resistance by 1%\nIllusion: Grants Stealth and increased Movement Speed by 10%. When damaged, you emit a dazzling attack that stuns and lowers your enemy's Damage Resistance by 10%.",
+      "stats": {
+        "power": 5000,
+        "defense": 5000,
+        "criticalavoidance": 5000,
+        "deflect": 5000
+      },
+      "icon": "tome_of_ascendance.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tome_of_ascendance.webp",
+      "iconPath": "/nw-hub/artifacts/tome_of_ascendance.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-resistance",
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [
+          1
+        ],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [
+          1,
+          10
+        ],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trial Placeholder 1200",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "",
+      "stats": {},
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null,
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trial Placeholder 1500",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 80000,
+      "powerText": "",
+      "stats": {},
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null,
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trial Placeholder 1800",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 85000,
+      "powerText": "",
+      "stats": {},
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null,
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trial Placeholder 600",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "",
+      "stats": {},
+      "icon": null,
+      "iconUrl": null,
+      "iconPath": null,
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trobriand's Overcharged Ring",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 80000,
+      "powerText": "Releases a charge of electricity, stunning and damaging all enemies that stand in your way for 20557. Also spawns a Scaladar that attacks your targets for 15 seconds.",
+      "stats": {
+        "power": 10000,
+        "defense": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "trobriands_overcharged_ring.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/trobriands_overcharged_ring.webp",
+      "iconPath": "/nw-hub/artifacts/trobriands_overcharged_ring.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Trobriand's Ring",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Releases a charge of electricity, stunning and damaging all enemies that stand in your way for 20557. Also spawns a Scaladar that attacks your targets for 15 seconds.",
+      "stats": {
+        "power": 10000,
+        "defense": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "trobriands_ring.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/trobriands_ring.webp",
+      "iconPath": "/nw-hub/artifacts/trobriands_ring.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Tymora's Spinning Coin",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will summon forth the will of Tymora creating a coin that will knock up to 5 of your enemies to the ground doing 7922 damage. Depending on how it lands Tymora's influence will be manifested as a blessing or a curse for 15 seconds.\nIf it is a blessing, an area of protection will be erected around you granting you and your allies 9% damage resistance and rapidly healing them for 5760 (Based on the number of targets) every second.\nIf it is a curse your enemies will take 15% more damage from you.",
+      "stats": {
+        "power": 5000,
+        "criticalstrike": 5000,
+        "combatadvantage": 5000
+      },
+      "icon": "tymoras_spinning_coin.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/tymoras_spinning_coin.webp",
+      "iconPath": "/nw-hub/artifacts/tymoras_spinning_coin.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": true,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-resistance",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Vanguard's Banner",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summon a Vanguard's Banner that buffs allies and debuffs enemies who stand nearby it.\nAllies gain 2500 Power and 2500 Critical Avoidance. Foes will have 5% Damage Resistance. **Duration:** 30 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "criticalavoidance": 5000
+      },
+      "icon": "vanguards_banner.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/vanguards_banner.webp",
+      "iconPath": "/nw-hub/artifacts/vanguards_banner.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-resistance",
+          "critical",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Vibrating Erratic Drift Globe",
+      "quality": "Mythic",
+      "itemLevel": 1800,
+      "combinedRating": 80000,
+      "powerText": "Summons forth an erratic Drift Globe which orbits the caster rapidly. Blinding nearby foes.\n**Apply Effect:** Drift Globe Aura\nAura Effect (Ally): +6% Deflect\nAura Effect (Enemy): -3% Critical Strike\nAura Effect (Enemy): -3% Deflect\nRange: 50'\n**Duration:** 10s",
+      "stats": {
+        "hitpoints": 5000,
+        "defense": 10000,
+        "deflect": 5000
+      },
+      "icon": "vibrating_erratic_drift_globe.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/vibrating_erratic_drift_globe.webp",
+      "iconPath": "/nw-hub/artifacts/vibrating_erratic_drift_globe.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "critical",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Wand of Domination",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 85000,
+      "powerText": "A frontal gaze that deals 36,379 to your enemies. Enemies struck by the blast are charmed for 4 seconds and take 7.5% more damage for 10 seconds. Control immune targets take 33 extra magnitude damage.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "accuracy": 5000
+      },
+      "icon": "wand_of_domination.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/wand_of_domination.webp",
+      "iconPath": "/nw-hub/artifacts/wand_of_domination.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Waters of Elah'zad",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Heals you for 12160 over 6 seconds and removes any harmful damaging effects such as poison.",
+      "stats": {
+        "accuracy": 5000,
+        "defense": 5000,
+        "awareness": 5000
+      },
+      "icon": "waters_of_elahzad.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/waters_of_elahzad.webp",
+      "iconPath": "/nw-hub/artifacts/waters_of_elahzad.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Waukeen's Horde",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will summon Waukeen's Horde from the sky, dealing 7922 damage upon impact.\n\nUpon landing, Waukeen's Horde will either rain treasure from the sky, dazing enemies and dealing 2333 each second for 8 seconds, or spew forth a cloud of rust that slows enemy movement by 25% and deals 4801 each second for 4 seconds.",
+      "stats": {
+        "power": 5000,
+        "criticalseverity": 5000,
+        "criticalstrike": 5000
+      },
+      "icon": "waukeens_horde.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/waukeens_horde.webp",
+      "iconPath": "/nw-hub/artifacts/waukeens_horde.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "slow",
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Wheel of Elements",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 85000,
+      "powerText": "Summons forth four symbols of elemental power, when an ally passes through a symbol it is consumed and its power is granted to the ally.\nFire: Deal 5% bonus Damage as fire for 30 seconds.\nWind: Grants control immunity and increased Movement Speed for 6 seconds.\nEarth: Grant 100% of Maximum Hit Points as Temporary Hit Points for 5 seconds.\nWater: Heal for 50% of Maximum Hit Points over 30 seconds.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 5000,
+        "staminaregen": 5000
+      },
+      "icon": "wheel_of_elements.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/wheel_of_elements.webp",
+      "iconPath": "/nw-hub/artifacts/wheel_of_elements.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": true,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "summon"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "White Dragon's Mark",
+      "quality": "Mythic",
+      "itemLevel": 1200,
+      "combinedRating": 80000,
+      "powerText": "Hits your enemies with a cold ball from a White Dragon, damaging them for 10,450 and reducing their move speed.",
+      "stats": {
+        "hitpoints": 5000,
+        "combatadvantage": 5000,
+        "controlbonus": 10000
+      },
+      "icon": "white_dragons_mark.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/white_dragons_mark.webp",
+      "iconPath": "/nw-hub/artifacts/white_dragons_mark.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Wrath of Kossuth",
+      "quality": "Mythic",
+      "itemLevel": 2000,
+      "combinedRating": 85000,
+      "powerText": "Activating this artifact will surround yourself with a cloak of flames for 10s, increasing your Awareness and Critical Avoidance by 7.5%. While this effect is active, enemies that attack you take 18,392 damage and become inflicted with a Primordial Burn, increasing damage taken by 7.5% for 10 seconds. Return damage can only trigger once per 2s on a given enemy.",
+      "stats": {
+        "criticalavoidance": 5000,
+        "deflect": 5000,
+        "deflectseverity": 5000
+      },
+      "icon": "wrath_of_kossuth.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/wrath_of_kossuth.webp",
+      "iconPath": "/nw-hub/artifacts/wrath_of_kossuth.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "damage-taken",
+          "critical"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Wyvern-Venom Coated Knives",
+      "quality": "Mythic",
+      "itemLevel": 600,
+      "combinedRating": 80000,
+      "powerText": "Activating this artifact will throw an array of knives coated with Wyvern Venom, which deals 9410 Physical damage to nearby enemies and envenomates those targets, dealing 4705 Poison damage every 1 sec for 10 seconds.\nEnvenomated enemies also take 12% more damage and are weakened, causing them to deal 12% less damage.\nThis artifact has its cooldown reduced by 75% if no targets are hit.",
+      "stats": {
+        "criticalseverity": 5000,
+        "criticalstrike": 5000,
+        "accuracy": 10000
+      },
+      "icon": "wyvern_venom_coated_knives.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/wyvern_venom_coated_knives.webp",
+      "iconPath": "/nw-hub/artifacts/wyvern_venom_coated_knives.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": false,
+        "keywords": [
+          "cooldown"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [
+          12
+        ],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    },
+    {
+      "name": "Xeleth's Blast Scepter",
+      "quality": "Mythic",
+      "itemLevel": 1500,
+      "combinedRating": 80000,
+      "powerText": "Annihilate: Hits your enemy with an arcane blast, stunning and damaging it for 100,057. Your target's damage resistance is lowered by 15%.",
+      "stats": {
+        "hitpoints": 5000,
+        "power": 10000,
+        "criticalstrike": 5000
+      },
+      "icon": "xeleths_blast_scepter.webp",
+      "iconUrl": "https://www.nw-hub.com/assets/artifacts/xeleths_blast_scepter.webp",
+      "iconPath": "/nw-hub/artifacts/xeleths_blast_scepter.webp",
+      "effects": {
+        "grantsShield": false,
+        "summonsEntity": false,
+        "appliesDot": false,
+        "hasControlEffect": true,
+        "keywords": [
+          "damage-resistance",
+          "stun"
+        ],
+        "damageTakenPct": [],
+        "outgoingDamagePct": [],
+        "outgoingHealingPct": [],
+        "critChancePct": [],
+        "critSeverityPct": [],
+        "reducedDamagePct": [],
+        "damageResistancePct": [],
+        "cooldownReductionSec": [],
+        "stunSeconds": [],
+        "durationSeconds": []
+      }
+    }
+  ]
+}
