@@ -1,0 +1,4 @@
+*.ts linguist-language=JavaScript
+*.tsx linguist-language=JavaScript
+tmp*.html linguist-generated=true
+index.html linguist-detectable=false

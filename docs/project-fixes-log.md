@@ -1096,3 +1096,31 @@ Write what changed in the files and why it was done.
     - keyword coverage
     - build instructions
     - authorship wording
+
+### 2026-03-26 - Repository language cleanup for GitHub Linguist and source ownership
+
+- Files touched:
+  - `.gitignore`
+  - `.gitattributes`
+  - `tmp-sheet-edit.html`
+  - `tmp_nwhub_classes.html`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Removed the two tracked temporary HTML snapshot files from Git tracking:
+    - `tmp-sheet-edit.html`
+    - `tmp_nwhub_classes.html`
+  - Added `tmp*.html` to `.gitignore` so future temporary scrape or export HTML files do not get recommitted and distort the repository language mix.
+  - Added a new `.gitattributes` file to guide GitHub Linguist:
+    - classify `*.ts` as JavaScript
+    - classify `*.tsx` as JavaScript
+    - mark `tmp*.html` as generated
+    - make the root `index.html` non-detectable for language statistics
+  - Kept the actual app source structure intact rather than rewriting TypeScript files or changing runtime behavior just to affect the repository language bar.
+- Why:
+  - The user wanted the repository to stop looking HTML-heavy on GitHub and to present more like a JavaScript-first codebase.
+  - The tracked temporary HTML dump files were not real product source and were disproportionately inflating the HTML share in the language graph.
+  - GitHub Linguist classification is the right repository-level place to control language presentation without damaging the codebase itself.
+- Verification:
+  - removed the temporary HTML files from Git tracking with `git rm --cached`
+  - confirmed the repository now has a `.gitattributes` file for Linguist overrides
+  - confirmed `.gitignore` now blocks future `tmp*.html` files from being tracked again

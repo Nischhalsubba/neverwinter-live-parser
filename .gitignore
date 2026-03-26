@@ -2,6 +2,7 @@ node_modules/
 dist/
 dist-electron/
 .vite/
+tmp*.html
 # Build / release artifacts
 release/
 release-clean/
