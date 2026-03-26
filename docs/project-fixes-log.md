@@ -1065,3 +1065,34 @@ Write what changed in the files and why it was done.
   - confirmed `dist/index.html` references `./assets/...`
   - built a fresh clean unpacked release in `release-clean/win-unpacked`
   - confirmed `app.asar` contains `dist/index.html`, packaged assets, `dist-electron/main/main.js`, and `dist-electron/main/preload.js`
+
+### 2026-03-26 - README redesign for project presentation and repo discoverability
+
+- Files touched:
+  - `README.md`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Rewrote the README from a short utility-style setup note into a fuller project presentation document.
+  - Added a clearer product-level introduction that frames the repository as a Windows desktop Neverwinter combat log parser rather than only a local Electron app.
+  - Added keyword-rich sections describing the project as a:
+    - Neverwinter combat log parser
+    - DPS tracker
+    - encounter analysis tool
+    - Windows desktop utility
+  - Expanded the feature breakdown into dedicated sections for:
+    - live combat log tracking
+    - encounter and session review
+    - recorded log analysis
+    - auxiliary log awareness
+  - Reworked the build and release section so the recommended Windows output and optional portable output remain clear without burying the main value of the project.
+  - Replaced the old generic credits section with authorship language centered on Nischhal Raj Subba, matching the user's requested project ownership voice.
+- Why:
+  - The user wanted a more polished README that feels professional, more personal to the project owner, and stronger for repository presentation.
+  - The repo needed better SEO-oriented wording and a clearer explanation of the project's purpose, feature set, and Windows-first workflow.
+  - The documentation needed to avoid any framing that would undermine the sense of direct authorship and ownership.
+- Verification:
+  - reviewed the rewritten README structure for:
+    - project clarity
+    - keyword coverage
+    - build instructions
+    - authorship wording
