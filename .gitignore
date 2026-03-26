@@ -10,3 +10,11 @@ win-unpacked/
 *.exe
 *.7z
 *.zip
+
+release/
+release-clean/
+dist/
+win-unpacked/
+*.exe
+*.7z
+*.zip
