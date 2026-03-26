@@ -3,6 +3,7 @@
 This file is the permanent engineering memory for this repository.
 
 What this file is for:
+
 - record what changed
 - record which files changed
 - record why the change was made
@@ -11,6 +12,7 @@ What this file is for:
 
 This file should not be written as “git commit summaries only”.
 It should be written as:
+
 - change set title
 - files touched
 - what changed in those files
@@ -21,6 +23,7 @@ It should be written as:
 From now on, every time any code, style, copy, config, test, script, or docs change is made, this file must be updated in the same turn.
 
 That includes:
+
 - major architecture changes
 - minor UI changes
 - wording changes
@@ -33,6 +36,7 @@ That includes:
 For future updates, use this format:
 
 ### YYYY-MM-DD - Change Set Title
+
 - Files touched:
   - `path`
   - `path`
@@ -46,6 +50,7 @@ For future updates, use this format:
 ## Historical ledger
 
 This section records the change history from:
+
 - start: `928768dc0f589f3714b31a453d1c0044ceaa740e`
 - end: `a2010102553361ae2bbcaf7b8ba7c10f7684711b`
 
@@ -54,6 +59,7 @@ The historical section is reconstructed from repository history. For old work, t
 ---
 
 ### 2026-03-23 - Initial scaffold
+
 - Files touched:
   - `.gitignore`
   - `index.html`
@@ -89,6 +95,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The project needed a working Windows-only parser foundation with clear separation between main process, parser engine, and renderer.
 
 ### 2026-03-23 - Browser-safe fallback for web deployments
+
 - Files touched:
   - `src/renderer/App.tsx`
   - `src/renderer/globals.d.ts`
@@ -102,6 +109,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The renderer had to avoid crashing when Electron APIs were unavailable outside the desktop runtime.
 
 ### 2026-03-23 - Real Neverwinter CSV parser and offline import
+
 - Files touched:
   - `src/core/aggregation/combatantTracker.ts`
   - `src/core/monitoring/logMonitorService.ts`
@@ -122,6 +130,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The original scaffold needed to support real logs, not placeholder assumptions.
 
 ### 2026-03-23 - Tabbed player detail analysis
+
 - Files touched:
   - `src/core/aggregation/combatantTracker.ts`
   - `src/core/aggregation/encounterAggregator.ts`
@@ -138,6 +147,7 @@ The historical section is reconstructed from repository history. For old work, t
   - A flat summary was not enough; users needed per-player drill-down views backed by encounter-aware data.
 
 ### 2026-03-23 - Neverwinter class and power metadata integration
+
 - Files touched:
   - `src/renderer/App.tsx`
   - `src/renderer/nwMetadata.ts`
@@ -151,6 +161,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Combat log names alone were not enough to give meaningful class-aware context in the UI.
 
 ### 2026-03-23 - Obsidian shell renderer rebuild
+
 - Files touched:
   - `src/renderer/App.tsx`
   - `src/renderer/analysisViewModel.ts`
@@ -164,6 +175,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The renderer needed a stronger structural shell and clearer separation between data shaping and presentation.
 
 ### 2026-03-23 - Stitch-based design system pass
+
 - Files touched:
   - `src/renderer/analysisViewModel.ts`
   - `src/renderer/components/ObsidianScreens.tsx`
@@ -176,6 +188,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The earlier UI pass still needed a more coherent design system and complete app-shell treatment.
 
 ### 2026-03-23 - Runtime telemetry integration
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
   - `src/main/main.ts`
@@ -189,6 +202,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The app was showing fake runtime metrics and needed real operational visibility.
 
 ### 2026-03-23 - Parser correctness improvements for companions and values
+
 - Files touched:
   - `src/core/parser/parseLine.test.ts`
   - `src/core/parser/parseLine.ts`
@@ -201,6 +215,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Early real-log testing showed wrong ownership and amount extraction in common lines.
 
 ### 2026-03-23 - Latest-log detection and live file workflow
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
   - `src/core/watcher/detectActiveLog.test.ts`
@@ -216,6 +231,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Users needed a reliable way to track the newest active log rather than picking a single stale file manually.
 
 ### 2026-03-23 - Setup running state and session indicator cleanup
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
   - `src/renderer/App.tsx`
@@ -231,6 +247,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The setup flow and session state display were unclear and easy to misread.
 
 ### 2026-03-23 - Recharts integration for combat graphs
+
 - Files touched:
   - `package-lock.json`
   - `package.json`
@@ -249,6 +266,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The app needed proper charting for combat trends and analysis views.
 
 ### 2026-03-23 - Live target focus chips
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -259,6 +277,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Users needed faster live target context while tracking current combat.
 
 ### 2026-03-24 - Collapsible sidebar and richer focus details
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -270,6 +289,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The shell needed better navigation density and more meaningful live focus presentation.
 
 ### 2026-03-24 - False parser error reduction
+
 - Files touched:
   - `src/core/parser/parseLine.test.ts`
   - `src/core/parser/parseLine.ts`
@@ -280,6 +300,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The parser was surfacing too many false errors and misclassifying harmless lines.
 
 ### 2026-03-24 - NW Hub artifact extraction and integration
+
 - Files touched:
   - `scripts/extract-nw-hub-artifacts.mjs`
   - `scripts/extract-nw-hub-classes.mjs`
@@ -315,6 +336,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Artifact and power data needed richer metadata and visuals to support better parsing and presentation.
 
 ### 2026-03-24 - Live parser performance pass
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
   - `src/core/parser/parseLine.test.ts`
@@ -331,6 +353,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Live tracking performance was degrading under higher event volume.
 
 ### 2026-03-24 - Renderer settings and visual control pass
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/App.tsx`
@@ -345,6 +368,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The settings page needed to become functional, and the renderer needed smoother user control.
 
 ### 2026-03-24 - Guided compare flow
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -355,6 +379,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The previous compare interaction was confusing and not explicit enough.
 
 ### 2026-03-24 - Library overhaul
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -366,6 +391,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The library needed to be a usable in-app knowledge base instead of a thin list.
 
 ### 2026-03-24 - Highest hit tracking and mechanics-based ranking
+
 - Files touched:
   - `src/core/aggregation/combatantTracker.ts`
   - `src/renderer/analysisViewModel.test.ts`
@@ -382,6 +408,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Users needed better ranking and visibility into single-hit peaks and cleaner focus aggregation.
 
 ### 2026-03-24 - Windows-wide combat log auto-discovery
+
 - Files touched:
   - `src/main/main.ts`
   - `src/main/preload.ts`
@@ -398,6 +425,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Many users will not have identical log locations, so setup needed broader discovery support.
 
 ### 2026-03-24 - Viewport shell and spreadsheet audit
+
 - Files touched:
   - `src/renderer/styles.css`
   - `tmp-sheet-edit.html`
@@ -409,6 +437,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The renderer needed stronger viewport containment and the external spreadsheet needed initial evaluation.
 
 ### 2026-03-24 - Responsive shell rework
+
 - Files touched:
   - `src/renderer/styles.css`
 - What changed:
@@ -418,6 +447,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Full-screen and maximized layouts were overflowing and wasting space.
 
 ### 2026-03-24 - Native Windows Electron shell direction
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/App.tsx`
@@ -430,6 +460,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The app needed to feel like an Electron utility, not a website wrapped in Electron.
 
 ### 2026-03-24 - First-run setup helper and sortable live table
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -441,6 +472,7 @@ The historical section is reconstructed from repository history. For old work, t
   - New users needed clearer onboarding and the live table needed more direct utility.
 
 ### 2026-03-24 - Recursive auto-detect and explicit confirmation flow
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/App.tsx`
@@ -453,6 +485,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Setup needed to reflect real Windows systems rather than hardcoded assumptions.
 
 ### 2026-03-24 - Sidebar tightening and image fallback improvements
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/nwMetadata.ts`
@@ -465,6 +498,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The sidebar wasted space and asset rendering was failing when names did not match exactly.
 
 ### 2026-03-24 - Auto_awesome removal and artifact damage tab
+
 - Files touched:
   - `public/nw-hub/powers/*.png`
   - `src/core/aggregation/combatantTracker.ts`
@@ -480,6 +514,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The title bar icon choice was wrong, image coverage was incomplete, and users needed post-artifact damage visibility.
 
 ### 2026-03-24 - Setup-first launch and extensionless log handling
+
 - Files touched:
   - `src/core/watcher/detectActiveLog.test.ts`
   - `src/core/watcher/detectActiveLog.ts`
@@ -496,6 +531,7 @@ The historical section is reconstructed from repository history. For old work, t
   - New-user setup was confusing and real Neverwinter log naming on disk was broader than `.log` only.
 
 ### 2026-03-24 - Timeline chart standardized on Recharts
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
 - What changed:
@@ -504,6 +540,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The charting stack needed consistency across the app.
 
 ### 2026-03-24 - Library nav restoration and related state fixes
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
   - `src/core/watcher/detectActiveLog.test.ts`
@@ -521,6 +558,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Library access had regressed and shell state consistency needed correction.
 
 ### 2026-03-24 - Responsive shell stabilization and maintenance actions
+
 - Files touched:
   - `package.json`
   - `src/main/errorLogger.ts`
@@ -541,6 +579,7 @@ The historical section is reconstructed from repository history. For old work, t
   - The UI was laggy, responsive behavior was unstable, and debugging information needed to be persisted.
 
 ### 2026-03-24 - Electron startup hardening
+
 - Files touched:
   - `package.json`
   - `scripts/dev-electron.mjs`
@@ -554,6 +593,7 @@ The historical section is reconstructed from repository history. For old work, t
   - `npm run dev` was failing because Electron was booting in the wrong mode.
 
 ### 2026-03-24 - IPC send safety during reload and teardown
+
 - Files touched:
   - `.logs/main-process-2026-03-24.log`
   - `scripts/dev-electron.mjs`
@@ -568,6 +608,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Reloads and renderer teardown were producing repeated `WebFrameMain` disposal errors.
 
 ### 2026-03-24 - Fast Refresh compatibility cleanup
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/App.tsx`
@@ -580,6 +621,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Vite Fast Refresh was invalidating due to mixed component/non-component exports.
 
 ### 2026-03-24 - Large-log import streaming and encounter segmentation pass
+
 - Files touched:
   - `.logs/main-process-2026-03-24.log`
   - `src/core/aggregation/combatantTracker.ts`
@@ -596,6 +638,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Large imported logs were causing performance and memory problems.
 
 ### 2026-03-24 - Additional import-path optimization
+
 - Files touched:
   - `src/core/monitoring/logMonitorService.ts`
 - What changed:
@@ -604,6 +647,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Large-log import still needed more optimization after the first streaming pass.
 
 ### 2026-03-24 - Artifact window and large-log pressure reduction
+
 - Files touched:
   - `src/core/aggregation/combatantTracker.ts`
   - `src/renderer/analysisViewModel.ts`
@@ -616,6 +660,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Artifact damage needed correctness and the large-log path still needed lower memory pressure.
 
 ### 2026-03-24 - Worker-thread import architecture
+
 - Files touched:
   - `src/core/monitoring/importWorker.ts`
   - `src/core/monitoring/logMonitorService.ts`
@@ -625,6 +670,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Heavy imports should not block the main Electron process.
 
 ### 2026-03-24 - Clickable rows and softer visual pass
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -636,6 +682,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Analysis surfaces needed deeper interactivity and less harsh presentation.
 
 ### 2026-03-25 - Renderer startup OOM reduction
+
 - Files touched:
   - `.logs/main-process-2026-03-25.log`
   - `src/renderer/App.tsx`
@@ -645,6 +692,7 @@ The historical section is reconstructed from repository history. For old work, t
   - Startup was failing because the renderer was building too much state immediately and crashing from memory pressure.
 
 ### 2026-03-25 - Lightweight bootstrap state
+
 - Files touched:
   - `docs/project-fixes-log.md`
   - `src/main/main.ts`
@@ -663,6 +711,7 @@ The historical section is reconstructed from repository history. For old work, t
 For every future task, add a new section in this format:
 
 ### YYYY-MM-DD - Change Set Title
+
 - Files touched:
   - `path`
   - `path`
@@ -677,6 +726,7 @@ Do not replace a future entry with a git summary line.
 Write what changed in the files and why it was done.
 
 ### 2026-03-25 - Live player selection fix and live table role filters
+
 - Files touched:
   - `src/renderer/App.tsx`
   - `src/renderer/components/ObsidianScreens.tsx`
@@ -698,6 +748,7 @@ Write what changed in the files and why it was done.
   - pending at time of entry creation, then completed after test/build pass in the same turn
 
 ### 2026-03-25 - Multiline combat-log line handling for data integrity
+
 - Files touched:
   - `src/core/reader/lineBuffer.ts`
   - `src/core/reader/lineBuffer.test.ts`
@@ -713,6 +764,7 @@ Write what changed in the files and why it was done.
   - pending at time of entry creation, then completed after test/build and import benchmark rerun in the same turn
 
 ### 2026-03-25 - Live encounter scope control and archived session history
+
 - Files touched:
   - `src/shared/types.ts`
   - `src/core/monitoring/logMonitorService.ts`
@@ -733,6 +785,7 @@ Write what changed in the files and why it was done.
   - pending at time of entry creation, then completed after test/build pass in the same turn
 
 ### 2026-03-25 - Sidebar footer cleanup and clearer Party Overview and Encounters UX
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -767,6 +820,7 @@ Write what changed in the files and why it was done.
   - `npm run build`
 
 ### 2026-03-25 - Live combat table refresh action and segmented role filters
+
 - Files touched:
   - `src/renderer/components/ObsidianScreens.tsx`
   - `src/renderer/styles.css`
@@ -793,6 +847,7 @@ Write what changed in the files and why it was done.
   - `npm run build`
 
 ### 2026-03-25 - Manual run recording and automatic dungeon recording foundations
+
 - Files touched:
   - `src/shared/types.ts`
   - `src/core/parser/parseAuxiliaryLogLine.ts`
@@ -829,6 +884,7 @@ Write what changed in the files and why it was done.
   - `npm run build`
 
 ### 2026-03-25 - Dedicated history view and readable recording archives
+
 - Files touched:
   - `src/shared/types.ts`
   - `src/core/parser/parseAuxiliaryLogLine.ts`
@@ -857,6 +913,7 @@ Write what changed in the files and why it was done.
   - `npm run build`
 
 ### 2026-03-25 - Electron runtime hardening, single-instance enforcement, About page, and portable Windows build setup
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/analysisViewModel.ts`
@@ -891,6 +948,7 @@ Write what changed in the files and why it was done.
   - duplicate-launch smoke check against the built Electron main process confirmed the first instance stayed alive and the second instance exited cleanly
 
 ### 2026-03-25 - Open-source repo setup, distribution docs, and security documentation
+
 - Files touched:
   - `LICENSE`
   - `README.md`
@@ -919,6 +977,7 @@ Write what changed in the files and why it was done.
   - `npm run dist:win-portable`
 
 ### 2026-03-25 - Faster packaged startup bootstrap and Windows release format rework
+
 - Files touched:
   - `src/main/main.ts`
   - `src/renderer/App.tsx`
@@ -947,10 +1006,10 @@ Write what changed in the files and why it was done.
 - Verification:
   - `npm test`
   - `npm run build`
-  - `npm run dist:win-unpacked`
-  - smoke launch of `release/win-unpacked/Neverwinter Live Parser.exe`
+  - `npm run dist:win-unpacked` - smoke launch of `release/win-unpacked/Neverwinter Live Parser.exe`
 
 ### 2026-03-25 - Packaged runtime hardening for blank-window failures and release republish
+
 - Files touched:
   - `src/main/errorLogger.ts`
   - `src/renderer/App.tsx`
@@ -972,3 +1031,37 @@ Write what changed in the files and why it was done.
   - `npm run build`
   - deleted the previous `release` directory after stopping packaged app processes that were locking it
   - `npm run dist:win-unpacked`
+
+### 2026-03-25 - Packaged renderer path fix and app activity logging
+
+- Files touched:
+  - `vite.config.ts`
+  - `src/main/errorLogger.ts`
+  - `src/main/main.ts`
+  - `docs/project-fixes-log.md`
+- What changed:
+  - Set the Vite build `base` to `./` so packaged Electron builds load renderer assets with relative paths instead of root-relative `/assets/...` URLs.
+  - Confirmed the built `dist/index.html` now points to `./assets/...`, which is the correct form for `file://` loading inside a packaged Electron app.
+  - Added a dedicated app activity logger in the main process that writes lifecycle and operational events to a dated `activity-YYYY-MM-DD.log`.
+  - Added activity and diagnostics capture for:
+    - app ready
+    - second-instance interception
+    - BrowserWindow creation
+    - dev or packaged load target
+    - renderer load start
+    - DOM ready
+    - renderer finished load
+    - renderer did-fail-load
+    - renderer console warnings and errors
+    - window unresponsive and responsive transitions
+    - monitoring start, stop, import, discover, and recording requests
+  - Updated packaged logging to use the runtime `userData/logs` directory, which gives release builds a consistent writable location for activity, renderer, and main-process logs.
+- Why:
+  - The packaged app could show a black screen even though the process stayed alive, which strongly indicated that the renderer assets were not loading correctly under `file://`.
+  - A production release needs more than error-only logs; startup and lifecycle activity must also be captured so silent packaged failures can be reconstructed.
+- Verification:
+  - `npm test`
+  - `npm run build`
+  - confirmed `dist/index.html` references `./assets/...`
+  - built a fresh clean unpacked release in `release-clean/win-unpacked`
+  - confirmed `app.asar` contains `dist/index.html`, packaged assets, `dist-electron/main/main.js`, and `dist-electron/main/preload.js`

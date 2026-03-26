@@ -11,6 +11,7 @@ import {
   getLogDirectory,
   listErrorLogs,
   readErrorLog,
+  writeActivityLog,
   writeErrorLog,
   writeRendererLog
 } from "./errorLogger.js";
@@ -353,6 +354,7 @@ function createWindow(): void {
       devTools: isDev
     }
   });
+  void writeActivityLog("Created BrowserWindow instance", "Window lifecycle");
 
   const windowSession = mainWindow.webContents.session;
   windowSession.setPermissionRequestHandler((_webContents, _permission, callback) => {
@@ -382,18 +384,55 @@ function createWindow(): void {
   });
 
   if (isDev) {
+    void writeActivityLog(`Loading dev server URL: ${process.env.VITE_DEV_SERVER_URL!}`, "Window lifecycle");
     void mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL!);
   } else {
-    void mainWindow.loadFile(path.join(__dirname, "../../dist/index.html"));
+    const indexPath = path.join(__dirname, "../../dist/index.html");
+    void writeActivityLog(`Loading packaged index file: ${indexPath}`, "Window lifecycle");
+    void mainWindow.loadFile(indexPath);
   }
 
   mainWindow.once("ready-to-show", () => {
     if (mainWindow && !mainWindow.isDestroyed()) {
+      void writeActivityLog("Window ready-to-show fired", "Window lifecycle");
       mainWindow.show();
     }
   });
 
+  mainWindow.webContents.on("did-start-loading", () => {
+    void writeActivityLog("Renderer started loading", "Window lifecycle");
+  });
+  mainWindow.webContents.on("dom-ready", () => {
+    void writeActivityLog("Renderer DOM ready", "Window lifecycle");
+  });
+  mainWindow.webContents.on("did-finish-load", () => {
+    void writeActivityLog("Renderer finished loading", "Window lifecycle");
+  });
+  mainWindow.webContents.on("did-fail-load", (_event, errorCode, errorDescription, validatedURL) => {
+    void writeErrorLog(
+      new Error(`did-fail-load ${errorCode}: ${errorDescription} (${validatedURL})`),
+      "Renderer failed to load"
+    );
+  });
+  mainWindow.webContents.on("console-message", (_event, level, message, line, sourceId) => {
+    if (level >= 2) {
+      void writeRendererLog(
+        `${sourceId}:${line}\n${message}`,
+        level === 3 ? "Renderer console error" : "Renderer console warning"
+      );
+    } else {
+      void writeActivityLog(`${sourceId}:${line}\n${message}`, "Renderer console info");
+    }
+  });
+  mainWindow.on("unresponsive", () => {
+    void writeErrorLog(new Error("BrowserWindow became unresponsive"), "Window unresponsive");
+  });
+  mainWindow.on("responsive", () => {
+    void writeActivityLog("BrowserWindow became responsive again", "Window lifecycle");
+  });
+
   mainWindow.on("closed", () => {
+    void writeActivityLog("Window closed", "Window lifecycle");
     mainWindow = null;
   });
 
@@ -446,6 +485,7 @@ function emitState(state: AppState): void {
 monitor.on("state", (state) => emitState(state));
 
 ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
+  void writeActivityLog(JSON.stringify(config), "Monitoring start request");
   await writeSettings({
     selectedLogFolder:
       config.folderPath ?? (config.filePath ? path.dirname(config.filePath) : null)
@@ -453,16 +493,22 @@ ipcMain.handle("monitoring:start", async (_event, config: MonitoringConfig) => {
   return withTelemetry(await monitor.start(config));
 });
 
-ipcMain.handle("monitoring:importFile", async (_event, filePath: string) =>
-  withTelemetry(await monitor.importLogFile(filePath))
-);
-ipcMain.handle("monitoring:stop", async () => withTelemetry(await monitor.stop()));
-ipcMain.handle("monitoring:startManualRecording", async () =>
-  withTelemetry(await monitor.startManualRecording())
-);
-ipcMain.handle("monitoring:stopActiveRecording", async () =>
-  withTelemetry(await monitor.stopActiveRecording())
-);
+ipcMain.handle("monitoring:importFile", async (_event, filePath: string) => {
+  void writeActivityLog(filePath, "Monitoring import request");
+  return withTelemetry(await monitor.importLogFile(filePath));
+});
+ipcMain.handle("monitoring:stop", async () => {
+  void writeActivityLog("Stop monitoring requested", "Monitoring stop request");
+  return withTelemetry(await monitor.stop());
+});
+ipcMain.handle("monitoring:startManualRecording", async () => {
+  void writeActivityLog("Manual recording requested", "Recording request");
+  return withTelemetry(await monitor.startManualRecording());
+});
+ipcMain.handle("monitoring:stopActiveRecording", async () => {
+  void writeActivityLog("Stop recording requested", "Recording request");
+  return withTelemetry(await monitor.stopActiveRecording());
+});
 ipcMain.handle("monitoring:getState", async () => {
   const state = monitor.getState();
   const savedFolder = (await readSettings()).selectedLogFolder;
@@ -520,8 +566,12 @@ ipcMain.handle("dialog:selectLogFile", async () => {
   return selected;
 });
 
-ipcMain.handle("monitoring:discoverLogs", async () => discoverCombatLogCandidates());
+ipcMain.handle("monitoring:discoverLogs", async () => {
+  void writeActivityLog("Auto-detect scan requested", "Monitoring discover request");
+  return discoverCombatLogCandidates();
+});
 ipcMain.handle("maintenance:clearData", async () => {
+  void writeActivityLog("Clear app data requested", "Maintenance request");
   await monitor.stop();
   await clearStoredAppData();
   const state = monitor.getState();
@@ -552,6 +602,7 @@ ipcMain.handle("maintenance:logRendererError", async (_event, payload: { context
 });
 
 app.whenReady().then(() => {
+  void writeActivityLog("Electron app ready", "App lifecycle");
   createWindow();
   telemetryTimer = setInterval(() => {
     if (!canEmitToWindow()) {
@@ -561,6 +612,7 @@ app.whenReady().then(() => {
   }, 3000);
 
   app.on("activate", () => {
+    void writeActivityLog("App activate event", "App lifecycle");
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
@@ -568,6 +620,7 @@ app.whenReady().then(() => {
 });
 
 app.on("second-instance", () => {
+  void writeActivityLog("Second-instance launch intercepted", "App lifecycle");
   if (!mainWindow || mainWindow.isDestroyed()) {
     createWindow();
     return;
@@ -589,6 +642,7 @@ process.on("unhandledRejection", (reason) => {
 });
 
 app.on("window-all-closed", () => {
+  void writeActivityLog("All windows closed", "App lifecycle");
   if (telemetryTimer) {
     clearInterval(telemetryTimer);
     telemetryTimer = null;

@@ -31,6 +31,11 @@ function toLogMessage(error: unknown, context: string): string {
   return `[${timestamp}] ${context}\n${String(error)}\n\n`;
 }
 
+function toActivityMessage(message: string, context: string): string {
+  const timestamp = new Date().toISOString();
+  return `[${timestamp}] ${context}\n${message}\n\n`;
+}
+
 export async function writeErrorLog(error: unknown, context: string): Promise<void> {
   const logDirectory = getLogDirectory();
   const fileName = `main-process-${new Date().toISOString().slice(0, 10)}.log`;
@@ -55,6 +60,19 @@ export async function writeRendererLog(message: string, context = "Renderer log"
     await fs.appendFile(filePath, `[${timestamp}] ${context}\n${message}\n\n`, "utf8");
   } catch {
     // Ignore renderer logging failures for the same reason as main-process logs.
+  }
+}
+
+export async function writeActivityLog(message: string, context = "App activity"): Promise<void> {
+  const logDirectory = getLogDirectory();
+  const fileName = `activity-${new Date().toISOString().slice(0, 10)}.log`;
+  const filePath = path.join(logDirectory, fileName);
+
+  try {
+    await fs.mkdir(logDirectory, { recursive: true });
+    await fs.appendFile(filePath, toActivityMessage(message, context), "utf8");
+  } catch {
+    // Ignore activity logging failures for the same reason as error logs.
   }
 }
 
