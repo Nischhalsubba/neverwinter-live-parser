@@ -592,7 +592,8 @@ input {
 }
 
 .oa-topbar {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 15;
   height: 46px;
   min-width: 0;
@@ -605,6 +606,7 @@ input {
   padding: 0 14px;
   background: #111722;
   border-bottom: 1px solid #2c3442;
+  backdrop-filter: blur(12px);
   -webkit-app-region: drag;
 }
 
@@ -953,6 +955,10 @@ button {
   background: var(--oa-surface-low);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition:
+    transform calc(140ms * var(--oa-motion-factor)) ease,
+    border-color calc(160ms * var(--oa-motion-factor)) ease,
+    box-shadow calc(160ms * var(--oa-motion-factor)) ease;
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
@@ -964,6 +970,15 @@ button {
 .oa-stat-card,
 .oa-theme-card {
   border: 1px solid rgba(205, 189, 255, 0.15);
+}
+
+.oa-panel:hover,
+.oa-mini-panel:hover,
+.oa-stat-card:hover,
+.oa-theme-card:hover {
+  border-color: rgba(101, 188, 212, 0.28);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.44);
+  transform: translateY(-1px);
 }
 
 .oa-panel,
@@ -1362,7 +1377,10 @@ button {
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: 180ms ease;
+  transition:
+    transform calc(120ms * var(--oa-motion-factor)) ease,
+    filter calc(120ms * var(--oa-motion-factor)) ease,
+    box-shadow calc(120ms * var(--oa-motion-factor)) ease;
 }
 
 .oa-spin {
@@ -1372,6 +1390,11 @@ button {
 .oa-button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+.oa-button:not(:disabled):hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
 }
 
 .oa-button.primary {

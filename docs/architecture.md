@@ -70,3 +70,4 @@ Owns the renderer:
 - Keep renderer transformations in `src/ui/state`.
 - Keep metadata resolution in `src/ui/metadata`.
 - Update `docs/project-fixes-log.md` whenever changing code, structure, docs, or behavior.
+- Use `docs/maintainer-guide.md` as the fast operational map for future maintenance work.

@@ -60,6 +60,25 @@ src/
 - `src/ui`
   - React application bootstrap, renderer state projections, metadata resolution, shell screens, and desktop styling
 
+## Code Tour
+
+If you are new to the repo, start with these files first:
+
+- [main.ts](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/desktop/runtime/main.ts)
+  - Electron startup, IPC wiring, runtime protections, and desktop lifecycle
+- [logMonitorService.ts](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/engine/monitoring/logMonitorService.ts)
+  - the main service that coordinates log watching, parsing, encounter segmentation, recording, and state emission
+- [parseLine.ts](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/engine/parsing/parseLine.ts)
+  - core Neverwinter combat-line parser
+- [parseAuxiliaryLogLine.ts](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/engine/parsing/parseAuxiliaryLogLine.ts)
+  - parser for auxiliary Neverwinter logs such as voice, lifecycle, and client events
+- [App.tsx](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/ui/app/App.tsx)
+  - renderer bootstrap and high-level state subscription root
+- [ObsidianScreens.tsx](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/ui/shell/ObsidianScreens.tsx)
+  - main desktop shell and primary screen composition layer
+- [analysisViewModel.ts](c:/Users/acer/OneDrive/Documents/Projects/neverwinter-live-parser/src/ui/state/analysisViewModel.ts)
+  - renderer-side projections that turn raw snapshots into sortable, drillable UI rows
+
 ## Development Standards
 
 The repo is structured around a few rules:
@@ -72,6 +91,17 @@ The repo is structured around a few rules:
 - generated artifacts and local investigation files do not belong in the repo root
 
 Most hand-authored source files now start with a short purpose comment so the next developer can understand what the file owns before reading implementation details.
+
+## Maintenance Workflow
+
+- Keep Electron-only code in `src/desktop/runtime`
+- Keep parser and aggregation code in `src/engine`
+- Keep cross-process contracts in `src/shared/models`
+- Keep renderer-only projections in `src/ui/state`
+- Keep visual metadata lookup in `src/ui/metadata`
+- Update [docs/project-fixes-log.md](./docs/project-fixes-log.md) for every meaningful code, config, UI, or docs change
+
+For a more operational maintenance map, see [docs/maintainer-guide.md](./docs/maintainer-guide.md).
 
 ## Tech Stack
 

@@ -1212,3 +1212,30 @@ Write what changed in the files and why it was done.
     - `ui`
   - confirmed the renderer entry now points to `src/ui/app/main.tsx`
   - confirmed Electron dev/build entry paths now point to `dist-electron/desktop/runtime/main.js`
+
+### 2026-03-29 - Maintainer documentation and shell polish after the layered refactor
+
+- Files touched:
+  - `README.md`
+  - `docs/architecture.md`
+  - `docs/maintainer-guide.md`
+  - `docs/project-fixes-log.md`
+  - `src/ui/styles/app.css`
+- What changed:
+  - Expanded `README.md` with a code-tour section that points future developers to the most important runtime, engine, and UI files first.
+  - Added a maintenance workflow section to `README.md` so the layered structure is reinforced in the main project documentation.
+  - Added a new `docs/maintainer-guide.md` file that explains where to make changes, what each layer owns, and what verification commands to run.
+  - Updated `docs/architecture.md` so it explicitly links the new maintainer guide into the architecture documentation flow.
+  - Polished `src/ui/styles/app.css` with:
+    - sticky top-bar behavior
+    - backdrop blur on the shell header
+    - more intentional hover treatment for panels and stat cards
+    - lighter button hover interactions
+  - Kept the UI polish low-risk and additive so it improves perceived quality without changing app behavior.
+- Why:
+  - The user wanted the codebase to feel like a mature, professionally maintained desktop project, not just a refactored folder tree.
+  - The existing layered structure needed stronger onboarding and maintenance guidance so future developers can understand where work belongs quickly.
+  - The shell benefited from a focused UX polish pass to better match the professionalism of the architecture.
+- Verification:
+  - reviewed the updated docs for consistency with the current folder structure
+  - kept the CSS changes constrained to shell polish rather than behavioral layout risk
