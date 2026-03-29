@@ -1,3 +1,8 @@
+/**
+ * Development Electron launcher.
+ * Watches compiled desktop files, guarantees a clean Electron runtime
+ * environment, and restarts the desktop process without shell quoting issues.
+ */
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -13,7 +18,7 @@ env.VITE_DEV_SERVER_URL = "http://127.0.0.1:5173";
 
 const repoRoot = process.cwd();
 const electronBinary = require("electron");
-const electronEntry = path.resolve(repoRoot, "dist-electron", "main", "main.js");
+const electronEntry = path.resolve(repoRoot, "dist-electron", "desktop", "runtime", "main.js");
 
 let child = null;
 let restarting = false;

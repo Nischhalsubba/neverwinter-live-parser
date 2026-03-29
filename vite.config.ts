@@ -1,3 +1,8 @@
+/**
+ * Vite configuration for the renderer bundle.
+ * Uses relative asset paths so packaged Electron builds can load the UI from
+ * file:// URLs without blank-screen asset resolution failures.
+ */
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 

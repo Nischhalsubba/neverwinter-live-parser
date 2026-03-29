@@ -2,6 +2,11 @@ node_modules/
 dist/
 dist-electron/
 .vite/
+.logs/
+.tmp-*/
+.tmp-*.*
+tmp-sheet-unzipped/
+tmp-sheet-gviz.txt
 tmp*.html
 # Build / release artifacts
 release/
@@ -11,11 +16,8 @@ win-unpacked/
 *.exe
 *.7z
 *.zip
-# Build / release artifacts
-release/
-release-clean/
-dist/
-win-unpacked/
-*.exe
-*.7z
-*.zip
+chunk-*.js
+main-*.js
+polyfills-*.js
+styles-*.css
+package.json.tmp-test

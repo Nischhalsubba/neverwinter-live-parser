@@ -1124,3 +1124,91 @@ Write what changed in the files and why it was done.
   - removed the temporary HTML files from Git tracking with `git rm --cached`
   - confirmed the repository now has a `.gitattributes` file for Linguist overrides
   - confirmed `.gitignore` now blocks future `tmp*.html` files from being tracked again
+
+### 2026-03-29 - Codebase restructure into layered desktop, engine, shared, and UI architecture
+
+- Files touched:
+  - `index.html`
+  - `.gitignore`
+  - `package.json`
+  - `tsconfig.json`
+  - `tsconfig.electron.json`
+  - `vite.config.ts`
+  - `README.md`
+  - `docs/architecture.md`
+  - `docs/project-fixes-log.md`
+  - `scripts/dev-electron.mjs`
+  - `src/desktop/runtime/main.ts`
+  - `src/desktop/runtime/preload.ts`
+  - `src/desktop/runtime/services/errorLogger.ts`
+  - `src/engine/aggregation/*`
+  - `src/engine/encounters/*`
+  - `src/engine/monitoring/*`
+  - `src/engine/parsing/*`
+  - `src/engine/reading/*`
+  - `src/engine/watching/*`
+  - `src/shared/config/constants.ts`
+  - `src/shared/models/*`
+  - `src/ui/app/*`
+  - `src/ui/metadata/*`
+  - `src/ui/shell/*`
+  - `src/ui/state/*`
+  - `src/ui/styles/app.css`
+  - `src/ui/types/globals.d.ts`
+  - removed temporary root investigation and generated files:
+    - `.tmp-*`
+    - `chunk-*.js`
+    - `main-*.js`
+    - `polyfills-*.js`
+    - `styles-*.css`
+    - `tmp-sheet-*`
+    - `tmp_nwhub_classes.html`
+- What changed:
+  - Reorganized the source tree into four explicit layers:
+    - `src/desktop/runtime`
+    - `src/engine`
+    - `src/shared`
+    - `src/ui`
+  - Moved the Electron runtime entry points out of the old `src/main` folder into `src/desktop/runtime` so privileged desktop code is separated from parser logic and renderer code.
+  - Moved parser and aggregation modules from the old `src/core` tree into `src/engine`, split by responsibility:
+    - aggregation
+    - encounters
+    - monitoring
+    - parsing
+    - reading
+    - watching
+  - Moved renderer code from the old `src/renderer` tree into `src/ui`, further separating:
+    - app bootstrap
+    - metadata lookup
+    - shell screens
+    - renderer state projections
+    - styles
+    - preload typings
+  - Split the old flat `src/shared` folder into:
+    - `src/shared/config`
+    - `src/shared/models`
+    - `src/shared/data`
+  - Updated renderer, engine, preload, and main-process imports to follow the new structure without changing the underlying app behavior.
+  - Updated `index.html`, `package.json`, `tsconfig.json`, `tsconfig.electron.json`, and `scripts/dev-electron.mjs` so dev, build, and packaged runtime entry points follow the new compiled output paths.
+  - Fixed the packaged Electron index-file path in `src/desktop/runtime/main.ts` after the main-process source moved deeper in the compiled output tree.
+  - Added purpose comments to major runtime, engine, shared-model, and renderer files so future maintainers can see what each file owns before reading implementation details.
+  - Added a stronger architecture-focused `README.md` and a dedicated `docs/architecture.md` to explain the new layering and source responsibilities.
+  - Improved basic UI polish in `src/ui/styles/app.css` with a clearer file header, shared focus styling, font inheritance for inputs, and smoother document scroll behavior.
+  - Cleaned the repo root by deleting temporary Electron probes, generated bundle chunks, and one-off investigation artifacts that made the repo look unmaintained.
+  - Expanded `.gitignore` so those temp and generated files do not come back.
+- Why:
+  - The user wanted the repository restructured into the kind of layered folder and file organization a senior long-term maintainer would expect.
+  - The previous layout mixed renderer code, Electron runtime code, parser engine code, and shared contracts too closely, which made onboarding and future refactors harder than necessary.
+  - The repo root contained temporary probes and generated artifacts that distracted from the real source of truth and made the project look less professional.
+  - The build and packaging entry points needed to be aligned with the new structure so the refactor did not silently break the Electron app.
+  - The project needed architecture documentation and stronger file-level intent comments to reduce future confusion and repeated mistakes.
+- Verification:
+  - ran `npm test`
+  - ran `npm run build`
+  - confirmed the new `src` tree now resolves to:
+    - `desktop`
+    - `engine`
+    - `shared`
+    - `ui`
+  - confirmed the renderer entry now points to `src/ui/app/main.tsx`
+  - confirmed Electron dev/build entry paths now point to `dist-electron/desktop/runtime/main.js`

@@ -12,5 +12,5 @@
     "resolveJsonModule": true,
     "types": ["node"]
   },
-  "include": ["src/main", "src/core", "src/shared"]
+  "include": ["src/desktop", "src/engine", "src/shared"]
 }
