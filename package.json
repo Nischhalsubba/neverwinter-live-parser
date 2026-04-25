@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "npm@11.6.2",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
   "author": "Archew",
   "license": "MIT",
   "description": "Windows-only local Neverwinter combat log parser with a minimal Electron dashboard.",
@@ -13,6 +18,8 @@
     "dev:main": "tsc -p tsconfig.electron.json --watch --preserveWatchOutput",
     "dev:electron": "wait-on tcp:5173 file:dist-electron/main/main.js && node scripts/dev-electron.mjs",
     "build": "vite build && tsc -p tsconfig.electron.json",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit",
+    "check": "npm run typecheck && npm run test && npm run build",
     "dist:win-unpacked": "npm run build && electron-builder --win dir",
     "dist:win-portable": "npm run build && electron-builder --win portable",
     "test": "vitest run",
