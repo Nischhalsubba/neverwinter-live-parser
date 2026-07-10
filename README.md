@@ -1,380 +1,415 @@
+<div align="center">
+
+<img src="docs/images/readme-hero.svg" width="100%" alt="Neverwinter Live Parser Windows desktop combat analysis dashboard" />
+
 # Neverwinter Live Parser
 
-> A Windows-first desktop combat log parser for **Neverwinter**, built to read live combat logs, preserve session history, and turn raw encounter data into readable performance analysis for players, parties, dungeons, trials, and recorded log files.
+### A Windows-first, local-first desktop combat log parser for live tracking, encounter analysis, session history, and post-run review.
 
-[![Electron](https://img.shields.io/badge/Desktop-Electron-47848F?style=for-the-badge&logo=electron&logoColor=white)](#tech-stack)
-[![React](https://img.shields.io/badge/UI-React%2019-61DAFB?style=for-the-badge&logo=react&logoColor=111111)](#tech-stack)
-[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](#tech-stack)
-[![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)](#development)
-[![Windows](https://img.shields.io/badge/Target-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)](#windows-build-and-usage)
+<p>
+  <img src="https://img.shields.io/badge/Desktop-Electron%2035-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron 35" />
+  <img src="https://img.shields.io/badge/UI-React%2019-61DAFB?style=for-the-badge&logo=react&logoColor=111111" alt="React 19" />
+  <img src="https://img.shields.io/badge/Language-TypeScript%205.8-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.8" />
+  <img src="https://img.shields.io/badge/Target-Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Windows" />
+  <img src="https://img.shields.io/badge/Privacy-Local--first-16A34A?style=for-the-badge" alt="Local-first" />
+  <img src="https://img.shields.io/badge/License-MIT-F59E0B?style=for-the-badge" alt="MIT License" />
+</p>
 
----
+[Overview](#overview) · [Features](#features) · [Architecture](#architecture) · [Development](#development) · [Windows builds](#windows-builds) · [Privacy](#privacy-and-security) · [Roadmap](#roadmap)
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Why This Project Exists](#why-this-project-exists)
-- [Designer's Perspective](#designers-perspective)
-- [What This Project Does](#what-this-project-does)
-- [Core Features](#core-features)
-- [Parser and Analysis Goals](#parser-and-analysis-goals)
-- [Tech Stack](#tech-stack)
-- [Application Architecture](#application-architecture)
-- [Windows Build and Usage](#windows-build-and-usage)
-- [Available Scripts](#available-scripts)
-- [Privacy and Security](#privacy-and-security)
-- [UX Principles](#ux-principles)
-- [Testing and Quality](#testing-and-quality)
-- [Roadmap](#roadmap)
-- [Maintainer](#maintainer)
+</div>
 
 ---
+
+> [!NOTE]
+> This is an active desktop-parser project. The repository contains a real Electron/React application, build scripts, tests, Windows packaging, live file watching, local persistence, and data-extraction utilities. Parser output should still be validated against representative Neverwinter combat logs before being treated as authoritative.
 
 ## Overview
 
-**Neverwinter Live Parser** is a local-first Windows desktop application for reading Neverwinter combat logs in real time. It is designed for players who want practical insight during and after dungeon, trial, and boss encounters without needing to upload logs to a browser dashboard.
+**Neverwinter Live Parser** is a Windows desktop utility that watches Neverwinter combat logs, parses combat events, organizes them into sessions and encounters, and presents the results through a focused analytical interface.
 
-The application focuses on three core outcomes:
+The app is designed for two connected workflows:
 
-1. Accurate Neverwinter combat log parsing.
-2. Readable encounter and party analysis.
-3. Fast Windows-first workflow for live tracking and post-run review.
+1. **Live tracking** while a player is actively running content.
+2. **Post-run review** of current or previously recorded combat logs.
 
-The project is built with Electron, React, TypeScript, Vite, and Recharts. It uses Electron for the desktop shell, React for the interface, TypeScript for safer app logic, Vite for renderer development/building, and Recharts for visualizing combat data.
+Unlike an upload-first website, the parser is built around local Windows files and a desktop runtime. The application can follow the active combat-log file, preserve session context, expose player and encounter summaries, and package as an unpacked or portable Windows application.
 
----
+### Product goals
 
-## Why This Project Exists
+- Keep combat data on the player’s machine.
+- Detect and follow active combat logs reliably.
+- Preserve previous sessions when new log files appear.
+- Separate useful encounter scopes where possible.
+- Make party, player, power, target, healing, support, and damage-taken analysis understandable.
+- Surface uncertainty instead of silently inventing confident numbers.
+- Offer a workflow that feels like a real desktop tool rather than a spreadsheet wearing fantasy armor.
 
-Neverwinter combat logs contain a lot of useful information, but raw logs are difficult to read during actual gameplay. Players often need to understand more than a single DPS number.
+## Why this project exists
 
-Useful questions include:
+Raw combat logs contain more information than a single DPS result can communicate. Players often need to answer questions such as:
 
-- Who dealt the most damage?
-- Which powers contributed most?
-- What happened during a specific boss fight?
-- How did performance change across a dungeon or trial?
-- Who took the most damage?
-- Which healing or support windows mattered?
-- Which targets were being hit?
-- What did the log capture and when?
-- Can older recorded logs be reviewed later?
+- Who contributed the most damage during a specific encounter?
+- Which powers produced that damage?
+- Which targets received the most attention?
+- How much healing or damage taken occurred?
+- Did performance change between boss phases or pulls?
+- Was a companion, artifact, or support effect responsible for part of the output?
+- Did the parser miss events when a new combat-log file was created?
+- Can an older run be reviewed without replaying the content?
 
-This project exists to make those answers easier to see, compare, and understand.
+The project exists to make those questions easier to investigate during and after play.
 
----
+## Features
 
-## Designer's Perspective
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Live file watching</h3>
+      <p>Uses a Windows desktop runtime and Chokidar to follow active Neverwinter combat logs as they change.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Session preservation</h3>
+      <p>Keeps older session context available when a new combat-log file is created or selected.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Encounter analysis</h3>
+      <p>Organizes parsed data into useful scopes for bosses, pulls, dungeons, trials, and broader sessions where the log supports it.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>Local desktop workflow</h3>
+      <p>Packages as a Windows unpacked application or portable executable without requiring combat-log uploads.</p>
+    </td>
+  </tr>
+</table>
 
-This app is designed from the point of view of a player and product designer who understands enough code to care about both data accuracy and usability.
+### Live tracking
 
-The most important UX challenge is not only parsing lines correctly. It is making parsed data readable while the user is thinking about a game run.
+- Watches active `combatlog_YYYY-MM-DD_HH-MM-SS` files.
+- Follows file growth during gameplay.
+- Detects newly created combat logs.
+- Maintains session-level and encounter-level scopes.
+- Supports diagnostics when the expected log path or file is unavailable.
+- Uses the Electron main process for file-system access rather than exposing direct file access to the renderer.
 
-The interface should help players:
+### Analysis direction
 
-- identify the active encounter quickly
-- compare party members without confusion
-- understand damage, healing, damage taken, support, artifacts, powers, and targets
-- switch between live tracking and session review
-- trust the parser output
-- debug log-tracking issues without needing to inspect raw files manually
+The project is structured to support:
 
-The design goal is practical clarity. The app should feel like a tool players can keep open during endgame play, not a confusing spreadsheet with a game skin.
+- total damage and DPS
+- healing and damage taken
+- player and party rankings
+- power contribution
+- target focus
+- encounter timelines
+- support, artifact, buff, and debuff windows
+- companion and pet events
+- recorded log review
+- session history
+- parser diagnostics and unknown-event handling
 
----
+### Recorded logs
 
-## What This Project Does
+The parser is not limited to the currently growing file. Its product direction includes importing or reopening older logs so that previous runs remain useful for analysis, testing, and debugging.
 
-This repository powers a dedicated Neverwinter combat log parser, DPS tracker, encounter analysis tool, and local session review utility for Windows players.
+### NW-Hub extraction utilities
 
-It supports workflows around:
-
-- live combat tracking
-- party overview and damage breakdowns
-- healing and damage taken analysis
-- support and artifact windows
-- boss-by-boss encounter review
-- recorded combat log import/review
-- organized session and run history
-- auxiliary log context for debugging and run diagnostics
-
-The project is designed as a true desktop utility rather than a website wrapper.
-
----
-
-## Core Features
-
-### Live Neverwinter Combat Log Tracking
-
-- Follows active `combatlog_YYYY-MM-DD_HH-MM-SS` files in real time.
-- Watches combat data while the player is actively running content.
-- Tracks session-level and encounter-level scopes.
-- Preserves older sessions when new logs are created.
-- Supports post-run analysis after the live session ends.
-
-### Encounter Breakdown and Session Review
-
-- Breaks down runs by encounter where possible.
-- Helps separate boss fights, trash pulls, and broader dungeon/trial sessions.
-- Shows party-level contribution instead of only personal output.
-- Helps compare damage, healing, support, target focus, powers, and timing.
-
-### Recorded Log Analysis
-
-- Supports importing or reviewing older Neverwinter combat logs.
-- Keeps archived logs useful instead of forcing everything into a live-only workflow.
-- Allows players to inspect past runs after gameplay.
-
-### Auxiliary Neverwinter Log Awareness
-
-- The project is designed to preserve context beyond the main combat stream where useful.
-- This can support troubleshooting around sessions, lifecycle events, and tracking issues.
-
-### NW-Hub Data Extraction Scripts
-
-The project includes scripts for extracting Neverwinter-related class and artifact data:
+The repository includes dedicated scripts for extracting class and artifact data:
 
 ```bash
 npm run extract:nwhub
 npm run extract:nwhub:artifacts
 ```
 
-These scripts support broader game-data enrichment and future analysis features.
+These scripts support game-data enrichment. Any extracted content should be reviewed for accuracy, provenance, and licensing before public redistribution.
 
----
+## Architecture
 
-## Parser and Analysis Goals
+```mermaid
+flowchart LR
+    LOG[Neverwinter combat logs] --> WATCH[Chokidar file watcher]
+    WATCH --> MAIN[Electron main process]
+    MAIN --> PARSER[Parser and aggregation logic]
+    PARSER --> IPC[Secure IPC boundary]
+    IPC --> UI[React renderer]
+    UI --> TABLES[Tables and drilldowns]
+    UI --> CHARTS[Recharts visualizations]
+    UI --> HISTORY[Session history]
+    MAIN --> STORE[Electron Store]
+    STORE --> HISTORY
+```
 
-The parser should prioritize:
+### Electron main process
 
-- correctness over flashy visuals
-- stable session tracking
-- clear encounter boundaries
-- readable aggregation
-- useful player-level drilldowns
-- power and target-level breakdowns
-- graceful handling of unexpected log lines
-- diagnostics when something cannot be parsed confidently
+Responsible for privileged desktop behavior:
 
-A good combat parser must be honest about uncertainty. If a line cannot be understood, the app should not silently produce misleading output.
+- application startup and window lifecycle
+- local file and directory access
+- live log watching
+- parser coordination where implemented
+- communication with the renderer
+- packaged-runtime constraints
+- settings and persistent desktop state
 
----
+### React renderer
 
-## Tech Stack
-
-| Layer | Technology | Purpose |
-|---|---|---|
-| Desktop Shell | Electron `35.x` | Windows desktop app runtime |
-| UI | React `19.x` | Renderer interface |
-| Language | TypeScript `5.8.x` | Safer app and parser logic |
-| Build Tool | Vite `6.x` | Renderer dev server and build |
-| Charts | Recharts `3.x` | Graphs and visual breakdowns |
-| File Watching | Chokidar | Live log tracking |
-| Local Storage | Electron Store | Persistent app settings/state |
-| Testing | Vitest | Parser/UI unit testing direction |
-| Packaging | Electron Builder | Windows unpacked and portable builds |
-| Dev Orchestration | concurrently, wait-on | Runs renderer, main process, and Electron together |
-
----
-
-## Application Architecture
-
-The app has two main sides:
-
-### Electron Main Process
-
-Responsible for desktop/runtime behavior such as:
-
-- launching the desktop app
-- reading local files
-- watching combat logs
-- communicating with renderer process
-- controlling packaged runtime behavior
-- applying security-related desktop constraints
-
-### React Renderer
-
-Responsible for user-facing screens such as:
+Responsible for user-facing analysis:
 
 - live dashboard
-- encounter tables
-- player breakdowns
-- chart areas
-- session history
-- settings/preferences
-- error or diagnostic states
+- session and encounter selection
+- player rankings
+- power and target breakdowns
+- charts and trends
+- settings and diagnostic states
+- recorded-log review
 
-### Local-first Model
+### Local persistence
 
-The app is intended to work with local Neverwinter logs on the player's Windows machine. This keeps the workflow fast and private.
+`electron-store` is included for persistent application settings and state. Sensitive combat data should remain local unless a future feature explicitly tells the user that information will leave the device.
 
----
+## Technology stack
 
-## Windows Build and Usage
+| Layer | Technology | Verified role |
+|---|---|---|
+| Desktop runtime | Electron `35.x` | Windows application shell and privileged file access |
+| Renderer | React `19.x` | User interface and analysis views |
+| Language | TypeScript `5.8.x` | Main-process, renderer, and parser safety |
+| Renderer build | Vite `6.3.x` | Development server and production bundle |
+| Charts | Recharts `3.8.x` | Analytical visualizations |
+| File watching | Chokidar `4.x` | Live combat-log tracking |
+| Persistence | Electron Store `10.x` | Local settings and state |
+| Testing | Vitest `3.x` | Automated tests |
+| Packaging | Electron Builder `26.x` | Windows unpacked and portable artifacts |
+| Dev orchestration | concurrently + wait-on | Starts renderer, TypeScript watcher, and Electron in order |
 
-### Local Development
+## Runtime and data flow
+
+```mermaid
+sequenceDiagram
+    participant NW as Neverwinter
+    participant FS as Combat-log file
+    participant M as Electron main
+    participant P as Parser
+    participant R as React renderer
+
+    NW->>FS: Append combat event
+    FS->>M: File change detected
+    M->>P: Read new content
+    P->>P: Parse, classify, aggregate
+    P->>R: Send updated session/encounter data
+    R->>R: Refresh tables, charts, and diagnostics
+```
+
+> [!IMPORTANT]
+> Encounter segmentation and event classification are inference problems. Unknown or ambiguous lines should be reported or safely ignored rather than forced into misleading categories.
+
+## Development
+
+### Requirements
+
+- Windows for the intended Electron runtime and packaged application
+- Node.js `22+`
+- npm `10+`
+- repository currently declares npm `11.6.2`
+
+### Install and run
 
 ```powershell
 npm install
 npm run dev
 ```
 
-The development script runs the renderer, Electron main TypeScript build, and Electron shell together.
+The development command starts three coordinated processes:
 
-### Production Build
+1. Vite renderer server
+2. Electron-main TypeScript watcher
+3. Electron desktop shell after port `5173` and the compiled main entry are available
+
+### Verification
 
 ```powershell
+npm run typecheck
+npm run test
 npm run build
 ```
 
-### Recommended Windows Release Build
+Run the complete repository check:
 
-For fastest startup and daily use, generate the unpacked desktop build:
+```powershell
+npm run check
+```
+
+### Available scripts
+
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Run renderer, Electron-main watcher, and desktop shell together |
+| `npm run dev:renderer` | Start Vite only |
+| `npm run dev:main` | Watch and compile Electron main-process TypeScript |
+| `npm run dev:electron` | Launch Electron after required development outputs exist |
+| `npm run typecheck` | Type-check renderer and Electron main projects |
+| `npm run test` | Run Vitest tests |
+| `npm run build` | Build renderer and Electron main output |
+| `npm run check` | Type-check, test, and build |
+| `npm run preview` | Preview the Vite renderer build |
+| `npm run dist:win-unpacked` | Create an unpacked Windows application |
+| `npm run dist:win-portable` | Create a single portable Windows executable |
+| `npm run extract:nwhub` | Extract class-related data |
+| `npm run extract:nwhub:artifacts` | Extract artifact-related data |
+
+## Windows builds
+
+### Unpacked application
 
 ```powershell
 npm run dist:win-unpacked
 ```
 
-Launch it from:
+Expected application path:
 
 ```text
 release/win-unpacked/Neverwinter Live Parser.exe
 ```
 
-### Single-file Portable Build
+The unpacked build is generally preferable for repeated local use because it avoids the startup overhead of a self-extracting portable package.
 
-If a single-file output is needed:
+### Portable executable
 
 ```powershell
 npm run dist:win-portable
 ```
 
-Portable output path:
+Expected artifact pattern:
 
 ```text
 release/Neverwinter-Live-Parser-Portable-0.1.0.exe
 ```
 
-The unpacked build is preferred when startup responsiveness matters most.
+The package targets Windows x64. Code signing is not configured, so Windows SmartScreen or Smart App Control may warn users about downloaded builds.
 
----
+## Privacy and security
 
-## Available Scripts
+The application is intentionally local-first:
 
-| Command | Purpose |
-|---|---|
-| `npm run dev` | Starts renderer, main process watch, and Electron shell together |
-| `npm run dev:renderer` | Runs Vite dev server |
-| `npm run dev:main` | Watches Electron main TypeScript build |
-| `npm run dev:electron` | Starts Electron after renderer and main build are ready |
-| `npm run build` | Builds renderer and Electron main output |
-| `npm run dist:win-unpacked` | Builds unpacked Windows desktop app |
-| `npm run dist:win-portable` | Builds portable Windows executable |
-| `npm run test` | Runs Vitest tests |
-| `npm run preview` | Runs Vite preview |
-| `npm run extract:nwhub` | Extracts NW-Hub class-related data |
-| `npm run extract:nwhub:artifacts` | Extracts NW-Hub artifact-related data |
+- combat logs are read from the user’s Windows machine
+- analysis does not require uploading logs to a server
+- settings and application state use local Electron storage
+- packaged runtime behavior should avoid unexpected outbound requests
+- public releases should document every external network dependency
 
----
+See `SECURITY.md` for repository-specific hardening guidance.
 
-## Privacy and Security
+### Distribution risks
 
-This project is designed around local log reading.
+- Unsigned executables can trigger trust warnings.
+- File-watching logic must not expose arbitrary file-system access to untrusted renderer content.
+- IPC channels should validate all messages and paths.
+- Imported logs should be treated as untrusted input.
+- Debug logs should avoid leaking usernames, full local paths, account identifiers, or other personal information.
 
-- The app reads local Neverwinter log files from the user's machine.
-- Error/activity logs are intended for local debugging.
-- Automatic outbound web requests are blocked in packaged runtime.
-- Unsigned Windows builds can trigger Smart App Control or SmartScreen warnings.
-- Public distribution should use code signing to reduce trust warnings.
+## UX principles
 
-For runtime hardening and security notes, see:
-
-```text
-SECURITY.md
-```
-
----
-
-## UX Principles
-
-A combat parser is only useful if players can understand it quickly.
-
-### UI Priorities
-
-- Keep live data readable.
-- Make encounter scope obvious.
-- Separate session-level and encounter-level views.
-- Make party comparison easy.
-- Avoid overwhelming users with too many graphs at once.
+- Make the active session and encounter obvious.
 - Use tables for exact comparison and charts for patterns.
-- Keep settings simple.
-- Show clear warnings when a log path or parser state is wrong.
+- Keep live updates readable rather than visually noisy.
+- Separate session-level totals from encounter-level performance.
+- Explain metrics and filters in plain language.
+- Show clear empty, loading, missing-path, malformed-log, and unknown-event states.
+- Preserve keyboard usability for a desktop tool.
+- Avoid presenting inferred encounter boundaries as guaranteed truth.
 
-### Recommended Graphs
+## Testing strategy
 
-Useful visualizations for this type of tool include:
+### Parser fixtures
 
-- damage by player bar chart
-- healing by player bar chart
-- damage taken by player bar chart
-- damage over time line chart
-- power contribution breakdown
-- target focus breakdown
-- encounter timeline
+Tests should cover:
 
----
+- direct damage
+- critical and combat-advantage flags
+- healing
+- shielding and absorption
+- incoming damage
+- player, companion, pet, summon, and artifact sources
+- boss and trash targets
+- malformed or truncated lines
+- unknown event types
+- long sessions
+- file rotation and newly created combat logs
 
-## Testing and Quality
+### Product QA
 
-### QA Checklist
+- [ ] Development app launches on supported Windows versions.
+- [ ] Renderer and Electron main process type-check.
+- [ ] Tests pass.
+- [ ] Production build succeeds.
+- [ ] Unpacked application launches.
+- [ ] Portable application launches.
+- [ ] Default Neverwinter log path can be selected or detected.
+- [ ] Live changes appear without duplicating old lines.
+- [ ] New log-file creation does not destroy previous session history.
+- [ ] Imported recorded logs can be reviewed.
+- [ ] Tables and charts reconcile to the same totals.
+- [ ] Missing folders and permission errors produce useful messages.
+- [ ] Unknown lines do not crash the parser.
+- [ ] Packaged application makes no undocumented outbound requests.
 
-- [ ] App starts in development mode.
-- [ ] App builds successfully.
-- [ ] Windows unpacked build launches.
-- [ ] Portable build launches.
-- [ ] Live log watching works.
-- [ ] New combat log detection works.
-- [ ] Recorded log import/review works.
-- [ ] Encounter boundaries are understandable.
-- [ ] Player totals match expected sample logs.
-- [ ] Charts match table totals.
-- [ ] App handles missing log folder gracefully.
-- [ ] App handles malformed/unknown log lines safely.
-- [ ] No unexpected outbound requests happen in packaged app.
+## Known limitations
 
-### Parser Quality Notes
-
-Parser testing should include:
-
-- sample damage lines
-- healing lines
-- damage taken lines
-- pet/companion events
-- artifact events
-- boss encounters
-- trash pulls
-- long dungeon/trial sessions
-- log rotation/new file behavior
-
----
+- Windows is the supported target.
+- Public code signing and installer distribution are not yet configured.
+- Parser correctness depends on the available log samples and classification coverage.
+- Encounter segmentation may be imperfect for unusual content or incomplete logs.
+- Some planned support, buff/debuff, artifact, export, and overlay capabilities may remain under active development.
+- A generated README hero is used because this environment cannot launch the Windows Electron UI or capture a verified live screenshot.
 
 ## Roadmap
 
-- Improve parser coverage for all combat line patterns.
-- Add stronger encounter segmentation.
-- Add party composition summaries.
-- Add buff/debuff and support windows.
-- Add exportable reports.
-- Add overlay/widget mode for live gameplay.
-- Improve sample log testing.
-- Add clearer diagnostics for unknown events.
-- Add installer/code signing for public releases.
-- Improve accessibility and keyboard navigation.
+### Parser
 
----
+- [ ] Expand combat-line pattern coverage.
+- [ ] Improve boss and trash encounter segmentation.
+- [ ] Strengthen companion, artifact, support, buff, and debuff classification.
+- [ ] Add diagnostics for unknown and partially parsed events.
+- [ ] Grow fixture coverage with anonymized real logs.
+
+### Product
+
+- [ ] Improve session and encounter navigation.
+- [ ] Add clearer party-composition summaries.
+- [ ] Add exportable reports.
+- [ ] Add optional compact overlay or widget mode.
+- [ ] Improve accessibility and keyboard navigation.
+- [ ] Add stronger first-run log-path setup.
+
+### Distribution
+
+- [ ] Add automated release workflows.
+- [ ] Add code signing.
+- [ ] Publish checksums and release notes.
+- [ ] Document upgrade and data-migration behavior.
+
+<details>
+<summary><strong>Release verification checklist</strong></summary>
+
+```powershell
+npm ci
+npm run check
+npm run dist:win-unpacked
+npm run dist:win-portable
+```
+
+Verify both packaged outputs on a clean Windows machine before publishing them.
+
+</details>
 
 ## Maintainer
 
 **Nischhal Raj Subba**
 
-This repository represents an ongoing effort to build a polished, high-signal Neverwinter combat parser focused on practical real-world use during live play and post-run analysis.
+This repository represents an ongoing effort to build a clear, trustworthy Neverwinter combat-analysis tool for live play and post-run review.
+
+## Disclaimer
+
+Neverwinter Live Parser is an independent community project. It is not affiliated with or endorsed by Cryptic Studios, Arc Games, Gearbox Publishing, or the Neverwinter rights holders. Game names and related assets belong to their respective owners.
