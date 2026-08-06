@@ -4,6 +4,96 @@
 
 # Neverwinter Live Parser
 
+<!-- interactive-readme-standard:start -->
+
+> [!NOTE]
+> **Branch-specific documentation:** this section is maintained for [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main). It is generated from the files present on this branch and preserves the project-authored README below.
+
+<details open>
+<summary><strong>Interactive repository guide</strong></summary>
+
+## Branch overview
+
+| Item | Value |
+|---|---|
+| Repository | [`Nischhalsubba/neverwinter-live-parser`](https://github.com/Nischhalsubba/neverwinter-live-parser) |
+| Branch | [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main) |
+| Detected stack | React, Vite, Electron, TypeScript, JavaScript, HTML, CSS |
+| Detected manifests | package.json |
+| Documentation policy | Every maintained branch must explain purpose, setup, structure, architecture, flows, testing, delivery, security, and ownership. |
+
+## Repository structure
+
+```mermaid
+flowchart TD
+    ROOT["neverwinter-live-parser / main"]
+    ROOT --> P0[".github/"]
+    ROOT --> P1[".logs/"]
+    ROOT --> P2[".tmp-electron-app/"]
+    ROOT --> P3[".tmp-electron-app2/"]
+    ROOT --> P4["docs/"]
+    ROOT --> P5["public/"]
+    ROOT --> P6["scripts/"]
+    ROOT --> P7["src/"]
+    ROOT --> P8[".gitignore"]
+    ROOT --> P9[".tmp-argv.mjs"]
+    ROOT --> P10[".tmp-chokidar.mjs"]
+    ROOT --> P11[".tmp-electron-main.cjs"]
+    ROOT --> P12[".tmp-electron-named.mjs"]
+    ROOT --> P13[".tmp-electron-require.cjs"]
+    ROOT --> P14[".tmp-electron-require.mjs"]
+    ROOT --> P15[".tmp-electron-test.mjs"]
+    ROOT --> P16[".tmp-import-app.mjs"]
+    ROOT --> P17[".tmp-package.json"]
+    ROOT --> MORE["+ 29 more top-level entries"]
+```
+
+The diagram is generated from the branch's actual top-level files and directories. Use the branch link above for complete source navigation.
+
+## Website or application structure
+
+```mermaid
+flowchart TD
+    APP["neverwinter-live-parser"]
+    APP --> R0["public"]
+```
+
+## Application and responsibility flow
+
+```mermaid
+flowchart LR
+    ACTOR["User / contributor"]
+    ACTOR --> A0["Interface: public, src"]
+    A0 --> A1["Documentation: docs"]
+    A1 --> A2["Delivery: .github, scripts"]
+    A2 --> DELIVERY["Delivery: GitHub Actions"]
+```
+
+## Change-to-delivery flow
+
+```mermaid
+flowchart LR
+    CHANGE["Change on main"]
+    CHECK["Validate: npm run dev, npm run build, npm run test, npm run typecheck, npm run preview"]
+    REVIEW["Review documentation and architecture impact"]
+    RELEASE["Merge, release, or deploy according to this branch"]
+    CHANGE --> CHECK --> REVIEW --> RELEASE
+```
+
+## README requirements for this branch
+
+- Explain what this branch contains and how it differs from the default branch.
+- Keep installation, configuration, usage, testing, deployment, security, support, and license information accurate.
+- Document repository, website or application, API, data, authentication, background-job, and deployment flows when they exist.
+- Prefer Mermaid diagrams and expandable `<details>` sections for visual navigation.
+- Link diagrams and modules to real source paths; never invent missing components.
+- Preserve project-specific documentation and update diagrams whenever architecture or major paths change.
+- Treat secrets, private infrastructure, customer data, and credentials as prohibited README content.
+
+</details>
+
+<!-- interactive-readme-standard:end -->
+
 ### A Windows-first, local-first desktop combat log parser for live tracking, encounter analysis, session history, and post-run review.
 
 <p>
