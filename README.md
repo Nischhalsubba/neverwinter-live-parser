@@ -1,28 +1,59 @@
-<div align="center">
-
-<img src="docs/images/readme-hero.svg" width="100%" alt="Neverwinter Live Parser Windows desktop combat analysis dashboard" />
-
-# Neverwinter Live Parser
-
 <!-- interactive-readme-standard:start -->
 
-> [!NOTE]
-> **Branch-specific documentation:** this section is maintained for [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main). It is generated from the files present on this branch and preserves the project-authored README below.
+<div align="center">
 
-<details open>
-<summary><strong>Interactive repository guide</strong></summary>
+# neverwinter-live-parser
 
-## Branch overview
+**Branch-aware technical guide for [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main)**
 
-| Item | Value |
+<p><img alt="branch: main" src="https://img.shields.io/static/v1?label=&message=branch%3A%20main&color=5965F2&style=flat-square"> <img alt="React" src="https://img.shields.io/static/v1?label=&message=React&color=24292F&style=flat-square"> <img alt="Vite" src="https://img.shields.io/static/v1?label=&message=Vite&color=24292F&style=flat-square"> <img alt="Electron" src="https://img.shields.io/static/v1?label=&message=Electron&color=24292F&style=flat-square"> <img alt="TypeScript" src="https://img.shields.io/static/v1?label=&message=TypeScript&color=24292F&style=flat-square"> <img alt="JavaScript" src="https://img.shields.io/static/v1?label=&message=JavaScript&color=24292F&style=flat-square"> <img alt="HTML" src="https://img.shields.io/static/v1?label=&message=HTML&color=24292F&style=flat-square"> <img alt="license detected" src="https://img.shields.io/static/v1?label=&message=license%20detected&color=2DA44E&style=flat-square"> <img alt="docs: branch-aware" src="https://img.shields.io/static/v1?label=&message=docs%3A%20branch-aware&color=8250DF&style=flat-square"></p>
+
+<p>
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main"><strong>Browse source</strong></a> ·
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/issues"><strong>Issues</strong></a> ·
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/codespaces/new?ref=main"><strong>Open in Codespaces</strong></a>
+</p>
+
+</div>
+
+> [!IMPORTANT]
+> This guide is generated from the files actually present on `main`. It links to detected source paths, preserves project-authored notes, and avoids claiming components that were not found.
+
+## At a glance
+
+| Item | Detected value |
 |---|---|
-| Repository | [`Nischhalsubba/neverwinter-live-parser`](https://github.com/Nischhalsubba/neverwinter-live-parser) |
-| Branch | [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main) |
-| Detected stack | React, Vite, Electron, TypeScript, JavaScript, HTML, CSS |
-| Detected manifests | package.json |
-| Documentation policy | Every maintained branch must explain purpose, setup, structure, architecture, flows, testing, delivery, security, and ownership. |
+| Purpose | Windows-only local Neverwinter combat log parser with a minimal Electron dashboard. |
+| Branch role | Default branch |
+| Stack | React, Vite, Electron, TypeScript, JavaScript, HTML, CSS |
+| Manifests | package.json |
+| Prerequisites | Node.js |
+| Delivery | GitHub Actions |
+| License | LICENSE |
 
-## Repository structure
+## Branch scope
+
+This is the repository's default branch.
+
+
+
+## Quick start
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run test
+npm run typecheck
+```
+
+### Configuration surface
+
+- No committed environment example file was detected.
+
+> Never commit secrets, private keys, production credentials, customer data, or unredacted infrastructure details.
+
+## Repository map
 
 ```mermaid
 flowchart TD
@@ -48,9 +79,13 @@ flowchart TD
     ROOT --> MORE["+ 29 more top-level entries"]
 ```
 
-The diagram is generated from the branch's actual top-level files and directories. Use the branch link above for complete source navigation.
+| Responsibility | Detected source paths |
+|---|---|
+| Interface | [`public`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/public), [`src`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/src) |
+| Documentation | [`docs`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/docs) |
+| Delivery | [`.github`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/.github), [`scripts`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/scripts) |
 
-## Website or application structure
+## Website or application map
 
 ```mermaid
 flowchart TD
@@ -58,41 +93,155 @@ flowchart TD
     APP --> R0["public"]
 ```
 
-## Application and responsibility flow
+## Architecture and responsibility flow
 
 ```mermaid
 flowchart LR
-    ACTOR["User / contributor"]
-    ACTOR --> A0["Interface: public, src"]
+    USER["User / contributor"]
+    USER --> A0["Interface: public, src"]
     A0 --> A1["Documentation: docs"]
     A1 --> A2["Delivery: .github, scripts"]
     A2 --> DELIVERY["Delivery: GitHub Actions"]
 ```
 
-## Change-to-delivery flow
+<details>
+<summary><strong>Authentication and authorization flow</strong></summary>
 
 ```mermaid
 flowchart LR
-    CHANGE["Change on main"]
-    CHECK["Validate: npm run dev, npm run build, npm run test, npm run typecheck, npm run preview"]
-    REVIEW["Review documentation and architecture impact"]
-    RELEASE["Merge, release, or deploy according to this branch"]
-    CHANGE --> CHECK --> REVIEW --> RELEASE
+    USER["User"] --> SIGNIN["Sign-in or identity step"]
+    SIGNIN --> VERIFY["Verify credentials / session"]
+    VERIFY --> AUTHORIZE["Resolve permissions"]
+    AUTHORIZE --> PROTECTED["Protected feature or data"]
+    VERIFY -->|failure| RECOVER["Error or recovery path"]
 ```
 
-## README requirements for this branch
+Relevant detected files: [`public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp).
 
-- Explain what this branch contains and how it differs from the default branch.
-- Keep installation, configuration, usage, testing, deployment, security, support, and license information accurate.
-- Document repository, website or application, API, data, authentication, background-job, and deployment flows when they exist.
-- Prefer Mermaid diagrams and expandable `<details>` sections for visual navigation.
-- Link diagrams and modules to real source paths; never invent missing components.
-- Preserve project-specific documentation and update diagrams whenever architecture or major paths change.
-- Treat secrets, private infrastructure, customer data, and credentials as prohibited README content.
+> The diagram expresses the responsibility sequence only. Confirm exact providers, token formats, roles, and recovery behavior in the linked source.
+
+</details>
+<details>
+<summary><strong>Background jobs and scheduled work</strong></summary>
+
+```mermaid
+flowchart LR
+    EVENT["Event / schedule"] --> QUEUE["Queue or job definition"]
+    QUEUE --> WORKER["Worker / processor"]
+    WORKER --> RESULT["Persist result or emit side effect"]
+    WORKER -->|failure| RETRY["Retry, alert, or dead-letter path"]
+```
+
+Relevant detected files: [`src/core/monitoring/importWorker.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/core/monitoring/importWorker.ts).
+
+</details>
+
+## Quality, security, and operations
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+### Quality
+
+- No conventional test directory was detected automatically.
+
+Detected commands:
+- `npm run dev`
+- `npm run build`
+- `npm run test`
+- `npm run typecheck`
+- `npm run preview`
+
+</td>
+<td width="33%" valign="top">
+
+### Security
+
+- [`SECURITY.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/SECURITY.md)
+
+Review authentication, authorization, input validation, dependency updates, secret handling, and failure recovery before release.
+
+</td>
+<td width="34%" valign="top">
+
+### Observability
+
+- [`src/main/errorLogger.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/main/errorLogger.ts)
+
+Define useful logs, metrics, traces, alerts, and rollback signals for production-facing branches.
+
+</td>
+</tr>
+</table>
+
+## Delivery flow
+
+```mermaid
+flowchart LR
+    CHANGE["Change on main"] --> CHECK["Tests and quality checks"]
+    CHECK --> REVIEW["Review architecture and documentation impact"]
+    REVIEW --> BUILD["Build or package"]
+    BUILD --> DEPLOY["Deploy or release"]
+    DEPLOY --> VERIFY["Verify health and rollback readiness"]
+```
+
+### Automation detected
+
+- [`.github/workflows/apply-interactive-readme.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/.github/workflows/apply-interactive-readme.yml)
+
+## Contribution flow
+
+```mermaid
+flowchart LR
+    FORK["Create branch"] --> CHANGE["Make focused change"]
+    CHANGE --> TEST["Run relevant checks"]
+    TEST --> DOCS["Update README and diagrams"]
+    DOCS --> PR["Open pull request"]
+    PR --> REVIEW["Review and iterate"]
+    REVIEW --> MERGE["Merge when ready"]
+```
+
+- Keep changes focused and explain architectural consequences.
+- Run the checks relevant to the changed area.
+- Update diagrams whenever routes, modules, data models, authentication, jobs, or delivery paths change.
+- Add screenshots or recordings for visual behavior changes when useful.
+- Use issues for reproducible defects and pull requests for reviewable changes.
+
+## Ownership and support
+
+| Topic | Source |
+|---|---|
+| Repository | [`Nischhalsubba/neverwinter-live-parser`](https://github.com/Nischhalsubba/neverwinter-live-parser) |
+| Branch | [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main) |
+| Ownership | No CODEOWNERS file detected |
+| Contributing | Use the contribution flow above |
+| Support | [Open or review issues](https://github.com/Nischhalsubba/neverwinter-live-parser/issues) |
+| License | [`LICENSE`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/LICENSE) |
+
+<details>
+<summary><strong>Documentation maintenance checklist</strong></summary>
+
+- [ ] Purpose and branch scope are accurate.
+- [ ] Setup and configuration commands still work.
+- [ ] Repository, application, API, data, authentication, job, and deployment diagrams match the code.
+- [ ] Tests, security controls, observability, and rollback behavior are documented.
+- [ ] Links point to real files on this branch.
+- [ ] No secrets or private operational details are exposed.
 
 </details>
 
 <!-- interactive-readme-standard:end -->
+
+<!-- project-authored-notes:start -->
+<details>
+<summary><strong>Project-authored notes preserved from this branch</strong></summary>
+
+<div align="center">
+
+<img src="docs/images/readme-hero.svg" width="100%" alt="Neverwinter Live Parser Windows desktop combat analysis dashboard" />
+
+# Neverwinter Live Parser
 
 ### A Windows-first, local-first desktop combat log parser for live tracking, encounter analysis, session history, and post-run review.
 
@@ -503,3 +652,6 @@ This repository represents an ongoing effort to build a clear, trustworthy Never
 ## Disclaimer
 
 Neverwinter Live Parser is an independent community project. It is not affiliated with or endorsed by Cryptic Studios, Arc Games, Gearbox Publishing, or the Neverwinter rights holders. Game names and related assets belong to their respective owners.
+
+</details>
+<!-- project-authored-notes:end -->
