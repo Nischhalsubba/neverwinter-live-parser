@@ -1,4 +1,0 @@
-lock=success
-install=success
-tests=failure
-build=success
