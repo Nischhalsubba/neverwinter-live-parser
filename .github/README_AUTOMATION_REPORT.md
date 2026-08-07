@@ -6,6 +6,8 @@ Generator: `aed303eed8a536f2dda075c8be583693325aac37`
 
 | Branch | Result | Detail |
 |---|---|---|
-| `main` | updated | Branch-specific README committed |
-| `push-local-changes` | updated | Branch-specific README committed |
-| `recovered-work` | updated | Branch-specific README committed |
+| `agent/baseline-typecheck` | updated | Branch-specific README committed |
+| `agent/security-electron-43` | updated | Branch-specific README committed |
+| `main` | unchanged | README already matched the standard |
+| `push-local-changes` | unchanged | README already matched the standard |
+| `recovered-work` | unchanged | README already matched the standard |
