@@ -1,2 +1,4 @@
 install=success
 typecheck=failure
+tests=failure
+build=success
