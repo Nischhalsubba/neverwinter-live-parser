@@ -4,27 +4,27 @@
 
 # neverwinter-live-parser
 
-**Branch-aware technical guide for [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main)**
+**Branch-aware technical guide for [`agent/security-electron-43`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43)**
 
-<p><img alt="branch: main" src="https://img.shields.io/static/v1?label=&message=branch%3A%20main&color=5965F2&style=flat-square"> <img alt="React" src="https://img.shields.io/static/v1?label=&message=React&color=24292F&style=flat-square"> <img alt="Vite" src="https://img.shields.io/static/v1?label=&message=Vite&color=24292F&style=flat-square"> <img alt="Electron" src="https://img.shields.io/static/v1?label=&message=Electron&color=24292F&style=flat-square"> <img alt="TypeScript" src="https://img.shields.io/static/v1?label=&message=TypeScript&color=24292F&style=flat-square"> <img alt="JavaScript" src="https://img.shields.io/static/v1?label=&message=JavaScript&color=24292F&style=flat-square"> <img alt="HTML" src="https://img.shields.io/static/v1?label=&message=HTML&color=24292F&style=flat-square"> <img alt="license detected" src="https://img.shields.io/static/v1?label=&message=license%20detected&color=2DA44E&style=flat-square"> <img alt="docs: branch-aware" src="https://img.shields.io/static/v1?label=&message=docs%3A%20branch-aware&color=8250DF&style=flat-square"></p>
+<p><img alt="branch: agent/security-electron-43" src="https://img.shields.io/static/v1?label=&message=branch%3A%20agent%2Fsecurity-electron-43&color=5965F2&style=flat-square"> <img alt="React" src="https://img.shields.io/static/v1?label=&message=React&color=24292F&style=flat-square"> <img alt="Vite" src="https://img.shields.io/static/v1?label=&message=Vite&color=24292F&style=flat-square"> <img alt="Electron" src="https://img.shields.io/static/v1?label=&message=Electron&color=24292F&style=flat-square"> <img alt="TypeScript" src="https://img.shields.io/static/v1?label=&message=TypeScript&color=24292F&style=flat-square"> <img alt="JavaScript" src="https://img.shields.io/static/v1?label=&message=JavaScript&color=24292F&style=flat-square"> <img alt="HTML" src="https://img.shields.io/static/v1?label=&message=HTML&color=24292F&style=flat-square"> <img alt="license detected" src="https://img.shields.io/static/v1?label=&message=license%20detected&color=2DA44E&style=flat-square"> <img alt="docs: branch-aware" src="https://img.shields.io/static/v1?label=&message=docs%3A%20branch-aware&color=8250DF&style=flat-square"></p>
 
 <p>
-  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main"><strong>Browse source</strong></a> ·
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43"><strong>Browse source</strong></a> ·
   <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/issues"><strong>Issues</strong></a> ·
-  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/codespaces/new?ref=main"><strong>Open in Codespaces</strong></a>
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/codespaces/new?ref=agent%2Fsecurity-electron-43"><strong>Open in Codespaces</strong></a>
 </p>
 
 </div>
 
 > [!IMPORTANT]
-> This guide is generated from the files actually present on `main`. It links to detected source paths, preserves project-authored notes, and avoids claiming components that were not found.
+> This guide is generated from the files actually present on `agent/security-electron-43`. It links to detected source paths, preserves project-authored notes, and avoids claiming components that were not found.
 
 ## At a glance
 
 | Item | Detected value |
 |---|---|
 | Purpose | Windows-only local Neverwinter combat log parser with a minimal Electron dashboard. |
-| Branch role | Default branch |
+| Branch role | Compared with `main` |
 | Stack | React, Vite, Electron, TypeScript, JavaScript, HTML, CSS |
 | Manifests | package.json |
 | Prerequisites | Node.js |
@@ -33,7 +33,7 @@
 
 ## Branch scope
 
-This is the repository's default branch.
+No branch-specific file differences were detected against the default branch at generation time.
 
 
 
@@ -57,7 +57,7 @@ npm run typecheck
 
 ```mermaid
 flowchart TD
-    ROOT["neverwinter-live-parser / main"]
+    ROOT["neverwinter-live-parser / agent/security-electron-43"]
     ROOT --> P0[".github/"]
     ROOT --> P1[".logs/"]
     ROOT --> P2[".tmp-electron-app/"]
@@ -81,9 +81,9 @@ flowchart TD
 
 | Responsibility | Detected source paths |
 |---|---|
-| Interface | [`public`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/public), [`src`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/src) |
-| Documentation | [`docs`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/docs) |
-| Delivery | [`.github`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/.github), [`scripts`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/scripts) |
+| Interface | [`public`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43/public), [`src`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43/src) |
+| Documentation | [`docs`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43/docs) |
+| Delivery | [`.github`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43/.github), [`scripts`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43/scripts) |
 
 ## Website or application map
 
@@ -116,7 +116,7 @@ flowchart LR
     VERIFY -->|failure| RECOVER["Error or recovery path"]
 ```
 
-Relevant detected files: [`public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp).
+Relevant detected files: [`public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp).
 
 > The diagram expresses the responsibility sequence only. Confirm exact providers, token formats, roles, and recovery behavior in the linked source.
 
@@ -132,7 +132,7 @@ flowchart LR
     WORKER -->|failure| RETRY["Retry, alert, or dead-letter path"]
 ```
 
-Relevant detected files: [`src/core/monitoring/importWorker.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/core/monitoring/importWorker.ts).
+Relevant detected files: [`src/core/monitoring/importWorker.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/src/core/monitoring/importWorker.ts).
 
 </details>
 
@@ -158,7 +158,7 @@ Detected commands:
 
 ### Security
 
-- [`SECURITY.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/SECURITY.md)
+- [`SECURITY.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/SECURITY.md)
 
 Review authentication, authorization, input validation, dependency updates, secret handling, and failure recovery before release.
 
@@ -167,7 +167,7 @@ Review authentication, authorization, input validation, dependency updates, secr
 
 ### Observability
 
-- [`src/main/errorLogger.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/main/errorLogger.ts)
+- [`src/main/errorLogger.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/src/main/errorLogger.ts)
 
 Define useful logs, metrics, traces, alerts, and rollback signals for production-facing branches.
 
@@ -179,7 +179,7 @@ Define useful logs, metrics, traces, alerts, and rollback signals for production
 
 ```mermaid
 flowchart LR
-    CHANGE["Change on main"] --> CHECK["Tests and quality checks"]
+    CHANGE["Change on agent/security-electron-43"] --> CHECK["Tests and quality checks"]
     CHECK --> REVIEW["Review architecture and documentation impact"]
     REVIEW --> BUILD["Build or package"]
     BUILD --> DEPLOY["Deploy or release"]
@@ -188,7 +188,7 @@ flowchart LR
 
 ### Automation detected
 
-- [`.github/workflows/apply-interactive-readme.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/.github/workflows/apply-interactive-readme.yml)
+- [`.github/workflows/apply-interactive-readme.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/.github/workflows/apply-interactive-readme.yml)
 
 ## Contribution flow
 
@@ -213,11 +213,11 @@ flowchart LR
 | Topic | Source |
 |---|---|
 | Repository | [`Nischhalsubba/neverwinter-live-parser`](https://github.com/Nischhalsubba/neverwinter-live-parser) |
-| Branch | [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main) |
+| Branch | [`agent/security-electron-43`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/security-electron-43) |
 | Ownership | No CODEOWNERS file detected |
 | Contributing | Use the contribution flow above |
 | Support | [Open or review issues](https://github.com/Nischhalsubba/neverwinter-live-parser/issues) |
-| License | [`LICENSE`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/LICENSE) |
+| License | [`LICENSE`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/security-electron-43/LICENSE) |
 
 <details>
 <summary><strong>Documentation maintenance checklist</strong></summary>
