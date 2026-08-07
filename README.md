@@ -4,27 +4,27 @@
 
 # neverwinter-live-parser
 
-**Branch-aware technical guide for [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main)**
+**Branch-aware technical guide for [`agent/baseline-typecheck`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck)**
 
-<p><img alt="branch: main" src="https://img.shields.io/static/v1?label=&message=branch%3A%20main&color=5965F2&style=flat-square"> <img alt="React" src="https://img.shields.io/static/v1?label=&message=React&color=24292F&style=flat-square"> <img alt="Vite" src="https://img.shields.io/static/v1?label=&message=Vite&color=24292F&style=flat-square"> <img alt="Electron" src="https://img.shields.io/static/v1?label=&message=Electron&color=24292F&style=flat-square"> <img alt="TypeScript" src="https://img.shields.io/static/v1?label=&message=TypeScript&color=24292F&style=flat-square"> <img alt="JavaScript" src="https://img.shields.io/static/v1?label=&message=JavaScript&color=24292F&style=flat-square"> <img alt="HTML" src="https://img.shields.io/static/v1?label=&message=HTML&color=24292F&style=flat-square"> <img alt="license detected" src="https://img.shields.io/static/v1?label=&message=license%20detected&color=2DA44E&style=flat-square"> <img alt="docs: branch-aware" src="https://img.shields.io/static/v1?label=&message=docs%3A%20branch-aware&color=8250DF&style=flat-square"></p>
+<p><img alt="branch: agent/baseline-typecheck" src="https://img.shields.io/static/v1?label=&message=branch%3A%20agent%2Fbaseline-typecheck&color=5965F2&style=flat-square"> <img alt="React" src="https://img.shields.io/static/v1?label=&message=React&color=24292F&style=flat-square"> <img alt="Vite" src="https://img.shields.io/static/v1?label=&message=Vite&color=24292F&style=flat-square"> <img alt="Electron" src="https://img.shields.io/static/v1?label=&message=Electron&color=24292F&style=flat-square"> <img alt="TypeScript" src="https://img.shields.io/static/v1?label=&message=TypeScript&color=24292F&style=flat-square"> <img alt="JavaScript" src="https://img.shields.io/static/v1?label=&message=JavaScript&color=24292F&style=flat-square"> <img alt="HTML" src="https://img.shields.io/static/v1?label=&message=HTML&color=24292F&style=flat-square"> <img alt="license detected" src="https://img.shields.io/static/v1?label=&message=license%20detected&color=2DA44E&style=flat-square"> <img alt="docs: branch-aware" src="https://img.shields.io/static/v1?label=&message=docs%3A%20branch-aware&color=8250DF&style=flat-square"></p>
 
 <p>
-  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main"><strong>Browse source</strong></a> ·
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck"><strong>Browse source</strong></a> ·
   <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/issues"><strong>Issues</strong></a> ·
-  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/codespaces/new?ref=main"><strong>Open in Codespaces</strong></a>
+  <a href="https://github.com/Nischhalsubba/neverwinter-live-parser/codespaces/new?ref=agent%2Fbaseline-typecheck"><strong>Open in Codespaces</strong></a>
 </p>
 
 </div>
 
 > [!IMPORTANT]
-> This guide is generated from the files actually present on `main`. It links to detected source paths, preserves project-authored notes, and avoids claiming components that were not found.
+> This guide is generated from the files actually present on `agent/baseline-typecheck`. It links to detected source paths, preserves project-authored notes, and avoids claiming components that were not found.
 
 ## At a glance
 
 | Item | Detected value |
 |---|---|
 | Purpose | Windows-only local Neverwinter combat log parser with a minimal Electron dashboard. |
-| Branch role | Default branch |
+| Branch role | Compared with `main` |
 | Stack | React, Vite, Electron, TypeScript, JavaScript, HTML, CSS |
 | Manifests | package.json |
 | Prerequisites | Node.js |
@@ -33,9 +33,13 @@
 
 ## Branch scope
 
-This is the repository's default branch.
+This branch differs from the default branch in the following detected paths:
 
-
+- [`.baseline-build.log`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-build.log)
+- [`.baseline-status.txt`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-status.txt)
+- [`.baseline-test.log`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-test.log)
+- [`.baseline-typecheck.log`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-typecheck.log)
+- [`.github/workflows/baseline-typecheck.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.github/workflows/baseline-typecheck.yml)
 
 ## Quick start
 
@@ -57,7 +61,7 @@ npm run typecheck
 
 ```mermaid
 flowchart TD
-    ROOT["neverwinter-live-parser / main"]
+    ROOT["neverwinter-live-parser / agent/baseline-typecheck"]
     ROOT --> P0[".github/"]
     ROOT --> P1[".logs/"]
     ROOT --> P2[".tmp-electron-app/"]
@@ -66,24 +70,24 @@ flowchart TD
     ROOT --> P5["public/"]
     ROOT --> P6["scripts/"]
     ROOT --> P7["src/"]
-    ROOT --> P8[".gitignore"]
-    ROOT --> P9[".tmp-argv.mjs"]
-    ROOT --> P10[".tmp-chokidar.mjs"]
-    ROOT --> P11[".tmp-electron-main.cjs"]
-    ROOT --> P12[".tmp-electron-named.mjs"]
-    ROOT --> P13[".tmp-electron-require.cjs"]
-    ROOT --> P14[".tmp-electron-require.mjs"]
-    ROOT --> P15[".tmp-electron-test.mjs"]
-    ROOT --> P16[".tmp-import-app.mjs"]
-    ROOT --> P17[".tmp-package.json"]
-    ROOT --> MORE["+ 29 more top-level entries"]
+    ROOT --> P8[".baseline-build.log"]
+    ROOT --> P9[".baseline-status.txt"]
+    ROOT --> P10[".baseline-test.log"]
+    ROOT --> P11[".baseline-typecheck.log"]
+    ROOT --> P12[".gitignore"]
+    ROOT --> P13[".tmp-argv.mjs"]
+    ROOT --> P14[".tmp-chokidar.mjs"]
+    ROOT --> P15[".tmp-electron-main.cjs"]
+    ROOT --> P16[".tmp-electron-named.mjs"]
+    ROOT --> P17[".tmp-electron-require.cjs"]
+    ROOT --> MORE["+ 33 more top-level entries"]
 ```
 
 | Responsibility | Detected source paths |
 |---|---|
-| Interface | [`public`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/public), [`src`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/src) |
-| Documentation | [`docs`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/docs) |
-| Delivery | [`.github`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/.github), [`scripts`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main/scripts) |
+| Interface | [`public`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck/public), [`src`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck/src) |
+| Documentation | [`docs`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck/docs) |
+| Delivery | [`.github`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck/.github), [`scripts`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck/scripts) |
 
 ## Website or application map
 
@@ -116,7 +120,7 @@ flowchart LR
     VERIFY -->|failure| RECOVER["Error or recovery path"]
 ```
 
-Relevant detected files: [`public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp).
+Relevant detected files: [`public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/public/nw-hub/artifacts/lostmauths_horn_of_blasting.webp).
 
 > The diagram expresses the responsibility sequence only. Confirm exact providers, token formats, roles, and recovery behavior in the linked source.
 
@@ -132,7 +136,7 @@ flowchart LR
     WORKER -->|failure| RETRY["Retry, alert, or dead-letter path"]
 ```
 
-Relevant detected files: [`src/core/monitoring/importWorker.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/core/monitoring/importWorker.ts).
+Relevant detected files: [`src/core/monitoring/importWorker.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/src/core/monitoring/importWorker.ts).
 
 </details>
 
@@ -158,7 +162,7 @@ Detected commands:
 
 ### Security
 
-- [`SECURITY.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/SECURITY.md)
+- [`SECURITY.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/SECURITY.md)
 
 Review authentication, authorization, input validation, dependency updates, secret handling, and failure recovery before release.
 
@@ -167,7 +171,7 @@ Review authentication, authorization, input validation, dependency updates, secr
 
 ### Observability
 
-- [`src/main/errorLogger.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/src/main/errorLogger.ts)
+- [`src/main/errorLogger.ts`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/src/main/errorLogger.ts)
 
 Define useful logs, metrics, traces, alerts, and rollback signals for production-facing branches.
 
@@ -179,7 +183,7 @@ Define useful logs, metrics, traces, alerts, and rollback signals for production
 
 ```mermaid
 flowchart LR
-    CHANGE["Change on main"] --> CHECK["Tests and quality checks"]
+    CHANGE["Change on agent/baseline-typecheck"] --> CHECK["Tests and quality checks"]
     CHECK --> REVIEW["Review architecture and documentation impact"]
     REVIEW --> BUILD["Build or package"]
     BUILD --> DEPLOY["Deploy or release"]
@@ -188,7 +192,8 @@ flowchart LR
 
 ### Automation detected
 
-- [`.github/workflows/apply-interactive-readme.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/.github/workflows/apply-interactive-readme.yml)
+- [`.github/workflows/apply-interactive-readme.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.github/workflows/apply-interactive-readme.yml)
+- [`.github/workflows/baseline-typecheck.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.github/workflows/baseline-typecheck.yml)
 
 ## Contribution flow
 
@@ -213,11 +218,11 @@ flowchart LR
 | Topic | Source |
 |---|---|
 | Repository | [`Nischhalsubba/neverwinter-live-parser`](https://github.com/Nischhalsubba/neverwinter-live-parser) |
-| Branch | [`main`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/main) |
+| Branch | [`agent/baseline-typecheck`](https://github.com/Nischhalsubba/neverwinter-live-parser/tree/agent/baseline-typecheck) |
 | Ownership | No CODEOWNERS file detected |
 | Contributing | Use the contribution flow above |
 | Support | [Open or review issues](https://github.com/Nischhalsubba/neverwinter-live-parser/issues) |
-| License | [`LICENSE`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/main/LICENSE) |
+| License | [`LICENSE`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/LICENSE) |
 
 <details>
 <summary><strong>Documentation maintenance checklist</strong></summary>
