@@ -6,6 +6,7 @@ on:
       - agent/security-electron-43
     paths:
       - package.json
+      - .github/workflows/security-electron-43.yml
 
 permissions:
   contents: write
@@ -27,15 +28,36 @@ jobs:
           cache: npm
 
       - name: Regenerate lockfile
+        id: lock
+        continue-on-error: true
         run: npm install --package-lock-only --ignore-scripts
 
       - name: Install from regenerated lockfile
+        id: install
+        if: steps.lock.outcome == 'success'
+        continue-on-error: true
         run: npm ci
 
-      - name: Typecheck, test, and build
-        run: npm run check
+      - name: Typecheck
+        id: typecheck
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        run: npm run typecheck
+
+      - name: Test
+        id: tests
+        if: steps.typecheck.outcome == 'success'
+        continue-on-error: true
+        run: npm run test
+
+      - name: Build
+        id: build
+        if: steps.tests.outcome == 'success'
+        continue-on-error: true
+        run: npm run build
 
       - name: Commit validated lockfile
+        if: steps.lock.outcome == 'success' && steps.install.outcome == 'success' && steps.typecheck.outcome == 'success' && steps.tests.outcome == 'success' && steps.build.outcome == 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -44,3 +66,24 @@ jobs:
             git commit -m "Regenerate lockfile for Electron 43 migration"
             git push origin HEAD:agent/security-electron-43
           fi
+
+      - name: Record validation status
+        if: always()
+        run: |
+          printf 'lock=%s\ninstall=%s\ntypecheck=%s\ntests=%s\nbuild=%s\n' \
+            "${{ steps.lock.outcome }}" \
+            "${{ steps.install.outcome }}" \
+            "${{ steps.typecheck.outcome }}" \
+            "${{ steps.tests.outcome }}" \
+            "${{ steps.build.outcome }}" > .security-electron-status.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .security-electron-status.txt
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Electron 43 validation status"
+            git push origin HEAD:agent/security-electron-43
+          fi
+
+      - name: Fail when validation did not pass
+        if: always() && (steps.lock.outcome != 'success' || steps.install.outcome != 'success' || steps.typecheck.outcome != 'success' || steps.tests.outcome != 'success' || steps.build.outcome != 'success')
+        run: exit 1
