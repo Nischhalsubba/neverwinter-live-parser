@@ -1,4 +1,4 @@
 lock=success
 install=success
 tests=failure
-build=skipped
+build=success
