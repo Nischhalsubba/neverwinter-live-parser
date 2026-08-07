@@ -1,0 +1,5 @@
+lock=success
+install=success
+typecheck=failure
+tests=skipped
+build=skipped
