@@ -40,6 +40,7 @@ This branch differs from the default branch in the following detected paths:
 - [`.baseline-test.log`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-test.log)
 - [`.baseline-typecheck.log`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.baseline-typecheck.log)
 - [`.github/workflows/baseline-typecheck.yml`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/.github/workflows/baseline-typecheck.yml)
+- [`README.md`](https://github.com/Nischhalsubba/neverwinter-live-parser/blob/agent/baseline-typecheck/README.md)
 
 ## Quick start
 
