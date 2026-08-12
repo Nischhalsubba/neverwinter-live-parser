@@ -71,6 +71,8 @@ type ShellProps = {
   discoveringLogs: boolean;
   hasScannedLogs: boolean;
   starting: boolean;
+  operationError: string | null;
+  onDismissOperationError: () => void;
   onViewChange: (view: View) => void;
   onDetailTabChange: (tab: DetailTab) => void;
   onFolderInputChange: (value: string) => void;
@@ -661,7 +663,7 @@ function TimelineChart({
               borderRadius: 12,
               color: "#F3EEE6"
             }}
-            formatter={(value: number) => formatShort(value)}
+            formatter={(value) => formatShort(Number(value ?? 0))}
             labelFormatter={(value) => `T: ${value}s`}
           />
           <ReferenceLine x={peak.second} stroke={color} strokeDasharray="4 4" />
@@ -791,7 +793,7 @@ function PowerContributionChart({ skills }: { skills: SkillStat[] }) {
               border: "1px solid rgba(205,189,255,0.18)",
               borderRadius: 12
             }}
-            formatter={(value: number) => formatShort(value)}
+            formatter={(value) => formatShort(Number(value ?? 0))}
           />
           <Bar dataKey="total" fill="#cdbdff" radius={[6, 6, 6, 6]} isAnimationActive={false} />
         </BarChart>
@@ -828,7 +830,7 @@ function CombatTimelineChart({ points }: { points: TimelinePoint[] }) {
               border: "1px solid rgba(205,189,255,0.18)",
               borderRadius: 12
             }}
-            formatter={(value: number) => formatShort(value)}
+            formatter={(value) => formatShort(Number(value ?? 0))}
             labelFormatter={(value) => `${value}s`}
           />
           <Area type="monotone" dataKey="damage" stroke="#cdbdff" fill="url(#oaDamageGradient)" strokeWidth={2} isAnimationActive={false} />
@@ -852,7 +854,7 @@ function EffectTimelineChart({ points }: { points: TimelinePoint[] }) {
           <XAxis dataKey="second" stroke="rgba(229, 225, 228, 0.52)" tickFormatter={(value) => `${value}s`} />
           <YAxis stroke="rgba(229, 225, 228, 0.52)" />
           <Tooltip
-            formatter={(value: number, name: string) => [formatNumber(Number(value)), name === "debuffs" ? "Debuff applications" : "Buff applications"]}
+            formatter={(value, name) => [formatNumber(Number(value ?? 0)), String(name) === "debuffs" ? "Debuff applications" : "Buff applications"]}
             labelFormatter={(value) => `${value}s`}
             contentStyle={{
               background: "rgba(27, 27, 29, 0.95)",
@@ -980,7 +982,7 @@ function ContributionPieChart({
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number) => formatShort(Number(value))}
+            formatter={(value) => formatShort(Number(value ?? 0))}
             contentStyle={{
               background: "rgba(27, 27, 29, 0.95)",
               border: "1px solid rgba(205, 189, 255, 0.16)",
@@ -1839,14 +1841,15 @@ function SetupView(props: ShellProps) {
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
-        <p className="oa-page-kicker">Configuration & Setup</p>
-        <h1>Connect the Neverwinter combat log</h1>
-        <p>
-          Start here the first time you open the app. The parser only watches Neverwinter files
-          named <code>combatlog_YYYY-MM-DD_HH-MM-SS</code>, so voice chat, crash, shutdown, and
-          shader files are ignored automatically.
-        </p>
-      </header>
+        \1
+    {props.operationError ? (
+      <div className="oa-empty-state" role="alert" style={{ marginBottom: 16 }}>
+        <span>{props.operationError}</span>
+        <button className="oa-button secondary" onClick={props.onDismissOperationError}>
+          Dismiss
+        </button>
+      </div>
+    ) : null}
 
       <div className="oa-setup-grid">
         <section className="oa-panel oa-panel-hero">
@@ -1884,7 +1887,12 @@ function SetupView(props: ShellProps) {
                     placeholder="Leave empty, then use Auto Detect or Browse to the GameClient folder"
                   />
                 </div>
-                <button className="oa-button secondary" onClick={props.onChooseFolder}>
+                <button
+                  className="oa-button secondary"
+                  onClick={props.onChooseFolder}
+                  disabled={!props.isDesktopRuntime}
+                  title={props.isDesktopRuntime ? "Choose the GameClient folder" : "Live folder monitoring requires the desktop app"}
+                >
                   Browse
                 </button>
                 <button className="oa-button secondary" onClick={props.onChooseImportFile}>
@@ -1969,6 +1977,7 @@ function SetupView(props: ShellProps) {
                   <input
                     value={props.importFilePath}
                     onChange={(event) => props.onImportFileChange(event.target.value)}
+                    readOnly={!props.isDesktopRuntime}
                     placeholder="Choose one combatlog file for a recorded parse"
                   />
                 </div>
@@ -1988,10 +1997,10 @@ function SetupView(props: ShellProps) {
             <button
               className="oa-button tertiary"
               onClick={props.onImportLogFile}
-              disabled={props.starting || !props.importFilePath.trim() || !props.isDesktopRuntime}
-            >
-              <Icon name="upload_file" />
-              Analyze Recorded Log
+                            disabled={props.starting || !props.importFilePath.trim()}
+              >
+                <Icon name={props.starting ? "autorenew" : "upload_file"} className={props.starting ? "oa-spin" : undefined} />
+                {props.starting ? "Analyzing Recorded Log..." : "Analyze Recorded Log"}
             </button>
           </div>
         </section>
@@ -3476,10 +3485,21 @@ function buildArtifactDamageRows(player: PlayerRow) {
       );
       const totalDamage = damageWindow.reduce((sum, moment) => sum + moment.amount, 0);
       const critHits = damageWindow.filter((moment) => moment.critical).length;
-      const strongestHit = damageWindow.reduce(
-        (best, moment) => (moment.amount > best.amount ? moment : best),
-        { abilityName: "None", amount: 0, targetName: undefined as string | undefined }
-      );
+            const strongestHit = damageWindow.reduce<{
+          abilityName: string;
+          amount: number;
+          targetName?: string;
+        }>(
+          (best, moment) =>
+            moment.amount > best.amount
+              ? {
+                  abilityName: moment.abilityName,
+                  amount: moment.amount,
+                  targetName: moment.targetName
+                }
+              : best,
+          { abilityName: "None", amount: 0 }
+        );
 
       return {
         artifactName: activation.abilityName,
@@ -3701,6 +3721,8 @@ function DetailDrawer({
   detail: DrilldownDetail;
   onClose: () => void;
 }) {
+  const detailTimeline = detail.kind === "power" ? detail.timeline : undefined;
+
   return (
     <aside className="oa-overlay oa-detail-drawer">
       <div className="oa-detail-drawer-head">
@@ -3718,10 +3740,10 @@ function DetailDrawer({
           <StatCard key={`${detail.title}-${row.label}`} label={row.label} value={row.value} />
         ))}
       </div>
-      {detail.timeline?.length ? (
+      {detailTimeline?.length ? (
         <section className="oa-panel">
           <SectionHeading icon="show_chart" eyebrow="Timeline" title="Timeline for this detail" />
-          <TimelineChart points={detail.timeline} mode="damage" />
+          <TimelineChart points={detailTimeline} mode="damage" />
         </section>
       ) : null}
       <section className="oa-panel">
@@ -4170,28 +4192,28 @@ function DebugView({ state, errorLogDirectory }: { state: AppState; errorLogDire
             value={formatNumber(auxiliarySummary.totalEvents)}
             tone="secondary"
             icon="network_node"
-            caption="All parsed non-combat GameClient signals"
+            hint="All parsed non-combat GameClient signals"
           />
           <StatCard
             label="System Notices"
             value={formatNumber(auxiliarySummary.countsByCategory.system)}
             tone="primary"
             icon="campaign"
-            caption="Joined, left, and system notify events"
+            hint="Joined, left, and system notify events"
           />
           <StatCard
             label="Errors"
             value={formatNumber(auxiliarySummary.countsByCategory.error)}
-            tone="danger"
+            tone="error"
             icon="error"
-            caption="Crash, failure, and error lines"
+            hint="Crash, failure, and error lines"
           />
           <StatCard
             label="Active Channels"
             value={formatNumber(auxiliarySummary.activeChannels.length)}
             tone="tertiary"
             icon="forum"
-            caption={
+            hint={
               auxiliarySummary.activeChannels.length
                 ? auxiliarySummary.activeChannels.join(", ")
                 : "No joined channels detected"
@@ -4980,9 +5002,9 @@ export function ObsidianScreens(props: ShellProps) {
         </main>
 
         {!props.isDesktopRuntime ? (
-          <div className="oa-runtime-banner">
-            Browser preview only. Live monitoring and file import require the Electron desktop app.
-          </div>
+                    <div className="oa-runtime-banner">
+              Browser mode: recorded log analysis is available. Live folder monitoring and auto-detect require the Electron desktop app.
+            </div>
         ) : null}
 
         <div className={`oa-floating-status ${sessionIndicator.tone}`}>

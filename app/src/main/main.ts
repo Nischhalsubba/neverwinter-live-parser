@@ -256,8 +256,7 @@ async function findLatestCombatLog(folderPath: string): Promise<string | null> {
 
 async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> {
   const candidates = new Map<string, DiscoveredLogCandidate>();
-
-  const roots = [];
+  const roots: string[] = [];
   for (const drive of getDriveRoots()) {
     if (await pathExists(drive)) {
       roots.push(drive);
@@ -273,29 +272,78 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
     "msocache",
     "perflogs",
     "temp",
-    "tmp"
+    "tmp",
+    "node_modules"
   ]);
+  const pathHints = [
+    "neverwinter",
+    "cryptic",
+    "arcgames",
+    "arc games",
+    "steam",
+    "steamapps",
+    "gameclient",
+    "games"
+  ];
+  const maxDirectories = 12_000;
+  const maxDepth = 12;
+  const deadlineMs = 8_000;
+  const startedAt = Date.now();
+  const queue = roots.map((folderPath) => ({
+    folderPath,
+    depth: 0,
+    hinted: false
+  }));
+  let queueIndex = 0;
+  let scannedDirectories = 0;
 
-  const queue = [...roots];
-
-  while (queue.length) {
-    const folderPath = queue.shift()!;
+  while (
+    queueIndex < queue.length &&
+    scannedDirectories < maxDirectories &&
+    Date.now() - startedAt < deadlineMs
+  ) {
+    const current = queue[queueIndex++];
+    scannedDirectories += 1;
     let entries: Dirent[];
     try {
-      entries = await fs.readdir(folderPath, { withFileTypes: true });
+      entries = await fs.readdir(current.folderPath, { withFileTypes: true });
     } catch {
       continue;
     }
 
-    const latestLog = await findLatestCombatLog(folderPath);
+    const logEntries = entries.filter(
+      (entry) =>
+        entry.isFile() &&
+        /^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(entry.name)
+    );
+    if (logEntries.length) {
+      const statResults = await Promise.allSettled(
+        logEntries.map(async (entry) => {
+          const fullPath = path.join(current.folderPath, entry.name);
+          const stats = await fs.stat(fullPath);
+          return { fullPath, mtimeMs: stats.mtimeMs };
+        })
+      );
+      const logFiles = statResults
+        .flatMap((result) => (result.status === "fulfilled" ? [result.value] : []))
+        .sort((left, right) =>
+          right.mtimeMs !== left.mtimeMs
+            ? right.mtimeMs - left.mtimeMs
+            : right.fullPath.localeCompare(left.fullPath)
+        );
+      const latestLog = logFiles[0]?.fullPath ?? null;
+      if (latestLog) {
+        candidates.set(current.folderPath.toLowerCase(), {
+          folderPath: current.folderPath,
+          filePath: latestLog,
+          timestampLabel: parseCombatLogTimestamp(latestLog),
+          sourceHint: `Detected on drive ${path.parse(current.folderPath).root}`
+        });
+      }
+    }
 
-    if (latestLog) {
-      candidates.set(folderPath.toLowerCase(), {
-        folderPath,
-        filePath: latestLog,
-        timestampLabel: parseCombatLogTimestamp(latestLog),
-        sourceHint: `Detected on drive ${path.parse(folderPath).root}`
-      });
+    if (current.depth >= maxDepth) {
+      continue;
     }
 
     for (const entry of entries) {
@@ -305,27 +353,37 @@ async function discoverCombatLogCandidates(): Promise<DiscoveredLogCandidate[]> 
       const normalizedName = entry.name.toLowerCase();
       if (
         ignoredDirectoryNames.has(normalizedName) ||
-        normalizedName.startsWith("$") ||
-        normalizedName === "node_modules"
+        normalizedName.startsWith("$")
       ) {
         continue;
       }
-      queue.push(path.join(folderPath, entry.name));
+
+      const hinted =
+        current.hinted || pathHints.some((hint) => normalizedName.includes(hint));
+      if (current.depth < 2 || hinted) {
+        queue.push({
+          folderPath: path.join(current.folderPath, entry.name),
+          depth: current.depth + 1,
+          hinted
+        });
+      }
     }
   }
 
-  return Array.from(candidates.values()).sort((left, right) => {
-    if (left.filePath && right.filePath) {
-      return right.filePath.localeCompare(left.filePath);
-    }
-    if (left.filePath) {
-      return -1;
-    }
-    if (right.filePath) {
-      return 1;
-    }
-    return left.folderPath.localeCompare(right.folderPath);
-  }).slice(0, 20);
+  return Array.from(candidates.values())
+    .sort((left, right) => {
+      if (left.filePath && right.filePath) {
+        return right.filePath.localeCompare(left.filePath);
+      }
+      if (left.filePath) {
+        return -1;
+      }
+      if (right.filePath) {
+        return 1;
+      }
+      return left.folderPath.localeCompare(right.folderPath);
+    })
+    .slice(0, 20);
 }
 
 function createWindow(): void {
@@ -406,9 +464,12 @@ function createWindow(): void {
   mainWindow.webContents.on("dom-ready", () => {
     void writeActivityLog("Renderer DOM ready", "Window lifecycle");
   });
-  mainWindow.webContents.on("did-finish-load", () => {
-    void writeActivityLog("Renderer finished loading", "Window lifecycle");
-  });
+    mainWindow.webContents.on("did-finish-load", () => {
+      void writeActivityLog("Renderer finished loading", "Window lifecycle");
+    });
+    mainWindow.webContents.on("preload-error", (_event, preloadPath, error) => {
+      void writeErrorLog(error, `Preload failed: ${preloadPath}`);
+    });
   mainWindow.webContents.on("did-fail-load", (_event, errorCode, errorDescription, validatedURL) => {
     void writeErrorLog(
       new Error(`did-fail-load ${errorCode}: ${errorDescription} (${validatedURL})`),
@@ -565,21 +626,7 @@ ipcMain.handle("dialog:selectLogFile", async () => {
   if (result.canceled) {
     return null;
   }
-  const selected = result.filePaths[0] ?? null;
-  if (!selected) {
-    return null;
-  }
-  if (!/^combatlog_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}(?:\.(?:log|txt))?$/i.test(path.basename(selected))) {
-    await dialog.showMessageBox({
-      type: "warning",
-      title: "Invalid log file",
-      message: "Please select a Neverwinter combat log file.",
-      detail:
-        "Only files named like combatlog_YYYY-MM-DD_HH-MM-SS are supported for live parsing and recorded analysis."
-    });
-    return null;
-  }
-  return selected;
+  return result.filePaths[0] ?? null;
 });
 
 ipcMain.handle("monitoring:discoverLogs", async () => {
