@@ -1841,15 +1841,23 @@ function SetupView(props: ShellProps) {
   return (
     <section className="oa-screen">
       <header className="oa-screen-hero">
-        \1
-    {props.operationError ? (
-      <div className="oa-empty-state" role="alert" style={{ marginBottom: 16 }}>
-        <span>{props.operationError}</span>
-        <button className="oa-button secondary" onClick={props.onDismissOperationError}>
-          Dismiss
-        </button>
-      </div>
-    ) : null}
+        <p className="oa-page-kicker">Configuration & Setup</p>
+        <h1>Connect the Neverwinter combat log</h1>
+        <p>
+          Start here the first time you open the app. Live monitoring only watches Neverwinter
+          files named <code>combatlog_YYYY-MM-DD_HH-MM-SS</code>. Recorded analysis can open a
+          local <code>.log</code> or <code>.txt</code> file directly.
+        </p>
+      </header>
+
+      {props.operationError ? (
+        <div className="oa-empty-state" role="alert" style={{ marginBottom: 16 }}>
+          <span>{props.operationError}</span>
+          <button className="oa-button secondary" onClick={props.onDismissOperationError}>
+            Dismiss
+          </button>
+        </div>
+      ) : null}
 
       <div className="oa-setup-grid">
         <section className="oa-panel oa-panel-hero">
