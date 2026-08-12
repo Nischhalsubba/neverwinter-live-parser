@@ -35,8 +35,8 @@ import { EncounterManager } from "../encounter/encounterManager.js";
 
 const MAX_DEBUG_ITEMS = 50;
 const MAX_AUXILIARY_EVENTS = 120;
-const MIN_EMIT_INTERVAL_MS = 100;
-const IMPORT_WORKER_MIN_BYTES = 8 * 1024 * 1024;
+const MIN_EMIT_INTERVAL_MS = 250;
+const IMPORT_WORKER_MIN_BYTES = 0;
 const AUTO_RECORDING_IDLE_TIMEOUT_MS = 3 * 60 * 1000;
 const IMPORT_WORKER_URL = new URL(
   path.extname(fileURLToPath(import.meta.url)) === ".ts"
