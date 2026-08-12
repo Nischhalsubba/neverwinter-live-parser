@@ -95,6 +95,7 @@ export class CombatantTracker {
     }
 
     const combatant = this.getOrCreateCombatant(event);
+    let encounterCombatant = combatant;
     const amount = event.amount ?? 0;
     const offsetSeconds = this.startedAt
       ? Math.max(0, Math.floor((event.timestamp - this.startedAt) / 1000))
@@ -147,6 +148,7 @@ export class CombatantTracker {
       const targetCombatant = this.getOrCreateCombatantFromTarget(event);
       targetCombatant.damageTaken += amount;
       targetCombatant.hits += 1;
+      encounterCombatant = targetCombatant;
     } else if (event.eventType === "death") {
       combatant.deaths += 1;
     }
@@ -259,7 +261,7 @@ export class CombatantTracker {
     combatant.timeline.set(bucket, point);
 
     if (encounterId) {
-      const currentEncounter = combatant.encounterTotals.get(encounterId) ?? {
+      const currentEncounter = encounterCombatant.encounterTotals.get(encounterId) ?? {
         encounterId,
         totalDamage: 0,
         totalHealing: 0,
@@ -273,10 +275,14 @@ export class CombatantTracker {
       } else if (event.eventType === "damageTaken") {
         currentEncounter.damageTaken += amount;
       }
-      if (event.eventType === "damage" || event.eventType === "heal") {
+      if (
+        event.eventType === "damage" ||
+        event.eventType === "heal" ||
+        event.eventType === "damageTaken"
+      ) {
         currentEncounter.hits += 1;
       }
-      combatant.encounterTotals.set(encounterId, currentEncounter);
+      encounterCombatant.encounterTotals.set(encounterId, currentEncounter);
     }
   }
 
