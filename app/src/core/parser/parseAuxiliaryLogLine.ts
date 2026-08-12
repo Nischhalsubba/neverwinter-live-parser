@@ -21,6 +21,11 @@ const CHANNEL_STATE_PATTERN =
   /^\[System Notify\]\s+(Joined|Left)\s+channel\s+"([^"]+)"\./i;
 const TEAM_CHANNEL_PATTERN = /TEAMID_([A-Za-z]+)(\d+)/i;
 
+function getPortableBaseName(filePath: string): string {
+  const normalized = filePath.replace(/\\/g, "/");
+  return path.posix.basename(normalized);
+}
+
 function categorizeLine(kind: AuxiliaryLogKind, line: string): AuxiliaryLogEvent["category"] {
   const lowered = line.toLowerCase();
   if (lowered.includes("[error]") || lowered.includes(" error ")) {
@@ -134,7 +139,7 @@ function buildEventDetails(
 }
 
 export function classifyAuxiliaryLogKind(filePath: string): AuxiliaryLogKind {
-  const baseName = path.basename(filePath);
+  const baseName = getPortableBaseName(filePath);
   return FILE_KIND_PATTERNS.find((entry) => entry.pattern.test(baseName))?.kind ?? "other";
 }
 
@@ -150,7 +155,7 @@ export function parseAuxiliaryLogLine(
   const kind = classifyAuxiliaryLogKind(filePath);
   const category = categorizeLine(kind, text);
   return {
-    fileName: path.basename(filePath),
+    fileName: getPortableBaseName(filePath),
     filePath,
     kind,
     category,
