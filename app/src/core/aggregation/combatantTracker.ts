@@ -56,6 +56,9 @@ const MAX_DAMAGE_MOMENTS_PER_COMBATANT = 4_000;
 const MAX_ACTIVATIONS_PER_COMBATANT = 4_000;
 const MAX_ARTIFACT_ACTIVATIONS_PER_COMBATANT = 256;
 const MAX_EFFECT_TIMESTAMPS = 512;
+const MAX_INTERNAL_TARGETS_PER_COMBATANT = 256;
+const MAX_EFFECTS_PER_COMBATANT = 256;
+const MAX_ENCOUNTERS_PER_COMBATANT = 64;
 
 function pushBounded<T>(items: T[], item: T, maxSize: number): void {
   items.push(item);
@@ -66,6 +69,24 @@ function pushBounded<T>(items: T[], item: T, maxSize: number): void {
 
 function isPlayerOwnedCombatant(combatant: MutableCombatant): boolean {
   return combatant.type === "player" || combatant.ownerId.startsWith("P[");
+}
+
+function isPlayerOwnedEventSource(event: CombatEvent): boolean {
+  return (
+    event.sourceType === "player" ||
+    event.sourceType === "companion" ||
+    Boolean(event.sourceOwnerId?.startsWith("P["))
+  );
+}
+
+function setBoundedMap<K, V>(map: Map<K, V>, key: K, value: V, maxSize: number): void {
+  if (!map.has(key) && map.size >= maxSize) {
+    const oldestKey = map.keys().next().value as K | undefined;
+    if (oldestKey !== undefined) {
+      map.delete(oldestKey);
+    }
+  }
+  map.set(key, value);
 }
 
 export class CombatantTracker {
@@ -90,16 +111,38 @@ export class CombatantTracker {
         ? event.timestamp
         : Math.max(this.endedAt, event.timestamp);
 
-    if (!event.sourceName) {
-      return;
-    }
-
-    const combatant = this.getOrCreateCombatant(event);
-    let encounterCombatant = combatant;
     const amount = event.amount ?? 0;
     const offsetSeconds = this.startedAt
       ? Math.max(0, Math.floor((event.timestamp - this.startedAt) / 1000))
       : 0;
+
+    if (event.eventType === "damageTaken") {
+      const targetCombatant = this.getOrCreateCombatantFromTarget(event);
+      targetCombatant.damageTaken += amount;
+      if (encounterId) {
+        const currentEncounter = targetCombatant.encounterTotals.get(encounterId) ?? {
+          encounterId,
+          totalDamage: 0,
+          totalHealing: 0,
+          damageTaken: 0,
+          hits: 0
+        };
+        currentEncounter.damageTaken += amount;
+        setBoundedMap(
+          targetCombatant.encounterTotals,
+          encounterId,
+          currentEncounter,
+          MAX_ENCOUNTERS_PER_COMBATANT
+        );
+      }
+      return;
+    }
+
+    if (!event.sourceName || !isPlayerOwnedEventSource(event)) {
+      return;
+    }
+
+    const combatant = this.getOrCreateCombatant(event);
 
     if (event.eventType === "damage") {
       combatant.totalDamage += amount;
@@ -125,7 +168,7 @@ export class CombatantTracker {
         if (event.critical) {
           target.critCount += 1;
         }
-        combatant.targetTotals.set(targetKey, target);
+        setBoundedMap(combatant.targetTotals, targetKey, target, MAX_INTERNAL_TARGETS_PER_COMBATANT);
       }
 
       if (event.abilityName) {
@@ -144,11 +187,6 @@ export class CombatantTracker {
     } else if (event.eventType === "heal") {
       combatant.totalHealing += amount;
       combatant.hits += 1;
-    } else if (event.eventType === "damageTaken") {
-      const targetCombatant = this.getOrCreateCombatantFromTarget(event);
-      targetCombatant.damageTaken += amount;
-      targetCombatant.hits += 1;
-      encounterCombatant = targetCombatant;
     } else if (event.eventType === "death") {
       combatant.deaths += 1;
     }
@@ -234,7 +272,7 @@ export class CombatantTracker {
       effect.applications += 1;
       effect.totalMagnitude += Math.abs(event.amount ?? event.magnitude ?? 0);
       pushBounded(effect.timestamps, offsetSeconds, MAX_EFFECT_TIMESTAMPS);
-      combatant.effects.set(effectKey, effect);
+      setBoundedMap(combatant.effects, effectKey, effect, MAX_EFFECTS_PER_COMBATANT);
     }
 
     const bucket = Math.floor(offsetSeconds / TIMELINE_BUCKET_SECONDS) * TIMELINE_BUCKET_SECONDS;
@@ -261,7 +299,7 @@ export class CombatantTracker {
     combatant.timeline.set(bucket, point);
 
     if (encounterId) {
-      const currentEncounter = encounterCombatant.encounterTotals.get(encounterId) ?? {
+      const currentEncounter = combatant.encounterTotals.get(encounterId) ?? {
         encounterId,
         totalDamage: 0,
         totalHealing: 0,
@@ -270,19 +308,18 @@ export class CombatantTracker {
       };
       if (event.eventType === "damage") {
         currentEncounter.totalDamage += amount;
-      } else if (event.eventType === "heal") {
-        currentEncounter.totalHealing += amount;
-      } else if (event.eventType === "damageTaken") {
-        currentEncounter.damageTaken += amount;
-      }
-      if (
-        event.eventType === "damage" ||
-        event.eventType === "heal" ||
-        event.eventType === "damageTaken"
-      ) {
-        currentEncounter.hits += 1;
-      }
-      encounterCombatant.encounterTotals.set(encounterId, currentEncounter);
+            } else if (event.eventType === "heal") {
+      currentEncounter.totalHealing += amount;
+    }
+    if (event.eventType === "damage" || event.eventType === "heal") {
+      currentEncounter.hits += 1;
+    }
+    setBoundedMap(
+      combatant.encounterTotals,
+      encounterId,
+      currentEncounter,
+      MAX_ENCOUNTERS_PER_COMBATANT
+    );
     }
   }
 
@@ -326,22 +363,16 @@ export class CombatantTracker {
         highestHits: Array.from(combatant.highestHits.values())
           .sort((left, right) => right.amount - left.amount)
           .slice(0, MAX_HIGHEST_HITS_PER_COMBATANT),
-        damageMoments: combatant.damageMoments
-          .slice()
-          .sort((left, right) => left.second - right.second),
+        damageMoments: combatant.damageMoments.slice(),
         timeline: Array.from(combatant.timeline.values()).sort(
           (left, right) => left.second - right.second
         ),
-        activations: combatant.activations
-          .slice()
-          .sort((left, right) => left.second - right.second),
-        artifactActivations: combatant.artifactActivations
-          .slice()
-          .sort((left, right) => left.second - right.second),
+        activations: combatant.activations.slice(),
+        artifactActivations: combatant.artifactActivations.slice(),
         effects: Array.from(combatant.effects.values())
           .map((effect) => ({
             ...effect,
-            timestamps: effect.timestamps.slice().sort((left, right) => left - right)
+            timestamps: effect.timestamps.slice()
           }))
           .sort((left, right) => right.applications - left.applications),
         encounters: Array.from(combatant.encounterTotals.values())

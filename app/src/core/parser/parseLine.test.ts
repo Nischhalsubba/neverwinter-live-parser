@@ -130,7 +130,32 @@ describe("parseLine", () => {
     }
   });
 
-  it("attaches NW Hub artifact effect metadata to artifact activations", () => {
+  it("normalizes quoted multiline fields and treats shields as buffs", () => {
+      const result = parseLine(
+        '26:03:24:16:22:45.6::Lysaera,C[91 Pet_M31_Succubus],,*,Knatlli,P[514848798@7599734 Knatlli@kate4u],"Heartfelt Barrier\n",Pn.71k5r11,Shield,ShowPowerDisplayName,154503,0'
+      );
+
+      expect(result.kind).toBe("event");
+      if (result.kind === "event") {
+        expect(result.event.abilityName).toBe("Heartfelt Barrier");
+        expect(result.event.eventType).toBe("buff");
+        expect(result.event.amount).toBe(0);
+      }
+    });
+
+    it("does not classify hit-point-max display records as damage", () => {
+      const result = parseLine(
+        "13:10:13:14:39:55.0::,,,,Lady Shiva,P[401878470@8454371 Lady Shiva@pombetitha],Minor Body Injury,Pn.Snckuc1,HitPointsMax,ShowPowerDisplayName,0.3,0"
+      );
+
+      expect(result.kind).toBe("event");
+      if (result.kind === "event") {
+        expect(result.event.eventType).toBe("buff");
+        expect(result.event.amount).toBe(0);
+      }
+    });
+
+    it("attaches NW Hub artifact effect metadata to artifact activations", () => {
     const result = parseLine(
       "26:03:23:22:01:40.0::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Broken Halo,Pn.Artifact01,Physical,Critical,37914,37914"
     );

@@ -4,6 +4,7 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ErrorInfo,
   type ReactNode
@@ -87,6 +88,41 @@ function getParentDirectory(filePath: string): string {
   const parts = filePath.split(/[\\/]/);
   parts.pop();
   return parts.join("\\");
+}
+
+type BrowserImportWorkerMessage =
+  | { kind: "progress"; loadedBytes: number; totalBytes: number }
+  | { kind: "complete"; state: AppState }
+  | { kind: "error"; error: string };
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function runBrowserImport(file: File): Promise<AppState> {
+  const worker = new Worker(new URL("./browserImportWorker.ts", import.meta.url), {
+    type: "module"
+  });
+
+  return new Promise<AppState>((resolve, reject) => {
+    worker.addEventListener("message", (event: MessageEvent<BrowserImportWorkerMessage>) => {
+      if (event.data.kind === "progress") {
+        return;
+      }
+      if (event.data.kind === "complete") {
+        resolve(event.data.state);
+        return;
+      }
+      reject(new Error(event.data.error));
+    });
+    worker.addEventListener("error", (event) => {
+      reject(new Error(event.message || "Browser import worker failed."));
+    });
+    worker.postMessage({
+      file,
+      inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
+    });
+  }).finally(() => worker.terminate());
 }
 
 function isPlayerOwnedCombatant(combatant: AppState["analysis"]["combatants"][number]): boolean {
@@ -181,6 +217,10 @@ function AppContent() {
   const [discoveringLogs, setDiscoveringLogs] = useState(false);
   const [hasScannedLogs, setHasScannedLogs] = useState(false);
   const [errorLogDirectory, setErrorLogDirectory] = useState("");
+  const [browserImportFile, setBrowserImportFile] = useState<File | null>(null);
+  const [operationError, setOperationError] = useState<string | null>(null);
+  const heavyViewRef = useRef(ANALYSIS_HEAVY_VIEWS.has(view));
+  heavyViewRef.current = ANALYSIS_HEAVY_VIEWS.has(view);
 
   useEffect(() => {
     const api = window.neverwinterApi;
@@ -205,7 +245,7 @@ function AppContent() {
       // never lag behind a previously buffered renderer frame.
       startTransition(() => {
         setState((current) =>
-          ANALYSIS_HEAVY_VIEWS.has(view) ? snapshot : toBootstrapState(snapshot)
+          heavyViewRef.current ? snapshot : toBootstrapState(snapshot)
         );
         setImportFilePath((current) =>
           current.trim()
@@ -217,7 +257,7 @@ function AppContent() {
         }
       });
     });
-  }, [view]);
+  }, []);
 
   useEffect(() => {
     window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(rendererSettings));
@@ -417,31 +457,60 @@ function AppContent() {
       : availableEncounters.find((encounter) => encounter.id === selectedEncounterId) ?? null;
 
   async function chooseFolder() {
-    const api = window.neverwinterApi;
-    if (!api) {
-      return;
-    }
+  const api = window.neverwinterApi;
+  if (!api) {
+    setOperationError("Folder monitoring is available in the Electron desktop app.");
+    return;
+  }
 
+  setOperationError(null);
+  try {
     const folder = await api.selectFolder();
     if (folder) {
       setFolderInput(folder);
     }
+  } catch (error) {
+    setOperationError(getErrorMessage(error));
   }
+}
 
   async function chooseImportFile() {
-    const api = window.neverwinterApi;
-    if (!api) {
-      return;
-    }
+  const api = window.neverwinterApi;
+  if (!api) {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".log,.txt,text/plain";
+    input.addEventListener(
+      "change",
+      () => {
+        const file = input.files?.[0] ?? null;
+        if (!file) {
+          return;
+        }
+        setBrowserImportFile(file);
+        setImportFilePath(file.name);
+        setOperationError(null);
+      },
+      { once: true }
+    );
+    input.click();
+    return;
+  }
 
+  setOperationError(null);
+  try {
     const filePath = await api.selectLogFile();
     if (filePath) {
+      setBrowserImportFile(null);
       setImportFilePath(filePath);
       setFolderInput((current) => current || getParentDirectory(filePath));
     }
+  } catch (error) {
+    setOperationError(getErrorMessage(error));
   }
+}
 
-  async function discoverLogs() {
+async function discoverLogs() {
     const api = window.neverwinterApi;
     if (!api) {
       return;
@@ -451,8 +520,11 @@ function AppContent() {
     setLogCandidates([]);
     setHasScannedLogs(true);
     try {
+      setOperationError(null);
       const candidates = await api.discoverLogs();
       setLogCandidates(candidates);
+    } catch (error) {
+      setOperationError(getErrorMessage(error));
     } finally {
       setDiscoveringLogs(false);
     }
@@ -466,12 +538,15 @@ function AppContent() {
 
     setStarting(true);
     try {
+      setOperationError(null);
       const snapshot = await api.startMonitoring({
         folderPath: folderInput.trim(),
         inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
       });
       setState(snapshot);
       setView("live");
+    } catch (error) {
+      setOperationError(getErrorMessage(error));
     } finally {
       setStarting(false);
     }
@@ -485,6 +560,7 @@ function AppContent() {
 
     setStarting(true);
     try {
+      setOperationError(null);
       const snapshot = await api.startMonitoring({
         filePath: importFilePath.trim(),
         inactivityTimeoutMs: DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS
@@ -492,28 +568,54 @@ function AppContent() {
       setState(snapshot);
       setFolderInput(snapshot.selectedLogFolder ?? "");
       setView("live");
+    } catch (error) {
+      setOperationError(getErrorMessage(error));
     } finally {
       setStarting(false);
     }
   }
 
   async function importLogFile() {
-    const api = window.neverwinterApi;
-    if (!api || !importFilePath.trim()) {
+  const api = window.neverwinterApi;
+
+  if (!api) {
+    if (!browserImportFile) {
+      setOperationError("Choose a local .log or .txt combat log before analyzing it.");
       return;
     }
 
     setStarting(true);
+    setOperationError(null);
     try {
-      const snapshot = await api.importLogFile(importFilePath.trim());
+      const snapshot = await runBrowserImport(browserImportFile);
       setState(snapshot);
       setView("players");
+    } catch (error) {
+      setOperationError(getErrorMessage(error));
     } finally {
       setStarting(false);
     }
+    return;
   }
 
-  async function stopMonitoring() {
+  if (!importFilePath.trim()) {
+    return;
+  }
+
+  setStarting(true);
+  setOperationError(null);
+  try {
+    const snapshot = await api.importLogFile(importFilePath.trim());
+    setState(snapshot);
+    setView("players");
+  } catch (error) {
+    setOperationError(getErrorMessage(error));
+  } finally {
+    setStarting(false);
+  }
+}
+
+async function stopMonitoring() {
     const api = window.neverwinterApi;
     if (!api) {
       return;
@@ -610,6 +712,8 @@ function AppContent() {
       discoveringLogs={discoveringLogs}
       hasScannedLogs={hasScannedLogs}
       starting={starting}
+      operationError={operationError}
+      onDismissOperationError={() => setOperationError(null)}
       onViewChange={setView}
       onDetailTabChange={setDetailTab}
       onFolderInputChange={setFolderInput}

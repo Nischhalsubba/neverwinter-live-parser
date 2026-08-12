@@ -63,6 +63,19 @@ function normalizeName(value: string | undefined): string {
   return (value ?? "").trim().toLowerCase();
 }
 
+function normalizeLogField(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.length >= 2 && trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return trimmed
+      .slice(1, -1)
+      .replace(/""/g, '"')
+      .replace(/\r?\n/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+  return trimmed;
+}
+
 function parseCombatNumber(input: string | undefined): number {
   if (!input) {
     return 0;
@@ -113,8 +126,11 @@ function inferEventType(
   const immuneFlag = loweredFlags.includes("immune");
   const nonCombatSchool =
     loweredSchool === "null" ||
-    loweredSchool === "power" ||
-    loweredSchool === "soulweave" ||
+        loweredSchool === "power" ||
+      loweredSchool === "shield" ||
+      loweredSchool === "hitpointsmax" ||
+      loweredSchool === "powermode" ||
+      loweredSchool === "soulweave" ||
     loweredSchool === "stat_power" ||
     loweredSchool === "damagetrigger" ||
     loweredSchool === "triggercomplex";
@@ -243,26 +259,24 @@ export function parseLine(line: string): ParseResult {
 
   const sourceOwnerName =
     ownerRefIndex >= 0
-      ? parts.slice(0, ownerRefIndex).join(",").trim()
+      ? normalizeLogField(parts.slice(0, ownerRefIndex).join(","))
       : "";
   const sourceOwnerId = ownerRefIndex >= 0 ? parts[ownerRefIndex]?.trim() ?? "" : "";
   const sourceNameField =
     sourceRefIndex >= 0
-      ? parts.slice(ownerRefIndex + 1, sourceRefIndex).join(",").trim()
+      ? normalizeLogField(parts.slice(ownerRefIndex + 1, sourceRefIndex).join(","))
       : "";
   const sourceIdField = sourceRefIndex >= 0 ? parts[sourceRefIndex]?.trim() ?? "" : "";
   const targetId = parts[targetRefIndex]?.trim() ?? "";
-  const targetName = parts
-    .slice(sourceRefIndex + 1, targetRefIndex)
-    .join(",")
-    .trim();
-  const abilityName = parts
-    .slice(targetRefIndex + 1, parts.length - 5)
-    .join(",")
-    .trim();
-  const abilityId = parts[parts.length - 5]?.trim() ?? "";
-  const school = parts[parts.length - 4]?.trim() ?? "";
-  const flagsField = parts[parts.length - 3]?.trim() ?? "";
+    const targetName = normalizeLogField(
+      parts.slice(sourceRefIndex + 1, targetRefIndex).join(",")
+    );
+    const abilityName = normalizeLogField(
+      parts.slice(targetRefIndex + 1, parts.length - 5).join(",")
+    );
+  const abilityId = normalizeLogField(parts[parts.length - 5] ?? "");
+  const school = normalizeLogField(parts[parts.length - 4] ?? "");
+  const flagsField = normalizeLogField(parts[parts.length - 3] ?? "");
   const magnitude = parseCombatNumber(parts[parts.length - 2]);
   const amount = parseCombatNumber(parts[parts.length - 1]);
   const hasExplicitSourceActor =

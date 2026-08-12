@@ -182,6 +182,7 @@ export class LogMonitorService extends EventEmitter {
   private state = createInitialAppState();
   private watcher: FSWatcher | null = null;
   private readonly pollIntervalMs = 250;
+  private readonly metadataPollIntervalMs = 2_000;
   private readerState: ReaderState = createInitialReaderState();
   private auxiliaryReaderStates = new Map<string, ReaderState>();
   private encounterManager = new EncounterManager(DEFAULT_ENCOUNTER_INACTIVITY_TIMEOUT_MS);
@@ -262,33 +263,42 @@ export class LogMonitorService extends EventEmitter {
       }
     });
 
-    // Windows file notifications are not always reliable for game logs, so the
-    // watcher and the poller both funnel through the same refresh path.
-    const refresh = async () => {
-      if (this.refreshInFlight) {
-        return;
-      }
-      this.refreshInFlight = true;
-      const previousActiveFile = this.state.activeLogFile;
-      const previousOffset = this.state.debug.currentOffset;
-      try {
-        await this.refreshActiveFile(resolvedFolderPath);
-        await this.readNewLines();
-        await this.readAuxiliaryLogs(resolvedFolderPath);
-        if (
-          this.state.activeLogFile !== previousActiveFile ||
-          this.state.debug.currentOffset !== previousOffset
-        ) {
-          this.scheduleEmitState();
+        // Keep the 250 ms fallback focused on appended combat bytes. Directory
+      // rescans and auxiliary-log discovery are much more expensive and do not need
+      // to run four times per second.
+      let lastMetadataRefreshAt = 0;
+      const refresh = async (forceMetadataRefresh = false) => {
+        if (this.refreshInFlight) {
+          return;
         }
-      } finally {
-        this.refreshInFlight = false;
-      }
-    };
+        this.refreshInFlight = true;
+        const previousActiveFile = this.state.activeLogFile;
+        const previousOffset = this.state.debug.currentOffset;
+        try {
+          const now = Date.now();
+          if (
+            forceMetadataRefresh ||
+            now - lastMetadataRefreshAt >= this.metadataPollIntervalMs
+          ) {
+            await this.refreshActiveFile(resolvedFolderPath);
+            await this.readAuxiliaryLogs(resolvedFolderPath);
+            lastMetadataRefreshAt = now;
+          }
+          await this.readNewLines();
+          if (
+            this.state.activeLogFile !== previousActiveFile ||
+            this.state.debug.currentOffset !== previousOffset
+          ) {
+            this.scheduleEmitState();
+          }
+        } finally {
+          this.refreshInFlight = false;
+        }
+      };
 
-    this.watcher.on("add", () => void refresh());
-    this.watcher.on("change", () => void refresh());
-    this.watcher.on("unlink", () => void refresh());
+      this.watcher.on("add", () => void refresh(true));
+      this.watcher.on("change", () => void refresh(false));
+      this.watcher.on("unlink", () => void refresh(true));
     this.watcher.on("error", (error) => {
       this.state.watcherStatus = "error";
       this.pushIssue(`Watcher error: ${String(error)}`);
@@ -296,7 +306,7 @@ export class LogMonitorService extends EventEmitter {
     });
 
     this.flushTimer = setInterval(() => {
-      void refresh();
+      void refresh(false);
       if (this.encounterManager.flush()) {
         this.syncEncounterState();
         this.scheduleEmitState();
@@ -317,7 +327,7 @@ export class LogMonitorService extends EventEmitter {
       }
     }, this.pollIntervalMs);
 
-    await refresh();
+    await refresh(true);
     return this.getState();
   }
 
