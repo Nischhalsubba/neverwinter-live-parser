@@ -631,3 +631,36 @@ app.whenReady().then(() => {
     }
   });
 });
+
+app.on("second-instance", () => {
+  void writeActivityLog("Second-instance launch intercepted", "App lifecycle");
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    createWindow();
+    return;
+  }
+
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore();
+  }
+  mainWindow.show();
+  mainWindow.focus();
+});
+
+process.on("uncaughtException", (error) => {
+  void writeErrorLog(error, "Uncaught exception in main process");
+});
+
+process.on("unhandledRejection", (reason) => {
+  void writeErrorLog(reason, "Unhandled rejection in main process");
+});
+
+app.on("window-all-closed", () => {
+  void writeActivityLog("All windows closed", "App lifecycle");
+  if (telemetryTimer) {
+    clearInterval(telemetryTimer);
+    telemetryTimer = null;
+  }
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
