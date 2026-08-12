@@ -47,3 +47,53 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Run 100k-event combat pipeline stress test
         run: npx vitest run src/core/aggregation/combatPipeline.stress.test.ts
+
+  import-responsiveness:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Build Electron worker pipeline
+        run: npm run build
+      - name: Import 150k events without blocking the main loop
+        run: node scripts/qa-import.mjs
+        env:
+          QA_IMPORT_EVENTS: 150000
+          QA_MAX_EVENT_LOOP_DELAY_MS: 750
+
+  desktop-package:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Build unpacked Windows desktop app
+        run: npm run dist:win-unpacked
+      - name: Verify desktop runtime payload
+        shell: pwsh
+        run: |
+          if (!(Test-Path "dist-electron/main/main.js")) { throw "Missing Electron main bundle" }
+          if (!(Test-Path "dist-electron/main/preload.js")) { throw "Missing Electron preload bundle" }
+          if (!(Test-Path "dist-electron/core/monitoring/importWorker.js")) { throw "Missing import worker bundle" }
+          if (!(Test-Path "release/win-unpacked/resources/app.asar")) { throw "Missing packaged app.asar" }
