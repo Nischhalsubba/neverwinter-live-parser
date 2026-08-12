@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { EncounterManager } from "./encounterManager.js";
 
 describe("EncounterManager", () => {
-  it("starts and completes encounters on inactivity", () => {
+  it("starts and completes encounters on inactivity without adding idle time to duration", () => {
     const manager = new EncounterManager(10_000);
 
     manager.consume({
@@ -18,6 +18,8 @@ describe("EncounterManager", () => {
     manager.flush(12_000);
     expect(manager.getCurrentSnapshot(12_000)).toBeNull();
     expect(manager.getCompleted()).toHaveLength(1);
+    expect(manager.getCompleted()[0]?.endedAt).toBe(1000);
+    expect(manager.getCompleted()[0]?.durationMs).toBe(1);
   });
 
   it("rotates encounters when the primary damage target changes after a gap", () => {
@@ -43,6 +45,7 @@ describe("EncounterManager", () => {
 
     expect(manager.getCompleted()).toHaveLength(1);
     expect(manager.getCompleted()[0]?.label).toBe("Target Dummy");
+    expect(manager.getCompleted()[0]?.endedAt).toBe(1_000);
     expect(manager.getCurrentSnapshot(7_000)?.label).toBe("Boss");
   });
 });
