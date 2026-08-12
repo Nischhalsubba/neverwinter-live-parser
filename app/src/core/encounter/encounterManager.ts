@@ -70,8 +70,10 @@ export class EncounterManager {
       return false;
     }
 
+    // Inactivity decides when an encounter is complete; it is not combat time.
+    // Ending at the last event keeps DPS/HPS from being diluted by the timeout.
     this.state.completed = [
-      finalizeEncounter(current, current.lastActivityAt + this.inactivityTimeoutMs),
+      finalizeEncounter(current, current.lastActivityAt),
       ...this.state.completed
     ].slice(0, 20);
     this.state.current = null;
@@ -98,7 +100,7 @@ export class EncounterManager {
     }
 
     this.state.completed = [
-      finalizeEncounter(current, current.lastActivityAt + this.targetSwitchWindowMs),
+      finalizeEncounter(current, current.lastActivityAt),
       ...this.state.completed
     ].slice(0, 20);
     this.state.current = null;
