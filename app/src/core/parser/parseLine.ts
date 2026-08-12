@@ -109,7 +109,6 @@ function inferEventType(
   const loweredFlags = flags.map((flag) => flag.toLowerCase());
   const absoluteAmount = Math.abs(amount);
   const absoluteMagnitude = Math.abs(magnitude);
-  const strongestValue = Math.max(absoluteAmount, absoluteMagnitude);
   const displayFlag = loweredFlags.includes("showpowerdisplayname");
   const immuneFlag = loweredFlags.includes("immune");
   const nonCombatSchool =
@@ -119,8 +118,7 @@ function inferEventType(
     loweredSchool === "stat_power" ||
     loweredSchool === "damagetrigger" ||
     loweredSchool === "triggercomplex";
-  const healSignal =
-    loweredSchool === "hitpoints" && (amount < 0 || magnitude < 0 || strongestValue > 0);
+  const healSignal = loweredSchool === "hitpoints" && amount < 0;
 
   if (immuneFlag) {
     return "buff";
@@ -130,21 +128,24 @@ function inferEventType(
     return "heal";
   }
 
-  if (hasTargetActor && strongestValue > 0 && !nonCombatSchool) {
+  // The final numeric field is the applied value. The preceding magnitude is
+  // useful mechanics metadata, but must not turn display/base-damage records
+  // into real damage when the applied amount is zero.
+  if (hasTargetActor && absoluteAmount > 0 && !nonCombatSchool) {
     if (sourceType === "npc" && (targetType === "player" || targetType === "companion")) {
       return "damageTaken";
     }
     return "damage";
   }
 
-  if (displayFlag || nonCombatSchool || strongestValue === 0) {
-    if (amount < 0 || magnitude < 0) {
+  if (displayFlag || nonCombatSchool || (absoluteAmount === 0 && absoluteMagnitude === 0)) {
+    if (amount < 0 || (amount === 0 && magnitude < 0)) {
       return "debuff";
     }
     return "buff";
   }
 
-  if (amount > 0 || magnitude > 0) {
+  if (amount > 0) {
     if (sourceType === "npc" && (targetType === "player" || targetType === "companion")) {
       return "damageTaken";
     }
@@ -158,12 +159,9 @@ function inferEventType(
   return "unknown";
 }
 
-function resolveEventAmount(eventType: CombatEvent["eventType"], magnitude: number, amount: number): number {
-  const absoluteMagnitude = Math.abs(magnitude);
-  const absoluteAmount = Math.abs(amount);
-
+function resolveEventAmount(eventType: CombatEvent["eventType"], amount: number): number {
   if (eventType === "damage" || eventType === "heal" || eventType === "damageTaken") {
-    return Math.max(absoluteMagnitude, absoluteAmount);
+    return Math.abs(amount);
   }
 
   return amount;
@@ -298,7 +296,7 @@ export function parseLine(line: string): ParseResult {
     return buildUnknown(line, "Line does not describe a combat action");
   }
 
-  const resolvedAmount = resolveEventAmount(eventType, magnitude, amount);
+  const resolvedAmount = resolveEventAmount(eventType, amount);
   const normalizedMagnitude =
     eventType === "heal" ? Math.abs(magnitude) : magnitude;
 

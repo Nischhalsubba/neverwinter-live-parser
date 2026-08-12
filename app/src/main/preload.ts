@@ -2,7 +2,8 @@ import { createRequire } from "node:module";
 import type {
   AppState,
   DiscoveredLogCandidate,
-  MonitoringConfig
+  MonitoringConfig,
+  SystemUsageSnapshot
 } from "../shared/types.js";
 import type { ErrorLogEntry } from "./errorLogger.js";
 
@@ -44,12 +45,29 @@ const api = {
   logRendererError: (message: string, context?: string) =>
     ipcRenderer.invoke("maintenance:logRendererError", { message, context }) as Promise<void>,
   onState: (listener: StateListener) => {
-    const wrapped = (_event: Electron.IpcRendererEvent, state: AppState) => {
+    let latestState: AppState | null = null;
+    const wrappedState = (_event: Electron.IpcRendererEvent, state: AppState) => {
+      latestState = state;
       listener(state);
     };
-    ipcRenderer.on("monitoring:state", wrapped);
+    const wrappedSystem = (
+      _event: Electron.IpcRendererEvent,
+      system: SystemUsageSnapshot
+    ) => {
+      if (!latestState) {
+        return;
+      }
+      latestState = {
+        ...latestState,
+        system
+      };
+      listener(latestState);
+    };
+    ipcRenderer.on("monitoring:state", wrappedState);
+    ipcRenderer.on("monitoring:system", wrappedSystem);
     return () => {
-      ipcRenderer.removeListener("monitoring:state", wrapped);
+      ipcRenderer.removeListener("monitoring:state", wrappedState);
+      ipcRenderer.removeListener("monitoring:system", wrappedSystem);
     };
   }
 };

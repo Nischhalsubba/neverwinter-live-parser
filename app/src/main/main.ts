@@ -18,7 +18,8 @@ import {
 import type {
   AppState,
   DiscoveredLogCandidate,
-  MonitoringConfig
+  MonitoringConfig,
+  SystemUsageSnapshot
 } from "../shared/types.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -126,7 +127,7 @@ function toMegabytes(value: number): number {
   return Number((value / (1024 * 1024)).toFixed(1));
 }
 
-function getSystemUsage() {
+function getSystemUsage(): SystemUsageSnapshot {
   const now = process.hrtime.bigint();
   const elapsedMicros = Number(now - lastCpuSampleAt) / 1000;
   const cpuUsage = process.cpuUsage(lastCpuUsage);
@@ -472,13 +473,28 @@ function emitState(state: AppState): void {
     return;
   }
   try {
-    // Renderer disposal can race with the telemetry timer during reloads or window close.
-    mainWindow!.webContents.send("monitoring:state", withTelemetry(state));
+    // Monitoring snapshots are already large. Do not add telemetry work here;
+    // Electron will serialize this payload once across IPC.
+    mainWindow!.webContents.send("monitoring:state", state);
   } catch (error) {
     if (isDisposedRendererError(error)) {
       return;
     }
     void writeErrorLog(error, "Failed to send monitoring state to renderer");
+  }
+}
+
+function emitSystemUsage(): void {
+  if (!canEmitToWindow()) {
+    return;
+  }
+  try {
+    mainWindow!.webContents.send("monitoring:system", getSystemUsage());
+  } catch (error) {
+    if (isDisposedRendererError(error)) {
+      return;
+    }
+    void writeErrorLog(error, "Failed to send system telemetry to renderer");
   }
 }
 
@@ -605,10 +621,7 @@ app.whenReady().then(() => {
   void writeActivityLog("Electron app ready", "App lifecycle");
   createWindow();
   telemetryTimer = setInterval(() => {
-    if (!canEmitToWindow()) {
-      return;
-    }
-    emitState(monitor.getState());
+    emitSystemUsage();
   }, 3000);
 
   app.on("activate", () => {

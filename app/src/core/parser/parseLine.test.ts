@@ -19,10 +19,11 @@ describe("parseLine", () => {
       expect(result.event.abilityId).toBe("Pn.Kr3spo");
       expect(result.event.eventType).toBe("damage");
       expect(result.event.amount).toBeCloseTo(85849.5);
+      expect(result.event.magnitude).toBeCloseTo(57805.3);
     }
   });
 
-  it("parses a healing line and keeps owner and target identity intact", () => {
+  it("uses applied healing instead of the larger base magnitude", () => {
     const result = parseLine(
       "26:02:14:19:11:57.0::Ilerae Shielderae,P[518778448@33856673 Ilerae Shielderae@meljiu#75254]," +
         ",*,ozymandias,P[518492955@34098842 ozymandias@namelessf#36888]," +
@@ -34,7 +35,8 @@ describe("parseLine", () => {
       expect(result.event.sourceName).toBe("Ilerae Shielderae");
       expect(result.event.targetName).toBe("ozymandias");
       expect(result.event.eventType).toBe("heal");
-      expect(result.event.amount).toBeCloseTo(345619);
+      expect(result.event.amount).toBeCloseTo(290808);
+      expect(result.event.magnitude).toBeCloseTo(345619);
       expect(result.event.critical).toBe(true);
     }
   });
@@ -58,7 +60,7 @@ describe("parseLine", () => {
     }
   });
 
-  it("keeps player summons with the player instead of treating them as companions", () => {
+  it("keeps player summons with the player and uses applied damage", () => {
     const result = parseLine(
       "26:02:14:19:16:12.2::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562]," +
         "Thorn Ward,C[53 Entity_Thornward],Valkariel, the Corrupted,C[37 M31_Trial_Boss_Valkariel]," +
@@ -71,7 +73,8 @@ describe("parseLine", () => {
       expect(result.event.sourceName).toBe("Thorn Ward");
       expect(result.event.sourceType).toBe("player");
       expect(result.event.eventType).toBe("damage");
-      expect(result.event.amount).toBeCloseTo(1815040);
+      expect(result.event.amount).toBeCloseTo(839927);
+      expect(result.event.magnitude).toBeCloseTo(1815040);
     }
   });
 
@@ -100,20 +103,21 @@ describe("parseLine", () => {
     }
   });
 
-  it("keeps targeted physical show-power lines as damage", () => {
+  it("does not count targeted show-power base magnitude as applied damage", () => {
     const result = parseLine(
       "26:03:23:22:01:33.6::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Lightning Flash,Pn.Wnize81,Physical,ShowPowerDisplayName,2698.43,0"
     );
 
     expect(result.kind).toBe("event");
     if (result.kind === "event") {
-      expect(result.event.eventType).toBe("damage");
+      expect(result.event.eventType).toBe("buff");
       expect(result.event.targetName).toBe("Target Dummy");
-      expect(result.event.amount).toBeCloseTo(2698.43);
+      expect(result.event.amount).toBe(0);
+      expect(result.event.magnitude).toBeCloseTo(2698.43);
     }
   });
 
-  it("parses scientific-notation combat numbers without dropping the event", () => {
+  it("parses scientific-notation combat numbers without replacing applied damage with magnitude", () => {
     const result = parseLine(
       "26:03:23:22:01:33.6::Ar-chew,P[517568826@33087734 Ar-chew@imortal#9562],,*,Target Dummy,C[470521 Entity_Targetdummy],Rapid Shot,Pn.Test01,Physical,Critical,1.81504e+06,839927"
     );
@@ -121,7 +125,8 @@ describe("parseLine", () => {
     expect(result.kind).toBe("event");
     if (result.kind === "event") {
       expect(result.event.eventType).toBe("damage");
-      expect(result.event.amount).toBeCloseTo(1815040);
+      expect(result.event.amount).toBeCloseTo(839927);
+      expect(result.event.magnitude).toBeCloseTo(1815040);
     }
   });
 

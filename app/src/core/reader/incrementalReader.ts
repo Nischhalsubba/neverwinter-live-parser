@@ -11,7 +11,10 @@ export type ReaderReadResult = {
   lines: string[];
   state: ReaderState;
   bytesRead: number;
+  hasMore: boolean;
 };
+
+export const DEFAULT_MAX_READ_BYTES = 512 * 1024;
 
 export function createInitialReaderState(): ReaderState {
   return {
@@ -23,7 +26,8 @@ export function createInitialReaderState(): ReaderState {
 
 export async function readAppendedLines(
   filePath: string,
-  previousState: ReaderState
+  previousState: ReaderState,
+  maxReadBytes = DEFAULT_MAX_READ_BYTES
 ): Promise<ReaderReadResult> {
   const hasSwitchedFiles = previousState.activeFilePath !== filePath;
   const baseState = hasSwitchedFiles
@@ -35,12 +39,13 @@ export async function readAppendedLines(
     const stats = await handle.stat();
     const startOffset =
       stats.size < baseState.lastReadOffset ? 0 : baseState.lastReadOffset;
-    const bytesToRead = Math.max(0, stats.size - startOffset);
+    const unreadBytes = Math.max(0, stats.size - startOffset);
 
-    if (bytesToRead === 0) {
+    if (unreadBytes === 0) {
       return {
         lines: [],
         bytesRead: 0,
+        hasMore: false,
         state: {
           ...baseState,
           activeFilePath: filePath
@@ -48,17 +53,23 @@ export async function readAppendedLines(
       };
     }
 
-    const buffer = Buffer.alloc(bytesToRead);
+    const bytesToRead = Math.min(
+      unreadBytes,
+      Math.max(1, Math.floor(maxReadBytes))
+    );
+    const buffer = Buffer.allocUnsafe(bytesToRead);
     const { bytesRead } = await handle.read(buffer, 0, bytesToRead, startOffset);
     const content = buffer.subarray(0, bytesRead).toString("utf8");
     const split = splitBufferedLines(baseState.leftoverPartialLine, content);
+    const nextOffset = startOffset + bytesRead;
 
     return {
       lines: split.lines,
       bytesRead,
+      hasMore: nextOffset < stats.size,
       state: {
         activeFilePath: filePath,
-        lastReadOffset: startOffset + bytesRead,
+        lastReadOffset: nextOffset,
         leftoverPartialLine: split.leftover
       }
     };
