@@ -12,6 +12,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: app
@@ -31,6 +32,7 @@ jobs:
 
   combat-stress:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: app
@@ -50,6 +52,7 @@ jobs:
 
   import-responsiveness:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: app
@@ -74,6 +77,7 @@ jobs:
 
   desktop-package:
     runs-on: windows-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: app
