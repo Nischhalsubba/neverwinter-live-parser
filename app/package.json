@@ -28,7 +28,7 @@
     "extract:nwhub:artifacts": "node scripts/extract-nw-hub-artifacts.mjs"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "electron-store": "^10.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
