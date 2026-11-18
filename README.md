@@ -73,3 +73,7 @@ Use accurate terms such as **Neverwinter live parser, Neverwinter combat parser,
 flowchart LR
     LOGCASE["New log case"] --> PARSER["Update parser"] --> TEST["Regression test"] --> METRIC["Validate calculations"] --> UX["Review live UI impact"] --> DOCS["Document assumptions"] --> PR["Pull request"]
 ```
+
+## Maintainer review checklist
+
+Before changing critical product behavior or public claims, use the [Combat-log regression matrix](docs/COMBAT_LOG_REGRESSION_MATRIX.md) to record evidence, verification and rollback expectations.
