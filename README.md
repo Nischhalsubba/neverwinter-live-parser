@@ -48,12 +48,16 @@ flowchart TD
 
 ## Getting started
 
+The maintained application is in `app/`, not the repository root. Use Windows with Node.js 24 and npm 11; this app uses Electron and is Windows-only.
+
 ```bash
 git clone https://github.com/Nischhalsubba/neverwinter-live-parser.git
-cd neverwinter-live-parser
+cd neverwinter-live-parser/app
+npm ci
+npm run dev
 ```
 
-Use the manifests and lockfiles committed in the repository to determine the current runtime, build, and test commands.
+Run `npm run check` from `app/` to validate changes before submitting them.
 
 ## Product & design principles
 
